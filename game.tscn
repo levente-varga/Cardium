@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://cw3o4f0nr0f2v"]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="Player" type="Sprite2D" parent="."]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+anchor_mode = 0
