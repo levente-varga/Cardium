@@ -12,7 +12,7 @@ config_version=5
 
 config/name="Cardium"
 run/main_scene="res://game.tscn"
-config/features=PackedStringArray("4.3", "Mobile")
+config/features=PackedStringArray("4.3", "C#", "Mobile")
 config/icon="res://icon.svg"
 
 [dotnet]
