@@ -1098,9 +1098,11 @@ script = ExtResource("2_spbvi")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 anchor_mode = 0
+zoom = Vector2(4, 4)
 
 [node name="TileMapLayer" type="TileMapLayer" parent="."]
 use_parent_material = true
+position = Vector2(32, 32)
 tile_map_data = PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 2, 0, 0, 0, 16, 0, 11, 0, 0, 0, 7, 0, 2, 0, 0, 0)
 tile_set = SubResource("TileSet_3rv6q")
 script = ExtResource("3_fnkqj")

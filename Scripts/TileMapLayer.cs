@@ -20,8 +20,7 @@ public partial class TileMapLayer : Godot.TileMapLayer
 		grid.CellSize = TileSet.TileSize;
 		grid.Offset = grid.CellSize / 2;
 		grid.DiagonalMode = AStarGrid2D.DiagonalModeEnum.Never;
-		grid.DefaultEstimateHeuristic = AStarGrid2D.Heuristic.Max;
-		grid.DefaultComputeHeuristic = AStarGrid2D.Heuristic.Manhattan;
+		grid.DefaultEstimateHeuristic = AStarGrid2D.Heuristic.Euclidean;
 		grid.Update();
 
 		GD.Print("TileMap rect: ", GetUsedRect());
@@ -55,20 +54,18 @@ public partial class TileMapLayer : Godot.TileMapLayer
 
 	private void UpdatePath() {
 		line.Points = grid.GetPointPath(start, end);
+		GD.Print("Path: ", grid.GetIdPath(start, end));
 	}
 
 	public override void _Input(InputEvent @event)
 	{
 		if (@event is InputEventMouseButton mouseButton && mouseButton.Pressed && mouseButton.ButtonIndex == MouseButton.Left) {
-			Vector2I cell = (Vector2I)(mouseButton.Position / grid.CellSize);
+			Camera2D camera = GetViewport().GetCamera2D();
 
-			GD.Print("Clisked on cell ", cell);
+			Vector2I cell = (Vector2I)(mouseButton.Position / camera.Zoom / grid.CellSize);
 
 			if (grid.IsInBoundsv(cell)) {
 				grid.SetPointSolid(cell, !grid.IsPointSolid(cell));
-			}
-			else {
-				GD.Print("Was no in bound");
 			}
 
 			UpdatePath();
