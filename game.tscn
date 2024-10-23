@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=4 uid="uid://cw3o4f0nr0f2v"]
+[gd_scene load_steps=7 format=3 uid="uid://cw3o4f0nr0f2v"]
 
 [ext_resource type="Texture2D" uid="uid://bbwlpuraqdfav" path="res://Assets/player.png" id="1_lyvn4"]
 [ext_resource type="Script" path="res://Scripts/Player.cs" id="2_spbvi"]
@@ -1101,6 +1101,8 @@ anchor_mode = 0
 
 [node name="TileMapLayer" type="TileMapLayer" parent="."]
 use_parent_material = true
-tile_map_data = PackedByteArray("AAAFAAQAAAAIAAUAAAAGAAQAAAAIAAUAAAAGAAUAAAAIAAUAAAAFAAUAAAAIAAUAAAAEAAQAAAAJAAUAAAAEAAUAAAAJAAUAAAAEAAMAAAAKAAUAAAAHAAMAAAAKAAUAAFAHAAYAAAAKAAUAADAEAAYAAAAKAAUAAGAFAAMAAAAJAAUAAFAGAAMAAAAJAAUAAFAHAAQAAAAJAAUAADAHAAUAAAAJAAUAADAGAAYAAAAJAAUAAGAFAAYAAAAJAAUAAGACAAMAAAAGAAQAAAA=")
+tile_map_data = PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 2, 0, 0, 0, 16, 0, 11, 0, 0, 0, 7, 0, 2, 0, 0, 0)
 tile_set = SubResource("TileSet_3rv6q")
 script = ExtResource("3_fnkqj")
+
+[node name="Line2D" type="Line2D" parent="TileMapLayer"]

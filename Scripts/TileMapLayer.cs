@@ -1,3 +1,4 @@
+using System;
 using Godot;
 
 public partial class TileMapLayer : Godot.TileMapLayer
@@ -6,12 +7,16 @@ public partial class TileMapLayer : Godot.TileMapLayer
 
 	Vector2I cellSize = new Vector2I(16, 16);
 
-	Vector2I start = new Vector2I(0, 0);
-	Vector2I end = new Vector2I(5, 2);
+	Vector2I start = new Vector2I(2, 2);
+	Vector2I end = new Vector2I(10, 10);
+
+	Line2D line;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		line = GetNode<Line2D>("Line2D");
+
 		grid = new AStarGrid2D();
 		grid.Region = GetUsedRect();
 		grid.CellSize = cellSize;
@@ -22,6 +27,8 @@ public partial class TileMapLayer : Godot.TileMapLayer
 		GD.Print("TileMap rect: ", GetUsedRect());
 		GD.Print("TileMap position: ", Position);
 		GD.Print("Top left tile position: ", ToGlobal(MapToLocal(GetUsedRect().Position)));
+
+		UpdatePath();
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -47,7 +54,7 @@ public partial class TileMapLayer : Godot.TileMapLayer
     }
 
 	private void UpdatePath() {
-		//$Line2D.points = new PackedVector2Array(grid.GetPointPath(start, end))
+		line.Points = grid.GetPointPath(start, end);
 	}
 
 	public override void _Input(InputEvent @event)
