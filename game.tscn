@@ -1098,7 +1098,6 @@ script = ExtResource("2_spbvi")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 anchor_mode = 0
-zoom = Vector2(4, 4)
 
 [node name="TileMapLayer" type="TileMapLayer" parent="."]
 use_parent_material = true
