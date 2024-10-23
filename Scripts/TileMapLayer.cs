@@ -5,8 +5,6 @@ public partial class TileMapLayer : Godot.TileMapLayer
 {
 	AStarGrid2D grid;
 
-	Vector2I cellSize = new Vector2I(16, 16);
-
 	Vector2I start = new Vector2I(2, 2);
 	Vector2I end = new Vector2I(10, 10);
 
@@ -19,9 +17,11 @@ public partial class TileMapLayer : Godot.TileMapLayer
 
 		grid = new AStarGrid2D();
 		grid.Region = GetUsedRect();
-		grid.CellSize = cellSize;
-		grid.Offset = cellSize / 2;
+		grid.CellSize = TileSet.TileSize;
+		grid.Offset = grid.CellSize / 2;
 		grid.DiagonalMode = AStarGrid2D.DiagonalModeEnum.Never;
+		grid.DefaultEstimateHeuristic = AStarGrid2D.Heuristic.Max;
+		grid.DefaultComputeHeuristic = AStarGrid2D.Heuristic.Manhattan;
 		grid.Update();
 
 		GD.Print("TileMap rect: ", GetUsedRect());
@@ -38,14 +38,14 @@ public partial class TileMapLayer : Godot.TileMapLayer
 
     public override void _Draw()
     {
-		DrawRect(new Rect2(start * cellSize, cellSize), Colors.GreenYellow);
-    	DrawRect(new Rect2(end * cellSize, cellSize), Colors.OrangeRed);
+		DrawRect(new Rect2(start * grid.CellSize, grid.CellSize), Colors.GreenYellow);
+    	DrawRect(new Rect2(end * grid.CellSize, grid.CellSize), Colors.OrangeRed);
 
 		for (int x = 0; x < grid.Region.Size.X; x++) {
 			for (int y = 0; y < grid.Region.Size.Y; y++) {
 				Vector2I cell = new Vector2I(x, y) + grid.Region.Position;
 				if (grid.IsPointSolid(cell)) {
-					DrawRect(new Rect2(cell.X * cellSize.X, cell.Y * cellSize.Y, cellSize.X, cellSize.Y), Colors.Aquamarine);
+					DrawRect(new Rect2(cell.X * grid.CellSize.X, cell.Y * grid.CellSize.Y, grid.CellSize.X, grid.CellSize.Y), Colors.Aquamarine);
 				}
 			}
 		}
@@ -60,9 +60,7 @@ public partial class TileMapLayer : Godot.TileMapLayer
 	public override void _Input(InputEvent @event)
 	{
 		if (@event is InputEventMouseButton mouseButton && mouseButton.Pressed && mouseButton.ButtonIndex == MouseButton.Left) {
-			Vector2I mousePosition = new Vector2I((int)mouseButton.GlobalPosition.X, (int)mouseButton.GlobalPosition.Y);
-			//Vector2I offsetPosition = mousePosition - ;
-			Vector2I cell = mousePosition / cellSize;
+			Vector2I cell = (Vector2I)(mouseButton.Position / grid.CellSize);
 
 			GD.Print("Clisked on cell ", cell);
 
