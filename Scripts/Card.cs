@@ -3,12 +3,18 @@ using System;
 
 public partial class Card : Container
 {
-	// Called when the node enters the scene tree for the first time.
+	AnimationPlayer animationPlayer = null;
+
 	public override void _Ready()
 	{
+		animationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
+
+		MouseEntered += OnMouseEntered;
+		MouseExited += OnMouseExited;
+
+		GD.Print("Card ready");
 	}
 
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
 	}
@@ -17,4 +23,14 @@ public partial class Card : Container
     {
         base._GuiInput(@event);
     }
+
+	public void OnMouseEntered() {
+		GD.Print("Mouse entered");
+		animationPlayer.Play("Select");
+	}
+
+	public void OnMouseExited() {
+		GD.Print("Mouse exited");
+		animationPlayer.Play("Deselect");
+	}
 }

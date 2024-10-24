@@ -6,20 +6,6 @@
 [ext_resource type="Texture2D" uid="uid://vre1mtm6rq0g" path="res://Assets/TileSets/colored-transparent.png" id="4_s82ru"]
 [ext_resource type="Script" path="res://Scripts/TileMapLayer.cs" id="5_07t5y"]
 
-[sub_resource type="Curve" id="Curve_3ub7t"]
-min_value = -1.0
-_data = [Vector2(0, -1), 0.0, 2.0, 0, 1, Vector2(1, 1), 2.0, 0.0, 1, 0]
-point_count = 2
-
-[sub_resource type="Curve" id="Curve_ngq3j"]
-_data = [Vector2(0, 1), 0.0, -2.0, 0, 0, Vector2(0.5, 0.5), 0.0, 0.0, 0, 0, Vector2(1, 1), 2.0, 0.0, 0, 0]
-point_count = 3
-
-[sub_resource type="Curve" id="Curve_sgx0k"]
-min_value = -1.0
-_data = [Vector2(0, -1), 0.0, 4.0, 0, 0, Vector2(0.5, 0), 1.0, 1.0, 0, 0, Vector2(1, 1), 4.0, 0.0, 0, 0]
-point_count = 3
-
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_mdys3"]
 texture = ExtResource("4_s82ru")
 separation = Vector2i(1, 1)
@@ -1104,13 +1090,21 @@ separation = Vector2i(1, 1)
 [sub_resource type="TileSet" id="TileSet_3rv6q"]
 sources/0 = SubResource("TileSetAtlasSource_mdys3")
 
-[node name="Node2D" type="Node2D"]
+[sub_resource type="Curve" id="Curve_3ub7t"]
+min_value = -1.0
+_data = [Vector2(0, -1), 0.0, 2.0, 0, 1, Vector2(1, 1), 2.0, 0.0, 1, 0]
+point_count = 2
 
-[node name="Hand" type="Node2D" parent="."]
-script = ExtResource("1_3ixgw")
-cardHorizontalPositions = SubResource("Curve_3ub7t")
-cardVerticalOffsets = SubResource("Curve_ngq3j")
-cardRotations = SubResource("Curve_sgx0k")
+[sub_resource type="Curve" id="Curve_ngq3j"]
+_data = [Vector2(0, 1), 0.0, -2.0, 0, 0, Vector2(0.5, 0.5), 0.0, 0.0, 0, 0, Vector2(1, 1), 2.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Curve" id="Curve_sgx0k"]
+min_value = -1.0
+_data = [Vector2(0, -1), 0.0, 4.0, 0, 0, Vector2(0.5, 0), 1.0, 1.0, 0, 0, Vector2(1, 1), 4.0, 0.0, 0, 0]
+point_count = 3
+
+[node name="Node2D" type="Node2D"]
 
 [node name="Player" type="Sprite2D" parent="."]
 texture = ExtResource("2_nlcsh")
@@ -1128,3 +1122,9 @@ tile_set = SubResource("TileSet_3rv6q")
 script = ExtResource("5_07t5y")
 
 [node name="Line2D" type="Line2D" parent="TileMapLayer"]
+
+[node name="Hand" type="Node2D" parent="."]
+script = ExtResource("1_3ixgw")
+cardHorizontalPositions = SubResource("Curve_3ub7t")
+cardVerticalOffsets = SubResource("Curve_ngq3j")
+cardRotations = SubResource("Curve_sgx0k")

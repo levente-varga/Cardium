@@ -16,7 +16,7 @@ public partial class Hand : Node2D
 
 	const float MaxHandWidthRatio = 0.5f;
 	const int MaxHandSize = 10;
-	const int HandHeight = 100;
+	const int HandHeight = 160;
 
 	public override void _Ready()
 	{
