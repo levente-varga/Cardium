@@ -1,7 +1,11 @@
-[gd_scene load_steps=2 format=3 uid="uid://c8tbfjcyg4o24"]
+[gd_scene load_steps=3 format=3 uid="uid://c8tbfjcyg4o24"]
 
 [ext_resource type="Texture2D" uid="uid://c4omwsrt6mxmf" path="res://Assets/cardPlaceholder.png" id="1_p3dkk"]
+[ext_resource type="Script" path="res://Scripts/Card.cs" id="1_u3qqd"]
 
-[node name="Card" type="Sprite2D"]
+[node name="Card" type="Container"]
 scale = Vector2(0.5, 0.5)
+script = ExtResource("1_u3qqd")
+
+[node name="Container" type="Sprite2D" parent="."]
 texture = ExtResource("1_p3dkk")
