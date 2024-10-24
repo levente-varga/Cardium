@@ -1,9 +1,23 @@
-[gd_scene load_steps=7 format=3 uid="uid://cw3o4f0nr0f2v"]
+[gd_scene load_steps=11 format=3 uid="uid://cw3o4f0nr0f2v"]
 
 [ext_resource type="Texture2D" uid="uid://bbwlpuraqdfav" path="res://Assets/player.png" id="1_lyvn4"]
 [ext_resource type="Script" path="res://Scripts/Player.cs" id="2_spbvi"]
 [ext_resource type="Script" path="res://Scripts/TileMapLayer.cs" id="3_fnkqj"]
 [ext_resource type="Texture2D" uid="uid://vre1mtm6rq0g" path="res://Assets/TileSets/colored-transparent.png" id="3_wj51j"]
+[ext_resource type="Script" path="res://Scripts/Hand.cs" id="5_rr01k"]
+
+[sub_resource type="Curve" id="Curve_3ub7t"]
+_data = [Vector2(0, 0), 0.0, 1.0, 0, 1, Vector2(1, 1), 1.0, 0.0, 1, 0]
+point_count = 2
+
+[sub_resource type="Curve" id="Curve_ngq3j"]
+_data = [Vector2(0, 1), 0.0, -2.0, 0, 0, Vector2(0.5, 0.5), 0.0, 0.0, 0, 0, Vector2(1, 1), 2.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Curve" id="Curve_sgx0k"]
+min_value = -1.0
+_data = [Vector2(0, -1), 0.0, 4.0, 0, 0, Vector2(0.503846, -0.0308741), 1.0, 1.0, 0, 0, Vector2(1, 1), 4.0, 0.0, 0, 0]
+point_count = 3
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_mdys3"]
 texture = ExtResource("3_wj51j")
@@ -1091,6 +1105,12 @@ sources/0 = SubResource("TileSetAtlasSource_mdys3")
 
 [node name="Node2D" type="Node2D"]
 
+[node name="Hand" type="Node2D" parent="."]
+script = ExtResource("5_rr01k")
+cardHorizontalPositions = SubResource("Curve_3ub7t")
+cardVerticalOffsets = SubResource("Curve_ngq3j")
+cardRotations = SubResource("Curve_sgx0k")
+
 [node name="Player" type="Sprite2D" parent="."]
 texture = ExtResource("1_lyvn4")
 centered = false
@@ -1098,7 +1118,6 @@ script = ExtResource("2_spbvi")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 anchor_mode = 0
-zoom = Vector2(4, 4)
 
 [node name="TileMapLayer" type="TileMapLayer" parent="."]
 use_parent_material = true
