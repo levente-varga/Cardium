@@ -31,17 +31,14 @@ public partial class Card : Node2D
 
 	public override void _Process(double delta)
 	{
-		
 	}
 
 
 	public void OnMouseEntered() {
-		GD.Print("Mouse entered");
 		animationPlayer.Play("Select");
 	}
 
 	public void OnMouseExited() {
-		GD.Print("Mouse exited");
 		animationPlayer.Play("Deselect");
 	}
 }

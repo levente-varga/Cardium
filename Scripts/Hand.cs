@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 public partial class Hand : Node2D
 {
@@ -15,14 +16,16 @@ public partial class Hand : Node2D
 	[Export]
 	public float defaultCardAngle = 7f;
 
-	int handSize = 3;
+	List<Node2D> cards = new List<Node2D>();
 
 	const float MaxHandWidthRatio = 0.5f;
 	const int MaxHandSize = 100;
+	PackedScene cardScene = null;
 
 	public override void _Ready()
 	{
-		PopulateHand();
+		cardScene = GD.Load<PackedScene>("res://Scenes/Card.tscn");
+		PositionHand();
 	}
 
 	private float DegreeToRadian(float angle)
@@ -48,39 +51,57 @@ public partial class Hand : Node2D
 		return origin + GetPointOnCircle(radius, angle);
 	}
 
-	private void PopulateHand()
-	{		
-		foreach (Node child in GetChildren())
-		{
-			RemoveChild(child);
-			child.QueueFree();
-		}
+	private List<float> GetCardAngles() => GetCardAngles(cards.Count);
+	private List<float> GetCardAngles(int cardCount)
+	{
+		List<float> angles = new List<float>();
 
-		var cardScene = GD.Load<PackedScene>("res://Scenes/Card.tscn");
-
-		float handEnclosedAngle = MathF.Min(maxHandEnclosedAngle, (handSize - 1) * defaultCardAngle);
+		float handEnclosedAngle = MathF.Min(maxHandEnclosedAngle, (cards.Count - 1) * defaultCardAngle);
 		float handStartAngle = -handEnclosedAngle / 2 - 90;
 		float cardAngle = 0;
-		if (handSize > 1) cardAngle = handEnclosedAngle / (handSize - 1);
+		if (cards.Count > 1) cardAngle = handEnclosedAngle / (cards.Count - 1);
 
-		GD.Print("Hand enclosed angle: ", handEnclosedAngle, " start angle: ", handStartAngle, " angle step: ", cardAngle);
+		for (int i = 0; i < cards.Count; i++)
+		{
+			float angle = handStartAngle + cardAngle * i;
+			angles.Add(angle);
+		}
+
+		return angles;
+	}
+
+	private void AddCard()
+	{
+		if (cards.Count >= MaxHandSize) return;
+		var card = cardScene.Instantiate<Node2D>();
+		cards.Add(card);
+		AddChild(card);
+	}
+
+	private void RemoveCard() => RemoveCard(cards.Count - 1);
+	private void RemoveCard(int i)
+	{
+		if (cards.Count == 0) return;
+		cards[i].QueueFree();
+		cards.RemoveAt(i);
+	}
+
+	private void PositionHand()
+	{		
+		List<float> cardAngles = GetCardAngles();
 
 		Vector2 handOrigin = new Vector2(
 			GetViewport().GetVisibleRect().Size.X / 2, 
 			GetViewport().GetVisibleRect().Size.Y - handHeight + handRadius
 			);
 
-		for (int i = 0; i < handSize; i++)
+		for (int i = 0; i < cards.Count; i++)
 		{
-			float angle = handStartAngle + cardAngle * i;
+			float angle = cardAngles[i];
 			Vector2 cardPosition = GetPointOnCircle(handOrigin, handRadius, angle);
 
-			var card = cardScene.Instantiate<Node2D>();
-
-			card.Position = cardPosition;
-			card.Rotation = DegreeToRadian(angle + 90);
-
-			AddChild(card);
+			cards[i].Position = cardPosition;
+			cards[i].Rotation = DegreeToRadian(angle + 90);
 		}
 	}
 
@@ -88,14 +109,14 @@ public partial class Hand : Node2D
     {
         if (@event is InputEventMouseButton mouseButton && mouseButton.Pressed && mouseButton.ButtonIndex == MouseButton.Left)
 		{
-			if (handSize < MaxHandSize) handSize++;
-			PopulateHand();
+			AddCard();
+			PositionHand();
 		}
 
 		if (@event is InputEventMouseButton mouseButton2 && mouseButton2.Pressed && mouseButton2.ButtonIndex == MouseButton.Right)
 		{
-			if (handSize > 1) handSize--;
-			PopulateHand();
+			RemoveCard();
+			PositionHand();
 		}
     }
 }
