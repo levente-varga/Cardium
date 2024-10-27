@@ -7,7 +7,7 @@ public partial class Hand : Node2D
 	public float handRadius = 1000f;
 
 	[Export]
-	public float handHeight = 200f;
+	public float handHeight = 64;
 	
 	[Export]
 	public float maxHandEnclosedAngle = 30f;
