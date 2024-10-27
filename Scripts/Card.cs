@@ -1,16 +1,19 @@
 using Godot;
 using System;
 
-public partial class Card : Container
+public partial class Card : Node2D
 {
 	AnimationPlayer animationPlayer = null;
+	Sprite2D cardSprite = null;
+
+	Vector2 cardSize;
 
 	public override void _Ready()
 	{
 		animationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
+		cardSprite = GetNode<Sprite2D>("CardSprite");
 
-		MouseEntered += OnMouseEntered;
-		MouseExited += OnMouseExited;
+		cardSize = cardSprite.Texture.GetSize() * cardSprite.Scale;
 
 		GD.Print("Card ready");
 	}
@@ -19,10 +22,6 @@ public partial class Card : Container
 	{
 	}
 
-    public override void _GuiInput(InputEvent @event)
-    {
-        base._GuiInput(@event);
-    }
 
 	public void OnMouseEntered() {
 		GD.Print("Mouse entered");
