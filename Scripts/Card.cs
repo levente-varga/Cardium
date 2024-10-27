@@ -14,8 +14,6 @@ public partial class Card : Node2D
 		cardSprite = GetNode<Sprite2D>("CardSprite");
 
 		cardSize = cardSprite.Texture.GetSize() * cardSprite.Scale;
-
-		GD.Print("Card ready");
 	}
 
 	public override void _Process(double delta)

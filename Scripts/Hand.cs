@@ -4,21 +4,21 @@ using System;
 public partial class Hand : Node2D
 {
 	[Export]
-	public float handRadius = 100f;
+	public float handRadius = 1000f;
 
 	[Export]
 	public float handHeight = 200f;
 	
 	[Export]
-	public float handMaxEnclosedAngle = 30f;
+	public float maxHandEnclosedAngle = 30f;
 
 	[Export]
-	public float cardAngle = 5f;
+	public float defaultCardAngle = 7f;
 
 	int handSize = 3;
 
 	const float MaxHandWidthRatio = 0.5f;
-	const int MaxHandSize = 10;
+	const int MaxHandSize = 100;
 
 	public override void _Ready()
 	{
@@ -58,10 +58,12 @@ public partial class Hand : Node2D
 
 		var cardScene = GD.Load<PackedScene>("res://Scenes/Card.tscn");
 
-		float handEnclosedAngle = (handSize - 1) * cardAngle;
-		float handStartAngle = -MathF.Min(handMaxEnclosedAngle, handEnclosedAngle) / 2 - 90;
-		float angleStep = 0;
-		if (handSize > 1) angleStep = handEnclosedAngle / (handSize - 1);
+		float handEnclosedAngle = MathF.Min(maxHandEnclosedAngle, (handSize - 1) * defaultCardAngle);
+		float handStartAngle = -handEnclosedAngle / 2 - 90;
+		float cardAngle = 0;
+		if (handSize > 1) cardAngle = handEnclosedAngle / (handSize - 1);
+
+		GD.Print("Hand enclosed angle: ", handEnclosedAngle, " start angle: ", handStartAngle, " angle step: ", cardAngle);
 
 		Vector2 handOrigin = new Vector2(
 			DisplayServer.WindowGetSize().X / 2, 
@@ -70,7 +72,7 @@ public partial class Hand : Node2D
 
 		for (int i = 0; i < handSize; i++)
 		{
-			float angle = handStartAngle + angleStep * i;
+			float angle = handStartAngle + cardAngle * i;
 			Vector2 cardPosition = GetPointOnCircle(handOrigin, handRadius, angle);
 
 			var card = cardScene.Instantiate<Node2D>();
@@ -79,8 +81,6 @@ public partial class Hand : Node2D
 			card.Rotation = DegreeToRadian(angle + 90);
 
 			AddChild(card);
-
-			GD.Print("Added a card at: ", card.Position, " with rotation: ", card.Rotation);
 		}
 	}
 
@@ -88,7 +88,7 @@ public partial class Hand : Node2D
     {
         if (@event is InputEventMouseButton mouseButton && mouseButton.Pressed && mouseButton.ButtonIndex == MouseButton.Left)
 		{
-			if (handSize < 10) handSize++;
+			if (handSize < MaxHandSize) handSize++;
 			PopulateHand();
 		}
 
