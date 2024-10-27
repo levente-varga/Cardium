@@ -66,8 +66,8 @@ public partial class Hand : Node2D
 		GD.Print("Hand enclosed angle: ", handEnclosedAngle, " start angle: ", handStartAngle, " angle step: ", cardAngle);
 
 		Vector2 handOrigin = new Vector2(
-			DisplayServer.WindowGetSize().X / 2, 
-			DisplayServer.WindowGetSize().Y - handHeight + handRadius
+			GetViewport().GetVisibleRect().Size.X / 2, 
+			GetViewport().GetVisibleRect().Size.Y - handHeight + handRadius
 			);
 
 		for (int i = 0; i < handSize; i++)
