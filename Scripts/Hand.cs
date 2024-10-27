@@ -17,10 +17,9 @@ public partial class Hand : Node2D
 	public float defaultCardAngle = 7f;
 
 	List<Node2D> cards = new List<Node2D>();
-
-	const float MaxHandWidthRatio = 0.5f;
 	const int MaxHandSize = 100;
 	PackedScene cardScene = null;
+
 
 	public override void _Ready()
 	{
@@ -28,63 +27,6 @@ public partial class Hand : Node2D
 		PositionHand();
 	}
 
-	private float DegreeToRadian(float angle)
-	{
-		return (float)(MathF.PI * angle / 180.0);
-	}
-
-	private float RadianToDegree(float angle)
-	{
-		return (float)(angle * (180.0 / MathF.PI));
-	}
-
-	private Vector2 GetPointOnCircle(float radius, float angle)
-	{
-		return new Vector2(
-			radius * MathF.Cos(DegreeToRadian(angle)),
-			radius * MathF.Sin(DegreeToRadian(angle))
-			);
-	}
-
-	private Vector2 GetPointOnCircle(Vector2 origin, float radius, float angle)
-	{
-		return origin + GetPointOnCircle(radius, angle);
-	}
-
-	private List<float> GetCardAngles() => GetCardAngles(cards.Count);
-	private List<float> GetCardAngles(int cardCount)
-	{
-		List<float> angles = new List<float>();
-
-		float handEnclosedAngle = MathF.Min(maxHandEnclosedAngle, (cards.Count - 1) * defaultCardAngle);
-		float handStartAngle = -handEnclosedAngle / 2 - 90;
-		float cardAngle = 0;
-		if (cards.Count > 1) cardAngle = handEnclosedAngle / (cards.Count - 1);
-
-		for (int i = 0; i < cards.Count; i++)
-		{
-			float angle = handStartAngle + cardAngle * i;
-			angles.Add(angle);
-		}
-
-		return angles;
-	}
-
-	private void AddCard()
-	{
-		if (cards.Count >= MaxHandSize) return;
-		var card = cardScene.Instantiate<Node2D>();
-		cards.Add(card);
-		AddChild(card);
-	}
-
-	private void RemoveCard() => RemoveCard(cards.Count - 1);
-	private void RemoveCard(int i)
-	{
-		if (cards.Count == 0) return;
-		cards[i].QueueFree();
-		cards.RemoveAt(i);
-	}
 
 	private void PositionHand()
 	{		
@@ -104,6 +46,72 @@ public partial class Hand : Node2D
 			cards[i].Rotation = DegreeToRadian(angle + 90);
 		}
 	}
+
+
+	private List<float> GetCardAngles() => GetCardAngles(cards.Count);
+	private List<float> GetCardAngles(int cardCount)
+	{
+		List<float> angles = new List<float>();
+
+		float handEnclosedAngle = MathF.Min(maxHandEnclosedAngle, (cardCount - 1) * defaultCardAngle);
+		float handStartAngle = -handEnclosedAngle / 2 - 90;
+		float cardAngle = 0;
+		if (cardCount > 1) cardAngle = handEnclosedAngle / (cardCount - 1);
+
+		for (int i = 0; i < cardCount; i++)
+		{
+			float angle = handStartAngle + cardAngle * i;
+			angles.Add(angle);
+		}
+
+		return angles;
+	}
+
+
+	private float DegreeToRadian(float angle)
+	{
+		return (float)(MathF.PI * angle / 180.0);
+	}
+
+
+	private float RadianToDegree(float angle)
+	{
+		return (float)(angle * (180.0 / MathF.PI));
+	}
+
+
+	private Vector2 GetPointOnCircle(float radius, float angle)
+	{
+		return new Vector2(
+			radius * MathF.Cos(DegreeToRadian(angle)),
+			radius * MathF.Sin(DegreeToRadian(angle))
+			);
+	}
+
+
+	private Vector2 GetPointOnCircle(Vector2 origin, float radius, float angle)
+	{
+		return origin + GetPointOnCircle(radius, angle);
+	}
+
+
+	private void AddCard()
+	{
+		if (cards.Count >= MaxHandSize) return;
+		var card = cardScene.Instantiate<Node2D>();
+		cards.Add(card);
+		AddChild(card);
+	}
+
+
+	private void RemoveCard() => RemoveCard(cards.Count - 1);
+	private void RemoveCard(int i)
+	{
+		if (cards.Count == 0) return;
+		cards[i].QueueFree();
+		cards.RemoveAt(i);
+	}
+
 
     public override void _Input(InputEvent @event)
     {
