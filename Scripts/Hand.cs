@@ -17,34 +17,49 @@ public partial class Hand : Node2D
 	public float defaultCardAngle = 7f;
 
 	List<Node2D> cards = new List<Node2D>();
+	List<float> cardAngles = new List<float>();
 	const int MaxHandSize = 100;
 	PackedScene cardScene = null;
+	Vector2 handOrigin = Vector2.Zero;
 
 
 	public override void _Ready()
 	{
 		cardScene = GD.Load<PackedScene>("res://Scenes/Card.tscn");
+
+		handOrigin = new Vector2(
+			GetViewport().GetVisibleRect().Size.X / 2,
+			GetViewport().GetVisibleRect().Size.Y - handHeight + handRadius
+			);
+		
 		PositionHand();
 	}
 
 
 	private void PositionHand()
-	{		
-		List<float> cardAngles = GetCardAngles();
-
-		Vector2 handOrigin = new Vector2(
-			GetViewport().GetVisibleRect().Size.X / 2, 
-			GetViewport().GetVisibleRect().Size.Y - handHeight + handRadius
-			);
+	{	
+		var oldCardAngles = new List<float>(cardAngles);
+		cardAngles = GetCardAngles();
 
 		for (int i = 0; i < cards.Count; i++)
 		{
-			float angle = cardAngles[i];
-			Vector2 cardPosition = GetPointOnCircle(handOrigin, handRadius, angle);
-
-			cards[i].Position = cardPosition;
-			cards[i].Rotation = DegreeToRadian(angle + 90);
+			var tween = CreateTween();
+			int index = i;
+			tween.TweenMethod(Callable.From<float>((value) => SetCardPosition(index, value)), oldCardAngles[index], cardAngles[index], 0.4f)
+				.SetEase(Tween.EaseType.Out)
+				.SetTrans(Tween.TransitionType.Expo);
+			tween.TweenCallback(Callable.From(() => { GD.Print("Tween of card #", index, " out of ",cards.Count , " complete"); }));
 		}
+	}
+
+
+	private void SetCardPosition(int index, float angle) {
+		if (index >= cards.Count || index < 0) return;
+		Vector2 cardPosition = GetPointOnCircle(handOrigin, handRadius, angle);
+
+		cards[index].Position = cardPosition;
+		cards[index].Rotation = DegreeToRadian(angle + 90);
+		cardAngles[index] = angle;
 	}
 
 
@@ -99,6 +114,7 @@ public partial class Hand : Node2D
 	{
 		if (cards.Count >= MaxHandSize) return;
 		var card = cardScene.Instantiate<Node2D>();
+		cardAngles.Add(-45);
 		cards.Add(card);
 		AddChild(card);
 	}
@@ -108,6 +124,7 @@ public partial class Hand : Node2D
 	private void RemoveCard(int i)
 	{
 		if (cards.Count == 0) return;
+		cardAngles.RemoveAt(i);
 		cards[i].QueueFree();
 		cards.RemoveAt(i);
 	}
