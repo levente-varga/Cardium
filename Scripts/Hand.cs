@@ -1,20 +1,15 @@
-using Godot;
 using System;
 using System.Collections.Generic;
+using Godot;
+
+namespace Cardium.Scripts;
 
 public partial class Hand : Node2D
 {
-	[Export]
-	public float HandRadius = 1000f;
-
-	[Export]
-	public float HandHeight = 64;
-	
-	[Export]
-	public float MaxHandEnclosedAngle = 30f;
-
-	[Export]
-	public float DefaultCardAngle = 7f;
+	[Export] public float HandRadius = 1000f;
+	[Export] public float HandHeight = 64;
+	[Export] public float MaxHandEnclosedAngle = 30f;
+	[Export] public float DefaultCardAngle = 7f;
 
 	private readonly List<Node2D> _cards = new();
 	private List<float> _cardAngles = new();
@@ -30,7 +25,7 @@ public partial class Hand : Node2D
 		_handOrigin = new Vector2(
 			GetViewport().GetVisibleRect().Size.X / 2,
 			GetViewport().GetVisibleRect().Size.Y - HandHeight + HandRadius
-			);
+		);
 		
 		PositionHand();
 	}
@@ -100,7 +95,7 @@ public partial class Hand : Node2D
 		return new Vector2(
 			radius * MathF.Cos(DegreeToRadian(angle)),
 			radius * MathF.Sin(DegreeToRadian(angle))
-			);
+		);
 	}
 
 
@@ -130,9 +125,9 @@ public partial class Hand : Node2D
 	}
 
 
-    public override void _Input(InputEvent @event)
-    {
-        if (@event is InputEventMouseButton { Pressed: true, ButtonIndex: MouseButton.Left })
+	public override void _Input(InputEvent @event)
+	{
+		if (@event is InputEventMouseButton { Pressed: true, ButtonIndex: MouseButton.Left })
 		{
 			AddCard();
 			PositionHand();
@@ -141,5 +136,5 @@ public partial class Hand : Node2D
 		if (@event is not InputEventMouseButton { Pressed: true, ButtonIndex: MouseButton.Right }) return;
 		RemoveCard();
 		PositionHand();
-    }
+	}
 }
