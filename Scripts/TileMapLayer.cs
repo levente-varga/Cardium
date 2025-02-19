@@ -1,27 +1,28 @@
-using System;
 using Godot;
+
+namespace Cardium.Scripts;
 
 public partial class TileMapLayer : Godot.TileMapLayer
 {
-	AStarGrid2D grid;
+	private AStarGrid2D _grid;
 
-	Vector2I start = new Vector2I(2, 2);
-	Vector2I end = new Vector2I(10, 10);
+	private Vector2I _start = new(2, 2);
+	private Vector2I _end = new(10, 10);
 
-	Line2D line;
+	private Line2D _line;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		line = GetNode<Line2D>("Line2D");
+		_line = GetNode<Line2D>("Line2D");
 
-		grid = new AStarGrid2D();
-		grid.Region = GetUsedRect();
-		grid.CellSize = TileSet.TileSize;
-		grid.Offset = grid.CellSize / 2;
-		grid.DiagonalMode = AStarGrid2D.DiagonalModeEnum.Never;
-		grid.DefaultEstimateHeuristic = AStarGrid2D.Heuristic.Euclidean;
-		grid.Update();
+		_grid = new AStarGrid2D();
+		_grid.Region = GetUsedRect();
+		_grid.CellSize = TileSet.TileSize;
+		_grid.Offset = _grid.CellSize / 2;
+		_grid.DiagonalMode = AStarGrid2D.DiagonalModeEnum.Never;
+		_grid.DefaultEstimateHeuristic = AStarGrid2D.Heuristic.Euclidean;
+		_grid.Update();
 
 		GD.Print("TileMap rect: ", GetUsedRect());
 		GD.Print("TileMap position: ", Position);
@@ -35,41 +36,40 @@ public partial class TileMapLayer : Godot.TileMapLayer
 	{
 	}
 
-    public override void _Draw()
-    {
-		DrawRect(new Rect2(start * grid.CellSize, grid.CellSize), Colors.GreenYellow);
-    	DrawRect(new Rect2(end * grid.CellSize, grid.CellSize), Colors.OrangeRed);
+	public override void _Draw()
+	{
+		DrawRect(new Rect2(_start * _grid.CellSize, _grid.CellSize), Colors.GreenYellow);
+		DrawRect(new Rect2(_end * _grid.CellSize, _grid.CellSize), Colors.OrangeRed);
 
-		for (int x = 0; x < grid.Region.Size.X; x++) {
-			for (int y = 0; y < grid.Region.Size.Y; y++) {
-				Vector2I cell = new Vector2I(x, y) + grid.Region.Position;
-				if (grid.IsPointSolid(cell)) {
-					DrawRect(new Rect2(cell.X * grid.CellSize.X, cell.Y * grid.CellSize.Y, grid.CellSize.X, grid.CellSize.Y), Colors.Aquamarine);
+		for (var x = 0; x < _grid.Region.Size.X; x++) {
+			for (var y = 0; y < _grid.Region.Size.Y; y++) {
+				var cell = new Vector2I(x, y) + _grid.Region.Position;
+				if (_grid.IsPointSolid(cell)) {
+					DrawRect(new Rect2(cell.X * _grid.CellSize.X, cell.Y * _grid.CellSize.Y, _grid.CellSize.X, _grid.CellSize.Y), Colors.Aquamarine);
 				}
 			}
 		}
 
-        base._Draw();
-    }
+		base._Draw();
+	}
 
 	private void UpdatePath() {
-		line.Points = grid.GetPointPath(start, end);
-		GD.Print("Path: ", grid.GetIdPath(start, end));
+		_line.Points = _grid.GetPointPath(_start, _end);
+		GD.Print("Path: ", _grid.GetIdPath(_start, _end));
 	}
 
 	public override void _Input(InputEvent @event)
 	{
-		if (@event is InputEventMouseButton mouseButton && mouseButton.Pressed && mouseButton.ButtonIndex == MouseButton.Left) {
-			Camera2D camera = GetViewport().GetCamera2D();
+		if (@event is not InputEventMouseButton { Pressed: true, ButtonIndex: MouseButton.Left } mouseButton) return;
+		var camera = GetViewport().GetCamera2D();
 
-			Vector2I cell = (Vector2I)(mouseButton.Position / camera.Zoom / grid.CellSize);
+		var cell = (Vector2I)(mouseButton.Position / camera.Zoom / _grid.CellSize);
 
-			if (grid.IsInBoundsv(cell)) {
-				grid.SetPointSolid(cell, !grid.IsPointSolid(cell));
-			}
-
-			UpdatePath();
-			QueueRedraw();
+		if (_grid.IsInBoundsv(cell)) {
+			_grid.SetPointSolid(cell, !_grid.IsPointSolid(cell));
 		}
+
+		UpdatePath();
+		QueueRedraw();
 	}
 }

@@ -5,45 +5,55 @@ namespace Cardium.Scripts;
 
 public class Deck
 {
-    private List<Card> cards = new();
+    public Deck(int maxSize = 30)
+    {
+        MaxSize = maxSize;
+    }
+
+    private int _maxSize = 1;
+    public int MaxSize { 
+        get => _maxSize;
+        set => _maxSize = Math.Max(value, 1);
+    }
+    private readonly List<Card> _cards = new();
     
     public void Shuffle ()
     {
         // Fisher-Yates shuffle algorithm
-        for (var i = cards.Count - 1; i > 0; i--)
+        for (var i = _cards.Count - 1; i > 0; i--)
         {
             var random = new Random();
             var j = random.Next(0, i);
-            (cards[i], cards[j]) = (cards[j], cards[i]);
+            (_cards[i], _cards[j]) = (_cards[j], _cards[i]);
         }
     }
 
     public void Add(Card card)
     {
-        cards.Add(card);
+        _cards.Add(card);
     }
     
     public void Remove(Card card)
     {
-        cards.Remove(card);
+        _cards.Remove(card);
     }
     
     public Card Draw()
     {
-        if (cards.Count == 0)
+        if (_cards.Count == 0)
         {
             return null;
         }
         
-        var card = cards[0];
-        cards.RemoveAt(0);
+        var card = _cards[0];
+        _cards.RemoveAt(0);
         return card;
     }
     
-    public int Size => cards.Count;
+    public int Size => _cards.Count;
     
     public bool Contains(Card card)
     {
-        return cards.Contains(card);
+        return _cards.Contains(card);
     }
 }

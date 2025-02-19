@@ -1,32 +1,32 @@
 using Godot;
-using System;
-using System.Drawing;
+
+namespace Cardium.Scripts;
 
 public partial class Card : Node2D
 {
-	AnimationPlayer animationPlayer = null;
-	Node2D body = null;
-	Sprite2D sprite = null;
-	Control hitbox = null;
+	private AnimationPlayer _animationPlayer;
+	private Node2D _body;
+	private Sprite2D _sprite;
+	private Control _hitbox;
 
 	public override void _Ready()
 	{
-		animationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
-		body = GetNode<Node2D>("Body");
-		sprite = GetNode<Sprite2D>("Body/Sprite");
-		hitbox = GetNode<Control>("Body/Hitbox");
+		_animationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
+		_body = GetNode<Node2D>("Body");
+		_sprite = GetNode<Sprite2D>("Body/Sprite");
+		_hitbox = GetNode<Control>("Body/Hitbox");
 
 		SetupHitbox();
 	}
 
 	private void SetupHitbox()
 	{
-		var cardSize = sprite.Texture.GetSize() * sprite.Scale;
-		hitbox.Size = cardSize;
-		hitbox.Position = new Vector2(-cardSize.X / 2, -cardSize.Y / 2);
+		var cardSize = _sprite.Texture.GetSize() * _sprite.Scale;
+		_hitbox.Size = cardSize;
+		_hitbox.Position = new Vector2(-cardSize.X / 2, -cardSize.Y / 2);
 
-		hitbox.MouseEntered += OnMouseEntered;
-		hitbox.MouseExited += OnMouseExited;
+		_hitbox.MouseEntered += OnMouseEntered;
+		_hitbox.MouseExited += OnMouseExited;
 	}
 
 	public override void _Process(double delta)
@@ -35,10 +35,10 @@ public partial class Card : Node2D
 
 
 	public void OnMouseEntered() {
-		animationPlayer.Play("Select");
+		_animationPlayer.Play("Select");
 	}
 
 	public void OnMouseExited() {
-		animationPlayer.Play("Deselect");
+		_animationPlayer.Play("Deselect");
 	}
 }

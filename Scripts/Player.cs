@@ -1,8 +1,12 @@
 using Godot;
-using System;
+
+namespace Cardium.Scripts;
 
 public partial class Player : Sprite2D
 {
+	private Deck _combatDeck = new();
+	private Deck _actionDeck = new();
+	
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
