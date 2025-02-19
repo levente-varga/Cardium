@@ -2,12 +2,24 @@ using Godot;
 
 namespace Cardium.Scripts;
 
-public partial class Card : Node2D
+public abstract partial class Card : Node2D
 {
+	public enum Type
+	{
+		Combat,
+		Action,
+	}
+	
 	private AnimationPlayer _animationPlayer;
 	private Node2D _body;
 	private Sprite2D _sprite;
 	private Control _hitbox;
+	
+	private int _cost = 1;
+	private string _name = "";
+	private string _description = "";
+	private Type _type = Type.Combat;
+	
 
 	public override void _Ready()
 	{
@@ -31,8 +43,14 @@ public partial class Card : Node2D
 
 	public override void _Process(double delta)
 	{
+		
 	}
 
+	public abstract void OnPlay(Player player);
+	public abstract void OnDiscard(Player player);
+	public abstract void OnDrawn(Player player);
+	public abstract void OnDestroy(Player player);
+	
 
 	public void OnMouseEntered() {
 		_animationPlayer.Play("Select");
