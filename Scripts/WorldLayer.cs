@@ -2,7 +2,7 @@ using Godot;
 
 namespace Cardium.Scripts;
 
-public partial class TileMapLayer : Godot.TileMapLayer
+public partial class WorldLayer : TileMapLayer
 {
 	private AStarGrid2D _grid;
 
