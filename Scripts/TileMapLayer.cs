@@ -7,12 +7,23 @@ public partial class TileMapLayer : Godot.TileMapLayer
 	private AStarGrid2D _grid;
 
 	private Vector2I _start = new(2, 2);
-	private Vector2I _end = new(10, 10);
+	private Vector2I _end = new(14, 10);
 
 	private Line2D _line;
 
-	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
+	{
+		TileSet.TileSize = new Vector2I(64, 64);
+		SetupPath();
+		UpdatePath();
+	}
+
+	public override void _Process(double delta)
+	{
+		
+	}
+	
+	private void SetupPath()
 	{
 		_line = GetNode<Line2D>("Line2D");
 
@@ -27,15 +38,11 @@ public partial class TileMapLayer : Godot.TileMapLayer
 		GD.Print("TileMap rect: ", GetUsedRect());
 		GD.Print("TileMap position: ", Position);
 		GD.Print("Top left tile position: ", ToGlobal(MapToLocal(GetUsedRect().Position)));
-
-		UpdatePath();
 	}
 
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
-	{
-	}
-
+	/// <summary>
+	/// Draws the path from the start to the end
+	/// </summary>
 	public override void _Draw()
 	{
 		DrawRect(new Rect2(_start * _grid.CellSize, _grid.CellSize), Colors.GreenYellow);
@@ -53,6 +60,9 @@ public partial class TileMapLayer : Godot.TileMapLayer
 		base._Draw();
 	}
 
+	/// <summary>
+	///  Recalculates the path
+	/// </summary>
 	private void UpdatePath() {
 		_line.Points = _grid.GetPointPath(_start, _end);
 		GD.Print("Path: ", _grid.GetIdPath(_start, _end));
