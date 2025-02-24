@@ -7,6 +7,7 @@ public partial class World : Node2D
 {
     private readonly List<TileMapLayer> _layers = new();
     private static readonly Vector2I TileSize = new(64, 64);
+    private static readonly float scale = 4f;
 
     private AStarGrid2D _grid;
     private Vector2I _start = new(2, 2);
@@ -26,7 +27,6 @@ public partial class World : Node2D
         {
             if (child is not TileMapLayer layer) continue;
             _layers.Add(layer);
-            layer.TileSet.TileSize = TileSize;
         }
     }
 

@@ -21,7 +21,7 @@ public partial class Player : Sprite2D
 	public override void _Ready()
 	{
 		// Set the player's position to the center of the screen
-		Position = GetViewportRect().Size / 8;
+		Position = new Vector2(64, 64);
 
 		// Set the player's texture
 		Texture = GD.Load<Texture2D>("res://assets/player.png");
