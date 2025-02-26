@@ -4,7 +4,7 @@ namespace Cardium.Scripts;
 
 public partial class Camera : Camera2D
 {
-	[Export] public Node2D Target { get; set; }
+	[Export] public Sprite2D Target { get; set; }
 	
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -14,7 +14,9 @@ public partial class Camera : Camera2D
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
+		var targetCenter = Target.GlobalPosition + ((Target.Texture.GetSize() * Target.Scale) / 2);
+		
 		// lerp to player position:
-		Position = Position.Lerp(Target.Position, 0.1f);
+		Position = GlobalPosition.Lerp(targetCenter, 0.1f);
 	}
 }
