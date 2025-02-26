@@ -1,7 +1,8 @@
-[gd_scene load_steps=10 format=4 uid="uid://cw3o4f0nr0f2v"]
+[gd_scene load_steps=11 format=4 uid="uid://cw3o4f0nr0f2v"]
 
 [ext_resource type="Script" path="res://Scripts/Hand.cs" id="1_3ixgw"]
 [ext_resource type="Texture2D" uid="uid://bbwlpuraqdfav" path="res://Assets/player.png" id="2_nlcsh"]
+[ext_resource type="Script" path="res://Scripts/Camera.cs" id="3_evct5"]
 [ext_resource type="Script" path="res://Scripts/Player.cs" id="3_q31ct"]
 [ext_resource type="Script" path="res://Scripts/World.cs" id="4_ayy7p"]
 [ext_resource type="Texture2D" uid="uid://vre1mtm6rq0g" path="res://Assets/TileSets/colored-transparent.png" id="4_s82ru"]
@@ -1107,8 +1108,10 @@ texture = ExtResource("2_nlcsh")
 centered = false
 script = ExtResource("3_q31ct")
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("Target")]
 anchor_mode = 0
+script = ExtResource("3_evct5")
+Target = NodePath("../Player")
 
 [node name="Hand" type="Node2D" parent="."]
 script = ExtResource("1_3ixgw")
