@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://c8tbfjcyg4o24"]
 
-[ext_resource type="Texture2D" uid="uid://c4omwsrt6mxmf" path="res://Assets/cardPlaceholder.png" id="1_p3dkk"]
+[ext_resource type="Texture2D" uid="uid://djs8kevewtnbl" path="res://Assets/Sprites/Card.png" id="1_wf06i"]
 
 [sub_resource type="Animation" id="Animation_2okwy"]
 resource_name = "Deselect"
@@ -64,8 +64,8 @@ libraries = {
 [node name="Body" type="Node2D" parent="."]
 
 [node name="Sprite" type="Sprite2D" parent="Body"]
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("1_p3dkk")
+scale = Vector2(6, 6)
+texture = ExtResource("1_wf06i")
 
 [node name="Hitbox" type="Control" parent="Body"]
 layout_mode = 3
