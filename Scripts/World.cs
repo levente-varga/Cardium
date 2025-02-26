@@ -5,9 +5,14 @@ namespace Cardium.Scripts;
 
 public partial class World : Node2D
 {
+	[Export] public Camera Camera;
+	[Export] public Label DebugLabel1;
+	[Export] public Label DebugLabel2;
+	[Export] public Label DebugLabel3;
+	
     private readonly List<TileMapLayer> _layers = new();
     private static readonly Vector2I TileSize = new(64, 64);
-    private static readonly float scale = 4f;
+    private static readonly float SpriteScale = 4f;
 
     private AStarGrid2D _grid;
     private Vector2I _start = new(2, 2);
@@ -83,10 +88,16 @@ public partial class World : Node2D
     public override void _Input(InputEvent @event)
     {
     	if (@event is not InputEventMouseButton { Pressed: true, ButtonIndex: MouseButton.Left } mouseButton) return;
-    	var camera = GetViewport().GetCamera2D();
 
-    	var cell = (Vector2I)(mouseButton.Position / camera.Zoom / _grid.CellSize);
+	    var relativeMousePosition = mouseButton.Position - Camera.ViewRect.Position;
+	    
+    	var cell = (Vector2I)((mouseButton.Position + Camera.ViewRect.Position) / _grid.CellSize);
 
+	    DebugLabel1.Text ="Camera view size: " + Camera.ViewRect.Size;
+	    DebugLabel2.Text = "Camera top left: " + Camera.ViewRect.Position;
+	    DebugLabel3.Text = "Mouse position: " + mouseButton.Position;
+	    
+	    
     	if (_grid.IsInBoundsv(cell)) {
     		_grid.SetPointSolid(cell, !_grid.IsPointSolid(cell));
     	}

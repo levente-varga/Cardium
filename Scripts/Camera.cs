@@ -4,7 +4,18 @@ namespace Cardium.Scripts;
 
 public partial class Camera : Camera2D
 {
-	[Export] public Sprite2D Target { get; set; }
+	[Export] public Sprite2D Target;
+
+	public Rect2 ViewRect
+	{
+		get
+		{
+			var viewportSize = GetViewportRect().Size;
+			var worldViewSize = viewportSize * Zoom;
+			var topLeft = GlobalPosition - (worldViewSize / 2);
+			return new Rect2(topLeft, worldViewSize);
+		}
+	}
 	
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
