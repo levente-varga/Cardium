@@ -6,8 +6,8 @@
 [ext_resource type="Script" path="res://Scripts/Camera.cs" id="3_evct5"]
 [ext_resource type="Script" path="res://Scripts/Player.cs" id="3_q31ct"]
 [ext_resource type="Script" path="res://Scripts/World.cs" id="4_ayy7p"]
+[ext_resource type="Texture2D" uid="uid://kt27mh54svlc" path="res://Assets/Sprites/Enemies/slime.png" id="4_ja0v2"]
 [ext_resource type="Texture2D" uid="uid://vre1mtm6rq0g" path="res://Assets/TileSets/colored-transparent.png" id="4_s82ru"]
-[ext_resource type="Texture2D" path="res://Assets/Sprites/slime.png" id="4_wbkww"]
 [ext_resource type="Script" path="res://Scripts/Enemy.cs" id="5_1ahjn"]
 [ext_resource type="Texture2D" uid="uid://1x3pcgt5ydit" path="res://Assets/Tiles/Placeholder.png" id="6_eb2kn"]
 
@@ -1120,7 +1120,7 @@ World = NodePath("../World")
 z_index = 5
 position = Vector2(192, -576)
 scale = Vector2(4, 4)
-texture = ExtResource("4_wbkww")
+texture = ExtResource("4_ja0v2")
 centered = false
 script = ExtResource("5_1ahjn")
 
