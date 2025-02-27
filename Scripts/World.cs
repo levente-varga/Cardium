@@ -88,12 +88,10 @@ public partial class World : Node2D
     public override void _Input(InputEvent @event)
     {
     	if (@event is not InputEventMouseButton { Pressed: true, ButtonIndex: MouseButton.Left } mouseButton) return;
-
-	    var relativeMousePosition = mouseButton.Position - Camera.ViewRect.Position;
 	    
     	var cell = (Vector2I)((mouseButton.Position + Camera.ViewRect.Position) / _grid.CellSize);
 
-	    DebugLabel1.Text ="Camera view size: " + Camera.ViewRect.Size;
+	    DebugLabel1.Text = "Camera view size: " + Camera.ViewRect.Size;
 	    DebugLabel2.Text = "Camera top left: " + Camera.ViewRect.Position;
 	    DebugLabel3.Text = "Mouse position: " + mouseButton.Position;
 	    

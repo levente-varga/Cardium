@@ -1112,8 +1112,10 @@ script = ExtResource("3_q31ct")
 script = ExtResource("3_evct5")
 Target = NodePath("../Player")
 
-[node name="Hand" type="Node2D" parent="Camera2D"]
+[node name="Hand" type="Node2D" parent="Camera2D" node_paths=PackedStringArray("DebugLabel")]
+z_index = 10
 script = ExtResource("1_3ixgw")
+DebugLabel = NodePath("../CanvasLayer/Label4")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="Camera2D"]
 
@@ -1132,6 +1134,12 @@ text = "Test"
 offset_top = 40.0
 offset_right = 40.0
 offset_bottom = 63.0
+text = "Test"
+
+[node name="Label4" type="Label" parent="Camera2D/CanvasLayer"]
+offset_top = 60.0
+offset_right = 40.0
+offset_bottom = 83.0
 text = "Test"
 
 [node name="World" type="Node2D" parent="." node_paths=PackedStringArray("Camera", "DebugLabel1", "DebugLabel2", "DebugLabel3")]

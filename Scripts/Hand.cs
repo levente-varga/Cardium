@@ -10,6 +10,7 @@ public partial class Hand : Node2D
 	[Export] public float HandHeight = 64;
 	[Export] public float MaxHandEnclosedAngle = 30f;
 	[Export] public float DefaultCardAngle = 7f;
+	[Export] public Label DebugLabel;
 
 	private readonly List<Node2D> _cards = new();
 	private List<float> _cardAngles = new();
@@ -23,11 +24,18 @@ public partial class Hand : Node2D
 		_cardScene = GD.Load<PackedScene>("res://Scenes/Card.tscn");
 
 		_handOrigin = new Vector2(
-			GetViewport().GetVisibleRect().Size.X / 2,
-			GetViewport().GetVisibleRect().Size.Y - HandHeight + HandRadius
+			0,
+			GetViewport().GetVisibleRect().Size.Y - HandHeight + HandRadius / 2
 		);
 		
 		PositionHand();
+	}
+	
+	public override void _Process(double delta)
+	{
+		DebugLabel.Text = "Hand origin: " + _handOrigin
+                      + "\nHand radius: " + HandRadius
+                      + "\nHand height: " + HandHeight;
 	}
 
 
@@ -40,7 +48,7 @@ public partial class Hand : Node2D
 		{
 			var tween = CreateTween();
 			var index = i;
-			tween.TweenMethod(Callable.From<float>((value) => SetCardPosition(index, value)), oldCardAngles[index], _cardAngles[index], 0.4f)
+			tween.TweenMethod(Callable.From<float>(value => SetCardPosition(index, value)), oldCardAngles[index], _cardAngles[index], 0.4f)
 				.SetEase(Tween.EaseType.Out)
 				.SetTrans(Tween.TransitionType.Expo);
 			tween.TweenCallback(Callable.From(() => { GD.Print("Tween of card #", index, " out of ",_cards.Count , " complete"); }));
