@@ -176,8 +176,8 @@ public partial class World : Node2D
     private void UpdatePath() {
 	    if (_end is null) return;
 	    
-    	_line.Points = _grid.GetPointPath(GetTilePosition(Player.Position), _end.Value);
-    	GD.Print("Path: ", _grid.GetIdPath(GetTilePosition(Player.Position), _end.Value));
+    	_line.Points = _grid.GetPointPath(Player.Position, _end.Value);
+    	GD.Print("Path: ", _grid.GetIdPath(Player.Position, _end.Value));
     }
 
     public override void _Input(InputEvent @event)
