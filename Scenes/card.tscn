@@ -1,6 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://c8tbfjcyg4o24"]
+[gd_scene load_steps=7 format=3 uid="uid://c8tbfjcyg4o24"]
 
 [ext_resource type="Texture2D" uid="uid://djs8kevewtnbl" path="res://Assets/Sprites/Card.png" id="1_wf06i"]
+[ext_resource type="Script" path="res://Scripts/Card.cs" id="1_wrdv8"]
 
 [sub_resource type="Animation" id="Animation_2okwy"]
 resource_name = "Deselect"
@@ -55,6 +56,7 @@ _data = {
 }
 
 [node name="Card" type="Node2D"]
+script = ExtResource("1_wrdv8")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
@@ -70,5 +72,10 @@ texture = ExtResource("1_wf06i")
 [node name="Hitbox" type="Control" parent="Body"]
 layout_mode = 3
 anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_left = -112.0
+offset_top = -160.0
+offset_right = 112.0
+offset_bottom = 160.0
+
+[connection signal="mouse_entered" from="Body/Hitbox" to="." method="OnMouseEntered"]
+[connection signal="mouse_exited" from="Body/Hitbox" to="." method="OnMouseExited"]

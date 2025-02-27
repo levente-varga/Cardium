@@ -2,7 +2,7 @@ using Godot;
 
 namespace Cardium.Scripts;
 
-public abstract partial class Card : Node2D
+public partial class Card : Node2D
 {
 	public enum Type
 	{
@@ -46,10 +46,10 @@ public abstract partial class Card : Node2D
 		
 	}
 
-	public abstract void OnPlay(Player player);
-	public abstract void OnDiscard(Player player);
-	public abstract void OnDrawn(Player player);
-	public abstract void OnDestroy(Player player);
+	// public abstract void OnPlay(Player player);
+	// public abstract void OnDiscard(Player player);
+	// public abstract void OnDrawn(Player player);
+	// public abstract void OnDestroy(Player player);
 	
 
 	public void OnMouseEntered() {
