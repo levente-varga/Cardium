@@ -17,6 +17,7 @@ public partial class World : Node2D
 	[Export] public TileMapLayer WallLayer;
 	[Export] public TileMapLayer ObjectLayer;
 	[Export] public TileMapLayer LootLayer;
+	[Export] public TileMapLayer FogLayer;
 	
     private readonly List<TileMapLayer> _layers = new();
     private static readonly Vector2I TileSize = new(64, 64);
@@ -31,6 +32,7 @@ public partial class World : Node2D
     {
 	    SetupLayers();
 	    SetupRegion();
+	    SetupFogOfWar();
 	    SetupPath();
 	    UpdatePath();
     }
@@ -70,6 +72,18 @@ public partial class World : Node2D
 	    GD.Print("World region: ", region);
 
 	    _region = region;
+    }
+
+    private void SetupFogOfWar()
+    {
+	    for (var x = _region.Position.X; x < _region.End.X; x++)
+	    {
+		    for (var y = _region.Position.Y; y < _region.End.Y; y++)
+		    {
+			    FogLayer.SetCell(new Vector2I(x, y), 2, new Vector2I(0, 0));
+			    GD.Print("Set fog of war cell: ", new Vector2I(x, y));
+		    }
+	    }
     }
     
     private void SetupPath()
@@ -138,7 +152,8 @@ public partial class World : Node2D
 		    for (var y = topLeftTile.Y; y < topLeftTile.Y + roundedVision * 2; y++)
 		    {
 			    if (((Vector2)Player.Position).DistanceTo(new Vector2I(x, y)) >= Player.Vision) continue;
-			    DrawRect(new Rect2(x * TileSize.X, y * TileSize.Y, TileSize.X, TileSize.Y), new Color("F4B41B"));
+			    //DrawRect(new Rect2(x * TileSize.X, y * TileSize.Y, TileSize.X, TileSize.Y), new Color("F4B41B"));
+			    FogLayer.SetCell(new Vector2I(x, y), 2, new Vector2I(2, 0));
 		    }
 	    }
     }

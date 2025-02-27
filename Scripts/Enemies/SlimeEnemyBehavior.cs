@@ -12,7 +12,7 @@ public class SlimeEnemyBehavior : EnemyBehavior
     public override int Vision => 3;
     public override string Name => "Slime";
     public override string Description => "A slime enemy.";
-    public override Texture2D Sprite => GD.Load<Texture2D>("res://Assets/Enemies/Slime.png");
+    public override Texture2D Sprite => GD.Load<Texture2D>("res://Assets/Sprites/Enemies/slime.png");
     
     public override void OnTurn(Player player)
     {

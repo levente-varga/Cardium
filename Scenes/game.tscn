@@ -9,7 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://kt27mh54svlc" path="res://Assets/Sprites/Enemies/slime.png" id="4_ja0v2"]
 [ext_resource type="Texture2D" uid="uid://vre1mtm6rq0g" path="res://Assets/TileSets/colored-transparent.png" id="4_s82ru"]
 [ext_resource type="Script" path="res://Scripts/Enemy.cs" id="5_1ahjn"]
-[ext_resource type="Texture2D" uid="uid://1x3pcgt5ydit" path="res://Assets/Tiles/Placeholder.png" id="6_eb2kn"]
+[ext_resource type="Texture2D" uid="uid://cdescqx8vh087" path="res://Assets/TileSets/fog.png" id="11_b6upe"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_mdys3"]
 texture = ExtResource("4_s82ru")
@@ -1092,16 +1092,16 @@ separation = Vector2i(1, 1)
 48:21/0 = 0
 1:0/0 = 0
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_uncmj"]
-texture = ExtResource("6_eb2kn")
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_bcugv"]
+texture = ExtResource("11_b6upe")
+separation = Vector2i(1, 1)
 0:0/0 = 0
 1:0/0 = 0
-0:1/0 = 0
-1:1/0 = 0
+2:0/0 = 0
 
 [sub_resource type="TileSet" id="TileSet_3rv6q"]
-sources/1 = SubResource("TileSetAtlasSource_uncmj")
 sources/0 = SubResource("TileSetAtlasSource_mdys3")
+sources/2 = SubResource("TileSetAtlasSource_bcugv")
 
 [node name="Node2D" type="Node2D" node_paths=PackedStringArray("Player", "World")]
 script = ExtResource("1_lp2n2")
@@ -1158,7 +1158,7 @@ offset_right = 40.0
 offset_bottom = 83.0
 text = "Test"
 
-[node name="World" type="Node2D" parent="." node_paths=PackedStringArray("Camera", "Player", "DebugLabel1", "DebugLabel2", "DebugLabel3", "DecorLayer", "WallLayer", "ObjectLayer", "LootLayer")]
+[node name="World" type="Node2D" parent="." node_paths=PackedStringArray("Camera", "Player", "DebugLabel1", "DebugLabel2", "DebugLabel3", "DecorLayer", "WallLayer", "ObjectLayer", "LootLayer", "FogLayer")]
 z_index = -1
 script = ExtResource("4_ayy7p")
 Camera = NodePath("../Camera2D")
@@ -1170,6 +1170,7 @@ DecorLayer = NodePath("DecorLayer")
 WallLayer = NodePath("WallLayer")
 ObjectLayer = NodePath("ObjectLayer")
 LootLayer = NodePath("LootLayer")
+FogLayer = NodePath("FogLayer")
 
 [node name="DecorLayer" type="TileMapLayer" parent="World"]
 use_parent_material = true
@@ -1193,6 +1194,12 @@ tile_set = SubResource("TileSet_3rv6q")
 
 [node name="LootLayer" type="TileMapLayer" parent="World"]
 z_index = 3
+use_parent_material = true
+scale = Vector2(4, 4)
+tile_set = SubResource("TileSet_3rv6q")
+
+[node name="FogLayer" type="TileMapLayer" parent="World"]
+z_index = 6
 use_parent_material = true
 scale = Vector2(4, 4)
 tile_set = SubResource("TileSet_3rv6q")
