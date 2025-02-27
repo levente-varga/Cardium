@@ -1,12 +1,14 @@
-[gd_scene load_steps=12 format=4 uid="uid://cw3o4f0nr0f2v"]
+[gd_scene load_steps=14 format=4 uid="uid://cw3o4f0nr0f2v"]
 
 [ext_resource type="Script" path="res://Scripts/Hand.cs" id="1_3ixgw"]
 [ext_resource type="Script" path="res://Scripts/GameManager.cs" id="1_lp2n2"]
-[ext_resource type="Texture2D" uid="uid://bbwlpuraqdfav" path="res://Assets/player.png" id="2_nlcsh"]
+[ext_resource type="Texture2D" uid="uid://br1qrnu0l6v15" path="res://Assets/Sprites/player.png" id="2_4yuyp"]
 [ext_resource type="Script" path="res://Scripts/Camera.cs" id="3_evct5"]
 [ext_resource type="Script" path="res://Scripts/Player.cs" id="3_q31ct"]
 [ext_resource type="Script" path="res://Scripts/World.cs" id="4_ayy7p"]
 [ext_resource type="Texture2D" uid="uid://vre1mtm6rq0g" path="res://Assets/TileSets/colored-transparent.png" id="4_s82ru"]
+[ext_resource type="Texture2D" uid="uid://dq0wcx3h6pb80" path="res://Assets/Sprites/slime.png" id="4_wbkww"]
+[ext_resource type="Script" path="res://Scripts/Enemy.cs" id="5_1ahjn"]
 [ext_resource type="Texture2D" uid="uid://1x3pcgt5ydit" path="res://Assets/Tiles/Placeholder.png" id="6_eb2kn"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_mdys3"]
@@ -1109,10 +1111,18 @@ World = NodePath("World")
 [node name="Player" type="Sprite2D" parent="." node_paths=PackedStringArray("World")]
 z_index = 5
 scale = Vector2(4, 4)
-texture = ExtResource("2_nlcsh")
+texture = ExtResource("2_4yuyp")
 centered = false
 script = ExtResource("3_q31ct")
 World = NodePath("../World")
+
+[node name="Slime" type="Sprite2D" parent="."]
+z_index = 5
+position = Vector2(192, -576)
+scale = Vector2(4, 4)
+texture = ExtResource("4_wbkww")
+centered = false
+script = ExtResource("5_1ahjn")
 
 [node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("Target")]
 script = ExtResource("3_evct5")
@@ -1189,3 +1199,5 @@ tile_set = SubResource("TileSet_3rv6q")
 
 [node name="Line2D" type="Line2D" parent="World"]
 z_index = 4
+width = 4.0
+default_color = Color(0.956863, 0.705882, 0.105882, 1)

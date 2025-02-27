@@ -112,7 +112,7 @@ public partial class World : Node2D
     /// </summary>
     public override void _Draw()
     {
-    	//DrawRect(new Rect2(_start * _grid.CellSize, _grid.CellSize), Colors.GreenYellow);
+    	if (_end != null) DrawRect(new Rect2(_end.Value * _grid.CellSize, _grid.CellSize), new Color("F4B41B"), false, 4);
     	//DrawRect(new Rect2(_end * _grid.CellSize, _grid.CellSize), Colors.OrangeRed);
 
     	for (var x = 0; x < _grid.Region.Size.X; x++) {
