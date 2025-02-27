@@ -10,6 +10,11 @@ public partial class World : Node2D
 	[Export] public Label DebugLabel2;
 	[Export] public Label DebugLabel3;
 	
+	[Export] public TileMapLayer DecorLayer;
+	[Export] public TileMapLayer WallLayer;
+	[Export] public TileMapLayer ObjectLayer;
+	[Export] public TileMapLayer LootLayer;
+	
     private readonly List<TileMapLayer> _layers = new();
     private static readonly Vector2I TileSize = new(64, 64);
     private static readonly float SpriteScale = 4f;
