@@ -15,10 +15,7 @@ public partial class Card : Node2D
 	private Sprite2D _sprite;
 	private Control _hitbox;
 	
-	private int _cost = 1;
-	private string _name = "";
-	private string _description = "";
-	private Type _type = Type.Combat;
+	private CardBehavior _behavior;
 	
 
 	public override void _Ready()
@@ -58,5 +55,9 @@ public partial class Card : Node2D
 
 	public void OnMouseExited() {
 		_animationPlayer.Play("Deselect");
+	}
+	
+	public void OnMousePressed() {
+		//_animationPlayer.Play("Play");
 	}
 }
