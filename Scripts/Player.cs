@@ -18,19 +18,8 @@ public partial class Player : Sprite2D
 	public int Armor => 0;
 	public int Damage => 1;
 	public int Luck => 0;
-	public int Vision => 4;
-	public new Vector2I Position
-	{
-		get => _position;
-		private set
-		{
-			_position = value;
-			base.Position = _position * 64;
-		}
-	}
-	
-	private Vector2I _position;
-	
+	public int Vision => 5;
+	public new Vector2I Position { get; private set; }
 	
 	public override void _Ready()
 	{
@@ -43,7 +32,7 @@ public partial class Player : Sprite2D
 
 	public override void _Process(double delta)
 	{
-		
+		base.Position = base.Position.Lerp(Position * 64, 0.1f);
 	}
 	
 	public override void _Input(InputEvent @event)
@@ -55,15 +44,15 @@ public partial class Player : Sprite2D
 					Position += Vector2I.Right;
 				break;
 			case InputEventKey { Pressed: true, Keycode: Key.Left }:
-				if (World.IsTileEmpty(_position + Vector2I.Left))
+				if (World.IsTileEmpty(Position + Vector2I.Left))
 					Position += Vector2I.Left;
 				break;
 			case InputEventKey { Pressed: true, Keycode: Key.Up }:
-				if (World.IsTileEmpty(_position + Vector2I.Up))
+				if (World.IsTileEmpty(Position + Vector2I.Up))
 					Position += Vector2I.Up;
 				break;
 			case InputEventKey { Pressed: true, Keycode: Key.Down }:
-				if (World.IsTileEmpty(_position + Vector2I.Down))
+				if (World.IsTileEmpty(Position + Vector2I.Down))
 					Position += Vector2I.Down;
 				break;
 		}
