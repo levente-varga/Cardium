@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Godot;
 
@@ -24,6 +25,32 @@ public partial class World : Node2D
     private Vector2I _end = new(14, 10);
     private Line2D _line;
 
+    private Rect2I Region
+    {
+	    get
+	    {
+		    var topLeft = new Vector2I(int.MaxValue, int.MaxValue);
+		    var bottomRight = new Vector2I(int.MinValue, int.MinValue);
+		    
+		    foreach (var layer in _layers)
+		    {
+			    topLeft = new Vector2I(
+				    Math.Min(topLeft.X, layer.GetUsedRect().Position.X),
+				    Math.Min(topLeft.Y, layer.GetUsedRect().Position.Y)
+			    );
+			    bottomRight = new Vector2I(
+				    Math.Max(bottomRight.X, layer.GetUsedRect().End.X),
+				    Math.Max(bottomRight.Y, layer.GetUsedRect().End.Y)
+			    );
+		    }
+		    
+		    var region = new Rect2I { Position = topLeft, Size = bottomRight - topLeft };
+		    GD.Print("World region: ", region);
+		    
+		    return region;
+	    }
+    }
+
     public override void _Ready()
     {
 	    SetupLayers();
@@ -33,11 +60,11 @@ public partial class World : Node2D
     
     private void SetupLayers()
     {
-        foreach (var child in GetChildren())
-        {
-            if (child is not TileMapLayer layer) continue;
-            _layers.Add(layer);
-        }
+	    _layers.Clear();
+	    _layers.Add(DecorLayer);
+	    _layers.Add(WallLayer);
+	    _layers.Add(ObjectLayer);
+	    _layers.Add(LootLayer);
     }
 
     public override void _Process(double delta)
@@ -50,7 +77,7 @@ public partial class World : Node2D
     	_line = GetNode<Line2D>("Line2D");
 
     	_grid = new AStarGrid2D();
-    	_grid.Region = _layers[0].GetUsedRect();
+    	_grid.Region = Region;
     	_grid.CellSize = TileSize;
     	_grid.Offset = _grid.CellSize / 2;
     	_grid.DiagonalMode = AStarGrid2D.DiagonalModeEnum.Never;
