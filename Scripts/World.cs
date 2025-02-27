@@ -35,6 +35,8 @@ public partial class World : Node2D
 	    SetupFogOfWar();
 	    SetupPath();
 	    UpdatePath();
+
+	    Player.OnMoveEvent += OnPlayerMove;
     }
     
     public override void _Process(double delta)
@@ -138,22 +140,32 @@ public partial class World : Node2D
     		}
     	}
 
-	    DrawPlayerVision();
+	    UpdateFogOfWar();
 	    
     	base._Draw();
     }
 
-    private void DrawPlayerVision()
+    private void UpdateFogOfWar()
     {
-	    var roundedVision = (int)Math.Ceiling(Player.Vision);
+	    var roundedVision = (int)Math.Ceiling(Player.Vision + 1);
 	    var topLeftTile = Player.Position - new Vector2I(roundedVision, roundedVision);
 	    for (var x = topLeftTile.X; x < topLeftTile.X + roundedVision * 2; x++)
 	    {
 		    for (var y = topLeftTile.Y; y < topLeftTile.Y + roundedVision * 2; y++)
 		    {
-			    if (((Vector2)Player.Position).DistanceTo(new Vector2I(x, y)) >= Player.Vision) continue;
-			    //DrawRect(new Rect2(x * TileSize.X, y * TileSize.Y, TileSize.X, TileSize.Y), new Color("F4B41B"));
-			    FogLayer.SetCell(new Vector2I(x, y), 2, new Vector2I(2, 0));
+			    var coords = new Vector2I(x, y);
+			    if (((Vector2)Player.Position).DistanceTo(coords) >= Player.Vision)
+			    {
+				    if (FogLayer.GetCellAtlasCoords(coords).X == 2)
+				    {
+					    FogLayer.SetCell(coords, 2, new Vector2I(1, 0));
+				    }
+			    }
+			    else
+			    {
+				    //DrawRect(new Rect2(x * TileSize.X, y * TileSize.Y, TileSize.X, TileSize.Y), new Color("F4B41B"));
+				    FogLayer.SetCell(coords, 2, new Vector2I(2, 0));
+			    }
 		    }
 	    }
     }
@@ -185,5 +197,11 @@ public partial class World : Node2D
 
     	UpdatePath();
     	QueueRedraw();
+    }
+
+    private void OnPlayerMove()
+    {
+	    UpdatePath();
+	    QueueRedraw();
     }
 }
