@@ -18,7 +18,7 @@ public partial class Player : Sprite2D
 	public int Armor => 0;
 	public int Damage => 1;
 	public int Luck => 0;
-	public int Vision => 5;
+	public float Vision => 3.5f;
 	public new Vector2I Position { get; private set; }
 	
 	public override void _Ready()

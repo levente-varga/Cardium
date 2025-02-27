@@ -124,7 +124,23 @@ public partial class World : Node2D
     		}
     	}
 
+	    DrawPlayerVision();
+	    
     	base._Draw();
+    }
+
+    private void DrawPlayerVision()
+    {
+	    var roundedVision = (int)Math.Ceiling(Player.Vision);
+	    var topLeftTile = Player.Position - new Vector2I(roundedVision, roundedVision);
+	    for (var x = topLeftTile.X; x < topLeftTile.X + roundedVision * 2; x++)
+	    {
+		    for (var y = topLeftTile.Y; y < topLeftTile.Y + roundedVision * 2; y++)
+		    {
+			    if (((Vector2)Player.Position).DistanceTo(new Vector2I(x, y)) >= Player.Vision) continue;
+			    DrawRect(new Rect2(x * TileSize.X, y * TileSize.Y, TileSize.X, TileSize.Y), new Color("F4B41B"));
+		    }
+	    }
     }
 
     /// <summary>
