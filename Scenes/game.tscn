@@ -1106,12 +1106,13 @@ script = ExtResource("1_lp2n2")
 Player = NodePath("Player")
 World = NodePath("World")
 
-[node name="Player" type="Sprite2D" parent="." node_paths=PackedStringArray("GameManager")]
+[node name="Player" type="Sprite2D" parent="." node_paths=PackedStringArray("World")]
+z_index = 5
 scale = Vector2(4, 4)
 texture = ExtResource("2_nlcsh")
 centered = false
 script = ExtResource("3_q31ct")
-GameManager = NodePath("..")
+World = NodePath("../World")
 
 [node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("Target")]
 script = ExtResource("3_evct5")
@@ -1147,9 +1148,11 @@ offset_right = 40.0
 offset_bottom = 83.0
 text = "Test"
 
-[node name="World" type="Node2D" parent="." node_paths=PackedStringArray("Camera", "DebugLabel1", "DebugLabel2", "DebugLabel3", "DecorLayer", "WallLayer", "ObjectLayer", "LootLayer")]
+[node name="World" type="Node2D" parent="." node_paths=PackedStringArray("Camera", "Player", "DebugLabel1", "DebugLabel2", "DebugLabel3", "DecorLayer", "WallLayer", "ObjectLayer", "LootLayer")]
+z_index = -1
 script = ExtResource("4_ayy7p")
 Camera = NodePath("../Camera2D")
+Player = NodePath("../Player")
 DebugLabel1 = NodePath("../Camera2D/CanvasLayer/Label1")
 DebugLabel2 = NodePath("../Camera2D/CanvasLayer/Label2")
 DebugLabel3 = NodePath("../Camera2D/CanvasLayer/Label3")
@@ -1159,30 +1162,30 @@ ObjectLayer = NodePath("ObjectLayer")
 LootLayer = NodePath("LootLayer")
 
 [node name="DecorLayer" type="TileMapLayer" parent="World"]
-z_index = -1
 use_parent_material = true
 scale = Vector2(4, 4)
 tile_map_data = PackedByteArray("AAD//wAAAAABAAAAAAADAP//AAABAAAAAAABAPj/AAABAAAAAAAFAPr/AAABAAAAAAAEAPb/AAABAAAAAAACAPv/AAABAAAAAAAFAPv/AAACAAAAAAABAPf/AAACAAAAAAABAAEAAAABAAAAAAA=")
 tile_set = SubResource("TileSet_3rv6q")
 
 [node name="WallLayer" type="TileMapLayer" parent="World"]
-z_index = -2
+z_index = 1
 use_parent_material = true
 scale = Vector2(4, 4)
 tile_map_data = PackedByteArray("AAD+////AAAUAAEAAAD+/wAAAAAUAAEAAAD+/wEAAAAUAAEAAAD+//7/AAASAAMAAAD+/wIAAAASAAQAAAD//wIAAAATAAAAAAAAAAIAAAATAAAAAAABAAIAAAATAAAAAAD///7/AAATAAIAAAAAAP7/AAATAAIAAAABAP7/AAATAAIAAAACAP7/AAAUAAIAAAACAAIAAAATAAAAAAAEAAIAAAATAAAAAAAEAP7/AAASAAIAAAADAAIAAAATAAAAAAAFAAEAAAASAAAAAAAHAP//AAAUAAIAAAAHAAEAAAAUAAAAAAAFAP//AAASAAIAAAAFAAIAAAATAAQAAAAFAP7/AAATAAMAAAAGAP//AAATAAIAAAAGAAEAAAATAAAAAAAHAP7/AAAUAAEAAAAHAAIAAAAUAAEAAAAHAAMAAAAUAAEAAAAHAAQAAAAUAAEAAAAHAAUAAAAUAAEAAAAHAAYAAAAUAAEAAAAEAP3/AAASAAEAAAAEAPz/AAASAAAAAAACAP3/AAAUAAEAAAACAPz/AAAUAAAAAAAHAP3/AAASAAMAAAAFAPz/AAATAAAAAAAGAPv/AAASAAEAAAAGAPr/AAASAAEAAAAGAPn/AAASAAEAAAAGAPj/AAASAAEAAAAGAPf/AAASAAEAAAAAAPv/AAAUAAEAAAAAAPr/AAAUAAEAAAAAAPn/AAAUAAEAAAAAAPj/AAAUAAEAAAAAAPf/AAAUAAEAAAAAAPb/AAAUAAEAAAAAAPX/AAAUAAEAAAAGAPX/AAASAAEAAAAGAPb/AAASAAEAAAAFAPT/AAATAAIAAAAEAPT/AAATAAIAAAABAPT/AAATAAIAAAACAPT/AAATAAIAAAAAAPT/AAASAAMAAAAGAPT/AAATAAMAAAABAPz/AAATAAAAAAAAAPz/AAASAAQAAAAGAPz/AAATAAQAAAADAPT/AAATAAIAAAA=")
 tile_set = SubResource("TileSet_3rv6q")
 
 [node name="ObjectLayer" type="TileMapLayer" parent="World"]
-z_index = -2
+z_index = 2
 use_parent_material = true
 scale = Vector2(4, 4)
 tile_map_data = PackedByteArray("AAAGAAAAAAADAAkAAAADAPX/AAAIAAYAAAADAAAAAAAOAAoAAAA=")
 tile_set = SubResource("TileSet_3rv6q")
 
 [node name="LootLayer" type="TileMapLayer" parent="World"]
-z_index = -2
+z_index = 3
 use_parent_material = true
 scale = Vector2(4, 4)
 tile_set = SubResource("TileSet_3rv6q")
 
 [node name="Line2D" type="Line2D" parent="World"]
+z_index = 4
