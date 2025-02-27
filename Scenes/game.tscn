@@ -1,6 +1,7 @@
-[gd_scene load_steps=11 format=4 uid="uid://cw3o4f0nr0f2v"]
+[gd_scene load_steps=12 format=4 uid="uid://cw3o4f0nr0f2v"]
 
 [ext_resource type="Script" path="res://Scripts/Hand.cs" id="1_3ixgw"]
+[ext_resource type="Script" path="res://Scripts/GameManager.cs" id="1_lp2n2"]
 [ext_resource type="Texture2D" uid="uid://bbwlpuraqdfav" path="res://Assets/player.png" id="2_nlcsh"]
 [ext_resource type="Script" path="res://Scripts/Camera.cs" id="3_evct5"]
 [ext_resource type="Script" path="res://Scripts/Player.cs" id="3_q31ct"]
@@ -1100,13 +1101,17 @@ texture = ExtResource("6_eb2kn")
 sources/1 = SubResource("TileSetAtlasSource_uncmj")
 sources/0 = SubResource("TileSetAtlasSource_mdys3")
 
-[node name="Node2D" type="Node2D"]
+[node name="Node2D" type="Node2D" node_paths=PackedStringArray("Player", "World")]
+script = ExtResource("1_lp2n2")
+Player = NodePath("Player")
+World = NodePath("World")
 
-[node name="Player" type="Sprite2D" parent="."]
+[node name="Player" type="Sprite2D" parent="." node_paths=PackedStringArray("GameManager")]
 scale = Vector2(4, 4)
 texture = ExtResource("2_nlcsh")
 centered = false
 script = ExtResource("3_q31ct")
+GameManager = NodePath("..")
 
 [node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("Target")]
 script = ExtResource("3_evct5")

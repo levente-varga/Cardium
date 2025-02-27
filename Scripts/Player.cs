@@ -4,6 +4,8 @@ namespace Cardium.Scripts;
 
 public partial class Player : Sprite2D
 {
+	[Export] public GameManager GameManager;
+	
 	private Deck _combatDeck = new();
 	private Deck _actionDeck = new();
 	private Pile _discardPile = new();
@@ -17,7 +19,7 @@ public partial class Player : Sprite2D
 	private int _attack = 1;
 	private int _luck = 0;
 	
-	private Vector2 _position = Vector2.Zero;
+	private Vector2I _position = Vector2I.Zero;
 	
 	
 	public override void _Ready()
@@ -40,16 +42,20 @@ public partial class Player : Sprite2D
 		switch (@event)
 		{
 			case InputEventKey { Pressed: true, Keycode: Key.Right }:
-				_position.X++;
+				if (GameManager.IsTileEmpty(_position + new Vector2I(1, 0)))
+					_position.X++;
 				break;
 			case InputEventKey { Pressed: true, Keycode: Key.Left }:
-				_position.X--;
+				if (GameManager.IsTileEmpty(_position + new Vector2I(-1, 0)))
+					_position.X--;
 				break;
 			case InputEventKey { Pressed: true, Keycode: Key.Up }:
-				_position.Y--;
+				if (GameManager.IsTileEmpty(_position + new Vector2I(0, -1)))
+					_position.Y--;
 				break;
 			case InputEventKey { Pressed: true, Keycode: Key.Down }:
-				_position.Y++;
+				if (GameManager.IsTileEmpty(_position + new Vector2I(0, 1)))
+					_position.Y++;
 				break;
 		}
 	}
