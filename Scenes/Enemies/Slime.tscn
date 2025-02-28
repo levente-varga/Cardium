@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://cpyyu7o6lud0d"]
+
+[ext_resource type="Texture2D" uid="uid://kt27mh54svlc" path="res://Assets/Sprites/Enemies/slime.png" id="1_51edc"]
+[ext_resource type="Script" path="res://Scripts/Enemies/SlimeEnemy.cs" id="2_5o1jf"]
+
+[node name="Slime" type="Sprite2D"]
+scale = Vector2(4, 4)
+texture = ExtResource("1_51edc")
+centered = false
+script = ExtResource("2_5o1jf")

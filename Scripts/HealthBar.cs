@@ -9,7 +9,7 @@ public partial class HealthBar : Polygon2D
 	public float Health;
 	
 	private float _gap = 8;
-	public float Gap
+	[Export] public float Gap
 	{
 		get => _gap;
 		set
@@ -20,7 +20,7 @@ public partial class HealthBar : Polygon2D
 	}
 	
 	private float _thickness = 8;
-	public float Thickness 
+	[Export] public float Thickness 
 	{
 		get => _thickness;
 		set
@@ -31,7 +31,7 @@ public partial class HealthBar : Polygon2D
 	}
 	
 	private float _horizontalMargin = 8;
-	public float HorizontalMargin
+	[Export] public float HorizontalMargin
 	{
 		get => _horizontalMargin;
 		set
@@ -42,7 +42,7 @@ public partial class HealthBar : Polygon2D
 	}
 	
 	private float _width = 64;
-	public float Width 
+	[Export] public float Width 
 	{
 		get => _width;
 		set
