@@ -1,7 +1,6 @@
-[gd_scene load_steps=14 format=4 uid="uid://cw3o4f0nr0f2v"]
+[gd_scene load_steps=13 format=4 uid="uid://cw3o4f0nr0f2v"]
 
 [ext_resource type="Script" path="res://Scripts/Hand.cs" id="1_3ixgw"]
-[ext_resource type="Script" path="res://Scripts/GameManager.cs" id="1_lp2n2"]
 [ext_resource type="Texture2D" uid="uid://br1qrnu0l6v15" path="res://Assets/Sprites/player.png" id="2_4yuyp"]
 [ext_resource type="Script" path="res://Scripts/Camera.cs" id="3_evct5"]
 [ext_resource type="Script" path="res://Scripts/Player.cs" id="3_q31ct"]
@@ -1103,10 +1102,7 @@ separation = Vector2i(1, 1)
 sources/0 = SubResource("TileSetAtlasSource_mdys3")
 sources/2 = SubResource("TileSetAtlasSource_bcugv")
 
-[node name="World" type="Node2D" node_paths=PackedStringArray("Player", "World")]
-script = ExtResource("1_lp2n2")
-Player = NodePath("Player")
-World = NodePath("World")
+[node name="Root" type="Node2D"]
 
 [node name="Player" type="Sprite2D" parent="." node_paths=PackedStringArray("World")]
 z_index = 5
