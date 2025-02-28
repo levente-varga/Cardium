@@ -15,7 +15,7 @@ public partial class Card : Node2D
 	private Sprite2D _sprite;
 	private Control _hitbox;
 	
-	private CardBehavior _behavior;
+	public CardBehavior Behavior;
 	
 
 	public override void _Ready()

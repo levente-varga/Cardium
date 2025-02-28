@@ -2,7 +2,7 @@ using Godot;
 
 namespace Cardium.Scripts;
 
-public partial class Player : Sprite2D
+public partial class Player : Entity
 {
 	[Export] public World World;
 	
@@ -19,23 +19,20 @@ public partial class Player : Sprite2D
 	public int Damage => 1;
 	public int Luck => 0;
 	public float Vision => 3.5f;
-	public new Vector2I Position { get; private set; }
 	
 	public delegate void OnMoveDelegate();
 	public event OnMoveDelegate OnMoveEvent;
 	
 	public override void _Ready()
 	{
-		// Set the player's position to the center of the screen
-		Position = Vector2I.Zero;
+		base._Ready();
 
-		// Set the player's texture
 		Texture = GD.Load<Texture2D>("res://assets/player.png");
 	}
 
 	public override void _Process(double delta)
 	{
-		base.Position = base.Position.Lerp(Position * 64, 0.1f);
+		base._Process(delta);
 	}
 	
 	public override void _Input(InputEvent @event)

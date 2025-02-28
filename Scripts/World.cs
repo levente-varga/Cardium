@@ -20,6 +20,8 @@ public partial class World : Node2D
 	[Export] public TileMapLayer LootLayer;
 	[Export] public TileMapLayer FogLayer;
 	
+	private List<Enemy> _enemies = new();
+	
     private readonly List<TileMapLayer> _layers = new();
     private static readonly Vector2I TileSize = new(64, 64);
     private static readonly float SpriteScale = 4f;
