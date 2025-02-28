@@ -20,9 +20,6 @@ public partial class Player : Entity
 	public int Luck => 0;
 	public float Vision => 3.5f;
 	
-	public delegate void OnMoveDelegate();
-	public event OnMoveDelegate OnMoveEvent;
-	
 	public override void _Ready()
 	{
 		base._Ready();
@@ -37,8 +34,6 @@ public partial class Player : Entity
 	
 	public override void _Input(InputEvent @event)
 	{
-		var previousPosition = Position;
-		
 		switch (@event)
 		{
 			case InputEventKey { Pressed: true, Keycode: Key.Right }:
@@ -57,11 +52,6 @@ public partial class Player : Entity
 				if (World.IsTileEmpty(Position + Vector2I.Down))
 					Position += Vector2I.Down;
 				break;
-		}
-		
-		if (previousPosition != Position)
-		{
-			OnMoveEvent?.Invoke();
 		}
 	}
 }
