@@ -8,7 +8,7 @@
 [ext_resource type="Script" path="res://Scripts/World.cs" id="4_ayy7p"]
 [ext_resource type="Texture2D" uid="uid://kt27mh54svlc" path="res://Assets/Sprites/Enemies/slime.png" id="4_ja0v2"]
 [ext_resource type="Texture2D" uid="uid://vre1mtm6rq0g" path="res://Assets/TileSets/colored-transparent.png" id="4_s82ru"]
-[ext_resource type="Script" path="res://Scripts/Enemy.cs" id="5_1ahjn"]
+[ext_resource type="Script" path="res://Scripts/Enemies/SlimeEnemy.cs" id="5_nlxdu"]
 [ext_resource type="Texture2D" uid="uid://cdescqx8vh087" path="res://Assets/TileSets/fog.png" id="11_b6upe"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_mdys3"]
@@ -1103,7 +1103,7 @@ separation = Vector2i(1, 1)
 sources/0 = SubResource("TileSetAtlasSource_mdys3")
 sources/2 = SubResource("TileSetAtlasSource_bcugv")
 
-[node name="Node2D" type="Node2D" node_paths=PackedStringArray("Player", "World")]
+[node name="World" type="Node2D" node_paths=PackedStringArray("Player", "World")]
 script = ExtResource("1_lp2n2")
 Player = NodePath("Player")
 World = NodePath("World")
@@ -1122,7 +1122,7 @@ position = Vector2(192, -576)
 scale = Vector2(4, 4)
 texture = ExtResource("4_ja0v2")
 centered = false
-script = ExtResource("5_1ahjn")
+script = ExtResource("5_nlxdu")
 
 [node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("Target")]
 script = ExtResource("3_evct5")
