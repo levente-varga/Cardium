@@ -10,7 +10,6 @@ public partial class Hand : Node2D
 	[Export] public float HandHeight = 64;
 	[Export] public float MaxHandEnclosedAngle = 30f;
 	[Export] public float DefaultCardAngle = 7f;
-	[Export] public Label DebugLabel;
 
 	private readonly List<Node2D> _cards = new();
 	private List<float> _cardAngles = new();
@@ -33,9 +32,7 @@ public partial class Hand : Node2D
 	
 	public override void _Process(double delta)
 	{
-		DebugLabel.Text = "Hand origin: " + _handOrigin
-                      + "\nHand radius: " + HandRadius
-                      + "\nHand height: " + HandHeight;
+		
 	}
 
 
@@ -51,7 +48,7 @@ public partial class Hand : Node2D
 			tween.TweenMethod(Callable.From<float>(value => SetCardPosition(index, value)), oldCardAngles[index], _cardAngles[index], 0.4f)
 				.SetEase(Tween.EaseType.Out)
 				.SetTrans(Tween.TransitionType.Expo);
-			tween.TweenCallback(Callable.From(() => { GD.Print("Tween of card #", index, " out of ",_cards.Count , " complete"); }));
+			tween.TweenCallback(Callable.From(() => { tween.Dispose(); }));
 		}
 	}
 

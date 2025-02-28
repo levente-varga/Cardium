@@ -12,6 +12,7 @@ public partial class World : Node2D
 	[Export] public Label DebugLabel1;
 	[Export] public Label DebugLabel2;
 	[Export] public Label DebugLabel3;
+	[Export] public Label DebugLabel4;
 	
 	[Export] public TileMapLayer DecorLayer;
 	[Export] public TileMapLayer WallLayer;
@@ -41,7 +42,9 @@ public partial class World : Node2D
     
     public override void _Process(double delta)
     {
-		
+	    DebugLabel1.Text = "Camera view size: " + Camera.ViewRect.Size;
+	    DebugLabel2.Text = "Camera top left: " + Camera.ViewRect.Position;
+	    DebugLabel3.Text = "Camera zoom: " + Camera.Zoom;
     }
     
     private void SetupLayers()
@@ -83,7 +86,6 @@ public partial class World : Node2D
 		    for (var y = _region.Position.Y; y < _region.End.Y; y++)
 		    {
 			    FogLayer.SetCell(new Vector2I(x, y), 2, new Vector2I(0, 0));
-			    GD.Print("Set fog of war cell: ", new Vector2I(x, y));
 		    }
 	    }
     }
@@ -104,14 +106,6 @@ public partial class World : Node2D
 	    {
 		    _grid.SetPointSolid(cell);
 	    }
-	    
-	    GD.Print(-1 % 64);
-	    
-	    GD.Print("Used cells: ", WallLayer.GetUsedCells());
-
-    	GD.Print("TileMap rect: ", _layers[0].GetUsedRect());
-    	GD.Print("TileMap position: ", Position);
-    	GD.Print("Top left tile position: ", ToGlobal(_layers[0].MapToLocal(_layers[0].GetUsedRect().Position)));
     }
     
     private Vector2I GetTilePosition(Vector2 position) => new (
@@ -175,21 +169,15 @@ public partial class World : Node2D
     /// </summary>
     private void UpdatePath() {
 	    if (_end is null) return;
-	    
     	_line.Points = _grid.GetPointPath(Player.Position, _end.Value);
-    	GD.Print("Path: ", _grid.GetIdPath(Player.Position, _end.Value));
     }
 
     public override void _Input(InputEvent @event)
     {
     	if (@event is not InputEventMouseButton { Pressed: true, ButtonIndex: MouseButton.Left } mouseButton) return;
 	    
-    	var cell = GetTilePosition(mouseButton.Position + Camera.ViewRect.Position);
-
-	    DebugLabel1.Text = "Camera view size: " + Camera.ViewRect.Size;
-	    DebugLabel2.Text = "Camera top left: " + Camera.ViewRect.Position;
-	    DebugLabel3.Text = "Mouse position: " + mouseButton.Position;
-	    
+	    var globalMousePosition = mouseButton.Position + Camera.ViewRect.Position;
+    	var cell = GetTilePosition(globalMousePosition);
 	    
     	if (_grid.IsInBoundsv(cell)) {
 		    _end = cell;

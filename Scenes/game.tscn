@@ -1128,10 +1128,9 @@ script = ExtResource("5_1ahjn")
 script = ExtResource("3_evct5")
 Target = NodePath("../Player")
 
-[node name="Hand" type="Node2D" parent="Camera2D" node_paths=PackedStringArray("DebugLabel")]
+[node name="Hand" type="Node2D" parent="Camera2D"]
 z_index = 10
 script = ExtResource("1_3ixgw")
-DebugLabel = NodePath("../CanvasLayer/Label4")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="Camera2D"]
 
@@ -1158,7 +1157,7 @@ offset_right = 40.0
 offset_bottom = 83.0
 text = "Test"
 
-[node name="World" type="Node2D" parent="." node_paths=PackedStringArray("Camera", "Player", "DebugLabel1", "DebugLabel2", "DebugLabel3", "DecorLayer", "WallLayer", "ObjectLayer", "LootLayer", "FogLayer")]
+[node name="World" type="Node2D" parent="." node_paths=PackedStringArray("Camera", "Player", "DebugLabel1", "DebugLabel2", "DebugLabel3", "DebugLabel4", "DecorLayer", "WallLayer", "ObjectLayer", "LootLayer", "FogLayer")]
 z_index = -1
 script = ExtResource("4_ayy7p")
 Camera = NodePath("../Camera2D")
@@ -1166,6 +1165,7 @@ Player = NodePath("../Player")
 DebugLabel1 = NodePath("../Camera2D/CanvasLayer/Label1")
 DebugLabel2 = NodePath("../Camera2D/CanvasLayer/Label2")
 DebugLabel3 = NodePath("../Camera2D/CanvasLayer/Label3")
+DebugLabel4 = NodePath("../Camera2D/CanvasLayer/Label4")
 DecorLayer = NodePath("DecorLayer")
 WallLayer = NodePath("WallLayer")
 ObjectLayer = NodePath("ObjectLayer")
