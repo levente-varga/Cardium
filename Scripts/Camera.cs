@@ -6,6 +6,8 @@ public partial class Camera : Camera2D
 {
 	[Export] public Sprite2D Target;
 
+	private bool _zoom;
+
 	public Rect2 ViewRect
 	{
 		get
@@ -29,5 +31,15 @@ public partial class Camera : Camera2D
 		
 		// lerp to player position:
 		Position = GlobalPosition.Lerp(targetCenter, 0.1f);
+		Zoom = Zoom.Lerp(_zoom ? Vector2.One / 0.7f : Vector2.One, 0.05f);
+	}
+
+	public override void _Input(InputEvent @event)
+	{
+		// if space pressed, toggle zoom
+		if (@event is InputEventKey keyEvent && keyEvent.Pressed && keyEvent.Keycode == Key.Space)
+		{
+			_zoom = !_zoom;
+		}
 	}
 }
