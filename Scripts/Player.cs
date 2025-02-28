@@ -11,18 +11,11 @@ public partial class Player : Entity
 	private Pile _discardPile = new();
 	private Hand _hand = new();
 	
-	public int MaxHealth => 5;
-	public int Health { get; private set; } = 5;
-	public int MaxEnergy => 5;
-	public int Energy { get; private set; } = 5;
-	public int Armor => 0;
-	public int Damage => 1;
-	public int Luck => 0;
-	public float Vision => 3.5f;
-	
 	public override void _Ready()
 	{
 		base._Ready();
+		
+		Vision = 3.5f;
 
 		Texture = GD.Load<Texture2D>("res://assets/player.png");
 	}
