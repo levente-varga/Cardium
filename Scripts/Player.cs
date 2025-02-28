@@ -47,4 +47,9 @@ public partial class Player : Entity
 				break;
 		}
 	}
+	
+	public void Attack(Entity entity)
+	{
+		World.Attack(entity, this);
+	}
 }

@@ -1,3 +1,4 @@
+using System;
 using Godot;
 
 namespace Cardium.Scripts;
@@ -11,13 +12,16 @@ public partial class Entity : Sprite2D
     public int MaxEnergy;
     public int Armor;
     public int Damage;
-    public int Luck;
+    public float Luck;
     public float Vision;
     public float Range;
     public string Description;
     
     public delegate void OnMoveDelegate();
     public event OnMoveDelegate OnMoveEvent;
+    
+    public delegate void OnDeathDelegate();
+    public event OnDeathDelegate OnDeathEvent;
     
     public new Vector2I Position { get; protected set; }
     private Vector2I _previousPosition;
@@ -39,23 +43,26 @@ public partial class Entity : Sprite2D
         }
     }
     
-    public virtual void OnTurn(Player player)
+    public virtual void OnTurn(Entity source)
     {
         
     }
 
-    public virtual void OnDamaged(Player player, int damage)
+    public virtual void OnDamaged(Entity source, int damage)
     {
-        
+        // TODO: Implement dodge based on luck
+        Health -= Math.Min(1, damage - Armor);
+        if (Health < 0) OnDeath(source);
     }
 
-    public virtual void OnTargeted(Player player)
+    public virtual void OnTargeted(Entity source)
     {
         
     }
     
-    public virtual void OnDeath(Player player)
+    public virtual void OnDeath(Entity source)
     {
-        
+        Health = 0;
+        OnDeathEvent?.Invoke();
     }
 }

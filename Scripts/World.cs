@@ -194,4 +194,9 @@ public partial class World : Node2D
 	    UpdatePath();
 	    QueueRedraw();
     }
+
+    public void Attack(Entity target, Entity source)
+    {
+	    target.OnDamaged(source, source.Damage);
+    }
 }
