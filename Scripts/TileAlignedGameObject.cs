@@ -40,27 +40,27 @@ public partial class TileAlignedGameObject : AnimatedSprite2D
         base.Position = position * Global.TileSize;
     }
 
-    protected void SetTexture(Texture2D texture)
+    protected void SetStillFrame(Texture2D texture)
     {
         // Create a new SpriteFrames resource
         var frames = new SpriteFrames();
-        frames.AddAnimation("static");
-        frames.SetAnimationLoop("static", false);
+        frames.AddAnimation("still");
+        frames.SetAnimationLoop("still", false);
 
         // Add a single frame
-        frames.AddFrame("static", texture);
+        frames.AddFrame("still", texture);
 
         // Assign the SpriteFrames to the AnimatedSprite2D
         SpriteFrames = frames;
-        Play("static", 0); // Not necessary, but ensures it stays on this frame
+        Play("still", 0); // Not necessary, but ensures it stays on this frame
     }
 
-    protected void SetAnimation(Texture2D spriteSheet, int frames, double fps)
+    protected void SetAnimation(string name, Texture2D spriteSheet, int frames, double fps, bool autoPlay = true, bool loop = true)
     {
         var spriteFrames = new SpriteFrames();
-        spriteFrames.AddAnimation("loop"); // Animation name
-        spriteFrames.SetAnimationLoop("loop", true);
-        spriteFrames.SetAnimationSpeed("loop", fps);
+        spriteFrames.AddAnimation(name); // Animation name
+        spriteFrames.SetAnimationLoop(name, loop);
+        spriteFrames.SetAnimationSpeed(name, fps);
 
         var frameSize = Global.SpriteSize;
 
@@ -72,11 +72,12 @@ public partial class TileAlignedGameObject : AnimatedSprite2D
             var frameImage = image.GetRegion(region);
             Texture2D frameTexture = ImageTexture.CreateFromImage(frameImage);
 
-            spriteFrames.AddFrame("loop", frameTexture);
+            spriteFrames.AddFrame(name, frameTexture);
         }
 
         SpriteFrames = spriteFrames;
+        Animation = name;
         
-        Play("loop");
+        if (autoPlay) Play(name);
     }
 }

@@ -8,7 +8,7 @@ public partial class Bonfire : Interactable
     {
         base._Ready();
 
-        SetAnimation(GD.Load<Texture2D>("res://Assets/Animations/Bonfire.png"), 4, 12);
+        SetAnimation("idle", GD.Load<Texture2D>("res://Assets/Animations/Bonfire.png"), 4, 12);
     }
 
     public override void _Process(double delta)

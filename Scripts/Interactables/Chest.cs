@@ -8,7 +8,7 @@ public partial class Chest : Interactable
     {
         base._Ready();
 
-        SetAnimation(ResourceLoader.Load<Texture2D>("res://Assets/Animations/Chest.png"), 6, 12);
+        SetAnimation("open", ResourceLoader.Load<Texture2D>("res://Assets/Animations/Chest.png"), 6, 12, false, false);
     }
 
     public override void _Process(double delta)

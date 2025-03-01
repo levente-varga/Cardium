@@ -1,10 +1,11 @@
-[gd_scene load_steps=10 format=4 uid="uid://cw3o4f0nr0f2v"]
+[gd_scene load_steps=18 format=4 uid="uid://cw3o4f0nr0f2v"]
 
 [ext_resource type="Script" path="res://Scripts/Hand.cs" id="1_3ixgw"]
 [ext_resource type="Script" path="res://Scripts/Camera.cs" id="3_evct5"]
 [ext_resource type="Script" path="res://Scripts/Player.cs" id="3_q31ct"]
 [ext_resource type="Script" path="res://Scripts/World.cs" id="4_ayy7p"]
 [ext_resource type="Texture2D" uid="uid://vre1mtm6rq0g" path="res://Assets/TileSets/colored-transparent.png" id="4_s82ru"]
+[ext_resource type="Texture2D" uid="uid://4svosk72j2wi" path="res://Assets/Animations/Chest.png" id="7_swsxg"]
 [ext_resource type="Texture2D" uid="uid://cdescqx8vh087" path="res://Assets/TileSets/fog.png" id="11_b6upe"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_mdys3"]
@@ -1099,6 +1100,56 @@ separation = Vector2i(1, 1)
 sources/0 = SubResource("TileSetAtlasSource_mdys3")
 sources/2 = SubResource("TileSetAtlasSource_bcugv")
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_1gns3"]
+atlas = ExtResource("7_swsxg")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a81xa"]
+atlas = ExtResource("7_swsxg")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fw1dm"]
+atlas = ExtResource("7_swsxg")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s3e23"]
+atlas = ExtResource("7_swsxg")
+region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0gkgt"]
+atlas = ExtResource("7_swsxg")
+region = Rect2(64, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6e50w"]
+atlas = ExtResource("7_swsxg")
+region = Rect2(80, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_e8old"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1gns3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a81xa")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fw1dm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s3e23")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0gkgt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6e50w")
+}],
+"loop": true,
+"name": &"default",
+"speed": 12.0
+}]
+
 [node name="Root" type="Node2D"]
 
 [node name="Player" type="AnimatedSprite2D" parent="." node_paths=PackedStringArray("World")]
@@ -1200,3 +1251,11 @@ tile_set = SubResource("TileSet_3rv6q")
 z_index = 4
 width = 4.0
 default_color = Color(0.956863, 0.705882, 0.105882, 1)
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(128, 0)
+scale = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_e8old")
+autoplay = "default"
+frame_progress = 0.750965
+centered = false

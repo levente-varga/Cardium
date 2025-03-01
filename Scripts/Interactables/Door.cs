@@ -8,7 +8,7 @@ public partial class Door : Interactable
     {
         base._Ready();
 
-        SetAnimation(ResourceLoader.Load<Texture2D>("res://Assets/Animations/Door.png"), 8, 12);
+        SetAnimation("open", ResourceLoader.Load<Texture2D>("res://Assets/Animations/Door.png"), 8, 12, false, false);
     }
 
     public override void _Process(double delta)
