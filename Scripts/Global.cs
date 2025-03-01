@@ -1,3 +1,5 @@
+using Godot;
+
 namespace Cardium.Scripts;
 
 public static class Global

@@ -21,11 +21,9 @@ public partial class World : Node2D
 	[Export] public TileMapLayer LootLayer;
 	[Export] public TileMapLayer FogLayer;
 	
-	private List<Enemy> _enemies = new();
+	private readonly List<Enemy> _enemies = new();
 	
     private readonly List<TileMapLayer> _layers = new();
-    private static readonly Vector2I TileSize = new(64, 64);
-    private static readonly float SpriteScale = 4f;
 
     private Rect2I _region;
     private AStarGrid2D _grid;
@@ -101,7 +99,7 @@ public partial class World : Node2D
 
     	_grid = new AStarGrid2D();
     	_grid.Region = _region;
-    	_grid.CellSize = TileSize;
+    	_grid.CellSize = new Vector2(Global.TileSize, Global.TileSize);
     	_grid.Offset = _grid.CellSize / 2;
     	_grid.DiagonalMode = AStarGrid2D.DiagonalModeEnum.Never;
     	_grid.DefaultEstimateHeuristic = AStarGrid2D.Heuristic.Euclidean;
@@ -127,8 +125,8 @@ public partial class World : Node2D
     }
     
     private Vector2I GetTilePosition(Vector2 position) => new (
-		Mathf.FloorToInt(position.X / TileSize.X),
-		Mathf.FloorToInt(position.Y / TileSize.Y)
+		Mathf.FloorToInt(position.X / Global.TileSize),
+		Mathf.FloorToInt(position.Y / Global.TileSize)
 	);
     
     public bool EnemyExistsAt(Vector2I position) => _enemies.Any(enemy => enemy.Position == position);
@@ -219,7 +217,7 @@ public partial class World : Node2D
     	QueueRedraw();
     }
 
-    private void OnPlayerMove(Entity entity)
+    private void OnPlayerMove(TileAlignedGameObject gameObject)
     {
 	    UpdatePath();
 	    QueueRedraw();
