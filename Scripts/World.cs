@@ -131,10 +131,16 @@ public partial class World : Node2D
 		Mathf.FloorToInt(position.Y / TileSize.Y)
 	);
     
+    public bool EnemyExistsAt(Vector2I position) => _enemies.Any(enemy => enemy.Position == position);
+    public bool ObjectExistsAt(Vector2I position) => ObjectLayer.GetCellTileData(position) != null;
+    public bool WallExistsAt(Vector2I position) => WallLayer.GetCellTileData(position) != null;
+    
+    public Enemy GetEnemyAt(Vector2I position) => _enemies.FirstOrDefault(enemy => enemy.Position == position);
+    
     public bool IsTileEmpty(Vector2I position) => 
-	    WallLayer.GetCellTileData(position) == null
-	    && ObjectLayer.GetCellTileData(position) == null
-	    && _enemies.All(enemy => enemy.Position != position)
+	    !WallExistsAt(position)
+	    && !ObjectExistsAt(position)
+	    && !EnemyExistsAt(position)
 	    && Player.Position != position;
 
     /// <summary>
@@ -215,6 +221,7 @@ public partial class World : Node2D
 
     public void Attack(Entity target, Entity source)
     {
+	    GD.Print(source.Name + " attacked " + target.Name + " for " + source.Damage + " damage!");
 	    target.OnDamaged(source, source.Damage);
     }
 }

@@ -16,6 +16,8 @@ public partial class Player : Entity
 		base._Ready();
 		
 		Vision = 3.5f;
+		Name = "Player";
+		Damage = 1;
 
 		Texture = GD.Load<Texture2D>("res://assets/player.png");
 	}
@@ -45,11 +47,27 @@ public partial class Player : Entity
 				if (World.IsTileEmpty(Position + Vector2I.Down))
 					Position += Vector2I.Down;
 				break;
+			case InputEventKey { Pressed: true, Keycode: Key.Q }:
+				if (!World.EnemyExistsAt(Position + Vector2I.Up))
+				{
+					GD.Print("No enemy to attack at " + (Position + Vector2I.Up));
+					break;
+				}
+				Enemy enemy = World.GetEnemyAt(Position + Vector2I.Up);
+				if (enemy == null)
+				{
+					GD.Print("Null returned as enemy at " + (Position + Vector2I.Up));
+					break;
+				}
+				GD.Print("Attacking " + enemy.Name);
+				
+				Attack(enemy);
+				break;
 		}
 	}
 	
-	public void Attack(Entity entity)
+	public void Attack(Entity target)
 	{
-		World.Attack(entity, this);
+		World.Attack(target, this);
 	}
 }

@@ -17,7 +17,7 @@ public partial class SlimeEnemy : Enemy
         base._Process(delta);
     }
 
-    public override void OnTurn(Player player)
+    public override void OnTurn(Entity source)
     {
         if (Energy > 0)
         {
@@ -25,18 +25,20 @@ public partial class SlimeEnemy : Enemy
         }
     }
 
-    public override void OnDamaged(Player player, int damage)
+    public override void OnDamaged(Entity source, int damage)
     {
-        base.OnDamaged(player, damage);
+        GD.Print(Name + " received " + damage + " damage from " + source.Name);
+        
+        base.OnDamaged(source, damage);
     }
 
-    public override void OnTargeted(Player player)
+    public override void OnTargeted(Entity source)
     {
         
     }
     
-    public override void OnDeath(Player player)
+    public override void OnDeath(Entity source)
     {
-        base.OnDeath(player);
+        base.OnDeath(source);
     }
 }

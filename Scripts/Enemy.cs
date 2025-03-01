@@ -26,26 +26,28 @@ public partial class Enemy : Entity
         HealthBar.Health = Health;
     }
 
-    public virtual void OnTurn(Player player)
+    public override void OnTurn(Entity source)
     {
+        base.OnTurn(source);
+        
         if (Energy > 0)
         {
             // TODO: Implement enemy AI
         }
     }
 
-    public virtual void OnDamaged(Player player, int damage)
+    public override void OnDamaged(Entity source, int damage)
     {
-        base.OnDamaged(player, damage);
+        base.OnDamaged(source, damage);
     }
 
-    public virtual void OnTargeted(Player player)
+    public override void OnTargeted(Entity source)
     {
-        
+        base.OnTargeted(source);
     }
     
-    public virtual void OnDeath(Player player)
+    public override void OnDeath(Entity source)
     {
-        base.OnDeath(player);
+        base.OnDeath(source);
     }
 }
