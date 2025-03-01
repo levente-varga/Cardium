@@ -33,6 +33,8 @@ public partial class Player : Entity
 	
 	public override void _Input(InputEvent @event)
 	{
+		if (!@event.IsPressed()) return;
+		
 		if (InputMap.EventIsAction(@event, "Right"))
 		{
 			if (World.IsTileEmpty(Position + Vector2I.Right)) Position += Vector2I.Right;

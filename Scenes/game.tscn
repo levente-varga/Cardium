@@ -1257,5 +1257,5 @@ position = Vector2(128, 0)
 scale = Vector2(4, 4)
 sprite_frames = SubResource("SpriteFrames_e8old")
 autoplay = "default"
-frame_progress = 0.750965
+frame_progress = 0.85761
 centered = false
