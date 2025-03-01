@@ -103,7 +103,7 @@ public partial class World : Node2D
 
     	_grid = new AStarGrid2D();
     	_grid.Region = _region;
-    	_grid.CellSize = new Vector2(Global.TileSize, Global.TileSize);
+    	_grid.CellSize = Global.TileSize;
     	_grid.Offset = _grid.CellSize / 2;
     	_grid.DiagonalMode = AStarGrid2D.DiagonalModeEnum.Never;
     	_grid.DefaultEstimateHeuristic = AStarGrid2D.Heuristic.Euclidean;
@@ -116,8 +116,8 @@ public partial class World : Node2D
     }
     
     private Vector2I GetTilePosition(Vector2 position) => new (
-		Mathf.FloorToInt(position.X / Global.TileSize),
-		Mathf.FloorToInt(position.Y / Global.TileSize)
+		Mathf.FloorToInt(position.X / Global.TileSize.X),
+		Mathf.FloorToInt(position.Y / Global.TileSize.Y)
 	);
     
     public bool EnemyExistsAt(Vector2I position) => _enemies.Any(enemy => enemy.Position == position);
