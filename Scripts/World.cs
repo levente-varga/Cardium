@@ -121,7 +121,7 @@ public partial class World : Node2D
 	    GD.Print("Setting up enemy health bar...");
 	    enemy.AddChild(new HealthBar());
 	    AddChild(enemy);
-	    enemy.Position = position;
+	    enemy.SetPosition(position);
 	    _enemies.Add(enemy);
 	    GD.Print("Enemy spawned at ", position);
     }

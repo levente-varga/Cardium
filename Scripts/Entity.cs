@@ -44,6 +44,12 @@ public partial class Entity : Sprite2D
             _previousPosition = Position;
         }
     }
+
+    public void SetPosition(Vector2I position)
+    {
+        Position = position;
+        base.Position = position * Global.TileSize;
+    }
     
     public virtual void OnTurn(Entity source)
     {
