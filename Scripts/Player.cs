@@ -19,6 +19,8 @@ public partial class Player : Entity
 		Name = "Player";
 		Damage = 1;
 
+		HealthBar.Visible = false;
+
 		Texture = GD.Load<Texture2D>("res://assets/player.png");
 	}
 

@@ -5,10 +5,16 @@ namespace Cardium.Scripts;
 
 public partial class Entity : Sprite2D
 {
-    public int Health { get; protected set; } = 1;
+    public int Health { 
+        get => HealthBar.Health;
+        protected set => HealthBar.Health = value;
+    }
+    public int MaxHealth
+    {
+        get => HealthBar.MaxHealth;
+        set => HealthBar.MaxHealth = value;
+    }
     public int Energy { get; protected set; } = 1;
-
-    public int MaxHealth = 1;
     public int MaxEnergy = 1;
     public int Armor;
     public int Damage;
@@ -16,6 +22,8 @@ public partial class Entity : Sprite2D
     public float Vision;
     public float Range;
     public string Description;
+    
+    public HealthBar HealthBar;
     
     public delegate void OnMoveDelegate(Entity entity);
     public event OnMoveDelegate OnMoveEvent;
@@ -28,10 +36,13 @@ public partial class Entity : Sprite2D
     
     public override void _Ready()
     {
+        HealthBar = new HealthBar();
+        AddChild(HealthBar);
         Position = Vector2I.Zero;
         Scale = new Vector2(Global.Scale, Global.Scale);
         Centered = false;
         Name = "Entity";
+        SetupHealthBar();
     }
 
     public override void _Process(double delta)
@@ -49,6 +60,14 @@ public partial class Entity : Sprite2D
     {
         Position = position;
         base.Position = position * Global.TileSize;
+    }
+    
+    private void SetupHealthBar()
+    {
+        HealthBar = GetNode<HealthBar>("HealthBar");
+        if (HealthBar == null) return;
+        HealthBar.MaxHealth = MaxHealth;
+        HealthBar.Health = Health;
     }
     
     public virtual void OnTurn(Entity source)

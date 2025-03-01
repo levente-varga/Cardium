@@ -120,7 +120,6 @@ public partial class World : Node2D
 	    
 	    GD.Print("Setting up enemy health bar...");
 	    enemy.OnDeathEvent += OnEnemyDeath;
-	    enemy.AddChild(new HealthBar());
 	    AddChild(enemy);
 	    enemy.SetPosition(position);
 	    _enemies.Add(enemy);
