@@ -2,7 +2,7 @@ using Godot;
 
 namespace Cardium.Scripts;
 
-public partial class InteractableGameObject : TileAlignedGameObject
+public partial class Interactable : TileAlignedGameObject
 {
     
 }

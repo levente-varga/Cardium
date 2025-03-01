@@ -22,6 +22,8 @@ public partial class World : Node2D
 	[Export] public TileMapLayer FogLayer;
 	
 	private readonly List<Enemy> _enemies = new();
+	private readonly List<CardLoot> _loot = new();
+	private readonly List<Interactable> _interactables = new();
 	
     private readonly List<TileMapLayer> _layers = new();
 

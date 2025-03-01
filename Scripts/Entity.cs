@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Godot;
 
 namespace Cardium.Scripts;
@@ -23,6 +24,8 @@ public partial class Entity : TileAlignedGameObject
     public float Range;
     public string Description;
     public bool InCombat;
+    
+    public List<Card> Inventory = new();
     
     public HealthBar HealthBar;
     
