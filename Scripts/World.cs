@@ -287,4 +287,23 @@ public partial class World : Node2D
 		    LootLayer.SetCell(cell, -1, new Vector2I(-1, -1));
 	    }
     }
+
+    public List<Vector2I> GetInteractablePositions(Vector2I position)
+    {
+	    List<Vector2I> adjacentPositions = new()
+	    {
+		    position + Vector2I.Up,
+		    position + Vector2I.Down,
+		    position + Vector2I.Left,
+		    position + Vector2I.Right,
+	    };
+	    
+	    return _interactables.Where(i => adjacentPositions.Contains(i.Position)).ToList().Select(i => i.Position).ToList();
+    }
+    
+    public void Interact(Vector2I position)
+	{
+	    var interactable = _interactables.FirstOrDefault(interactable => interactable.Position == position);
+	    interactable?.OnInteract(Player);
+	}
 }

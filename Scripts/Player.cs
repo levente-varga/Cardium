@@ -51,6 +51,9 @@ public partial class Player : Entity
 				if (World.IsTileEmpty(Position + Vector2I.Down))
 					Position += Vector2I.Down;
 				break;
+			case InputEventKey { Pressed: true, Keycode: Key.E }:
+				Interact();
+				break;
 			case InputEventKey { Pressed: true, Keycode: Key.Q }:
 				if (!World.EnemyExistsAt(Position + Vector2I.Up))
 				{
@@ -78,5 +81,13 @@ public partial class Player : Entity
 	public void Attack(Entity target)
 	{
 		World.Attack(target, this);
+	}
+
+	public void Interact()
+	{
+		var interactablePositions = World.GetInteractablePositions(Position);
+		if (interactablePositions.Count == 0) return;
+		
+		World.Interact(interactablePositions[0]);
 	}
 }

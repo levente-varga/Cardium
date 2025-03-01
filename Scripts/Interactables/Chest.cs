@@ -19,5 +19,7 @@ public partial class Chest : Interactable
     public override void OnInteract(Entity source)
     {
         base.OnInteract(source);
+        
+        Play("open");
     }
 }
