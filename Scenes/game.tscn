@@ -1,12 +1,10 @@
-[gd_scene load_steps=30 format=4 uid="uid://cw3o4f0nr0f2v"]
+[gd_scene load_steps=10 format=4 uid="uid://cw3o4f0nr0f2v"]
 
 [ext_resource type="Script" path="res://Scripts/Hand.cs" id="1_3ixgw"]
 [ext_resource type="Script" path="res://Scripts/Camera.cs" id="3_evct5"]
 [ext_resource type="Script" path="res://Scripts/Player.cs" id="3_q31ct"]
 [ext_resource type="Script" path="res://Scripts/World.cs" id="4_ayy7p"]
 [ext_resource type="Texture2D" uid="uid://vre1mtm6rq0g" path="res://Assets/TileSets/colored-transparent.png" id="4_s82ru"]
-[ext_resource type="Texture2D" uid="uid://dejly3ni430dn" path="res://Assets/TileSets/Card loot hollow.png" id="8_rkndv"]
-[ext_resource type="Texture2D" uid="uid://boqaya4h4l3g8" path="res://Assets/TileSets/Slime animated.png" id="9_ret8s"]
 [ext_resource type="Texture2D" uid="uid://cdescqx8vh087" path="res://Assets/TileSets/fog.png" id="11_b6upe"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_mdys3"]
@@ -1101,134 +1099,6 @@ separation = Vector2i(1, 1)
 sources/0 = SubResource("TileSetAtlasSource_mdys3")
 sources/2 = SubResource("TileSetAtlasSource_bcugv")
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_m3lme"]
-atlas = ExtResource("8_rkndv")
-region = Rect2(0, 0, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_w7pa2"]
-atlas = ExtResource("8_rkndv")
-region = Rect2(16, 0, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_thr2r"]
-atlas = ExtResource("8_rkndv")
-region = Rect2(32, 0, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_i2squ"]
-atlas = ExtResource("8_rkndv")
-region = Rect2(48, 0, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_v7wdg"]
-atlas = ExtResource("8_rkndv")
-region = Rect2(64, 0, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_vjvp6"]
-atlas = ExtResource("8_rkndv")
-region = Rect2(80, 0, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_njnp4"]
-atlas = ExtResource("8_rkndv")
-region = Rect2(96, 0, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_8xjiu"]
-atlas = ExtResource("8_rkndv")
-region = Rect2(112, 0, 16, 16)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_mf4l4"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_m3lme")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_w7pa2")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_thr2r")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_i2squ")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_v7wdg")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_vjvp6")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_njnp4")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_8xjiu")
-}],
-"loop": true,
-"name": &"default",
-"speed": 12.0
-}]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_uwprp"]
-atlas = ExtResource("9_ret8s")
-region = Rect2(0, 0, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_lkb32"]
-atlas = ExtResource("9_ret8s")
-region = Rect2(16, 0, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_sgbsa"]
-atlas = ExtResource("9_ret8s")
-region = Rect2(32, 0, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ypxvy"]
-atlas = ExtResource("9_ret8s")
-region = Rect2(48, 0, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ksu7u"]
-atlas = ExtResource("9_ret8s")
-region = Rect2(64, 0, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_8uu66"]
-atlas = ExtResource("9_ret8s")
-region = Rect2(80, 0, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_p7gsm"]
-atlas = ExtResource("9_ret8s")
-region = Rect2(96, 0, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_6dqel"]
-atlas = ExtResource("9_ret8s")
-region = Rect2(112, 0, 16, 16)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_3tpyg"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_uwprp")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_lkb32")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_sgbsa")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_ypxvy")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_ksu7u")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_8uu66")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_p7gsm")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_6dqel")
-}],
-"loop": true,
-"name": &"default",
-"speed": 12.0
-}]
-
 [node name="Root" type="Node2D"]
 
 [node name="Player" type="AnimatedSprite2D" parent="." node_paths=PackedStringArray("World")]
@@ -1330,19 +1200,3 @@ tile_set = SubResource("TileSet_3rv6q")
 z_index = 4
 width = 4.0
 default_color = Color(0.956863, 0.705882, 0.105882, 1)
-
-[node name="AnimatedSprite2D2" type="AnimatedSprite2D" parent="World"]
-position = Vector2(128, -320)
-scale = Vector2(4, 4)
-sprite_frames = SubResource("SpriteFrames_mf4l4")
-autoplay = "default"
-frame_progress = 0.975565
-centered = false
-
-[node name="AnimatedSprite2D3" type="AnimatedSprite2D" parent="World"]
-position = Vector2(256, -320)
-scale = Vector2(4, 4)
-sprite_frames = SubResource("SpriteFrames_3tpyg")
-autoplay = "default"
-frame_progress = 0.690221
-centered = false

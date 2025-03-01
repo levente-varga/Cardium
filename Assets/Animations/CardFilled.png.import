@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://2no1nlp5smr4"
-path="res://.godot/imported/Card loot.png-5d680799505a88a7cf3d218ffef69724.ctex"
+uid="uid://bhmda5eu048u0"
+path="res://.godot/imported/CardFilled.png-36c38deca50e0e3b5fed4fec19b9e1be.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/TileSets/Card loot.png"
-dest_files=["res://.godot/imported/Card loot.png-5d680799505a88a7cf3d218ffef69724.ctex"]
+source_file="res://Assets/Animations/CardFilled.png"
+dest_files=["res://.godot/imported/CardFilled.png-36c38deca50e0e3b5fed4fec19b9e1be.ctex"]
 
 [params]
 
