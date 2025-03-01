@@ -36,11 +36,11 @@ public partial class Entity : TileAlignedGameObject
     
     public override void _Ready()
     {
+        base._Ready();
+        
         HealthBar = new HealthBar();
         AddChild(HealthBar);
         Position = Vector2I.Zero;
-        Scale = new Vector2(Global.Scale, Global.Scale);
-        Centered = false;
         Name = "Entity";
         SetupHealthBar();
     }

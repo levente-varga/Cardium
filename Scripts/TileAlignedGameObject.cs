@@ -9,7 +9,13 @@ public partial class TileAlignedGameObject : AnimatedSprite2D
     
     public delegate void OnMoveDelegate(TileAlignedGameObject gameGameObject);
     public event OnMoveDelegate OnMoveEvent;
-    
+
+    public override void _Ready()
+    {
+        Scale = new Vector2(Global.Scale, Global.Scale);
+        Centered = false;
+    }
+
     public override void _Process(double delta)
     {
         if (base.Position.DistanceTo(Position * Global.TileSize) < 1)

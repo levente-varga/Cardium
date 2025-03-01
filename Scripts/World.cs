@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cardium.Scripts.Enemies;
+using Cardium.Scripts.Interactables;
 using Godot;
 
 namespace Cardium.Scripts;
@@ -41,6 +42,7 @@ public partial class World : Node2D
 	    SetupPath();
 	    UpdatePath();
 	    
+	    SpawnInteractables();
 	    SpawnEnemies();
 	    
 	    Player.OnMoveEvent += OnPlayerMove;
@@ -121,7 +123,7 @@ public partial class World : Node2D
 	);
     
     public bool EnemyExistsAt(Vector2I position) => _enemies.Any(enemy => enemy.Position == position);
-    public bool ObjectExistsAt(Vector2I position) => ObjectLayer.GetCellTileData(position) != null;
+    public bool InteractableExistsAt(Vector2I position) => _interactables.Any(enemy => enemy.Position == position);
     public bool WallExistsAt(Vector2I position) => WallLayer.GetCellTileData(position) != null;
 
     public bool ObjectExistsNextTo(Vector2I position) =>
@@ -134,7 +136,7 @@ public partial class World : Node2D
     
     public bool IsTileEmpty(Vector2I position) => 
 	    !WallExistsAt(position)
-	    && !ObjectExistsAt(position)
+	    && !InteractableExistsAt(position)
 	    && !EnemyExistsAt(position)
 	    && Player.Position != position;
 
@@ -236,7 +238,7 @@ public partial class World : Node2D
 	    _enemies.Add(enemy);
     }
     
-    private void SpawnObject(Interactable interactable, Vector2I position)
+    private void SpawnInteractable(Interactable interactable, Vector2I position)
     {
 	    if (!IsTileEmpty(position)) return;
 	    AddChild(interactable);
@@ -261,11 +263,11 @@ public partial class World : Node2D
 	    }
     }
     
-    private void SpawnObjects()
+    private void SpawnInteractables()
     {
 	    foreach (var cell in ObjectLayer.GetUsedCells())
 	    {
-		    SpawnObject(new Interactable(), cell);
+		    SpawnInteractable(new Bonfire(), cell);
 		    ObjectLayer.SetCell(cell, -1, new Vector2I(-1, -1));
 	    }
     }

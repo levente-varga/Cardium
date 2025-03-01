@@ -2,13 +2,13 @@ using Godot;
 
 namespace Cardium.Scripts.Interactables;
 
-public partial class Bonfire : Interactable
+public partial class Chest : Interactable
 {
     public override void _Ready()
     {
         base._Ready();
 
-        SetAnimation(GD.Load<Texture2D>("res://Assets/TileSets/Fire animated.png"), 4, 12);
+        SetAnimation(ResourceLoader.Load<Texture2D>("res://Assets/TileSets/Fire animated.png"), 4, 12);
     }
 
     public override void _Process(double delta)
