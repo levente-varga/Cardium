@@ -1,13 +1,11 @@
-[gd_scene load_steps=13 format=4 uid="uid://cw3o4f0nr0f2v"]
+[gd_scene load_steps=11 format=4 uid="uid://cw3o4f0nr0f2v"]
 
 [ext_resource type="Script" path="res://Scripts/Hand.cs" id="1_3ixgw"]
 [ext_resource type="Texture2D" uid="uid://br1qrnu0l6v15" path="res://Assets/Sprites/player.png" id="2_4yuyp"]
 [ext_resource type="Script" path="res://Scripts/Camera.cs" id="3_evct5"]
 [ext_resource type="Script" path="res://Scripts/Player.cs" id="3_q31ct"]
 [ext_resource type="Script" path="res://Scripts/World.cs" id="4_ayy7p"]
-[ext_resource type="Texture2D" uid="uid://kt27mh54svlc" path="res://Assets/Sprites/Enemies/slime.png" id="4_ja0v2"]
 [ext_resource type="Texture2D" uid="uid://vre1mtm6rq0g" path="res://Assets/TileSets/colored-transparent.png" id="4_s82ru"]
-[ext_resource type="Script" path="res://Scripts/Enemies/SlimeEnemy.cs" id="5_nlxdu"]
 [ext_resource type="Texture2D" uid="uid://cdescqx8vh087" path="res://Assets/TileSets/fog.png" id="11_b6upe"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_mdys3"]
@@ -1111,14 +1109,6 @@ texture = ExtResource("2_4yuyp")
 centered = false
 script = ExtResource("3_q31ct")
 World = NodePath("../World")
-
-[node name="Slime" type="Sprite2D" parent="."]
-z_index = 5
-position = Vector2(192, -576)
-scale = Vector2(4, 4)
-texture = ExtResource("4_ja0v2")
-centered = false
-script = ExtResource("5_nlxdu")
 
 [node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("Target")]
 script = ExtResource("3_evct5")

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Cardium.Scripts.Enemies;
 using Godot;
 
 namespace Cardium.Scripts;
@@ -38,6 +39,8 @@ public partial class World : Node2D
 	    SetupFogOfWar();
 	    SetupPath();
 	    UpdatePath();
+	    
+	    SpawnEnemy(new SlimeEnemy(), new Vector2I(3, -7));
 
 	    Player.OnMoveEvent += OnPlayerMove;
     }
@@ -109,6 +112,19 @@ public partial class World : Node2D
 		    _grid.SetPointSolid(cell);
 	    }
     }
+
+    private void SpawnEnemy(Enemy enemy, Vector2I position)
+    {
+	    GD.Print("Trying to spawn an enemy at ", position, "...");
+	    if (!IsTileEmpty(position)) return;
+	    
+	    GD.Print("Setting up enemy health bar...");
+	    enemy.AddChild(new HealthBar());
+	    AddChild(enemy);
+	    enemy.Position = position;
+	    _enemies.Add(enemy);
+	    GD.Print("Enemy spawned at ", position);
+    }
     
     private Vector2I GetTilePosition(Vector2 position) => new (
 		Mathf.FloorToInt(position.X / TileSize.X),
@@ -117,7 +133,9 @@ public partial class World : Node2D
     
     public bool IsTileEmpty(Vector2I position) => 
 	    WallLayer.GetCellTileData(position) == null
-	    && ObjectLayer.GetCellTileData(position) == null;
+	    && ObjectLayer.GetCellTileData(position) == null
+	    && _enemies.All(enemy => enemy.Position != position)
+	    && Player.Position != position;
 
     /// <summary>
     /// Draws the path from the start to the end

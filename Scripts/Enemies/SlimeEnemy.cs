@@ -8,7 +8,13 @@ public partial class SlimeEnemy : Enemy
     {
         base._Ready();
         
-        Position = new Vector2I(3, -9);
+        Texture = GD.Load<Texture2D>("res://assets/Sprites/Enemies/slime.png");
+        Name = "Slime";
+    }
+    
+    public override void _Process(double delta)
+    {
+        base._Process(delta);
     }
 
     public override void OnTurn(Player player)

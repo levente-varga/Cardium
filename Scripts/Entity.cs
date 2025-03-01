@@ -23,12 +23,14 @@ public partial class Entity : Sprite2D
     public delegate void OnDeathDelegate();
     public event OnDeathDelegate OnDeathEvent;
     
-    public new Vector2I Position { get; protected set; }
+    public new Vector2I Position { get; set; }
     private Vector2I _previousPosition;
     
     public override void _Ready()
     {
         Position = Vector2I.Zero;
+        Scale = new Vector2(Global.Scale, Global.Scale);
+        Centered = false;
         Name = "Entity";
     }
 

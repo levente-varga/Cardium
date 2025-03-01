@@ -86,6 +86,7 @@ public partial class HealthBar : Polygon2D
 	
 	public override void _Ready()
 	{
+		Name = "HealthBar";
 		_smoothHealth = Health / MaxHealth; 
 		UpdatePolygon();
 	}
