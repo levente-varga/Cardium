@@ -7,11 +7,10 @@ public partial class HealthBar : Polygon2D
 {
 	private float _smoothHealth;
 	
-	private float _health;
-
-	public float Health
+	private float _health = 1;
+	public int Health
 	{
-		get => _health;
+		get => (int)_health;
 		set
 		{
 			_health = Math.Max(0, value);
@@ -22,14 +21,13 @@ public partial class HealthBar : Polygon2D
 		}
 	}
 	
-	private float _maxHealth;
-
-	public float MaxHealth
+	private float _maxHealth = 1;
+	public int MaxHealth
 	{
-		get => _maxHealth;
+		get => (int)_maxHealth;
 		set
 		{
-			_maxHealth = Math.Max(0, value);
+			_maxHealth = Math.Max(1, value);
 			if (Health > MaxHealth)
 			{
 				Health = MaxHealth;
@@ -37,7 +35,7 @@ public partial class HealthBar : Polygon2D
 		}
 	}
 	
-	private float _gap = 8;
+	private float _gap = 2;
 	[Export] public float Gap
 	{
 		get => _gap;
@@ -48,7 +46,7 @@ public partial class HealthBar : Polygon2D
 		}
 	}
 	
-	private float _thickness = 8;
+	private float _thickness = 2;
 	[Export] public float Thickness 
 	{
 		get => _thickness;
@@ -59,7 +57,7 @@ public partial class HealthBar : Polygon2D
 		}
 	}
 	
-	private float _horizontalMargin = 8;
+	private float _horizontalMargin = 2;
 	[Export] public float HorizontalMargin
 	{
 		get => _horizontalMargin;
@@ -70,7 +68,7 @@ public partial class HealthBar : Polygon2D
 		}	
 	}
 	
-	private float _width = 64;
+	private float _width = 16;
 	[Export] public float Width 
 	{
 		get => _width;
@@ -87,7 +85,9 @@ public partial class HealthBar : Polygon2D
 	public override void _Ready()
 	{
 		Name = "HealthBar";
-		_smoothHealth = Health / MaxHealth; 
+		Visible = true;
+		ZIndex = 10;
+		_smoothHealth = _health / _maxHealth; 
 		UpdatePolygon();
 	}
 	
@@ -96,18 +96,18 @@ public partial class HealthBar : Polygon2D
 		Polygon = new Vector2[]
 		{
 			new (HorizontalMargin, -Gap),
-			new (HorizontalMargin + SmoothWidth, -Gap),
-			new (HorizontalMargin + SmoothWidth, -Gap - Thickness),
 			new (HorizontalMargin, -Gap - Thickness),
+			new (HorizontalMargin + SmoothWidth, -Gap - Thickness),
+			new (HorizontalMargin + SmoothWidth, -Gap),
 			new (HorizontalMargin, -Gap)
 		};
 	}
 
 	public override void _Process(double delta)
 	{
-		_smoothHealth = Mathf.Lerp(_smoothHealth, Health / MaxHealth, 0.1f);
+		_smoothHealth = Mathf.Lerp(_smoothHealth, _health / _maxHealth, 0.1f);
 		
-		Polygon[1] = new Vector2(HorizontalMargin + SmoothWidth, -Gap);
+		Polygon[3] = new Vector2(HorizontalMargin + SmoothWidth, -Gap);
 		Polygon[2] = new Vector2(HorizontalMargin + SmoothWidth, -Gap - Thickness);
 	}
 }
