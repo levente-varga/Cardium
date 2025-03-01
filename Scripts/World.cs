@@ -267,7 +267,14 @@ public partial class World : Node2D
     {
 	    foreach (var cell in ObjectLayer.GetUsedCells())
 	    {
-		    SpawnInteractable(new Bonfire(), cell);
+		    Interactable interactable;
+		    
+		    if (ObjectLayer.GetCellAtlasCoords(cell) == Global.BonfireAtlasCoords) interactable = new Bonfire();
+			else if (ObjectLayer.GetCellAtlasCoords(cell) == Global.ChestAtlasCoords) interactable = new Chest();
+		    else if (ObjectLayer.GetCellAtlasCoords(cell) == Global.DoorAtlasCoords) interactable = new Door();
+		    else return;
+		    
+		    SpawnInteractable(interactable, cell);
 		    ObjectLayer.SetCell(cell, -1, new Vector2I(-1, -1));
 	    }
     }
