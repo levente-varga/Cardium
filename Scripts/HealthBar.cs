@@ -1,3 +1,4 @@
+using System;
 using Godot;
 
 namespace Cardium.Scripts;
@@ -6,7 +7,35 @@ public partial class HealthBar : Polygon2D
 {
 	private float _smoothHealth;
 	
-	public float Health;
+	private float _health;
+
+	public float Health
+	{
+		get => _health;
+		set
+		{
+			_health = Math.Max(0, value);
+			if (Health > MaxHealth)
+			{
+				Health = MaxHealth;
+			}
+		}
+	}
+	
+	private float _maxHealth;
+
+	public float MaxHealth
+	{
+		get => _maxHealth;
+		set
+		{
+			_maxHealth = Math.Max(0, value);
+			if (Health > MaxHealth)
+			{
+				Health = MaxHealth;
+			}
+		}
+	}
 	
 	private float _gap = 8;
 	[Export] public float Gap
@@ -57,7 +86,7 @@ public partial class HealthBar : Polygon2D
 	
 	public override void _Ready()
 	{
-		_smoothHealth = Health;
+		_smoothHealth = Health / MaxHealth; 
 		UpdatePolygon();
 	}
 	
@@ -75,7 +104,7 @@ public partial class HealthBar : Polygon2D
 
 	public override void _Process(double delta)
 	{
-		_smoothHealth = Mathf.Lerp(_smoothHealth, Health, 0.1f);
+		_smoothHealth = Mathf.Lerp(_smoothHealth, Health / MaxHealth, 0.1f);
 		
 		Polygon[1] = new Vector2(HorizontalMargin + SmoothWidth, -Gap);
 		Polygon[2] = new Vector2(HorizontalMargin + SmoothWidth, -Gap - Thickness);
