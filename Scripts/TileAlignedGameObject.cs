@@ -12,8 +12,15 @@ public partial class TileAlignedGameObject : Sprite2D
     
     public override void _Process(double delta)
     {
-        base.Position = base.Position.Lerp(Position * Global.TileSize, 0.1f);
-        
+        if (base.Position.DistanceTo(Position * Global.TileSize) < 1)
+        {
+            base.Position = Position * Global.TileSize;
+        }
+        else
+        {
+            base.Position = base.Position.Lerp(Position * Global.TileSize, Global.LerpWeight * (float) delta);
+        }
+
         if (_previousPosition != Position)
         {
             OnMoveEvent?.Invoke(this);

@@ -105,7 +105,7 @@ public partial class HealthBar : Polygon2D
 
 	public override void _Process(double delta)
 	{
-		_smoothHealth = Mathf.Lerp(_smoothHealth, _health / _maxHealth, 0.2f);
+		_smoothHealth = Mathf.Lerp(_smoothHealth, _health / _maxHealth, Global.LerpWeight * (float) delta);
 		
 		UpdatePolygon();
 	}

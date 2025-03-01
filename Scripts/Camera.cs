@@ -30,8 +30,8 @@ public partial class Camera : Camera2D
 		var targetCenter = Target.GlobalPosition + ((Target.Texture.GetSize() * Target.Scale) / 2);
 		
 		// lerp to player position:
-		Position = GlobalPosition.Lerp(targetCenter, 0.1f);
-		Zoom = Zoom.Lerp(_zoom ? Vector2.One / 0.7f : Vector2.One, 0.05f);
+		Position = GlobalPosition.Lerp(targetCenter, Global.LerpWeight * (float) delta);
+		Zoom = Zoom.Lerp(_zoom ? Vector2.One / 0.7f : Vector2.One, Global.LerpWeight * (float) delta);
 	}
 
 	public override void _Input(InputEvent @event)
