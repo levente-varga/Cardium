@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=4 uid="uid://cw3o4f0nr0f2v"]
+[gd_scene load_steps=27 format=4 uid="uid://cw3o4f0nr0f2v"]
 
 [ext_resource type="Script" path="res://Scripts/Hand.cs" id="1_3ixgw"]
 [ext_resource type="Texture2D" uid="uid://br1qrnu0l6v15" path="res://Assets/Sprites/player.png" id="2_4yuyp"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://Scripts/Player.cs" id="3_q31ct"]
 [ext_resource type="Script" path="res://Scripts/World.cs" id="4_ayy7p"]
 [ext_resource type="Texture2D" uid="uid://vre1mtm6rq0g" path="res://Assets/TileSets/colored-transparent.png" id="4_s82ru"]
+[ext_resource type="Texture2D" uid="uid://bivmdpjoqxfa4" path="res://Assets/TileSets/Fire animated.png" id="8_jeh1w"]
 [ext_resource type="Texture2D" uid="uid://dejly3ni430dn" path="res://Assets/TileSets/Card loot hollow.png" id="8_rkndv"]
 [ext_resource type="Texture2D" uid="uid://cdescqx8vh087" path="res://Assets/TileSets/fog.png" id="11_b6upe"]
 
@@ -1101,64 +1102,100 @@ separation = Vector2i(1, 1)
 sources/0 = SubResource("TileSetAtlasSource_mdys3")
 sources/2 = SubResource("TileSetAtlasSource_bcugv")
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_06b7f"]
-atlas = ExtResource("8_rkndv")
+[sub_resource type="AtlasTexture" id="AtlasTexture_4su7t"]
+atlas = ExtResource("8_jeh1w")
 region = Rect2(0, 0, 16, 16)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_5kyp1"]
-atlas = ExtResource("8_rkndv")
+[sub_resource type="AtlasTexture" id="AtlasTexture_vh7d2"]
+atlas = ExtResource("8_jeh1w")
 region = Rect2(16, 0, 16, 16)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_8l4fv"]
-atlas = ExtResource("8_rkndv")
+[sub_resource type="AtlasTexture" id="AtlasTexture_wxx0j"]
+atlas = ExtResource("8_jeh1w")
 region = Rect2(32, 0, 16, 16)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_p31d3"]
-atlas = ExtResource("8_rkndv")
+[sub_resource type="AtlasTexture" id="AtlasTexture_m4j7b"]
+atlas = ExtResource("8_jeh1w")
 region = Rect2(48, 0, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_abqmg"]
-atlas = ExtResource("8_rkndv")
-region = Rect2(64, 0, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_elna6"]
-atlas = ExtResource("8_rkndv")
-region = Rect2(80, 0, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_0l2hw"]
-atlas = ExtResource("8_rkndv")
-region = Rect2(96, 0, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_napip"]
-atlas = ExtResource("8_rkndv")
-region = Rect2(112, 0, 16, 16)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_3f084"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_06b7f")
+"texture": SubResource("AtlasTexture_4su7t")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_5kyp1")
+"texture": SubResource("AtlasTexture_vh7d2")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_8l4fv")
+"texture": SubResource("AtlasTexture_wxx0j")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_p31d3")
+"texture": SubResource("AtlasTexture_m4j7b")
+}],
+"loop": true,
+"name": &"default",
+"speed": 6.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m3lme"]
+atlas = ExtResource("8_rkndv")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_w7pa2"]
+atlas = ExtResource("8_rkndv")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_thr2r"]
+atlas = ExtResource("8_rkndv")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i2squ"]
+atlas = ExtResource("8_rkndv")
+region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v7wdg"]
+atlas = ExtResource("8_rkndv")
+region = Rect2(64, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vjvp6"]
+atlas = ExtResource("8_rkndv")
+region = Rect2(80, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_njnp4"]
+atlas = ExtResource("8_rkndv")
+region = Rect2(96, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8xjiu"]
+atlas = ExtResource("8_rkndv")
+region = Rect2(112, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_mf4l4"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m3lme")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_abqmg")
+"texture": SubResource("AtlasTexture_w7pa2")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_elna6")
+"texture": SubResource("AtlasTexture_thr2r")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_0l2hw")
+"texture": SubResource("AtlasTexture_i2squ")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_napip")
+"texture": SubResource("AtlasTexture_v7wdg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vjvp6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_njnp4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8xjiu")
 }],
 "loop": true,
 "name": &"default",
@@ -1208,7 +1245,7 @@ offset_right = 40.0
 offset_bottom = 83.0
 text = "Test"
 
-[node name="World" type="Node2D" parent="." node_paths=PackedStringArray("Camera", "Player", "DebugLabel1", "DebugLabel2", "DebugLabel3", "DebugLabel4", "DecorLayer", "WallLayer", "ObjectLayer", "LootLayer", "FogLayer")]
+[node name="World" type="Node2D" parent="." node_paths=PackedStringArray("Camera", "Player", "DebugLabel1", "DebugLabel2", "DebugLabel3", "DebugLabel4", "DecorLayer", "WallLayer", "ObjectLayer", "EnemyLayer", "LootLayer", "FogLayer")]
 z_index = -1
 script = ExtResource("4_ayy7p")
 Camera = NodePath("../Camera2D")
@@ -1220,6 +1257,7 @@ DebugLabel4 = NodePath("../Camera2D/CanvasLayer/Label4")
 DecorLayer = NodePath("DecorLayer")
 WallLayer = NodePath("WallLayer")
 ObjectLayer = NodePath("ObjectLayer")
+EnemyLayer = NodePath("EnemyLayer")
 LootLayer = NodePath("LootLayer")
 FogLayer = NodePath("FogLayer")
 
@@ -1241,6 +1279,13 @@ z_index = 2
 use_parent_material = true
 scale = Vector2(4, 4)
 tile_map_data = PackedByteArray("AAAGAAAAAAADAAkAAAADAPX/AAAIAAYAAAADAAAAAAAOAAoAAAA=")
+tile_set = SubResource("TileSet_3rv6q")
+
+[node name="EnemyLayer" type="TileMapLayer" parent="World"]
+z_index = 2
+use_parent_material = true
+scale = Vector2(4, 4)
+tile_map_data = PackedByteArray("AAADAPn/AAAUAAUAAAA=")
 tile_set = SubResource("TileSet_3rv6q")
 
 [node name="LootLayer" type="TileMapLayer" parent="World"]
@@ -1265,5 +1310,13 @@ position = Vector2(192, -384)
 scale = Vector2(4, 4)
 sprite_frames = SubResource("SpriteFrames_3f084")
 autoplay = "default"
-frame_progress = 0.103785
+frame_progress = 0.476681
+centered = false
+
+[node name="AnimatedSprite2D2" type="AnimatedSprite2D" parent="World"]
+position = Vector2(192, -320)
+scale = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_mf4l4")
+autoplay = "default"
+frame_progress = 0.0033678
 centered = false

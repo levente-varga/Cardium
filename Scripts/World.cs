@@ -18,6 +18,7 @@ public partial class World : Node2D
 	[Export] public TileMapLayer DecorLayer;
 	[Export] public TileMapLayer WallLayer;
 	[Export] public TileMapLayer ObjectLayer;
+	[Export] public TileMapLayer EnemyLayer;
 	[Export] public TileMapLayer LootLayer;
 	[Export] public TileMapLayer FogLayer;
 	
@@ -40,8 +41,8 @@ public partial class World : Node2D
 	    SetupPath();
 	    UpdatePath();
 	    
-	    SpawnEnemy(new SlimeEnemy(), new Vector2I(3, -7));
-
+	    SpawnEnemies();
+	    
 	    Player.OnMoveEvent += OnPlayerMove;
     }
     
@@ -58,6 +59,7 @@ public partial class World : Node2D
 	    _layers.Add(DecorLayer);
 	    _layers.Add(WallLayer);
 	    _layers.Add(ObjectLayer);
+	    _layers.Add(EnemyLayer);
 	    _layers.Add(LootLayer);
     }
 
@@ -111,19 +113,6 @@ public partial class World : Node2D
 	    {
 		    _grid.SetPointSolid(cell);
 	    }
-    }
-
-    private void SpawnEnemy(Enemy enemy, Vector2I position)
-    {
-	    GD.Print("Trying to spawn an enemy at ", position, "...");
-	    if (!IsTileEmpty(position)) return;
-	    
-	    GD.Print("Setting up enemy health bar...");
-	    enemy.OnDeathEvent += OnEnemyDeath;
-	    AddChild(enemy);
-	    enemy.SetPosition(position);
-	    _enemies.Add(enemy);
-	    GD.Print("Enemy spawned at ", position);
     }
     
     private Vector2I GetTilePosition(Vector2 position) => new (
@@ -236,5 +225,57 @@ public partial class World : Node2D
     {
 	    GD.Print(source.Name + " attacked " + target.Name + " for " + source.Damage + " damage!");
 	    target.OnDamaged(source, source.Damage);
+    }
+
+    private void SpawnEnemy(Enemy enemy, Vector2I position)
+    {
+	    if (!IsTileEmpty(position)) return;
+	    enemy.OnDeathEvent += OnEnemyDeath;
+	    AddChild(enemy);
+	    enemy.SetPosition(position);
+	    _enemies.Add(enemy);
+    }
+    
+    private void SpawnObject(Interactable interactable, Vector2I position)
+    {
+	    if (!IsTileEmpty(position)) return;
+	    AddChild(interactable);
+	    interactable.SetPosition(position);
+	    _interactables.Add(interactable);
+    }
+    
+    private void SpawnLoot(CardLoot loot, Vector2I position)
+    {
+	    if (!IsTileEmpty(position)) return;
+	    AddChild(loot);
+	    loot.SetPosition(position);
+	    _loot.Add(loot);
+    }
+    
+    private void SpawnEnemies()
+    {
+	    foreach (var cell in EnemyLayer.GetUsedCells())
+	    {
+		    SpawnEnemy(new SlimeEnemy(), cell);
+		    EnemyLayer.SetCell(cell, -1, new Vector2I(-1, -1));
+	    }
+    }
+    
+    private void SpawnObjects()
+    {
+	    foreach (var cell in ObjectLayer.GetUsedCells())
+	    {
+		    SpawnObject(new Interactable(), cell);
+		    ObjectLayer.SetCell(cell, -1, new Vector2I(-1, -1));
+	    }
+    }
+    
+    private void SpawnLoot()
+    {
+	    foreach (var cell in LootLayer.GetUsedCells())
+	    {
+		    SpawnLoot(new CardLoot(), cell);
+		    LootLayer.SetCell(cell, -1, new Vector2I(-1, -1));
+	    }
     }
 }
