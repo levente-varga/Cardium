@@ -33,43 +33,29 @@ public partial class Player : Entity
 	
 	public override void _Input(InputEvent @event)
 	{
-		switch (@event)
+		if (InputMap.EventIsAction(@event, "Right"))
 		{
-			case InputEventKey { Pressed: true, Keycode: Key.Right }:
-				if (World.IsTileEmpty(Position + Vector2I.Right))
-					Position += Vector2I.Right;
-				break;
-			case InputEventKey { Pressed: true, Keycode: Key.Left }:
-				if (World.IsTileEmpty(Position + Vector2I.Left))
-					Position += Vector2I.Left;
-				break;
-			case InputEventKey { Pressed: true, Keycode: Key.Up }:
-				if (World.IsTileEmpty(Position + Vector2I.Up))
-					Position += Vector2I.Up;
-				break;
-			case InputEventKey { Pressed: true, Keycode: Key.Down }:
-				if (World.IsTileEmpty(Position + Vector2I.Down))
-					Position += Vector2I.Down;
-				break;
-			case InputEventKey { Pressed: true, Keycode: Key.E }:
-				Interact();
-				break;
-			case InputEventKey { Pressed: true, Keycode: Key.Q }:
-				if (!World.EnemyExistsAt(Position + Vector2I.Up))
-				{
-					GD.Print("No enemy to attack at " + (Position + Vector2I.Up));
-					break;
-				}
-				Enemy enemy = World.GetEnemyAt(Position + Vector2I.Up);
-				if (enemy == null)
-				{
-					GD.Print("Null returned as enemy at " + (Position + Vector2I.Up));
-					break;
-				}
-				GD.Print("Attacking " + enemy.Name);
-				
-				Attack(enemy);
-				break;
+			if (World.IsTileEmpty(Position + Vector2I.Right)) Position += Vector2I.Right;
+		}
+		else if (InputMap.EventIsAction(@event, "Left"))
+		{
+			if (World.IsTileEmpty(Position + Vector2I.Left)) Position += Vector2I.Left;
+		}
+		else if (InputMap.EventIsAction(@event, "Up"))
+		{
+			if (World.IsTileEmpty(Position + Vector2I.Up)) Position += Vector2I.Up;
+		}
+		else if (InputMap.EventIsAction(@event, "Down"))
+		{
+			if (World.IsTileEmpty(Position + Vector2I.Down)) Position += Vector2I.Down;
+		}
+		else if (InputMap.EventIsAction(@event, "Interact"))
+		{
+			Interact();
+		}
+		else if (InputMap.EventIsAction(@event, "Use"))
+		{
+			Attack();
 		}
 	}
 	
@@ -78,9 +64,13 @@ public partial class Player : Entity
 		_nextToObject = World.InteractableExistsAt(Position + Vector2I.Up);
 	}
 	
-	public void Attack(Entity target)
+	public void Attack()
 	{
-		World.Attack(target, this);
+		if (!World.EnemyExistsAt(Position + Vector2I.Up)) return;
+		var enemy = World.GetEnemyAt(Position + Vector2I.Up);
+		if (enemy == null) return;
+		
+		World.Attack(enemy, this);
 	}
 
 	public void Interact()
