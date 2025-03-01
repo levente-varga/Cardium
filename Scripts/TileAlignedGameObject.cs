@@ -2,7 +2,7 @@ using Godot;
 
 namespace Cardium.Scripts;
 
-public partial class TileAlignedGameObject : Sprite2D
+public partial class TileAlignedGameObject : AnimatedSprite2D
 {
     public new Vector2I Position { get; set; }
     private Vector2I _previousPosition;
@@ -32,5 +32,20 @@ public partial class TileAlignedGameObject : Sprite2D
     {
         Position = position;
         base.Position = position * Global.TileSize;
+    }
+
+    protected void SetTexture(Texture2D texture)
+    {
+        // Create a new SpriteFrames resource
+        var frames = new SpriteFrames();
+        frames.AddAnimation("single");
+        frames.SetAnimationLoop("single", false);
+
+        // Add a single frame
+        frames.AddFrame("single", texture);
+
+        // Assign the SpriteFrames to the AnimatedSprite2D
+        SpriteFrames = frames;
+        Play("single", 0); // Not necessary, but ensures it stays on this frame
     }
 }

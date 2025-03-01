@@ -4,7 +4,7 @@ namespace Cardium.Scripts;
 
 public partial class Camera : Camera2D
 {
-	[Export] public Sprite2D Target;
+	[Export] public Node2D Target;
 
 	private bool _zoom;
 
@@ -27,7 +27,7 @@ public partial class Camera : Camera2D
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
-		var targetCenter = Target.GlobalPosition + ((Target.Texture.GetSize() * Target.Scale) / 2);
+		var targetCenter = Target.GlobalPosition + new Vector2(Global.TileSize, Global.TileSize) / 2;
 		
 		// lerp to player position:
 		Position = GlobalPosition.Lerp(targetCenter, Global.LerpWeight * (float) delta);

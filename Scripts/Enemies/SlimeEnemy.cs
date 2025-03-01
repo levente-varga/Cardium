@@ -8,7 +8,7 @@ public partial class SlimeEnemy : Enemy
     {
         base._Ready();
         
-        Texture = GD.Load<Texture2D>("res://assets/Sprites/Enemies/slime.png");
+        SetTexture(GD.Load<Texture2D>("res://assets/Sprites/Enemies/slime.png"));
         Name = "Slime";
         MaxHealth = 3;
         Health = MaxHealth;

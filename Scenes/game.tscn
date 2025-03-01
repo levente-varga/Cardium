@@ -1,7 +1,6 @@
-[gd_scene load_steps=27 format=4 uid="uid://cw3o4f0nr0f2v"]
+[gd_scene load_steps=26 format=4 uid="uid://cw3o4f0nr0f2v"]
 
 [ext_resource type="Script" path="res://Scripts/Hand.cs" id="1_3ixgw"]
-[ext_resource type="Texture2D" uid="uid://br1qrnu0l6v15" path="res://Assets/Sprites/player.png" id="2_4yuyp"]
 [ext_resource type="Script" path="res://Scripts/Camera.cs" id="3_evct5"]
 [ext_resource type="Script" path="res://Scripts/Player.cs" id="3_q31ct"]
 [ext_resource type="Script" path="res://Scripts/World.cs" id="4_ayy7p"]
@@ -1204,10 +1203,9 @@ animations = [{
 
 [node name="Root" type="Node2D"]
 
-[node name="Player" type="Sprite2D" parent="." node_paths=PackedStringArray("World")]
+[node name="Player" type="AnimatedSprite2D" parent="." node_paths=PackedStringArray("World")]
 z_index = 5
 scale = Vector2(4, 4)
-texture = ExtResource("2_4yuyp")
 centered = false
 script = ExtResource("3_q31ct")
 World = NodePath("../World")
@@ -1310,7 +1308,7 @@ position = Vector2(192, -384)
 scale = Vector2(4, 4)
 sprite_frames = SubResource("SpriteFrames_3f084")
 autoplay = "default"
-frame_progress = 0.476681
+frame_progress = 0.699069
 centered = false
 
 [node name="AnimatedSprite2D2" type="AnimatedSprite2D" parent="World"]
@@ -1318,5 +1316,5 @@ position = Vector2(192, -320)
 scale = Vector2(4, 4)
 sprite_frames = SubResource("SpriteFrames_mf4l4")
 autoplay = "default"
-frame_progress = 0.0033678
+frame_progress = 0.447796
 centered = false
