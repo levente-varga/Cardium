@@ -9,6 +9,7 @@ public partial class SlimeEnemy : Enemy
         base._Ready();
         
         SetTexture(GD.Load<Texture2D>("res://assets/Sprites/Enemies/slime.png"));
+        SetAnimation(GD.Load<Texture2D>("res://assets/TileSets/Slime animated.png"), 8, 12);
         Name = "Slime";
         MaxHealth = 3;
         Health = MaxHealth;
@@ -37,9 +38,13 @@ public partial class SlimeEnemy : Enemy
 
     public override void OnDamaged(Entity source, int damage)
     {
-        base.OnDamaged(source, damage);
+        Tween tween = GetTree().CreateTween();
+        Modulate = new Color(0.25f, 0.25f, 0.25f, 1); // Set red
+        tween.TweenProperty(this, "modulate", new Color(1, 1, 1, 1), 0.2f);
         
         GD.Print(Name + " received " + damage + " damage from " + source.Name + ". Current health: " + Health + "/" + MaxHealth);
+        
+        base.OnDamaged(source, damage);
     }
 
     public override void OnTargeted(Entity source)
