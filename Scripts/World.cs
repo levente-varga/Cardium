@@ -134,6 +134,12 @@ public partial class World : Node2D
     public bool EnemyExistsAt(Vector2I position) => _enemies.Any(enemy => enemy.Position == position);
     public bool ObjectExistsAt(Vector2I position) => ObjectLayer.GetCellTileData(position) != null;
     public bool WallExistsAt(Vector2I position) => WallLayer.GetCellTileData(position) != null;
+
+    public bool ObjectExistsNextTo(Vector2I position) =>
+	    ObjectLayer.GetCellTileData(position + Vector2I.Down) != null ||
+	    ObjectLayer.GetCellTileData(position + Vector2I.Up) != null ||
+	    ObjectLayer.GetCellTileData(position + Vector2I.Left) != null ||
+	    ObjectLayer.GetCellTileData(position + Vector2I.Right) != null;
     
     public Enemy GetEnemyAt(Vector2I position) => _enemies.FirstOrDefault(enemy => enemy.Position == position);
     

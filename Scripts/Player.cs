@@ -11,6 +11,8 @@ public partial class Player : Entity
 	private Pile _discardPile = new();
 	private Hand _hand = new();
 	
+	private bool _nextToObject = false;
+	
 	public override void _Ready()
 	{
 		base._Ready();
@@ -66,6 +68,11 @@ public partial class Player : Entity
 				Attack(enemy);
 				break;
 		}
+	}
+	
+	public void CheckForObjects()
+	{
+		_nextToObject = World.ObjectExistsAt(Position + Vector2I.Up);
 	}
 	
 	public void Attack(Entity target)
