@@ -5,11 +5,11 @@ namespace Cardium.Scripts;
 
 public partial class Entity : Sprite2D
 {
-    public int Health { get; protected set; } = 5;
-    public int Energy { get; protected set; } = 5;
+    public int Health { get; protected set; } = 1;
+    public int Energy { get; protected set; } = 1;
 
-    public int MaxHealth;
-    public int MaxEnergy;
+    public int MaxHealth = 1;
+    public int MaxEnergy = 1;
     public int Armor;
     public int Damage;
     public float Luck;
@@ -17,10 +17,10 @@ public partial class Entity : Sprite2D
     public float Range;
     public string Description;
     
-    public delegate void OnMoveDelegate();
+    public delegate void OnMoveDelegate(Entity entity);
     public event OnMoveDelegate OnMoveEvent;
     
-    public delegate void OnDeathDelegate();
+    public delegate void OnDeathDelegate(Entity entity);
     public event OnDeathDelegate OnDeathEvent;
     
     public new Vector2I Position { get; set; }
@@ -40,7 +40,7 @@ public partial class Entity : Sprite2D
         
         if (_previousPosition != Position)
         {
-            OnMoveEvent?.Invoke();
+            OnMoveEvent?.Invoke(this);
             _previousPosition = Position;
         }
     }
@@ -60,7 +60,7 @@ public partial class Entity : Sprite2D
     {
         // TODO: Implement dodge based on luck
         Health -= Math.Min(1, damage - Armor);
-        if (Health < 0) OnDeath(source);
+        if (Health <= 0) OnDeath(source);
     }
 
     public virtual void OnTargeted(Entity source)
@@ -71,6 +71,6 @@ public partial class Entity : Sprite2D
     public virtual void OnDeath(Entity source)
     {
         Health = 0;
-        OnDeathEvent?.Invoke();
+        OnDeathEvent?.Invoke(this);
     }
 }

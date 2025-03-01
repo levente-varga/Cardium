@@ -10,6 +10,16 @@ public partial class SlimeEnemy : Enemy
         
         Texture = GD.Load<Texture2D>("res://assets/Sprites/Enemies/slime.png");
         Name = "Slime";
+        MaxHealth = 3;
+        Health = MaxHealth;
+        MaxEnergy = 1;
+        Energy = MaxEnergy;
+        Armor = 0;
+        Damage = 1;
+        Luck = 0f;
+        Vision = 2f;
+        Range = 1f;
+        Description = "A slime enemy.";
     }
     
     public override void _Process(double delta)
@@ -27,9 +37,9 @@ public partial class SlimeEnemy : Enemy
 
     public override void OnDamaged(Entity source, int damage)
     {
-        GD.Print(Name + " received " + damage + " damage from " + source.Name);
-        
         base.OnDamaged(source, damage);
+        
+        GD.Print(Name + " received " + damage + " damage from " + source.Name + ". Current health: " + Health + "/" + MaxHealth);
     }
 
     public override void OnTargeted(Entity source)

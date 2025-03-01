@@ -119,6 +119,7 @@ public partial class World : Node2D
 	    if (!IsTileEmpty(position)) return;
 	    
 	    GD.Print("Setting up enemy health bar...");
+	    enemy.OnDeathEvent += OnEnemyDeath;
 	    enemy.AddChild(new HealthBar());
 	    AddChild(enemy);
 	    enemy.SetPosition(position);
@@ -213,11 +214,18 @@ public partial class World : Node2D
     	QueueRedraw();
     }
 
-    private void OnPlayerMove()
+    private void OnPlayerMove(Entity entity)
     {
 	    UpdatePath();
 	    QueueRedraw();
     }
+    
+    private void OnEnemyDeath(Entity entity)
+	{
+		GD.Print(entity.Name + " died!");
+	    _enemies.Remove((Enemy)entity);
+	    RemoveChild(entity);
+	}
 
     public void Attack(Entity target, Entity source)
     {
