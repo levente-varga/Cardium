@@ -85,6 +85,7 @@ public partial class HealthBar : Polygon2D
 	public override void _Ready()
 	{
 		Name = "HealthBar";
+		Color = new Color("E6482E");
 		Visible = true;
 		ZIndex = 10;
 		_smoothHealth = _health / _maxHealth; 
@@ -99,15 +100,13 @@ public partial class HealthBar : Polygon2D
 			new (HorizontalMargin, -Gap - Thickness),
 			new (HorizontalMargin + SmoothWidth, -Gap - Thickness),
 			new (HorizontalMargin + SmoothWidth, -Gap),
-			new (HorizontalMargin, -Gap)
 		};
 	}
 
 	public override void _Process(double delta)
 	{
-		_smoothHealth = Mathf.Lerp(_smoothHealth, _health / _maxHealth, 0.1f);
+		_smoothHealth = Mathf.Lerp(_smoothHealth, _health / _maxHealth, 0.2f);
 		
-		Polygon[3] = new Vector2(HorizontalMargin + SmoothWidth, -Gap);
-		Polygon[2] = new Vector2(HorizontalMargin + SmoothWidth, -Gap - Thickness);
+		UpdatePolygon();
 	}
 }
