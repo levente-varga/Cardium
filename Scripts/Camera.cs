@@ -9,6 +9,8 @@ public partial class Camera : Camera2D
 
 	private float _shake;
 	private readonly Random _random = new Random();
+	
+	private Vector2 TargetCenter => Target.GlobalPosition + Global.TileSize / 2;
 
 	private bool _focus;
 	public bool Focus
@@ -39,11 +41,9 @@ public partial class Camera : Camera2D
 
 	public override void _Process(double delta)
 	{
-		var targetCenter = Target.GlobalPosition + Global.TileSize / 2;
-		
 		Zoom = Zoom.Lerp(_focus ? Vector2.One / 0.7f : Vector2.One, Global.LerpWeight * (float) delta);
 		Scale = Zoom.Inverse();
-		Position = GlobalPosition.Lerp(targetCenter, Global.LerpWeight * (float) delta);
+		Position = GlobalPosition.Lerp(TargetCenter, Global.LerpWeight * (float) delta);
 		
 		if (_shake > 0)
 		{
@@ -75,5 +75,10 @@ public partial class Camera : Camera2D
 	public void Shake(float amount)
 	{
 		_shake = amount;
+	}
+	
+	public void JumpToTarget()
+	{
+		Position = TargetCenter;
 	}
 }

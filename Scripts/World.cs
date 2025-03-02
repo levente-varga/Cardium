@@ -54,6 +54,8 @@ public partial class World : Node2D
 	    Player.OnNudgeEvent += OnPlayerNudge;
 	    Player.OnEnterCombatEvent += entity => { Camera.Focus = true; };
 	    Player.OnLeaveCombatEvent += entity => { Camera.Focus = false; };
+	    
+	    Camera.JumpToTarget();
     }
     
     public override void _Process(double delta)
