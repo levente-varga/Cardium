@@ -7,8 +7,11 @@ public partial class TileAlignedGameObject : AnimatedSprite2D
     public new Vector2I Position { get; set; }
     private Vector2I _previousPosition;
     
-    public delegate void OnMoveDelegate(TileAlignedGameObject gameGameObject);
+    public delegate void OnMoveDelegate(TileAlignedGameObject gameGameObject, Vector2I position);
     public event OnMoveDelegate OnMoveEvent;
+    
+    public delegate void OnNudgeDelegate(TileAlignedGameObject gameGameObject, Vector2I position);
+    public event OnNudgeDelegate OnNudgeEvent;
 
     public override void _Ready()
     {
@@ -29,7 +32,7 @@ public partial class TileAlignedGameObject : AnimatedSprite2D
 
         if (_previousPosition != Position)
         {
-            OnMoveEvent?.Invoke(this);
+            OnMoveEvent?.Invoke(this, Position);
             _previousPosition = Position;
         }
     }
@@ -84,5 +87,6 @@ public partial class TileAlignedGameObject : AnimatedSprite2D
     protected void Nudge(Vector2I direction)
     {
         base.Position += direction * Global.TileSize / 8;
+        OnNudgeEvent?.Invoke(this, Position + direction);
     }
 }

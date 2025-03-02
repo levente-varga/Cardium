@@ -46,6 +46,7 @@ public partial class World : Node2D
 	    SpawnEnemies();
 	    
 	    Player.OnMoveEvent += OnPlayerMove;
+	    Player.OnNudgeEvent += OnPlayerNudge;
     }
     
     public override void _Process(double delta)
@@ -210,19 +211,24 @@ public partial class World : Node2D
     	QueueRedraw();
     }
 
-    private void OnPlayerMove(TileAlignedGameObject gameObject)
+    private void OnPlayerMove(TileAlignedGameObject gameObject, Vector2I position)
     {
 	    PickUpLoot();
 	    UpdatePath();
 	    QueueRedraw();
     }
     
+    private void OnPlayerNudge(TileAlignedGameObject gameObject, Vector2I position)
+	{
+		Interact(position);
+	}
+    
     private void OnEnemyDeath(Entity entity)
 	{
 		GD.Print(entity.Name + " died!");
 	    _enemies.Remove((Enemy)entity);
-	    entity.QueueFree();
 	    RemoveChild(entity);
+	    entity.QueueFree();
 	    
 	    var cardLoot = new CardLoot();
 	    _loot.Add(cardLoot);
@@ -320,9 +326,9 @@ public partial class World : Node2D
 	{
 		foreach (var loot in _loot.Where(loot => loot.Position == Player.Position).ToList())
 		{
-			loot.QueueFree();
 			_loot.Remove(loot);
 			RemoveChild(loot);
+			loot.QueueFree();
 			// TODO: Add loot to player
 		}
 	}
