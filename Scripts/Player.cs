@@ -63,7 +63,7 @@ public partial class Player : Entity
 		{
 			Attack();
 		}
-		else if (Input.IsKeyPressed(Key.R))
+		else if (InputMap.EventIsAction(@event, "Reset"))
 		{
 			GetTree().ReloadCurrentScene();
 		}

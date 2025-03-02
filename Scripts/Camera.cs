@@ -42,6 +42,7 @@ public partial class Camera : Camera2D
 		var targetCenter = Target.GlobalPosition + Global.TileSize / 2;
 		
 		Zoom = Zoom.Lerp(_focus ? Vector2.One / 0.7f : Vector2.One, Global.LerpWeight * (float) delta);
+		Scale = Zoom.Inverse();
 		Position = GlobalPosition.Lerp(targetCenter, Global.LerpWeight * (float) delta);
 		
 		if (_shake > 0)
