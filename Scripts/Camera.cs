@@ -7,9 +7,19 @@ public partial class Camera : Camera2D
 {
 	[Export] public Node2D Target;
 
-	private bool _zoom;
 	private float _shake;
-	private Random _random = new Random();
+	private readonly Random _random = new Random();
+
+	private bool _focus;
+	public bool Focus
+	{
+		get => _focus;
+		set
+		{
+			_focus = value;
+			//SetFocus(_focus);
+		}
+	}
 
 	public Rect2 ViewRect
 	{
@@ -31,8 +41,8 @@ public partial class Camera : Camera2D
 	{
 		var targetCenter = Target.GlobalPosition + Global.TileSize / 2;
 		
+		Zoom = Zoom.Lerp(_focus ? Vector2.One / 0.7f : Vector2.One, Global.LerpWeight * (float) delta);
 		Position = GlobalPosition.Lerp(targetCenter, Global.LerpWeight * (float) delta);
-		Zoom = Zoom.Lerp(_zoom ? Vector2.One / 0.7f : Vector2.One, Global.LerpWeight * (float) delta);
 		
 		if (_shake > 0)
 		{
@@ -52,12 +62,13 @@ public partial class Camera : Camera2D
 		}
 	}
 
-	public override void _Input(InputEvent @event)
+	private void SetFocus(bool focus)
 	{
-		if (@event is InputEventKey { Pressed: true, Keycode: Key.Space })
-		{
-			_zoom = !_zoom;
-		}
+		var tween = CreateTween();
+		
+		tween.TweenProperty(this, "zoom", focus ? new Vector2(1.5f, 1.5f) : new Vector2(1f, 1f), 0.5f);
+		tween.SetEase(Tween.EaseType.OutIn);
+		tween.Play();
 	}
 	
 	public void Shake(float amount)

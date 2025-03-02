@@ -49,6 +49,8 @@ public partial class World : Node2D
 	    
 	    Player.OnMoveEvent += OnPlayerMove;
 	    Player.OnNudgeEvent += OnPlayerNudge;
+	    Player.OnEnterCombatEvent += entity => { Camera.Focus = true; };
+	    Player.OnLeaveCombatEvent += entity => { Camera.Focus = false; };
     }
     
     public override void _Process(double delta)
@@ -232,6 +234,7 @@ public partial class World : Node2D
 	{
 		GD.Print(entity.Name + " died!");
 	    _enemies.Remove((Enemy)entity);
+	    Player.OnMoveEvent -= ((Enemy)entity).OnPlayerMove;
 	    RemoveChild(entity);
 	    entity.QueueFree();
 	    

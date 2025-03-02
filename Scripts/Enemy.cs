@@ -47,17 +47,20 @@ public partial class Enemy : Entity
 
     public void OnPlayerMove(TileAlignedGameObject player, Vector2I position)
     {
+        var _player = player as Player;
         if (InVision(position))
         {
             if (InCombat) return;
             InCombat = true;
             HealthBar.Visible = true;
             SpawnFloatingLabel("Spotted!", color: Global.Red, lifetimeMillis: 2000);
+            _player?.OnSpotted(this);
         }
         else
         {
             HealthBar.Visible = false;
             InCombat = false;
+            _player?.OnFled(this);
         }
     }
 }

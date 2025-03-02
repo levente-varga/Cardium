@@ -32,6 +32,12 @@ public partial class Entity : TileAlignedGameObject
     public delegate void OnDeathDelegate(Entity entity);
     public event OnDeathDelegate OnDeathEvent;
     
+    public delegate void OnEnterCombatDelegate(Entity entity);
+    public event OnEnterCombatDelegate OnEnterCombatEvent;
+    
+    public delegate void OnLeaveCombatDelegate(Entity entity);
+    public event OnLeaveCombatDelegate OnLeaveCombatEvent;
+    
     private Vector2I _previousPosition;
     
     public override void _Ready()
@@ -89,5 +95,15 @@ public partial class Entity : TileAlignedGameObject
     public bool InVision(Vector2I position)
     {
         return Position.DistanceTo(position) <= Vision;
+    }
+
+    public void OnSpotted(Entity source)
+    {
+        OnEnterCombatEvent?.Invoke(this);
+    }
+    
+    public void OnFled(Entity source)
+    {
+        OnLeaveCombatEvent?.Invoke(this);
     }
 }
