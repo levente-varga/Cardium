@@ -221,6 +221,7 @@ public partial class World : Node2D
     private void OnPlayerNudge(TileAlignedGameObject gameObject, Vector2I position)
 	{
 		Interact(position);
+		Attack(position, Player);
 	}
     
     private void OnEnemyDeath(Entity entity)
@@ -243,6 +244,14 @@ public partial class World : Node2D
 	    
 	    Camera.Shake(6 * source.Damage);
     }
+    
+    public void Attack(Vector2I position, Entity source)
+	{
+	    var enemy = GetEnemyAt(position);
+	    if (enemy == null) return;
+	    
+	    Attack(enemy, source);
+	}
 
     private void SpawnEnemy(Enemy enemy, Vector2I position)
     {

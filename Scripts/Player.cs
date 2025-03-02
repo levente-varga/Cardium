@@ -72,11 +72,7 @@ public partial class Player : Entity
 	
 	public void Attack()
 	{
-		if (!World.EnemyExistsAt(Position + Vector2I.Up)) return;
-		var enemy = World.GetEnemyAt(Position + Vector2I.Up);
-		if (enemy == null) return;
-		
-		World.Attack(enemy, this);
+		World.Attack(Position + Vector2I.Up, this);
 	}
 
 	public void Interact()
