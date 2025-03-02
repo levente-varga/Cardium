@@ -18,6 +18,15 @@ public partial class FallingLabel : Label
         AddThemeFontSizeOverride("font_size", 40);
         
         _velocity = new Vector2(_random.Next(80, 100), _random.Next(-500, -400));
+        
+        var shadow = new Label();
+        shadow.Text = Text;
+        shadow.AddThemeFontOverride("font", font);
+        shadow.AddThemeFontSizeOverride("font_size", 40);
+        shadow.Modulate = new Color(0, 0, 0, 1f);
+        shadow.Position = new Vector2(4, 4);
+        shadow.ZIndex = ZIndex - 1;
+        AddChild(shadow);
     }
 
     public override void _Process(double delta)
