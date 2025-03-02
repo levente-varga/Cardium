@@ -1141,11 +1141,12 @@ offset_right = 40.0
 offset_bottom = 83.0
 text = "Test"
 
-[node name="World" type="Node2D" parent="." node_paths=PackedStringArray("Camera", "Player", "DebugLabel1", "DebugLabel2", "DebugLabel3", "DebugLabel4", "DecorLayer", "WallLayer", "ObjectLayer", "EnemyLayer", "LootLayer", "FogLayer")]
+[node name="World" type="Node2D" parent="." node_paths=PackedStringArray("Camera", "Player", "Hand", "DebugLabel1", "DebugLabel2", "DebugLabel3", "DebugLabel4", "DecorLayer", "WallLayer", "ObjectLayer", "EnemyLayer", "LootLayer", "FogLayer")]
 z_index = -1
 script = ExtResource("4_ayy7p")
 Camera = NodePath("../Camera2D")
 Player = NodePath("../Player")
+Hand = NodePath("../Camera2D/Hand")
 DebugLabel1 = NodePath("../Camera2D/CanvasLayer/Label1")
 DebugLabel2 = NodePath("../Camera2D/CanvasLayer/Label2")
 DebugLabel3 = NodePath("../Camera2D/CanvasLayer/Label3")

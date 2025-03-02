@@ -11,6 +11,7 @@ public partial class World : Node2D
 {
 	[Export] public Camera Camera;
 	[Export] public Player Player;
+	[Export] public Hand Hand;
 	[Export] public Label DebugLabel1;
 	[Export] public Label DebugLabel2;
 	[Export] public Label DebugLabel3;
@@ -340,6 +341,7 @@ public partial class World : Node2D
 			RemoveChild(loot);
 			loot.QueueFree();
 			// TODO: Add loot to player
+			Hand.AddCard();
 		}
 	}
 }

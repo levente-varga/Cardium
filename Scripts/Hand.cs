@@ -110,13 +110,14 @@ public partial class Hand : Node2D
 	}
 
 
-	private void AddCard()
+	public void AddCard()
 	{
 		if (_cards.Count >= MaxHandSize) return;
 		var card = _cardScene.Instantiate<Node2D>();
 		_cardAngles.Add(-45);
 		_cards.Add(card);
 		AddChild(card);
+		PositionHand();
 	}
 
 
@@ -127,6 +128,7 @@ public partial class Hand : Node2D
 		_cardAngles.RemoveAt(i);
 		_cards[i].QueueFree();
 		_cards.RemoveAt(i);
+		PositionHand();
 	}
 
 
@@ -135,11 +137,9 @@ public partial class Hand : Node2D
 		if (@event is InputEventMouseButton { Pressed: true, ButtonIndex: MouseButton.Left })
 		{
 			AddCard();
-			PositionHand();
 		}
 
 		if (@event is not InputEventMouseButton { Pressed: true, ButtonIndex: MouseButton.Right }) return;
 		RemoveCard();
-		PositionHand();
 	}
 }
