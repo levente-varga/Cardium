@@ -9,7 +9,7 @@ public partial class FallingLabel : Label
     private Vector2 _velocity = new (0, 0);
     private ulong _spawnTime = Time.GetTicksMsec();
     
-    public float LifetimeMillis = 1000;
+    public float LifetimeMillis = 1200f;
     
     public override void _Ready()
     {
@@ -17,9 +17,7 @@ public partial class FallingLabel : Label
         AddThemeFontOverride("font", font);
         AddThemeFontSizeOverride("font_size", 40);
         
-        var progress = 1 - (Time.GetTicksMsec() - _spawnTime) / LifetimeMillis;
         _velocity = new Vector2(_random.Next(80, 100), _random.Next(-500, -400));
-        Modulate = new Color(Modulate.R, Modulate.G, Modulate.B, MathF.Pow(progress, 10));
     }
 
     public override void _Process(double delta)
@@ -31,5 +29,8 @@ public partial class FallingLabel : Label
         }
         _velocity += new Vector2(0, 1200f) * (float) delta;
         Position += _velocity * (float) delta;
+        
+        var progress = 1f - (Time.GetTicksMsec() - _spawnTime) / LifetimeMillis;
+        Modulate = new Color(Modulate.R, Modulate.G, Modulate.B, MathF.Pow(progress, 0.5f));
     }
 }
