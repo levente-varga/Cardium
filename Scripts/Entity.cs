@@ -80,4 +80,14 @@ public partial class Entity : TileAlignedGameObject
         Health = 0;
         OnDeathEvent?.Invoke(this);
     }
+
+    public bool InRange(Vector2I position)
+    {
+        return Position.DistanceTo(position) <= Range;
+    }
+    
+    public bool InVision(Vector2I position)
+    {
+        return Position.DistanceTo(position) <= Vision;
+    }
 }

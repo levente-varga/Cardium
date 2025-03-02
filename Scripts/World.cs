@@ -25,6 +25,7 @@ public partial class World : Node2D
 	[Export] public TileMapLayer FogLayer;
 	
 	private readonly List<Enemy> _enemies = new();
+	private readonly List<Enemy> _enemiesInCombat = new();
 	private readonly List<CardLoot> _loot = new();
 	private readonly List<Interactable> _interactables = new();
 	
@@ -175,17 +176,17 @@ public partial class World : Node2D
 		    for (var y = topLeftTile.Y; y < topLeftTile.Y + roundedVision * 2; y++)
 		    {
 			    var coords = new Vector2I(x, y);
-			    if (((Vector2)Player.Position).DistanceTo(coords) >= Player.Vision)
+			    if (Player.InVision(coords))
+			    {
+				    //DrawRect(new Rect2(x * TileSize.X, y * TileSize.Y, TileSize.X, TileSize.Y), new Color("F4B41B"));
+				    FogLayer.SetCell(coords, 2, new Vector2I(2, 0));
+			    }
+			    else
 			    {
 				    if (FogLayer.GetCellAtlasCoords(coords).X == 2)
 				    {
 					    FogLayer.SetCell(coords, 2, new Vector2I(1, 0));
 				    }
-			    }
-			    else
-			    {
-				    //DrawRect(new Rect2(x * TileSize.X, y * TileSize.Y, TileSize.X, TileSize.Y), new Color("F4B41B"));
-				    FogLayer.SetCell(coords, 2, new Vector2I(2, 0));
 			    }
 		    }
 	    }
