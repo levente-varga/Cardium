@@ -117,7 +117,7 @@ public partial class HealthBar : Polygon2D
 	
 	public void SpawnFloatingLabel(string text)
 	{
-		FallingLabel label = new()
+		Labels.FallingLabel label = new()
 		{
 			Text = text,
 			Position = new Vector2(GlobalPosition.X + (HorizontalMargin + ActualWidth) * Global.Scale, GlobalPosition.Y),

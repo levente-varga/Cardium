@@ -100,7 +100,7 @@ public partial class TileAlignedGameObject : AnimatedSprite2D
     
     public void SpawnFloatingLabel(string text, Color color)
     {
-        FallingLabel label = new()
+        Labels.FallingLabel label = new()
         {
             Text = text,
             Position = GlobalPosition + Global.TileSize / 2,

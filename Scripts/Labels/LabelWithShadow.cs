@@ -1,18 +1,12 @@
-using System;
 using Godot;
 
-namespace Cardium.Scripts;
+namespace Cardium.Scripts.Labels;
 
-public partial class FallingLabel : Node2D
+public partial class LabelWithShadow : Node2D
 {
-    private readonly Random _random = new ();
-    private Vector2 _velocity = new (0, 0);
-    private ulong _spawnTime = Time.GetTicksMsec();
-    
     private Label _label;
     private Label _shadow;
     
-    public float LifetimeMillis = 1200f;
     public string Text;
     public Color Color;
     
@@ -38,21 +32,10 @@ public partial class FallingLabel : Node2D
         shadow.Position = new Vector2(4, 4);
         shadow.ZIndex = _label.ZIndex - 1;
         AddChild(shadow);
-        
-        _velocity = new Vector2(_random.Next(80, 100), _random.Next(-500, -400));
     }
 
     public override void _Process(double delta)
     {
-        if (Time.GetTicksMsec() - _spawnTime > LifetimeMillis)
-        {
-            QueueFree();
-            return;
-        }
-        _velocity += new Vector2(0, 1200f) * (float) delta;
-        Position += _velocity * (float) delta;
         
-        var progress = 1f - (Time.GetTicksMsec() - _spawnTime) / LifetimeMillis;
-        Modulate = new Color(Modulate.R, Modulate.G, Modulate.B, MathF.Pow(progress, 0.5f));
     }
 }
