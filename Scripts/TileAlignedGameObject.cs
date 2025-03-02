@@ -89,4 +89,12 @@ public partial class TileAlignedGameObject : AnimatedSprite2D
         base.Position += direction * Global.TileSize / 8;
         OnNudgeEvent?.Invoke(this, Position + direction);
     }
+
+    public void Blink()
+    {
+        Tween tween = CreateTween();
+        Modulate = new Color(0f, 0f, 0f, 1); // Set red
+        tween.TweenProperty(this, "modulate", new Color(1, 1, 1, 1), 0.2f);
+        tween.Play();
+    }
 }

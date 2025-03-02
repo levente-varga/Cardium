@@ -37,12 +37,6 @@ public partial class SlimeEnemy : Enemy
 
     public override void OnDamaged(Entity source, int damage)
     {
-        Tween tween = CreateTween();
-        Modulate = new Color(0.25f, 0.25f, 0.25f, 1); // Set red
-        tween.TweenProperty(this, "modulate", new Color(1, 1, 1, 1), 0.2f);
-        
-        GD.Print(Name + " received " + damage + " damage from " + source.Name + ". Current health: " + Health + "/" + MaxHealth);
-        
         base.OnDamaged(source, damage);
     }
 
