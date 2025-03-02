@@ -13,6 +13,10 @@ public partial class FallingLabel : Label
     
     public override void _Ready()
     {
+        var font = GD.Load<FontFile>("res://Assets/Fonts/alagard.ttf");
+        AddThemeFontOverride("font", font);
+        AddThemeFontSizeOverride("font_size", 40);
+        
         var progress = 1 - (Time.GetTicksMsec() - _spawnTime) / LifetimeMillis;
         _velocity = new Vector2(_random.Next(80, 100), _random.Next(-500, -400));
         Modulate = new Color(Modulate.R, Modulate.G, Modulate.B, MathF.Pow(progress, 10));
