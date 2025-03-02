@@ -37,11 +37,15 @@ public partial class Camera : Camera2D
 		if (_shake > 0)
 		{
 			// Apply random offsets to the camera's position for the shake effect
-			var offsetX = (float)(_random.NextDouble() * 2 - 1) * _shake; // Random X offset between -shakeAmount and shakeAmount
-			var offsetY = (float)(_random.NextDouble() * 2 - 1) * _shake; // Random Y offset between -shakeAmount and shakeAmount
+			var offset = new Vector2(
+				(float)(_random.NextDouble() * 2 - 1),
+				(float)(_random.NextDouble() * 2 - 1)
+			);
+			if (offset == Vector2.Zero) offset = Vector2.One;
+			offset = offset.Normalized() * _shake;
 
 			// Apply the offset to the camera's position
-			Position += new Vector2(offsetX, offsetY);
+			Position += offset;
 
 			// Gradually reduce the shake intensity (smooth shake reduction)
 			_shake = Mathf.Lerp(_shake, 0f, Global.LerpWeight * (float)delta); // You can adjust the reduction speed
