@@ -13,7 +13,8 @@ public partial class FloatingLabel : DisappearingLabel
     
     public override void _Ready()
     {
-        _velocity = new Vector2(_random.Next(-50, 50), _random.Next(-500, -400));
+        Position += Vector2.Up * Global.TileSize; 
+        _velocity = new Vector2(_random.Next(-50, 50), _random.Next(-300, -240));
         
         base._Ready();
     }

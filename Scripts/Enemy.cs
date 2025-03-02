@@ -7,6 +7,8 @@ public partial class Enemy : Entity
     public override void _Ready()
     {
         base._Ready();
+        
+        HealthBar.Visible = false;
     }
     
     public override void _Process(double delta)
@@ -41,5 +43,21 @@ public partial class Enemy : Entity
     public override void OnDeath(Entity source)
     {
         base.OnDeath(source);
+    }
+
+    public void OnPlayerMove(TileAlignedGameObject player, Vector2I position)
+    {
+        if (InVision(position))
+        {
+            if (InCombat) return;
+            InCombat = true;
+            HealthBar.Visible = true;
+            SpawnFloatingLabel("Spotted!", color: Global.Red, lifetimeMillis: 2000);
+        }
+        else
+        {
+            HealthBar.Visible = false;
+            InCombat = false;
+        }
     }
 }

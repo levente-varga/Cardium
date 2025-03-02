@@ -261,6 +261,7 @@ public partial class World : Node2D
     {
 	    if (!IsTileEmpty(position)) return;
 	    enemy.OnDeathEvent += OnEnemyDeath;
+	    Player.OnMoveEvent += enemy.OnPlayerMove;
 	    AddChild(enemy);
 	    enemy.SetPosition(position);
 	    _enemies.Add(enemy);

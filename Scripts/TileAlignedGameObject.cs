@@ -109,7 +109,7 @@ public partial class TileAlignedGameObject : AnimatedSprite2D
         GetTree().Root.AddChild(label);
     }
     
-    public void SpawnFloatingLabel(string text, Color? color = null, int? fontSize = null)
+    public void SpawnFloatingLabel(string text, Color? color = null, int? fontSize = null, int? lifetimeMillis = 2000)
     {
         Labels.FloatingLabel label = new()
         {
@@ -117,6 +117,7 @@ public partial class TileAlignedGameObject : AnimatedSprite2D
             Position = GlobalPosition + Global.TileSize / 2,
             Color = color,
             FontSize = fontSize ?? 40,
+            LifetimeMillis = lifetimeMillis,
         };
         GetTree().Root.AddChild(label);
     }

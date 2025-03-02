@@ -5,7 +5,8 @@ namespace Cardium.Scripts.Labels;
 public partial class DisappearingLabel : LabelWithShadow
 {
     protected readonly ulong SpawnTime = Time.GetTicksMsec();
-    public float LifetimeMillis = 1200f;
+    public float? LifetimeMillis;
+    private const float DefaultLifetimeMillis = 1200f;
     
     public override void _Ready()
     {
@@ -14,12 +15,12 @@ public partial class DisappearingLabel : LabelWithShadow
     
     public override void _Process(double delta)
     {
-        if (Time.GetTicksMsec() - SpawnTime > LifetimeMillis)
+        if (Time.GetTicksMsec() - SpawnTime > (LifetimeMillis ?? DefaultLifetimeMillis))
         {
             QueueFree();
         }
         
-        var progress = 1f - (Time.GetTicksMsec() - SpawnTime) / LifetimeMillis;
+        var progress = 1f - (Time.GetTicksMsec() - SpawnTime) / (LifetimeMillis ?? DefaultLifetimeMillis);
         Modulate = new Color(Modulate.R, Modulate.G, Modulate.B, Mathf.Pow(progress, 0.5f));
         
         base._Process(delta);
