@@ -80,4 +80,9 @@ public partial class TileAlignedGameObject : AnimatedSprite2D
         
         if (autoPlay) Play(name);
     }
+    
+    protected void Nudge(Vector2I direction)
+    {
+        base.Position += direction * Global.TileSize / 8;
+    }
 }

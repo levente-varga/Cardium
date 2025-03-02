@@ -38,18 +38,22 @@ public partial class Player : Entity
 		if (InputMap.EventIsAction(@event, "Right"))
 		{
 			if (World.IsTileEmpty(Position + Vector2I.Right)) Position += Vector2I.Right;
+			else Nudge(Vector2I.Right);
 		}
 		else if (InputMap.EventIsAction(@event, "Left"))
 		{
 			if (World.IsTileEmpty(Position + Vector2I.Left)) Position += Vector2I.Left;
+			else Nudge(Vector2I.Left);
 		}
 		else if (InputMap.EventIsAction(@event, "Up"))
 		{
 			if (World.IsTileEmpty(Position + Vector2I.Up)) Position += Vector2I.Up;
+			else Nudge(Vector2I.Up);
 		}
 		else if (InputMap.EventIsAction(@event, "Down"))
 		{
 			if (World.IsTileEmpty(Position + Vector2I.Down)) Position += Vector2I.Down;
+			else Nudge(Vector2I.Down);
 		}
 		else if (InputMap.EventIsAction(@event, "Interact"))
 		{
