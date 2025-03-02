@@ -51,9 +51,10 @@ public partial class World : Node2D
     
     public override void _Process(double delta)
     {
-	    DebugLabel1.Text = "Camera view size: " + Camera.ViewRect.Size;
-	    DebugLabel2.Text = "Camera top left: " + Camera.ViewRect.Position;
-	    DebugLabel3.Text = "Camera zoom: " + Camera.Zoom;
+	    DebugLabel1.Text = "";
+	    DebugLabel2.Text = "";
+	    DebugLabel3.Text = "";
+	    DebugLabel4.Text = "";
     }
     
     private void SetupLayers()

@@ -63,6 +63,10 @@ public partial class Player : Entity
 		{
 			Attack();
 		}
+		else if (Input.IsKeyPressed(Key.R))
+		{
+			GetTree().ReloadCurrentScene();
+		}
 	}
 	
 	public void CheckForObjects()
