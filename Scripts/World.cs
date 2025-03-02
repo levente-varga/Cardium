@@ -221,6 +221,11 @@ public partial class World : Node2D
 		GD.Print(entity.Name + " died!");
 	    _enemies.Remove((Enemy)entity);
 	    RemoveChild(entity);
+	    
+	    var cardLoot = new CardLoot();
+	    _loot.Add(cardLoot);
+	    AddChild(cardLoot);
+	    cardLoot.SetPosition(entity.Position);
 	}
 
     public void Attack(Entity target, Entity source)
