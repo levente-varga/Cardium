@@ -67,6 +67,10 @@ public partial class Player : Entity
 		{
 			GetTree().ReloadCurrentScene();
 		}
+		else if (InputMap.EventIsAction(@event, "Back"))
+		{
+			GetTree().Quit();
+		}
 	}
 	
 	public void Attack()
