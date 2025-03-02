@@ -13,14 +13,14 @@ public partial class FloatingLabel : DisappearingLabel
     
     public override void _Ready()
     {
-        _velocity = new Vector2(_random.Next(80, 100), _random.Next(-500, -400));
+        _velocity = new Vector2(_random.Next(-50, 50), _random.Next(-500, -400));
         
         base._Ready();
     }
 
     public override void _Process(double delta)
     {
-        _velocity += new Vector2(0, 1200f) * (float) delta;
+        _velocity = _velocity.Lerp(new Vector2(0, 0), 3 * (float) delta);
         Position += _velocity * (float) delta;
         
         base._Process(delta);

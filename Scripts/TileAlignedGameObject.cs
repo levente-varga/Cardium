@@ -98,13 +98,25 @@ public partial class TileAlignedGameObject : AnimatedSprite2D
         tween.Play();
     }
     
-    public void SpawnFloatingLabel(string text, Color color)
+    public void SpawnFallingLabel(string text, Color? color = null)
     {
         Labels.FallingLabel label = new()
         {
             Text = text,
             Position = GlobalPosition + Global.TileSize / 2,
             Color = color,
+        };
+        GetTree().Root.AddChild(label);
+    }
+    
+    public void SpawnFloatingLabel(string text, Color? color = null, int? fontSize = null)
+    {
+        Labels.FloatingLabel label = new()
+        {
+            Text = text,
+            Position = GlobalPosition + Global.TileSize / 2,
+            Color = color,
+            FontSize = fontSize ?? 40,
         };
         GetTree().Root.AddChild(label);
     }

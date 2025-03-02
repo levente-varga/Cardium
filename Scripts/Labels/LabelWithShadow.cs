@@ -8,7 +8,8 @@ public partial class LabelWithShadow : Node2D
     private Label _shadow;
     
     public string Text;
-    public Color Color;
+    public Color? Color;
+    public int? FontSize = 40;
     
     public override void _Ready()
     {
@@ -19,15 +20,15 @@ public partial class LabelWithShadow : Node2D
         _label = new Label();
         _label.Text = Text;
         _label.AddThemeFontOverride("font", font);
-        _label.AddThemeFontSizeOverride("font_size", 40);
-        _label.Modulate = Color;
+        _label.AddThemeFontSizeOverride("font_size", FontSize ?? 40);
+        _label.Modulate = Color ?? new Color("FFFFFF");
         _label.ZIndex = 1;
         AddChild(_label);
         
         var shadow = new Label();
         shadow.Text = Text;
         shadow.AddThemeFontOverride("font", font);
-        shadow.AddThemeFontSizeOverride("font_size", 40);
+        shadow.AddThemeFontSizeOverride("font_size", FontSize ?? 40);
         shadow.Modulate = new Color(0, 0, 0, 1f);
         shadow.Position = new Vector2(4, 4);
         shadow.ZIndex = _label.ZIndex - 1;

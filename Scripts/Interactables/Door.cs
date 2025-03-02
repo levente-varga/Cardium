@@ -4,7 +4,7 @@ namespace Cardium.Scripts.Interactables;
 
 public partial class Door : Interactable
 {
-    bool opened = false;
+    private bool _opened = false;
     
     public override void _Ready()
     {
@@ -22,11 +22,11 @@ public partial class Door : Interactable
     {
         base.OnInteract(source, camera);
         
-        if (opened) return;
+        if (_opened) return;
         
-        opened = true;
+        _opened = true;
         camera.Shake(10);
-        SpawnFloatingLabel("Opened!", color: Colors.White);
+        SpawnFallingLabel("Opened!");
         Play("open");
     }
 }
