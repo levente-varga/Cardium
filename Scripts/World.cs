@@ -232,6 +232,8 @@ public partial class World : Node2D
     {
 	    GD.Print(source.Name + " attacked " + target.Name + " for " + source.Damage + " damage!");
 	    target.OnDamaged(source, source.Damage);
+	    
+	    Camera.Shake(10 * source.Damage);
     }
 
     private void SpawnEnemy(Enemy enemy, Vector2I position)
