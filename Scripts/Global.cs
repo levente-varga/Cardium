@@ -16,4 +16,5 @@ public static class Global
     public static readonly Color Yellow = new Color("F4B41B");
     public static readonly Color Red = new Color("E6482E");
     public static readonly Color White = new Color("FFFFFF");
+    public static readonly Color Magenta = new Color("472d3c");
 }
