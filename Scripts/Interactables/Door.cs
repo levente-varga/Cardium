@@ -18,13 +18,14 @@ public partial class Door : Interactable
         base._Process(delta);
     }
 
-    public override void OnInteract(Entity source)
+    public override void OnInteract(Entity source, Camera camera)
     {
-        base.OnInteract(source);
+        base.OnInteract(source, camera);
         
         if (opened) return;
         
         opened = true;
+        camera.Shake(10);
         SpawnFloatingLabel("Opened!", color: Colors.White);
         Play("open");
     }

@@ -328,7 +328,7 @@ public partial class World : Node2D
     public void Interact(Vector2I position)
 	{
 	    var interactable = _interactables.FirstOrDefault(interactable => interactable.Position == position);
-	    interactable?.OnInteract(Player);
+	    interactable?.OnInteract(Player, Camera);
 	}
 
 	private void PickUpLoot()
