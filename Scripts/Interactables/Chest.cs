@@ -4,6 +4,8 @@ namespace Cardium.Scripts.Interactables;
 
 public partial class Chest : Interactable
 {
+    bool opened = false;
+    
     public override void _Ready()
     {
         base._Ready();
@@ -20,6 +22,10 @@ public partial class Chest : Interactable
     {
         base.OnInteract(source);
         
+        if (opened) return;
+        
+        opened = true;
         Play("open");
+        SpawnFloatingLabel("Opened!", color: Colors.White);
     }
 }

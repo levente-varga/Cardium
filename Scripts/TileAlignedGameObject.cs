@@ -97,4 +97,17 @@ public partial class TileAlignedGameObject : AnimatedSprite2D
         tween.TweenProperty(this, "modulate", new Color(1, 1, 1, 1), 0.2f);
         tween.Play();
     }
+    
+    public void SpawnFloatingLabel(string text, Color color)
+    {
+        FallingLabel label = new()
+        {
+            Text = text,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center,
+            Position = GlobalPosition + Global.TileSize / 2,
+            Modulate = color,
+        };
+        GetTree().Root.AddChild(label);
+    }
 }
