@@ -316,8 +316,16 @@ public partial class World : Node2D
     {
 	    foreach (var cell in EnemyLayer.GetUsedCells())
 	    {
-		    SpawnEnemy(new Slime(), cell);
+		    Enemy enemy;
+		    
+		    var atlasCoords = EnemyLayer.GetCellAtlasCoords(cell);
 		    EnemyLayer.SetCell(cell, -1, new Vector2I(-1, -1));
+
+		    if (atlasCoords == Global.SlimeAtlasCoords) enemy = new Slime();
+		    else if (atlasCoords == Global.SpiderAtlasCoords) enemy = new Spider();
+		    else continue;
+		    
+		    SpawnEnemy(enemy, cell);
 	    }
     }
     
@@ -327,13 +335,15 @@ public partial class World : Node2D
 	    {
 		    Interactable interactable;
 		    
-		    if (ObjectLayer.GetCellAtlasCoords(cell) == Global.BonfireAtlasCoords) interactable = new Bonfire();
-			else if (ObjectLayer.GetCellAtlasCoords(cell) == Global.ChestAtlasCoords) interactable = new Chest();
-		    else if (ObjectLayer.GetCellAtlasCoords(cell) == Global.DoorAtlasCoords) interactable = new Door();
-		    else return;
+		    var atlasCoords = ObjectLayer.GetCellAtlasCoords(cell);
+		    ObjectLayer.SetCell(cell, -1, new Vector2I(-1, -1));
+		    
+		    if (atlasCoords == Global.BonfireAtlasCoords) interactable = new Bonfire();
+			else if (atlasCoords == Global.ChestAtlasCoords) interactable = new Chest();
+		    else if (atlasCoords == Global.DoorAtlasCoords) interactable = new Door();
+		    else continue;
 		    
 		    SpawnInteractable(interactable, cell);
-		    ObjectLayer.SetCell(cell, -1, new Vector2I(-1, -1));
 	    }
     }
     
