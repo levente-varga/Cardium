@@ -13,10 +13,15 @@ public partial class HealthBar : Polygon2D
 		get => (int)_health;
 		set
 		{
+			var previousHealth = Health;
 			_health = Math.Max(0, value);
 			if (Health > MaxHealth)
 			{
 				Health = MaxHealth;
+			}
+			if (Health < previousHealth)
+			{
+				SpawnFloatingLabel((previousHealth - Health).ToString());
 			}
 		}
 	}
@@ -108,5 +113,18 @@ public partial class HealthBar : Polygon2D
 		_smoothHealth = Mathf.Lerp(_smoothHealth, _health / _maxHealth, Global.LerpWeight * (float) delta);
 		
 		UpdatePolygon();
+	}
+	
+	public void SpawnFloatingLabel(string text)
+	{
+		FallingLabel label = new()
+		{
+			Text = text,
+			HorizontalAlignment = HorizontalAlignment.Center,
+			VerticalAlignment = VerticalAlignment.Center,
+			Position = new Vector2(GlobalPosition.X + (HorizontalMargin + ActualWidth) * Global.Scale, GlobalPosition.Y),
+			Modulate = new Color("E6482E"),
+		};
+		GetTree().Root.AddChild(label);
 	}
 }
