@@ -316,7 +316,7 @@ public partial class World : Node2D
     {
 	    foreach (var cell in EnemyLayer.GetUsedCells())
 	    {
-		    SpawnEnemy(new SlimeEnemy(), cell);
+		    SpawnEnemy(new Slime(), cell);
 		    EnemyLayer.SetCell(cell, -1, new Vector2I(-1, -1));
 	    }
     }

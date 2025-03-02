@@ -2,7 +2,7 @@ using Godot;
 
 namespace Cardium.Scripts.Enemies;
 
-public partial class SlimeEnemy : Enemy
+public partial class Slime : Enemy
 {
     public override void _Ready()
     {
