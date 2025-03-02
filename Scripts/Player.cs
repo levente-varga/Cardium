@@ -69,11 +69,6 @@ public partial class Player : Entity
 		}
 	}
 	
-	public void CheckForObjects()
-	{
-		_nextToObject = World.InteractableExistsAt(Position + Vector2I.Up);
-	}
-	
 	public void Attack()
 	{
 		World.Attack(Position + Vector2I.Up, this);

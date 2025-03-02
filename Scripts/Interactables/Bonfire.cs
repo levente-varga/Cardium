@@ -4,8 +4,6 @@ namespace Cardium.Scripts.Interactables;
 
 public partial class Bonfire : Interactable
 {
-    private bool _active = false;
-    
     public override void _Ready()
     {
         base._Ready();
@@ -22,13 +20,13 @@ public partial class Bonfire : Interactable
     {
         base.OnInteract(source, camera);
         
-        if (_active)
+        if (Interacted)
         {
             SpawnFloatingLabel("Rested", color: Global.White);
             return;
         }
         
-        _active = true;
+        Interacted = true;
         
         camera.Shake(25);
         SetAnimation("idle", GD.Load<Texture2D>("res://Assets/Animations/Bonfire.png"), 4, 12);

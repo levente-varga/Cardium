@@ -127,7 +127,7 @@ public partial class World : Node2D
 	);
     
     public bool EnemyExistsAt(Vector2I position) => _enemies.Any(enemy => enemy.Position == position);
-    public bool InteractableExistsAt(Vector2I position) => _interactables.Any(enemy => enemy.Position == position);
+    public bool SolidInteractableExistsAt(Vector2I position) => _interactables.Any(interactable => interactable.Position == position && interactable.Solid);
     public bool WallExistsAt(Vector2I position) => WallLayer.GetCellTileData(position) != null;
 
     public bool ObjectExistsNextTo(Vector2I position) =>
@@ -140,7 +140,7 @@ public partial class World : Node2D
     
     public bool IsTileEmpty(Vector2I position) => 
 	    !WallExistsAt(position)
-	    && !InteractableExistsAt(position)
+	    && !SolidInteractableExistsAt(position)
 	    && !EnemyExistsAt(position)
 	    && Player.Position != position;
 
