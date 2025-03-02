@@ -212,6 +212,7 @@ public partial class World : Node2D
 
     private void OnPlayerMove(TileAlignedGameObject gameObject)
     {
+	    PickUpLoot();
 	    UpdatePath();
 	    QueueRedraw();
     }
@@ -220,6 +221,7 @@ public partial class World : Node2D
 	{
 		GD.Print(entity.Name + " died!");
 	    _enemies.Remove((Enemy)entity);
+	    entity.QueueFree();
 	    RemoveChild(entity);
 	    
 	    var cardLoot = new CardLoot();
@@ -312,5 +314,16 @@ public partial class World : Node2D
 	{
 	    var interactable = _interactables.FirstOrDefault(interactable => interactable.Position == position);
 	    interactable?.OnInteract(Player);
+	}
+
+	private void PickUpLoot()
+	{
+		foreach (var loot in _loot.Where(loot => loot.Position == Player.Position).ToList())
+		{
+			loot.QueueFree();
+			_loot.Remove(loot);
+			RemoveChild(loot);
+			// TODO: Add loot to player
+		}
 	}
 }
