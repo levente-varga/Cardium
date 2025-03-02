@@ -105,6 +105,7 @@ public partial class World : Node2D
     private void SetupPath()
     {
     	_line = GetNode<Line2D>("Line2D");
+	    _line.DefaultColor = Global.Yellow;
 
     	_grid = new AStarGrid2D();
     	_grid.Region = _region;
@@ -148,7 +149,7 @@ public partial class World : Node2D
     /// </summary>
     public override void _Draw()
     {
-    	if (_end != null) DrawRect(new Rect2(_end.Value * _grid.CellSize, _grid.CellSize), new Color("F4B41B"), false, 4);
+    	if (_end != null) DrawRect(new Rect2(_end.Value * _grid.CellSize, _grid.CellSize), Global.Yellow, false, 4);
     	//DrawRect(new Rect2(_end * _grid.CellSize, _grid.CellSize), Colors.OrangeRed);
 
     	for (var x = 0; x < _grid.Region.Size.X; x++) {
@@ -195,7 +196,7 @@ public partial class World : Node2D
     /// </summary>
     private void UpdatePath() {
 	    if (_end is null) return;
-    	_line.Points = _grid.GetPointPath(Player.Position, _end.Value);
+	    _line.Points = _grid.GetPointPath(Player.Position, _end.Value);
     }
 
     public override void _Input(InputEvent @event)

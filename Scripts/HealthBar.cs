@@ -90,7 +90,7 @@ public partial class HealthBar : Polygon2D
 	public override void _Ready()
 	{
 		Name = "HealthBar";
-		Color = new Color("E6482E");
+		Color = Global.Red;
 		Visible = true;
 		ZIndex = 10;
 		_smoothHealth = _health / _maxHealth; 
@@ -121,7 +121,7 @@ public partial class HealthBar : Polygon2D
 		{
 			Text = text,
 			Position = new Vector2(GlobalPosition.X + (HorizontalMargin + ActualWidth) * Global.Scale, GlobalPosition.Y),
-			Color = new Color("E6482E"),
+			Color = Global.Red,
 		};
 		GetTree().Root.AddChild(label);
 	}

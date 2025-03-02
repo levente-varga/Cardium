@@ -22,9 +22,11 @@ public partial class Bonfire : Interactable
     {
         base.OnInteract(source, camera);
         
-        SpawnFloatingLabel("!", color: new Color("E6482E"), 60);
-        
-        if (_active) return;
+        if (_active)
+        {
+            SpawnFloatingLabel("Rested", color: Global.White);
+            return;
+        }
         
         _active = true;
         
