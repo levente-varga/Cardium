@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c4omwsrt6mxmf"
-path="res://.godot/imported/cardPlaceholder.png-c06e0b087e5ed2a079e0e4b37d38277a.ctex"
+uid="uid://botlfa2sgslun"
+path="res://.godot/imported/Bonfire.png-5331ab35aae397c22eb9baf33a4ffa93.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/cardPlaceholder.png"
-dest_files=["res://.godot/imported/cardPlaceholder.png-c06e0b087e5ed2a079e0e4b37d38277a.ctex"]
+source_file="res://Assets/Sprites/Bonfire.png"
+dest_files=["res://.godot/imported/Bonfire.png-5331ab35aae397c22eb9baf33a4ffa93.ctex"]
 
 [params]
 

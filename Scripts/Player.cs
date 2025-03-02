@@ -23,7 +23,7 @@ public partial class Player : Entity
 
 		HealthBar.Visible = false;
 
-		SetStillFrame(GD.Load<Texture2D>("res://assets/player.png"));
+		SetStillFrame(GD.Load<Texture2D>("res://Assets/Sprites/player.png"));
 	}
 
 	public override void _Process(double delta)
