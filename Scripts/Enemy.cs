@@ -51,16 +51,14 @@ public partial class Enemy : Entity
         if (InVision(position))
         {
             if (InCombat) return;
-            InCombat = true;
-            HealthBar.Visible = true;
+            SetInCombatStatus(true);
             SpawnFloatingLabel("Spotted!", color: Global.Red, lifetimeMillis: 2000);
-            _player?.OnSpotted(this);
+            _player?.OnSpottedBy(this);
         }
         else
         {
-            HealthBar.Visible = false;
-            InCombat = false;
-            _player?.OnFled(this);
+            SetInCombatStatus(false);
+            _player?.OnFled();
         }
     }
 }

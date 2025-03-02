@@ -234,6 +234,7 @@ public partial class World : Node2D
 	{
 		GD.Print(entity.Name + " died!");
 	    _enemies.Remove((Enemy)entity);
+	    _enemiesInCombat.Remove((Enemy)entity);
 	    Player.OnMoveEvent -= ((Enemy)entity).OnPlayerMove;
 	    RemoveChild(entity);
 	    entity.QueueFree();
@@ -264,11 +265,24 @@ public partial class World : Node2D
     {
 	    if (!IsTileEmpty(position)) return;
 	    enemy.OnDeathEvent += OnEnemyDeath;
+	    enemy.OnEnterCombatEvent += AddEnemyToCombat;
+	    enemy.OnLeaveCombatEvent += RemoveEnemyFromCombat;
 	    Player.OnMoveEvent += enemy.OnPlayerMove;
 	    AddChild(enemy);
 	    enemy.SetPosition(position);
 	    _enemies.Add(enemy);
     }
+    
+    private void AddEnemyToCombat(Entity enemy)
+	{
+	    _enemiesInCombat.Add((Enemy)enemy);
+	}
+
+	private void RemoveEnemyFromCombat(Entity enemy)
+	{
+		_enemiesInCombat.Remove((Enemy)enemy);
+		if (_enemiesInCombat.Count == 0) Player.OnFled();
+	}
     
     private void SpawnInteractable(Interactable interactable, Vector2I position)
     {

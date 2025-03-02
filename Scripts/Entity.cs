@@ -23,7 +23,7 @@ public partial class Entity : TileAlignedGameObject
     public float Vision;
     public float Range;
     public string Description;
-    public bool InCombat;
+    public bool InCombat { get; private set; }
     
     public List<Card> Inventory = new();
     
@@ -84,6 +84,7 @@ public partial class Entity : TileAlignedGameObject
     public virtual void OnDeath(Entity source)
     {
         Health = 0;
+        OnLeaveCombatEvent?.Invoke(this);
         OnDeathEvent?.Invoke(this);
     }
 
@@ -97,13 +98,30 @@ public partial class Entity : TileAlignedGameObject
         return Position.DistanceTo(position) <= Vision;
     }
 
-    public void OnSpotted(Entity source)
+    public void OnSpottedBy(Entity source)
     {
+        InCombat = true;
         OnEnterCombatEvent?.Invoke(this);
     }
     
-    public void OnFled(Entity source)
+    public void OnFled()
     {
+        InCombat = false;
         OnLeaveCombatEvent?.Invoke(this);
+    }
+
+    protected void SetInCombatStatus(bool inCombat)
+    {
+        InCombat = inCombat;
+        if (InCombat)
+        {
+            HealthBar.Visible = true;
+            OnEnterCombatEvent?.Invoke(this);
+        }
+        else
+        {
+            HealthBar.Visible = false;
+            OnLeaveCombatEvent?.Invoke(this);
+        }
     }
 }
