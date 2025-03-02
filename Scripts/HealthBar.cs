@@ -120,10 +120,8 @@ public partial class HealthBar : Polygon2D
 		FallingLabel label = new()
 		{
 			Text = text,
-			HorizontalAlignment = HorizontalAlignment.Center,
-			VerticalAlignment = VerticalAlignment.Center,
 			Position = new Vector2(GlobalPosition.X + (HorizontalMargin + ActualWidth) * Global.Scale, GlobalPosition.Y),
-			Modulate = new Color("E6482E"),
+			Color = new Color("E6482E"),
 		};
 		GetTree().Root.AddChild(label);
 	}

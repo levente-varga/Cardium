@@ -19,5 +19,7 @@ public partial class Bonfire : Interactable
     public override void OnInteract(Entity source)
     {
         base.OnInteract(source);
+        
+        SpawnFloatingLabel("Restored!", color: new Color("F4B41B"));
     }
 }

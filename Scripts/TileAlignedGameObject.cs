@@ -103,10 +103,8 @@ public partial class TileAlignedGameObject : AnimatedSprite2D
         FallingLabel label = new()
         {
             Text = text,
-            HorizontalAlignment = HorizontalAlignment.Center,
-            VerticalAlignment = VerticalAlignment.Center,
             Position = GlobalPosition + Global.TileSize / 2,
-            Modulate = color,
+            Color = color,
         };
         GetTree().Root.AddChild(label);
     }
