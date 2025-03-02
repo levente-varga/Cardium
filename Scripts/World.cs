@@ -17,6 +17,7 @@ public partial class World : Node2D
 	[Export] public Label DebugLabel3;
 	[Export] public Label DebugLabel4;
 	
+	[Export] public TileMapLayer GroundLayer;
 	[Export] public TileMapLayer DecorLayer;
 	[Export] public TileMapLayer WallLayer;
 	[Export] public TileMapLayer ObjectLayer;
@@ -64,6 +65,7 @@ public partial class World : Node2D
     private void SetupLayers()
     {
 	    _layers.Clear();
+	    _layers.Add(GroundLayer);
 	    _layers.Add(DecorLayer);
 	    _layers.Add(WallLayer);
 	    _layers.Add(ObjectLayer);
