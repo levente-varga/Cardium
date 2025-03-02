@@ -278,12 +278,18 @@ public partial class World : Node2D
     private void AddEnemyToCombat(Entity enemy)
 	{
 	    _enemiesInCombat.Add((Enemy)enemy);
+	    GD.Print("Enemy entered combat.");
 	}
 
 	private void RemoveEnemyFromCombat(Entity enemy)
 	{
 		_enemiesInCombat.Remove((Enemy)enemy);
-		if (_enemiesInCombat.Count == 0) Player.OnFled();
+		GD.Print("Enemy left combat.");
+		if (_enemiesInCombat.Count == 0)
+		{
+			GD.Print("Player left combat, no enemies left.");
+			Player.OnFled();
+		}
 	}
     
     private void SpawnInteractable(Interactable interactable, Vector2I position)

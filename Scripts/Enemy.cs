@@ -57,8 +57,8 @@ public partial class Enemy : Entity
         }
         else
         {
+            if (!InCombat) return;
             SetInCombatStatus(false);
-            _player?.OnFled();
         }
     }
 }
