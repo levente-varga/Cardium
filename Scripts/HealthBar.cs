@@ -17,7 +17,7 @@ public partial class HealthBar : Polygon2D
 			_health = Math.Max(0, value);
 			if (Health > MaxHealth)
 			{
-				Health = MaxHealth;
+				_health = MaxHealth;
 			}
 			if (Health < previousHealth)
 			{
@@ -40,7 +40,7 @@ public partial class HealthBar : Polygon2D
 		}
 	}
 	
-	private float _gap = 2;
+	private float _gap = 3;
 	[Export] public float Gap
 	{
 		get => _gap;

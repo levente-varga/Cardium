@@ -1,28 +1,24 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Godot;
 
 namespace Cardium.Scripts;
 
-public partial class EnergyBar : Polygon2D
+public partial class EnergyBar : Node2D
 {
-	private float _smoothEnergy;
-	
 	private float _energy = 1;
 	public int Energy
 	{
 		get => (int)_energy;
 		set
 		{
-			var previousHealth = Energy;
 			_energy = Math.Max(0, value);
 			if (Energy > MaxEnergy)
 			{
-				Energy = MaxEnergy;
+				_energy = MaxEnergy;
 			}
-			if (Energy < previousHealth)
-			{
-				SpawnFloatingLabel((previousHealth - Energy).ToString());
-			}
+			ReactToEnergyChange();
 		}
 	}
 	
@@ -37,92 +33,68 @@ public partial class EnergyBar : Polygon2D
 			{
 				Energy = MaxEnergy;
 			}
+			ReactToMaxEnergyChange();
 		}
 	}
 	
-	private float _gap = 0;
-	[Export] public float Gap
-	{
-		get => _gap;
-		set
-		{
-			_gap = value;
-			UpdatePolygon();
-		}
-	}
-	
-	private float _thickness = 2;
-	[Export] public float Thickness 
-	{
-		get => _thickness;
-		set
-		{
-			_thickness = value;
-			UpdatePolygon();
-		}
-	}
-	
-	private float _horizontalMargin = 2;
-	[Export] public float HorizontalMargin
-	{
-		get => _horizontalMargin;
-		set
-		{
-			_horizontalMargin = value;
-			UpdatePolygon();
-		}	
-	}
-	
-	private float _width = 16;
-	[Export] public float Width 
-	{
-		get => _width;
-		set
-		{
-			_width = value;
-			UpdatePolygon();
-		}
-	}
-	
-	private float ActualWidth => Width - 2 * HorizontalMargin;
-	private float SmoothWidth => ActualWidth * _smoothEnergy;
+	private const float Gap = 1;
+	private const float Thickness = 1;
+	private const float HorizontalMargin = 2;
+
+	public readonly List<Polygon2D> Polygons = new();
 	
 	public override void _Ready()
 	{
-		Name = "EnergyBar";
-		Color = Global.Purple;
-		Visible = true;
-		ZIndex = 10;
-		_smoothEnergy = _energy / _maxEnergy; 
-		UpdatePolygon();
+		ReactToMaxEnergyChange();
+		ReactToEnergyChange();
 	}
 	
-	private void UpdatePolygon()
+	private Polygon2D CreatePolygon(int index)
 	{
-		Polygon = new Vector2[]
+		var offset = index * (Gap + Thickness) + HorizontalMargin;
+		var polygon = new Polygon2D();
+		polygon.Color = Global.Purple;
+		polygon.Name = "EnergyBarSegment";
+		polygon.Visible = index < Energy;
+		polygon.ZIndex = 10;
+		polygon.Polygon = new Vector2[]
 		{
-			new (HorizontalMargin, -Gap),
-			new (HorizontalMargin, -Gap - Thickness),
-			new (HorizontalMargin + SmoothWidth, -Gap - Thickness),
-			new (HorizontalMargin + SmoothWidth, -Gap),
+			new (offset, -Gap),
+			new (offset, -Gap - Thickness),
+			new (offset + Thickness, -Gap - Thickness),
+			new (offset + Thickness, -Gap),
 		};
+		return polygon;
+	}
+	
+	private void ReactToEnergyChange()
+	{
+		for (var i = 0; i < MaxEnergy; i++)
+		{
+			Polygons[i].Visible = i < Energy;
+		}
 	}
 
-	public override void _Process(double delta)
+	private void ReactToMaxEnergyChange()
 	{
-		_smoothEnergy = Mathf.Lerp(_smoothEnergy, _energy / _maxEnergy, Global.LerpWeight * (float) delta);
-		
-		UpdatePolygon();
+		for (var i = 0; i < Math.Max(MaxEnergy, Polygons.Count); i++)
+		{
+			if (i >= Polygons.Count)
+			{
+				var polygon = CreatePolygon(i);
+				AddChild(polygon);
+				Polygons.Add(polygon);
+			}
+			else if (i >= MaxEnergy)
+			{
+				Polygons[i].QueueFree();
+				Polygons.RemoveAt(i);
+			}
+		}
 	}
 	
-	public void SpawnFloatingLabel(string text)
+	public override void _Process(double delta)
 	{
-		Labels.FallingLabel label = new()
-		{
-			Text = text,
-			Position = new Vector2(GlobalPosition.X + (HorizontalMargin + ActualWidth) * Global.Scale, GlobalPosition.Y),
-			Color = Global.Purple,
-		};
-		GetTree().Root.AddChild(label);
+		
 	}
 }
