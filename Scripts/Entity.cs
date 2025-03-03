@@ -4,6 +4,14 @@ using Godot;
 
 namespace Cardium.Scripts;
 
+public enum Direction
+{
+    Up,
+    Down,
+    Left,
+    Right
+}
+
 public partial class Entity : TileAlignedGameObject
 {
     public int Health { 
@@ -122,6 +130,11 @@ public partial class Entity : TileAlignedGameObject
         InCombat = false;
         OnLeaveCombatEvent?.Invoke(this);
     }
+    
+    public void OnTurnFinished()
+    {
+        OnTurnFinishedEvent?.Invoke(this);
+    }
 
     protected void SetInCombatStatus(bool inCombat)
     {
@@ -138,5 +151,31 @@ public partial class Entity : TileAlignedGameObject
             EnergyBar.Visible = false;
             OnLeaveCombatEvent?.Invoke(this);
         }
+    }
+
+    protected void Move(Direction direction, World world, bool useEnergy = true)
+    {
+        GD.Print("Desire to move registered.");
+        if (useEnergy)
+        {
+            if (Energy <= 0)
+            {
+                GD.Print("Can't move, no energy left.");
+                return;
+            }
+            Energy--;
+        }
+        
+        var vector = direction switch
+        {
+            Direction.Up => Vector2I.Up,
+            Direction.Down => Vector2I.Down,
+            Direction.Left => Vector2I.Left,
+            Direction.Right => Vector2I.Right,
+            _ => Vector2I.Zero
+        };
+
+        if (world.IsTileEmpty(Position + vector)) Position += vector;
+        else Nudge(vector);
     }
 }

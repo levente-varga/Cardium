@@ -29,7 +29,10 @@ public partial class Slime : Enemy
 
     public override void OnTurn(Player player, World world)
     {
-        if (Energy > 0)
+        GD.Print("Slime OnTurn called");
+        Energy = MaxEnergy;
+
+        for (var i = 0; i < MaxEnergy && Energy > 0; i++)
         {
             if (world.GetDistanceBetween(Position, player.Position) <= Range)
             {
@@ -38,15 +41,28 @@ public partial class Slime : Enemy
             else
             {
                 var path = world.GetPathBetween(Position, player.Position);
-                if (path.Count > 0)
+                // print the whole path:
+                GD.Print("Path: (from position " + Position + " to position " + player.Position + ")");
+                foreach (var p in path)
+                {
+                    GD.Print(p);
+                }
+                if (path.Count > Range)
                 {
                     Position = path[0];
                     Energy--;
+                    SpawnFallingLabel("Path length: " + path.Count);
+                }
+                else
+                {
+                    player.OnDamaged(this, Damage);
                 }
             }
         }
         
         base.OnTurn(player, world);
+        
+        OnTurnFinished();
     }
 
     public override void OnDamaged(Entity source, int damage)

@@ -57,15 +57,12 @@ public partial class World : Node2D
 	    
 	    Camera.JumpToTarget();
 	    
-	    _combatManager = new CombatManager(Player, this);
+	    _combatManager = new CombatManager(Player, this, DebugLabel1);
     }
     
     public override void _Process(double delta)
     {
-	    DebugLabel1.Text = "";
-	    DebugLabel2.Text = "";
-	    DebugLabel3.Text = "";
-	    DebugLabel4.Text = "";
+	    
     }
     
     private void SetupLayers()
@@ -121,7 +118,7 @@ public partial class World : Node2D
     	_grid = new AStarGrid2D();
     	_grid.Region = _region;
     	_grid.CellSize = Global.TileSize;
-    	_grid.Offset = _grid.CellSize / 2;
+    	_grid.Offset = Vector2.Zero;
     	_grid.DiagonalMode = AStarGrid2D.DiagonalModeEnum.Never;
     	_grid.DefaultEstimateHeuristic = AStarGrid2D.Heuristic.Euclidean;
 	    _grid.Update();
@@ -385,6 +382,10 @@ public partial class World : Node2D
 	public List<Vector2I> GetPathBetween(Vector2I from, Vector2I to)
 	{
 		if (!_grid.IsInBoundsv(from) || !_grid.IsInBoundsv(to)) return new List<Vector2I>();
-		return _grid.GetPointPath(from, to).ToList().Select(p => new Vector2I((int)p.X, (int)p.Y)).ToList();
+		if (from == to) return new List<Vector2I>();
+		var path = _grid.GetPointPath(from, to).ToList();
+		if (path.Count <= 1) return new List<Vector2I>();
+		path = path.GetRange(1, path.Count - 1);
+		return path.Select(p => new Vector2I((int)p.X / Global.TileSize.X, (int)p.Y / Global.TileSize.Y)).ToList();
 	}
 }

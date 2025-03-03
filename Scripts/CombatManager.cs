@@ -8,22 +8,28 @@ public class CombatManager
     private readonly World _world;
     private readonly Player _player;
     private readonly List<Enemy> _enemiesInCombat = new();
+    private readonly Label _debugLabel;
     
     private readonly List<Entity> _turnOrder = new();
+    private Entity _currentTurnEntity;
 
-    public CombatManager(Player player, World world)
+    public CombatManager(Player player, World world, Label debugLabel)
     {
         _player = player;
         _world = world;
-    }
+        _debugLabel = debugLabel;
 
-    private Entity _currentTurnEntity;
+        UpdateDebugLabel();
+    }
     
     public void EnterCombat(Enemy enemy)
     {
         if (_enemiesInCombat.Count == 0)
         {
             _turnOrder.Add(_player);
+            _player.OnTurnFinishedEvent += OnTurnFinished;
+            _currentTurnEntity = _player;
+            _player.OnTurn(_player, _world);
         }
         
         if (!_enemiesInCombat.Contains(enemy))
@@ -33,6 +39,8 @@ public class CombatManager
             enemy.OnTurnFinishedEvent += OnTurnFinished;
             enemy.OnLeaveCombatEvent += OnLeaveCombat;
         }
+
+        UpdateDebugLabel();
     }
 
     private void OnTurnFinished(Entity entity)
@@ -42,11 +50,14 @@ public class CombatManager
             GD.Print("[ANOMALY] " + entity.Name + " finished their turn out of order.");
             return;
         }
+        GD.Print(entity.Name + " finished their turn.");
         
         _turnOrder.Remove(entity);
         _turnOrder.Add(entity);
         _currentTurnEntity = _turnOrder[0];
         _currentTurnEntity.OnTurn(_player, _world);
+
+        UpdateDebugLabel();
     }
     
     private void OnLeaveCombat(Entity entity)
@@ -65,5 +76,18 @@ public class CombatManager
         
         _currentTurnEntity = _turnOrder[0];
         _currentTurnEntity.OnTurn(_player, _world);
+
+        UpdateDebugLabel();
+    }
+    
+    private void UpdateDebugLabel()
+    {
+        _debugLabel.Text = "Turn order: \n"
+            + "Current turn: " + _currentTurnEntity?.Name
+            + "\n\nEntities in combat (in turn order):";
+        foreach (var entity in _turnOrder)
+        {
+            _debugLabel.Text += "\n" + entity.Name;
+        }
     }
 }

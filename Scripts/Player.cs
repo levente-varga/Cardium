@@ -5,6 +5,7 @@ namespace Cardium.Scripts;
 public partial class Player : Entity
 {
 	[Export] public World World;
+	[Export] public Label DebugLabel;
 	
 	private Deck _combatDeck = new();
 	private Deck _actionDeck = new();
@@ -12,6 +13,7 @@ public partial class Player : Entity
 	private Hand _hand = new();
 	
 	private bool _nextToObject = false;
+	private bool _turnOngoing = false;
 	
 	public override void _Ready()
 	{
@@ -20,6 +22,10 @@ public partial class Player : Entity
 		Vision = 3.5f;
 		Name = "Player";
 		Damage = 1;
+		MaxHealth = 5;
+		Health = MaxHealth;
+		MaxEnergy = 3;
+		Energy = MaxEnergy;
 
 		HealthBar.Visible = false;
 		EnergyBar.Visible = false;
@@ -29,6 +35,19 @@ public partial class Player : Entity
 
 	public override void _Process(double delta)
 	{
+		if (Energy <= 0 && _turnOngoing)
+		{
+			_turnOngoing = false;
+			OnTurnFinished();
+			//return;
+		}
+
+		DebugLabel.Text = $"Health: {Health} / {MaxHealth}\n"
+		                  + $"Energy: {Energy} / {MaxEnergy}\n"
+		                  + $"Position: {Position}\n"
+		                  + $"InCombat: {InCombat}\n"
+		                  + $"Turn: {_turnOngoing}\n";
+		
 		base._Process(delta);
 	}
 	
@@ -36,27 +55,7 @@ public partial class Player : Entity
 	{
 		if (!@event.IsPressed()) return;
 		
-		if (InputMap.EventIsAction(@event, "Right"))
-		{
-			if (World.IsTileEmpty(Position + Vector2I.Right)) Position += Vector2I.Right;
-			else Nudge(Vector2I.Right);
-		}
-		else if (InputMap.EventIsAction(@event, "Left"))
-		{
-			if (World.IsTileEmpty(Position + Vector2I.Left)) Position += Vector2I.Left;
-			else Nudge(Vector2I.Left);
-		}
-		else if (InputMap.EventIsAction(@event, "Up"))
-		{
-			if (World.IsTileEmpty(Position + Vector2I.Up)) Position += Vector2I.Up;
-			else Nudge(Vector2I.Up);
-		}
-		else if (InputMap.EventIsAction(@event, "Down"))
-		{
-			if (World.IsTileEmpty(Position + Vector2I.Down)) Position += Vector2I.Down;
-			else Nudge(Vector2I.Down);
-		}
-		else if (InputMap.EventIsAction(@event, "Interact"))
+		if (InputMap.EventIsAction(@event, "Interact"))
 		{
 			Interact();
 		}
@@ -72,6 +71,25 @@ public partial class Player : Entity
 		{
 			GetTree().Quit();
 		}
+		
+		if (InCombat && !_turnOngoing) return;
+		
+		if (InputMap.EventIsAction(@event, "Right"))
+		{
+			Move(Direction.Right, World, useEnergy: InCombat);
+		}
+		else if (InputMap.EventIsAction(@event, "Left"))
+		{
+			Move(Direction.Left, World, useEnergy: InCombat);
+		}
+		else if (InputMap.EventIsAction(@event, "Up"))
+		{
+			Move(Direction.Up, World, useEnergy: InCombat);
+		}
+		else if (InputMap.EventIsAction(@event, "Down"))
+		{
+			Move(Direction.Down, World, useEnergy: InCombat);
+		}
 	}
 	
 	public void Attack()
@@ -85,5 +103,11 @@ public partial class Player : Entity
 		if (interactablePositions.Count == 0) return;
 		
 		World.Interact(interactablePositions[0]);
+	}
+
+	public override void OnTurn(Player player, World world)
+	{
+		Energy = MaxEnergy;
+		_turnOngoing = true;
 	}
 }

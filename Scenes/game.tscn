@@ -1101,12 +1101,13 @@ sources/2 = SubResource("TileSetAtlasSource_bcugv")
 
 [node name="Root" type="Node2D"]
 
-[node name="Player" type="AnimatedSprite2D" parent="." node_paths=PackedStringArray("World")]
+[node name="Player" type="AnimatedSprite2D" parent="." node_paths=PackedStringArray("World", "DebugLabel")]
 z_index = 5
 scale = Vector2(4, 4)
 centered = false
 script = ExtResource("3_q31ct")
 World = NodePath("../World")
+DebugLabel = NodePath("../Camera2D/CanvasLayer/Label2")
 
 [node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("Target")]
 script = ExtResource("3_evct5")
@@ -1123,9 +1124,9 @@ offset_right = 40.0
 offset_bottom = 23.0
 
 [node name="Label2" type="Label" parent="Camera2D/CanvasLayer"]
-offset_top = 20.0
-offset_right = 40.0
-offset_bottom = 43.0
+offset_left = 320.0
+offset_right = 360.0
+offset_bottom = 23.0
 
 [node name="Label3" type="Label" parent="Camera2D/CanvasLayer"]
 offset_top = 40.0
