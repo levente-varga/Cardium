@@ -15,10 +15,10 @@ public partial class TileAlignedGameObject : AnimatedSprite2D
     public new Vector2I Position { get; set; }
     private Vector2I _previousPosition;
     
-    public delegate void OnMoveDelegate(TileAlignedGameObject gameGameObject, Vector2I oldPosition, Vector2I newPosition);
+    public delegate void OnMoveDelegate(TileAlignedGameObject source, Vector2I oldPosition, Vector2I newPosition);
     public event OnMoveDelegate OnMoveEvent;
     
-    public delegate void OnNudgeDelegate(TileAlignedGameObject gameGameObject, Vector2I position);
+    public delegate void OnNudgeDelegate(TileAlignedGameObject source, Vector2I position);
     public event OnNudgeDelegate OnNudgeEvent;
 
     public override void _Ready()
@@ -140,5 +140,14 @@ public partial class TileAlignedGameObject : AnimatedSprite2D
             Direction.Right => Vector2I.Right,
             _ => Vector2I.Zero
         };
+    }
+
+    protected static Direction VectorToDirection(Vector2 vector)
+    {
+        var normalized = vector.Normalized();
+        
+        if (Mathf.Abs(normalized.X) > Mathf.Abs(normalized.Y))
+            return normalized.X > 0 ? Direction.Right : Direction.Left;
+        return normalized.Y > 0 ? Direction.Up : Direction.Down;
     }
 }

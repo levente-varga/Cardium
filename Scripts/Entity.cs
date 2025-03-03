@@ -178,4 +178,9 @@ public partial class Entity : TileAlignedGameObject
 
         Position = newPosition;
     }
+    
+    public void Heal(int amount)
+    {
+        Health = Math.Min(MaxHealth, Health + amount);
+    }
 }

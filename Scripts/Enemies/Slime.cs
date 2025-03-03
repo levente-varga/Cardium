@@ -37,6 +37,7 @@ public partial class Slime : Enemy
         {
             if (world.GetDistanceBetween(Position, player.Position) <= Range)
             {
+                Nudge(VectorToDirection(player.Position - Position));
                 player.ReceiveDamage(this, Damage);
             }
             else

@@ -51,7 +51,7 @@ public partial class World : Node2D
 	    SpawnEnemies();
 	    
 	    Player.OnMoveEvent += OnPlayerMove;
-	    Player.OnNudgeEvent += OnPlayerNudge;
+	    Player.OnNudgeEvent += OnNudge;
 	    Player.OnEnterCombatEvent += entity => { Camera.Focus = true; };
 	    Player.OnLeaveCombatEvent += entity => { Camera.Focus = false; };
 	    
@@ -222,14 +222,14 @@ public partial class World : Node2D
     	QueueRedraw();
     }
 
-    private void OnPlayerMove(TileAlignedGameObject gameObject, Vector2I oldPosition, Vector2I newPosition)
+    private void OnPlayerMove(TileAlignedGameObject source, Vector2I oldPosition, Vector2I newPosition)
     {
 	    PickUpLoot();
 	    UpdatePath();
 	    QueueRedraw();
     }
     
-    private void OnPlayerNudge(TileAlignedGameObject gameObject, Vector2I position)
+    private void OnNudge(TileAlignedGameObject source, Vector2I position)
 	{
 		Interact(position);
 		Attack(position, Player);
@@ -240,6 +240,9 @@ public partial class World : Node2D
 		GD.Print(entity.Name + " died!");
 	    _enemies.Remove((Enemy)entity);
 	    Player.OnMoveEvent -= ((Enemy)entity).OnPlayerMove;
+	    entity.OnNudgeEvent -= OnNudge;
+	    entity.OnDeathEvent -= OnEnemyDeath;
+	    entity.OnEnterCombatEvent -= AddEnemyToCombat;
 	    RemoveChild(entity);
 	    entity.QueueFree();
 	    
@@ -270,6 +273,7 @@ public partial class World : Node2D
 	    if (!IsTileEmpty(position)) return;
 	    enemy.OnDeathEvent += OnEnemyDeath;
 	    enemy.OnEnterCombatEvent += AddEnemyToCombat;
+	    enemy.OnNudgeEvent += OnNudge;
 	    Player.OnMoveEvent += enemy.OnPlayerMove;
 	    AddChild(enemy);
 	    enemy.SetPosition(position);
