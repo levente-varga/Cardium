@@ -23,7 +23,7 @@ public partial class Player : Entity
 
 		HealthBar.Visible = false;
 		EnergyBar.Visible = false;
-
+		
 		SetStillFrame(GD.Load<Texture2D>("res://Assets/Sprites/player.png"));
 	}
 

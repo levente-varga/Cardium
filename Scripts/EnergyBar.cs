@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Godot;
 
 namespace Cardium.Scripts;
@@ -37,12 +36,12 @@ public partial class EnergyBar : Node2D
 		}
 	}
 	
-	private const float VerticalGap = 0;
+	private const float VerticalGap = 1;
 	private const float DotSeparation = 1;
 	private const float Thickness = 1;
 	private const float HorizontalMargin = 2;
 
-	private readonly List<Polygon2D> _polygons = new();
+	private readonly List<EnergyDot> _dots = new();
 	
 	public override void _Ready()
 	{
@@ -50,53 +49,45 @@ public partial class EnergyBar : Node2D
 		ReactToEnergyChange();
 	}
 	
-	private Polygon2D CreatePolygon(int index)
+	private EnergyDot CreateDot(int index)
 	{
 		var offset = index * (DotSeparation + Thickness) + HorizontalMargin;
-		var polygon = new Polygon2D();
-		polygon.Color = Global.Purple;
-		polygon.Name = "EnergyBarSegment";
-		polygon.Visible = index < Energy;
-		polygon.ZIndex = 10;
-		polygon.Polygon = new Vector2[]
-		{
-			new (offset, -VerticalGap),
-			new (offset, -VerticalGap - Thickness),
-			new (offset + Thickness, -VerticalGap - Thickness),
-			new (offset + Thickness, -VerticalGap),
-		};
-		return polygon;
+		var dot = new EnergyDot();
+		dot.Position = new Vector2(offset, -VerticalGap);
+		return dot;
 	}
 	
 	private void ReactToEnergyChange()
 	{
 		for (var i = 0; i < MaxEnergy; i++)
 		{
-			_polygons[i].Visible = i < Energy;
+			if (i < Energy)
+			{
+				if (_dots[i].IsThrown) _dots[i].CancelThrow();
+				continue;
+			}
+			if (_dots[i].IsThrown) continue;
+			
+			_dots[i].Throw();
 		}
 	}
 
 	private void ReactToMaxEnergyChange()
 	{
-		for (var i = 0; i < Math.Max(MaxEnergy, _polygons.Count); i++)
+		for (var i = 0; i < Math.Max(MaxEnergy, _dots.Count); i++)
 		{
-			if (i >= _polygons.Count)
+			if (i >= _dots.Count)
 			{
-				var polygon = CreatePolygon(i);
-				AddChild(polygon);
-				_polygons.Add(polygon);
+				var dot = CreateDot(i);
+				AddChild(dot);
+				_dots.Add(dot);
 			}
 			else if (i >= MaxEnergy)
 			{
-				_polygons[i].QueueFree();
-				_polygons.RemoveAt(i);
+				_dots[i].QueueFree();
+				_dots.RemoveAt(i);
 			}
 		}
-	}
-
-	private void ThrowEnergyDots(int amount)
-	{
-		
 	}
 	
 	public override void _Process(double delta)

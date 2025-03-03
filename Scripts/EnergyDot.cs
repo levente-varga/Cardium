@@ -1,12 +1,11 @@
 using System;
-using System.Linq;
 using Godot;
 
 namespace Cardium.Scripts;
 
 public partial class EnergyDot : Node2D
 {
-    private const float Size = 2;
+    private const float Size = 1;
     
     private readonly Random _random = new ();
     private Vector2 _velocity = Vector2.Zero;
@@ -16,7 +15,9 @@ public partial class EnergyDot : Node2D
     
     private Polygon2D _dot;
     private Polygon2D _shadow;
-    
+
+    public bool IsThrown { get; private set; }
+
     public override void _Ready()
     {
         Name = "EnergyDot";
@@ -34,6 +35,7 @@ public partial class EnergyDot : Node2D
             new (Size, Size),
             new (0, Size)
         };
+        AddChild(_dot);
         
         _shadow = new Polygon2D();
         _shadow.Color = Global.Black;
@@ -42,20 +44,22 @@ public partial class EnergyDot : Node2D
         _shadow.ZIndex = _dot.ZIndex - 1;
         _shadow.Position = _dot.Position + Vector2.One;
         _shadow.Polygon = _dot.Polygon;
-        
-        base._Ready();
+        AddChild(_shadow);
     }
     
     public void Throw()
     {
+        if (IsThrown) return;
         _throwTime = Time.GetTicksMsec();
         _velocity = new Vector2(_random.Next(400, 500), _random.Next(-50, 50));
+        IsThrown = true;
     }
 
     public void CancelThrow()
     {
         FinishThrow();
         Visible = true;
+        IsThrown = false;
     }
 
     private void FinishThrow()
