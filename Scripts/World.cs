@@ -267,18 +267,6 @@ public partial class World : Node2D
 	    
 	    Attack(enemy, source);
 	}
-
-    private void SpawnEnemy(Enemy enemy, Vector2I position)
-    {
-	    if (!IsTileEmpty(position)) return;
-	    enemy.OnDeathEvent += OnEnemyDeath;
-	    enemy.OnEnterCombatEvent += AddEnemyToCombat;
-	    enemy.OnNudgeEvent += OnNudge;
-	    Player.OnMoveEvent += enemy.OnPlayerMove;
-	    AddChild(enemy);
-	    enemy.SetPosition(position);
-	    _enemies.Add(enemy);
-    }
     
     private void AddEnemyToCombat(Entity enemy)
 	{
@@ -286,11 +274,25 @@ public partial class World : Node2D
 	    GD.Print("Enemy entered combat.");
 	}
 
-	private void OnEntityMove(Vector2I oldPosition, Vector2I newPosition)
+	private void OnEntityMove(TileAlignedGameObject source, Vector2I oldPosition, Vector2I newPosition)
 	{
-		
+		_grid.SetPointSolid(oldPosition, false);
+		_grid.SetPointSolid(newPosition, true);
 	}
     
+	private void SpawnEnemy(Enemy enemy, Vector2I position)
+	{
+		if (!IsTileEmpty(position)) return;
+		enemy.OnDeathEvent += OnEnemyDeath;
+		enemy.OnEnterCombatEvent += AddEnemyToCombat;
+		enemy.OnNudgeEvent += OnNudge;
+		enemy.OnMoveEvent += OnEntityMove;
+		Player.OnMoveEvent += enemy.OnPlayerMove;
+		AddChild(enemy);
+		enemy.SetPosition(position);
+		_enemies.Add(enemy);
+	}
+	
     private void SpawnInteractable(Interactable interactable, Vector2I position)
     {
 	    if (!IsTileEmpty(position)) return;
