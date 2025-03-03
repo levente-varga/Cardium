@@ -37,11 +37,12 @@ public partial class EnergyBar : Node2D
 		}
 	}
 	
-	private const float Gap = 1;
+	private const float VerticalGap = 0;
+	private const float DotSeparation = 1;
 	private const float Thickness = 1;
 	private const float HorizontalMargin = 2;
 
-	public readonly List<Polygon2D> Polygons = new();
+	private readonly List<Polygon2D> _polygons = new();
 	
 	public override void _Ready()
 	{
@@ -51,7 +52,7 @@ public partial class EnergyBar : Node2D
 	
 	private Polygon2D CreatePolygon(int index)
 	{
-		var offset = index * (Gap + Thickness) + HorizontalMargin;
+		var offset = index * (DotSeparation + Thickness) + HorizontalMargin;
 		var polygon = new Polygon2D();
 		polygon.Color = Global.Purple;
 		polygon.Name = "EnergyBarSegment";
@@ -59,10 +60,10 @@ public partial class EnergyBar : Node2D
 		polygon.ZIndex = 10;
 		polygon.Polygon = new Vector2[]
 		{
-			new (offset, -Gap),
-			new (offset, -Gap - Thickness),
-			new (offset + Thickness, -Gap - Thickness),
-			new (offset + Thickness, -Gap),
+			new (offset, -VerticalGap),
+			new (offset, -VerticalGap - Thickness),
+			new (offset + Thickness, -VerticalGap - Thickness),
+			new (offset + Thickness, -VerticalGap),
 		};
 		return polygon;
 	}
@@ -71,24 +72,24 @@ public partial class EnergyBar : Node2D
 	{
 		for (var i = 0; i < MaxEnergy; i++)
 		{
-			Polygons[i].Visible = i < Energy;
+			_polygons[i].Visible = i < Energy;
 		}
 	}
 
 	private void ReactToMaxEnergyChange()
 	{
-		for (var i = 0; i < Math.Max(MaxEnergy, Polygons.Count); i++)
+		for (var i = 0; i < Math.Max(MaxEnergy, _polygons.Count); i++)
 		{
-			if (i >= Polygons.Count)
+			if (i >= _polygons.Count)
 			{
 				var polygon = CreatePolygon(i);
 				AddChild(polygon);
-				Polygons.Add(polygon);
+				_polygons.Add(polygon);
 			}
 			else if (i >= MaxEnergy)
 			{
-				Polygons[i].QueueFree();
-				Polygons.RemoveAt(i);
+				_polygons[i].QueueFree();
+				_polygons.RemoveAt(i);
 			}
 		}
 	}

@@ -40,51 +40,12 @@ public partial class HealthBar : Polygon2D
 		}
 	}
 	
-	private float _gap = 3;
-	[Export] public float Gap
-	{
-		get => _gap;
-		set
-		{
-			_gap = value;
-			UpdatePolygon();
-		}
-	}
+	private const float VerticalGap = 2;
+	private const float Thickness = 2;
+	private const float HorizontalMargin = 2;
+	private const float Width = 16;
 	
-	private float _thickness = 2;
-	[Export] public float Thickness 
-	{
-		get => _thickness;
-		set
-		{
-			_thickness = value;
-			UpdatePolygon();
-		}
-	}
-	
-	private float _horizontalMargin = 2;
-	[Export] public float HorizontalMargin
-	{
-		get => _horizontalMargin;
-		set
-		{
-			_horizontalMargin = value;
-			UpdatePolygon();
-		}	
-	}
-	
-	private float _width = 16;
-	[Export] public float Width 
-	{
-		get => _width;
-		set
-		{
-			_width = value;
-			UpdatePolygon();
-		}
-	}
-	
-	private float ActualWidth => Width - 2 * HorizontalMargin;
+	private static float ActualWidth => Width - 2 * HorizontalMargin;
 	private float SmoothWidth => ActualWidth * _smoothHealth;
 	
 	public override void _Ready()
@@ -101,10 +62,10 @@ public partial class HealthBar : Polygon2D
 	{
 		Polygon = new Vector2[]
 		{
-			new (HorizontalMargin, -Gap),
-			new (HorizontalMargin, -Gap - Thickness),
-			new (HorizontalMargin + SmoothWidth, -Gap - Thickness),
-			new (HorizontalMargin + SmoothWidth, -Gap),
+			new (HorizontalMargin, -VerticalGap),
+			new (HorizontalMargin, -VerticalGap - Thickness),
+			new (HorizontalMargin + SmoothWidth, -VerticalGap - Thickness),
+			new (HorizontalMargin + SmoothWidth, -VerticalGap),
 		};
 	}
 
@@ -114,8 +75,8 @@ public partial class HealthBar : Polygon2D
 		
 		UpdatePolygon();
 	}
-	
-	public void SpawnFloatingLabel(string text)
+
+	private void SpawnFloatingLabel(string text)
 	{
 		Labels.FallingLabel label = new()
 		{
