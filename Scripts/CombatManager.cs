@@ -5,12 +5,18 @@ namespace Cardium.Scripts;
 
 public class CombatManager
 {
+    private readonly World _world;
     private readonly Player _player;
     private readonly List<Enemy> _enemiesInCombat = new();
     
     private readonly List<Entity> _turnOrder = new();
-    
-    public CombatManager(Player player) => _player = player;
+
+    public CombatManager(Player player, World world)
+    {
+        _player = player;
+        _world = world;
+    }
+
     private Entity _currentTurnEntity;
     
     public void EnterCombat(Enemy enemy)
@@ -40,7 +46,7 @@ public class CombatManager
         _turnOrder.Remove(entity);
         _turnOrder.Add(entity);
         _currentTurnEntity = _turnOrder[0];
-        _currentTurnEntity.OnTurn(_player);
+        _currentTurnEntity.OnTurn(_player, _world);
     }
     
     private void OnLeaveCombat(Entity entity)
@@ -58,6 +64,6 @@ public class CombatManager
         if (entity != _currentTurnEntity) return;
         
         _currentTurnEntity = _turnOrder[0];
-        _currentTurnEntity.OnTurn(_player);
+        _currentTurnEntity.OnTurn(_player, _world);
     }
 }

@@ -83,7 +83,7 @@ public partial class Entity : TileAlignedGameObject
         EnergyBar.Energy = Energy;
     }
     
-    public virtual void OnTurn(Entity source) { }
+    public virtual void OnTurn(Player player, World world) { }
 
     public virtual void OnDamaged(Entity source, int damage)
     {

@@ -27,12 +27,26 @@ public partial class Slime : Enemy
         base._Process(delta);
     }
 
-    public override void OnTurn(Entity source)
+    public override void OnTurn(Player player, World world)
     {
         if (Energy > 0)
         {
-            // TODO: Implement enemy AI
+            if (world.GetDistanceBetween(Position, player.Position) <= Range)
+            {
+                // TODO: Attack player
+            }
+            else
+            {
+                var path = world.GetPathBetween(Position, player.Position);
+                if (path.Count > 0)
+                {
+                    Position = path[0];
+                    Energy--;
+                }
+            }
         }
+        
+        base.OnTurn(player, world);
     }
 
     public override void OnDamaged(Entity source, int damage)

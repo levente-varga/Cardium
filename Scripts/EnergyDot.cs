@@ -51,7 +51,7 @@ public partial class EnergyDot : Node2D
     {
         if (IsThrown) return;
         _throwTime = Time.GetTicksMsec();
-        _velocity = new Vector2(_random.Next(400, 500), _random.Next(-50, 50));
+        _velocity = new Vector2(_random.Next(70, 80), _random.Next(-25, 25));
         IsThrown = true;
     }
 

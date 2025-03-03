@@ -27,12 +27,14 @@ public partial class Spider : Enemy
         base._Process(delta);
     }
 
-    public override void OnTurn(Entity source)
+    public override void OnTurn(Player player, World world)
     {
         if (Energy > 0)
         {
             // TODO: Implement enemy AI
         }
+        
+        base.OnTurn(player, world);
     }
 
     public override void OnDamaged(Entity source, int damage)

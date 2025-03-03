@@ -16,9 +16,9 @@ public partial class Enemy : Entity
         base._Process(delta);
     }
 
-    public override void OnTurn(Entity source)
+    public override void OnTurn(Player player, World world)
     {
-        base.OnTurn(source);
+        base.OnTurn(player, world);
         
         if (Energy > 0)
         {

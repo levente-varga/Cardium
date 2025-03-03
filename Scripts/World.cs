@@ -57,7 +57,7 @@ public partial class World : Node2D
 	    
 	    Camera.JumpToTarget();
 	    
-	    _combatManager = new CombatManager(Player);
+	    _combatManager = new CombatManager(Player, this);
     }
     
     public override void _Process(double delta)
@@ -374,5 +374,17 @@ public partial class World : Node2D
 			// TODO: Add loot to player
 			Hand.AddCard();
 		}
+	}
+
+	public int GetDistanceBetween(Vector2I from, Vector2I to)
+	{
+		if (!_grid.IsInBoundsv(from) || !_grid.IsInBoundsv(to)) return -1;
+		return _grid.GetPointPath(from, to).Length;
+	}
+	
+	public List<Vector2I> GetPathBetween(Vector2I from, Vector2I to)
+	{
+		if (!_grid.IsInBoundsv(from) || !_grid.IsInBoundsv(to)) return new List<Vector2I>();
+		return _grid.GetPointPath(from, to).ToList().Select(p => new Vector2I((int)p.X, (int)p.Y)).ToList();
 	}
 }
