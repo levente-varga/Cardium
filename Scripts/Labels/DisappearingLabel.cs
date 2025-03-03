@@ -18,6 +18,7 @@ public partial class DisappearingLabel : LabelWithShadow
         if (Time.GetTicksMsec() - SpawnTime > (LifetimeMillis ?? DefaultLifetimeMillis))
         {
             QueueFree();
+            return;
         }
         
         var progress = 1f - (Time.GetTicksMsec() - SpawnTime) / (LifetimeMillis ?? DefaultLifetimeMillis);

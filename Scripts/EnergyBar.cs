@@ -93,6 +93,11 @@ public partial class EnergyBar : Node2D
 			}
 		}
 	}
+
+	private void ThrowEnergyDots(int amount)
+	{
+		
+	}
 	
 	public override void _Process(double delta)
 	{
