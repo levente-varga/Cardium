@@ -25,14 +25,43 @@ public partial class Enemy : Entity
 
     public override void OnTurn(Player player, World world)
     {
-        base.OnTurn(player, world);
-        
         _path.SetPath(world.GetPointPathBetween(Position, player.Position));
         
-        if (Energy > 0)
+        SpawnFloatingLabel("[Debug] Start of turn", color: Global.Magenta, fontSize: 20);
+        
+        Energy = MaxEnergy;
+
+        for (var i = 0; i < MaxEnergy && Energy > 0; i++)
         {
-            // TODO: Implement enemy AI
+            var distance = world.GetDistanceBetween(Position, player.Position);
+            if (distance == -1)
+            {
+                SpawnFloatingLabel("[Debug] Unreachable", color: Global.Magenta, fontSize: 20);
+                OnTurnFinished();
+                return;
+            } 
+            if (distance <= Range)
+            {
+                Nudge(VectorToDirection(player.Position - Position));
+                player.ReceiveDamage(this, Damage);
+            }
+            else
+            {
+                var path = world.GetPathBetween(Position, player.Position);
+                if (path.Count > 1)
+                {
+                    Move(path[0], world);
+                }
+                else
+                {
+                    SpawnFloatingLabel("[Debug] Unable to move", color: Global.Magenta, fontSize: 20);
+                }
+            }
         }
+        
+        base.OnTurn(player, world);
+        
+        OnTurnFinished();
     }
 
     public override void ReceiveDamage(Entity source, int damage)

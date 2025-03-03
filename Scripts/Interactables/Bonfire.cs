@@ -34,6 +34,6 @@ public partial class Bonfire : Interactable
         
         camera.Shake(25);
         SetAnimation("idle", GD.Load<Texture2D>("res://Assets/Animations/Bonfire.png"), 4, 12);
-        SpawnFallingLabel("Restored!");
+        SpawnFallingLabel("Lit!");
     }
 }

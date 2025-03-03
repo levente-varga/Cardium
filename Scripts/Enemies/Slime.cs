@@ -30,41 +30,7 @@ public partial class Slime : Enemy
 
     public override void OnTurn(Player player, World world)
     {
-        SpawnFloatingLabel("[Debug] Start of turn", fontSize: 20);
-        
-        Energy = MaxEnergy;
-
-        for (var i = 0; i < MaxEnergy && Energy > 0; i++)
-        {
-            var distance = world.GetDistanceBetween(Position, player.Position);
-            if (distance == -1)
-            {
-                SpawnFloatingLabel("[Debug] Unreachable");
-                OnTurnFinished();
-                return;
-            } 
-            if (distance <= Range)
-            {
-                Nudge(VectorToDirection(player.Position - Position));
-                player.ReceiveDamage(this, Damage);
-            }
-            else
-            {
-                var path = world.GetPathBetween(Position, player.Position);
-                if (path.Count > 1)
-                {
-                    Move(path[0], world);
-                }
-                else
-                {
-                    SpawnFloatingLabel("[Debug] Unable to move", color: Global.Magenta);
-                }
-            }
-        }
-        
         base.OnTurn(player, world);
-        
-        OnTurnFinished();
     }
 
     public override void ReceiveDamage(Entity source, int damage)

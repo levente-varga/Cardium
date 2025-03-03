@@ -245,6 +245,7 @@ public partial class World : Node2D
 	    entity.OnEnterCombatEvent -= AddEnemyToCombat;
 	    RemoveChild(entity);
 	    entity.QueueFree();
+	    _grid.SetPointSolid(entity.Position, false);
 	    
 	    var cardLoot = new CardLoot();
 	    _loot.Add(cardLoot);

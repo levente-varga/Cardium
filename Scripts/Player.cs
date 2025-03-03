@@ -115,7 +115,7 @@ public partial class Player : Entity
 
 	public override void OnTurn(Player player, World world)
 	{
-		SpawnFloatingLabel("[Debug] Start of turn", fontSize: 20);
+		SpawnFloatingLabel("[Debug] Start of turn", color: Global.Magenta, fontSize: 20);
 		Energy = MaxEnergy;
 		_turnOngoing = true;
 	}
