@@ -46,6 +46,9 @@ public partial class Entity : TileAlignedGameObject
     public delegate void OnLeaveCombatDelegate(Entity entity);
     public event OnLeaveCombatDelegate OnLeaveCombatEvent;
     
+    public delegate void OnTurnFinishedDelegate(Entity entity);
+    public event OnTurnFinishedDelegate OnTurnFinishedEvent;
+    
     private Vector2I _previousPosition;
     
     public override void _Ready()
