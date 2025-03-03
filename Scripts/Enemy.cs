@@ -66,8 +66,6 @@ public partial class Enemy : Entity
 
     public override void ReceiveDamage(Entity source, int damage)
     {
-        Blink();
-        
         GD.Print(Name + " received " + damage + " damage from " + source.Name + ". Current health: " + Health + "/" + MaxHealth);
         
         base.ReceiveDamage(source, damage);

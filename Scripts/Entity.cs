@@ -88,7 +88,10 @@ public partial class Entity : TileAlignedGameObject
 
     public virtual void ReceiveDamage(Entity source, int damage)
     {
+        Blink();
+        
         // TODO: Implement dodge based on luck
+        
         Health -= Math.Min(1, damage - Armor);
         if (Health <= 0) OnDeath(source);
     }
