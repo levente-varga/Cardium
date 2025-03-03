@@ -30,6 +30,8 @@ public partial class Slime : Enemy
 
     public override void OnTurn(Player player, World world)
     {
+        SpawnFloatingLabel("[Debug] Start of turn", fontSize: 20);
+        
         GD.Print("Slime OnTurn called");
         Energy = MaxEnergy;
 

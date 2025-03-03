@@ -96,14 +96,23 @@ public class CombatManager
 
     private void StartCombat()
     {
-        _turnOrder.Add(_player);
+        if (_turnOrder.Contains(_player))
+        {
+            GD.Print("[ANOMALY] Player is already in the turn order on combat start.");
+        }
+        else
+        {
+            _turnOrder.Add(_player);
+        }
         _currentTurnEntity = _player;
         _player.OnTurn(_player, _world);
+        UpdateDebugLabel();
     }
 
     private void EndCombat()
     {
         _turnOrder.Remove(_player);
         _player.OnCombatEnd();
+        UpdateDebugLabel();
     }
 }

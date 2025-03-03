@@ -90,6 +90,14 @@ public partial class Player : Entity
 		{
 			Move(Direction.Down, World, useEnergy: InCombat);
 		}
+		else if (InputMap.EventIsAction(@event, "Skip"))
+		{
+			Energy--;
+			if (Energy <= 0)
+			{
+				OnTurnFinished();
+			}
+		}
 	}
 	
 	public void Attack()
@@ -107,6 +115,7 @@ public partial class Player : Entity
 
 	public override void OnTurn(Player player, World world)
 	{
+		SpawnFloatingLabel("[Debug] Start of turn", fontSize: 20);
 		Energy = MaxEnergy;
 		_turnOngoing = true;
 	}
