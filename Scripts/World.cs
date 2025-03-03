@@ -26,11 +26,11 @@ public partial class World : Node2D
 	[Export] public TileMapLayer FogLayer;
 	
 	private readonly List<Enemy> _enemies = new();
-	private readonly List<Enemy> _enemiesInCombat = new();
 	private readonly List<CardLoot> _loot = new();
 	private readonly List<Interactable> _interactables = new();
-	
     private readonly List<TileMapLayer> _layers = new();
+    
+    private CombatManager _combatManager;
 
     private Rect2I _region;
     private AStarGrid2D _grid;
@@ -56,6 +56,8 @@ public partial class World : Node2D
 	    Player.OnLeaveCombatEvent += entity => { Camera.Focus = false; };
 	    
 	    Camera.JumpToTarget();
+	    
+	    _combatManager = new CombatManager(Player);
     }
     
     public override void _Process(double delta)
@@ -240,7 +242,6 @@ public partial class World : Node2D
 	{
 		GD.Print(entity.Name + " died!");
 	    _enemies.Remove((Enemy)entity);
-	    _enemiesInCombat.Remove((Enemy)entity);
 	    Player.OnMoveEvent -= ((Enemy)entity).OnPlayerMove;
 	    RemoveChild(entity);
 	    entity.QueueFree();
@@ -272,7 +273,6 @@ public partial class World : Node2D
 	    if (!IsTileEmpty(position)) return;
 	    enemy.OnDeathEvent += OnEnemyDeath;
 	    enemy.OnEnterCombatEvent += AddEnemyToCombat;
-	    enemy.OnLeaveCombatEvent += RemoveEnemyFromCombat;
 	    Player.OnMoveEvent += enemy.OnPlayerMove;
 	    AddChild(enemy);
 	    enemy.SetPosition(position);
@@ -281,19 +281,8 @@ public partial class World : Node2D
     
     private void AddEnemyToCombat(Entity enemy)
 	{
-	    _enemiesInCombat.Add((Enemy)enemy);
+	    _combatManager.EnterCombat((Enemy)enemy);
 	    GD.Print("Enemy entered combat.");
-	}
-
-	private void RemoveEnemyFromCombat(Entity enemy)
-	{
-		_enemiesInCombat.Remove((Enemy)enemy);
-		GD.Print("Enemy left combat.");
-		if (_enemiesInCombat.Count == 0)
-		{
-			GD.Print("Player left combat, no enemies left.");
-			Player.OnFled();
-		}
 	}
     
     private void SpawnInteractable(Interactable interactable, Vector2I position)

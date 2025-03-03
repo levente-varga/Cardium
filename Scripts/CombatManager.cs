@@ -48,6 +48,13 @@ public class CombatManager
         _turnOrder.Remove(entity);
         _enemiesInCombat.Remove(entity as Enemy);
 
+        if (_enemiesInCombat.Count == 0)
+        {
+            _turnOrder.Remove(_player);
+            _player.OnFled();
+            return;
+        }
+        
         if (entity != _currentTurnEntity) return;
         
         _currentTurnEntity = _turnOrder[0];
