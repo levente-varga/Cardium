@@ -29,6 +29,8 @@ public partial class Spider : Enemy
 
     public override void OnTurn(Player player, World world)
     {
+        OnTurnFinished();
+        
         if (Energy > 0)
         {
             // TODO: Implement enemy AI
@@ -37,9 +39,9 @@ public partial class Spider : Enemy
         base.OnTurn(player, world);
     }
 
-    public override void OnDamaged(Entity source, int damage)
+    public override void ReceiveDamage(Entity source, int damage)
     {
-        base.OnDamaged(source, damage);
+        base.ReceiveDamage(source, damage);
     }
 
     public override void OnTargeted(Entity source)
@@ -47,7 +49,7 @@ public partial class Spider : Enemy
         
     }
     
-    public override void OnDeath(Entity source)
+    protected override void OnDeath(Entity source)
     {
         base.OnDeath(source);
     }

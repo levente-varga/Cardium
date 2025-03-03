@@ -40,10 +40,10 @@ public partial class HealthBar : Polygon2D
 		}
 	}
 	
-	private const float VerticalGap = 2;
-	private const float Thickness = 2;
-	private const float HorizontalMargin = 2;
-	private const float Width = 16;
+	private const int VerticalGap = 2;
+	private const int Thickness = 2;
+	private const int HorizontalMargin = 2;
+	private const int Width = 16;
 	
 	private static float ActualWidth => Width - 2 * HorizontalMargin;
 	private float SmoothWidth => ActualWidth * _smoothHealth;

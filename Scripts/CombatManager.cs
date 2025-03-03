@@ -18,6 +18,7 @@ public class CombatManager
         _player = player;
         _world = world;
         _debugLabel = debugLabel;
+        _player.OnTurnFinishedEvent += OnTurnFinished;
 
         UpdateDebugLabel();
     }
@@ -26,10 +27,7 @@ public class CombatManager
     {
         if (_enemiesInCombat.Count == 0)
         {
-            _turnOrder.Add(_player);
-            _player.OnTurnFinishedEvent += OnTurnFinished;
-            _currentTurnEntity = _player;
-            _player.OnTurn(_player, _world);
+            StartCombat();
         }
         
         if (!_enemiesInCombat.Contains(enemy))
@@ -64,11 +62,11 @@ public class CombatManager
     {
         _turnOrder.Remove(entity);
         _enemiesInCombat.Remove(entity as Enemy);
+        entity.OnTurnFinishedEvent -= OnTurnFinished;
 
         if (_enemiesInCombat.Count == 0)
         {
-            _turnOrder.Remove(_player);
-            _player.OnFled();
+            EndCombat();
             return;
         }
         
@@ -84,10 +82,28 @@ public class CombatManager
     {
         _debugLabel.Text = "Turn order: \n"
             + "Current turn: " + _currentTurnEntity?.Name
-            + "\n\nEntities in combat (in turn order):";
+            + "\n\nTurn order:";
         foreach (var entity in _turnOrder)
         {
             _debugLabel.Text += "\n" + entity.Name;
         }
+        _debugLabel.Text += "\n\nEnemies in combat: " + _enemiesInCombat.Count;
+        foreach (var entity in _enemiesInCombat)
+        {
+            _debugLabel.Text += "\n" + entity.Name;
+        }
+    }
+
+    private void StartCombat()
+    {
+        _turnOrder.Add(_player);
+        _currentTurnEntity = _player;
+        _player.OnTurn(_player, _world);
+    }
+
+    private void EndCombat()
+    {
+        _turnOrder.Remove(_player);
+        _player.OnCombatEnd();
     }
 }

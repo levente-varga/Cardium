@@ -16,10 +16,10 @@ public static class Global
     public static readonly Vector2I SlimeAtlasCoords = new (27, 8);
     public static readonly Vector2I SpiderAtlasCoords = new (28, 5);
     
-    public static readonly Color Yellow = new Color("F4B41B");
-    public static readonly Color Red = new Color("E6482E");
-    public static readonly Color White = new Color("FFFFFF");
-    public static readonly Color Black = new Color("000000");
-    public static readonly Color Magenta = new Color("472d3c");
-    public static readonly Color Purple = new Color("7D3CD7");
+    public static readonly Color Yellow = new ("F4B41B");
+    public static readonly Color Red = new ("E6482E");
+    public static readonly Color White = new ("FFFFFF");
+    public static readonly Color Black = new ("000000");
+    public static readonly Color Magenta = new ("FF23D9");
+    public static readonly Color Purple = new ("7D3CD7");
 }

@@ -2,12 +2,20 @@ using Godot;
 
 namespace Cardium.Scripts;
 
+public enum Direction
+{
+    Up,
+    Down,
+    Left,
+    Right
+}
+
 public partial class TileAlignedGameObject : AnimatedSprite2D
 {
     public new Vector2I Position { get; set; }
     private Vector2I _previousPosition;
     
-    public delegate void OnMoveDelegate(TileAlignedGameObject gameGameObject, Vector2I position);
+    public delegate void OnMoveDelegate(TileAlignedGameObject gameGameObject, Vector2I oldPosition, Vector2I newPosition);
     public event OnMoveDelegate OnMoveEvent;
     
     public delegate void OnNudgeDelegate(TileAlignedGameObject gameGameObject, Vector2I position);
@@ -32,7 +40,7 @@ public partial class TileAlignedGameObject : AnimatedSprite2D
 
         if (_previousPosition != Position)
         {
-            OnMoveEvent?.Invoke(this, Position);
+            OnMoveEvent?.Invoke(this, _previousPosition, Position);
             _previousPosition = Position;
         }
     }
@@ -84,10 +92,10 @@ public partial class TileAlignedGameObject : AnimatedSprite2D
         if (autoPlay) Play(name);
     }
     
-    protected void Nudge(Vector2I direction)
+    protected void Nudge(Direction direction)
     {
-        base.Position += direction * Global.TileSize / 8;
-        OnNudgeEvent?.Invoke(this, Position + direction);
+        base.Position += DirectionToVector(direction) * Global.TileSize / 8;
+        OnNudgeEvent?.Invoke(this, Position + DirectionToVector(direction));
     }
 
     public void Blink()
@@ -120,5 +128,17 @@ public partial class TileAlignedGameObject : AnimatedSprite2D
             LifetimeMillis = lifetimeMillis,
         };
         GetTree().Root.AddChild(label);
+    }
+    
+    protected static Vector2I DirectionToVector(Direction direction)
+    {
+        return direction switch
+        {
+            Direction.Up => Vector2I.Up,
+            Direction.Down => Vector2I.Down,
+            Direction.Left => Vector2I.Left,
+            Direction.Right => Vector2I.Right,
+            _ => Vector2I.Zero
+        };
     }
 }

@@ -5,6 +5,7 @@ namespace Cardium.Scripts;
 
 public partial class EnergyDot : Node2D
 {
+    private Vector2I _offset;
     private const float Size = 1;
     
     private readonly Random _random = new ();
@@ -17,6 +18,11 @@ public partial class EnergyDot : Node2D
     private Polygon2D _shadow;
 
     public bool IsThrown { get; private set; }
+    
+    public EnergyDot(Vector2I offset)
+    {
+        _offset = offset;
+    }
 
     public override void _Ready()
     {
@@ -65,7 +71,7 @@ public partial class EnergyDot : Node2D
     private void FinishThrow()
     {
         _velocity = Vector2.Zero;
-        Position = Vector2.Zero;
+        Position = _offset;
         Visible = false;
         Modulate = new Color(Modulate.R, Modulate.G, Modulate.B, 1);
     }

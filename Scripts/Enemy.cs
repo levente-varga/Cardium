@@ -26,13 +26,13 @@ public partial class Enemy : Entity
         }
     }
 
-    public override void OnDamaged(Entity source, int damage)
+    public override void ReceiveDamage(Entity source, int damage)
     {
         Blink();
         
         GD.Print(Name + " received " + damage + " damage from " + source.Name + ". Current health: " + Health + "/" + MaxHealth);
         
-        base.OnDamaged(source, damage);
+        base.ReceiveDamage(source, damage);
     }
 
     public override void OnTargeted(Entity source)
@@ -40,24 +40,23 @@ public partial class Enemy : Entity
         base.OnTargeted(source);
     }
     
-    public override void OnDeath(Entity source)
+    protected override void OnDeath(Entity source)
     {
         base.OnDeath(source);
     }
 
-    public void OnPlayerMove(TileAlignedGameObject player, Vector2I position)
+    public void OnPlayerMove(TileAlignedGameObject entity, Vector2I oldPosition, Vector2I newPosition)
     {
-        var _player = player as Player;
-        if (InVision(position))
+        var player = entity as Player;
+        if (InVision(newPosition))
         {
             if (InCombat) return;
             SetInCombatStatus(true);
             SpawnFloatingLabel("Spotted!", color: Global.Red, lifetimeMillis: 2000);
-            _player?.OnSpottedBy(this);
+            player?.OnCombatStart();
         }
-        else
+        else if (InCombat && !InCombatVision(newPosition))
         {
-            if (!InCombat) return;
             SetInCombatStatus(false);
         }
     }

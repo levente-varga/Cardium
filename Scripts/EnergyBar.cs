@@ -36,10 +36,10 @@ public partial class EnergyBar : Node2D
 		}
 	}
 	
-	private const float VerticalGap = 1;
-	private const float DotSeparation = 1;
-	private const float Thickness = 1;
-	private const float HorizontalMargin = 2;
+	private const int VerticalGap = 1;
+	private const int DotSeparation = 1;
+	private const int Thickness = 1;
+	private const int HorizontalMargin = 2;
 
 	private readonly List<EnergyDot> _dots = new();
 	
@@ -52,7 +52,7 @@ public partial class EnergyBar : Node2D
 	private EnergyDot CreateDot(int index)
 	{
 		var offset = index * (DotSeparation + Thickness) + HorizontalMargin;
-		var dot = new EnergyDot();
+		var dot = new EnergyDot(new Vector2I(offset, -VerticalGap));
 		dot.Position = new Vector2(offset, -VerticalGap);
 		return dot;
 	}

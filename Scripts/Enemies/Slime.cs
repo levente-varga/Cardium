@@ -18,6 +18,7 @@ public partial class Slime : Enemy
         Damage = 1;
         Luck = 0f;
         Vision = 2f;
+        CombatVision = 4f;
         Range = 1f;
         Description = "A slime enemy.";
     }
@@ -36,26 +37,18 @@ public partial class Slime : Enemy
         {
             if (world.GetDistanceBetween(Position, player.Position) <= Range)
             {
-                // TODO: Attack player
+                player.ReceiveDamage(this, Damage);
             }
             else
             {
                 var path = world.GetPathBetween(Position, player.Position);
-                // print the whole path:
-                GD.Print("Path: (from position " + Position + " to position " + player.Position + ")");
-                foreach (var p in path)
+                if (path.Count > 1)
                 {
-                    GD.Print(p);
-                }
-                if (path.Count > Range)
-                {
-                    Position = path[0];
-                    Energy--;
-                    SpawnFallingLabel("Path length: " + path.Count);
+                    Move(path[0], world);
                 }
                 else
                 {
-                    player.OnDamaged(this, Damage);
+                    SpawnFloatingLabel("Unable to move", color: Global.Magenta);
                 }
             }
         }
@@ -65,9 +58,9 @@ public partial class Slime : Enemy
         OnTurnFinished();
     }
 
-    public override void OnDamaged(Entity source, int damage)
+    public override void ReceiveDamage(Entity source, int damage)
     {
-        base.OnDamaged(source, damage);
+        base.ReceiveDamage(source, damage);
     }
 
     public override void OnTargeted(Entity source)
@@ -75,7 +68,7 @@ public partial class Slime : Enemy
         
     }
     
-    public override void OnDeath(Entity source)
+    protected override void OnDeath(Entity source)
     {
         base.OnDeath(source);
     }

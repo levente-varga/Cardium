@@ -134,11 +134,11 @@ public partial class World : Node2D
 		Mathf.FloorToInt(position.Y / Global.TileSize.Y)
 	);
     
-    public bool EnemyExistsAt(Vector2I position) => _enemies.Any(enemy => enemy.Position == position);
-    public bool SolidInteractableExistsAt(Vector2I position) => _interactables.Any(interactable => interactable.Position == position && interactable.Solid);
-    public bool WallExistsAt(Vector2I position) => WallLayer.GetCellTileData(position) != null;
+    public bool IsTileEnemy(Vector2I position) => _enemies.Any(enemy => enemy.Position == position);
+    public bool IsTileInteractable(Vector2I position) => _interactables.Any(interactable => interactable.Position == position && interactable.Solid);
+    public bool IsTileWall(Vector2I position) => WallLayer.GetCellTileData(position) != null;
 
-    public bool ObjectExistsNextTo(Vector2I position) =>
+    public bool IsAnyTileInteractableNextTo(Vector2I position) =>
 	    ObjectLayer.GetCellTileData(position + Vector2I.Down) != null ||
 	    ObjectLayer.GetCellTileData(position + Vector2I.Up) != null ||
 	    ObjectLayer.GetCellTileData(position + Vector2I.Left) != null ||
@@ -147,9 +147,9 @@ public partial class World : Node2D
     public Enemy GetEnemyAt(Vector2I position) => _enemies.FirstOrDefault(enemy => enemy.Position == position);
     
     public bool IsTileEmpty(Vector2I position) => 
-	    !WallExistsAt(position)
-	    && !SolidInteractableExistsAt(position)
-	    && !EnemyExistsAt(position)
+	    !IsTileWall(position)
+	    && !IsTileInteractable(position)
+	    && !IsTileEnemy(position)
 	    && Player.Position != position;
 
     /// <summary>
@@ -222,7 +222,7 @@ public partial class World : Node2D
     	QueueRedraw();
     }
 
-    private void OnPlayerMove(TileAlignedGameObject gameObject, Vector2I position)
+    private void OnPlayerMove(TileAlignedGameObject gameObject, Vector2I oldPosition, Vector2I newPosition)
     {
 	    PickUpLoot();
 	    UpdatePath();
@@ -252,7 +252,7 @@ public partial class World : Node2D
     public void Attack(Entity target, Entity source)
     {
 	    GD.Print(source.Name + " attacked " + target.Name + " for " + source.Damage + " damage!");
-	    target.OnDamaged(source, source.Damage);
+	    target.ReceiveDamage(source, source.Damage);
 	    
 	    Camera.Shake(6 * source.Damage);
     }
@@ -280,6 +280,11 @@ public partial class World : Node2D
 	{
 	    _combatManager.EnterCombat((Enemy)enemy);
 	    GD.Print("Enemy entered combat.");
+	}
+
+	private void OnEntityMove(Vector2I oldPosition, Vector2I newPosition)
+	{
+		
 	}
     
     private void SpawnInteractable(Interactable interactable, Vector2I position)
@@ -376,7 +381,7 @@ public partial class World : Node2D
 	public int GetDistanceBetween(Vector2I from, Vector2I to)
 	{
 		if (!_grid.IsInBoundsv(from) || !_grid.IsInBoundsv(to)) return -1;
-		return _grid.GetPointPath(from, to).Length;
+		return _grid.GetPointPath(from, to).Length - 1;
 	}
 	
 	public List<Vector2I> GetPathBetween(Vector2I from, Vector2I to)

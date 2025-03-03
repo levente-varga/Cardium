@@ -4,14 +4,6 @@ using Godot;
 
 namespace Cardium.Scripts;
 
-public enum Direction
-{
-    Up,
-    Down,
-    Left,
-    Right
-}
-
 public partial class Entity : TileAlignedGameObject
 {
     public int Health { 
@@ -36,6 +28,7 @@ public partial class Entity : TileAlignedGameObject
     public int Damage;
     public float Luck;
     public float Vision;
+    public float CombatVision;
     public float Range;
     public string Description;
     public bool InCombat { get; private set; }
@@ -93,7 +86,7 @@ public partial class Entity : TileAlignedGameObject
     
     public virtual void OnTurn(Player player, World world) { }
 
-    public virtual void OnDamaged(Entity source, int damage)
+    public virtual void ReceiveDamage(Entity source, int damage)
     {
         // TODO: Implement dodge based on luck
         Health -= Math.Min(1, damage - Armor);
@@ -102,7 +95,7 @@ public partial class Entity : TileAlignedGameObject
 
     public virtual void OnTargeted(Entity source) { }
 
-    public virtual void OnDeath(Entity source)
+    protected virtual void OnDeath(Entity source)
     {
         Health = 0;
         OnLeaveCombatEvent?.Invoke(this);
@@ -118,20 +111,23 @@ public partial class Entity : TileAlignedGameObject
     {
         return Position.DistanceTo(position) <= Vision;
     }
+    
+    public bool InCombatVision(Vector2I position)
+    {
+        return Position.DistanceTo(position) <= CombatVision;
+    }
 
-    public void OnSpottedBy(Entity source)
+    public void OnCombatStart()
     {
-        InCombat = true;
-        OnEnterCombatEvent?.Invoke(this);
+        SetInCombatStatus(true);
     }
     
-    public void OnFled()
+    public void OnCombatEnd()
     {
-        InCombat = false;
-        OnLeaveCombatEvent?.Invoke(this);
+        SetInCombatStatus(false);
     }
     
-    public void OnTurnFinished()
+    protected void OnTurnFinished()
     {
         OnTurnFinishedEvent?.Invoke(this);
     }
@@ -155,7 +151,21 @@ public partial class Entity : TileAlignedGameObject
 
     protected void Move(Direction direction, World world, bool useEnergy = true)
     {
+        var newPosition = Position + DirectionToVector(direction);
+        if (world.IsTileEmpty(newPosition)) Move(newPosition, world, useEnergy);
+        else
+        {
+            if (world.IsTileEnemy(newPosition) && useEnergy) Energy--; 
+            Nudge(direction);
+        }
+    }
+    
+    protected void Move(Vector2I newPosition, World world, bool useEnergy = true)
+    {
         GD.Print("Desire to move registered.");
+        
+        if (!world.IsTileEmpty(newPosition)) return;
+        
         if (useEnergy)
         {
             if (Energy <= 0)
@@ -165,17 +175,7 @@ public partial class Entity : TileAlignedGameObject
             }
             Energy--;
         }
-        
-        var vector = direction switch
-        {
-            Direction.Up => Vector2I.Up,
-            Direction.Down => Vector2I.Down,
-            Direction.Left => Vector2I.Left,
-            Direction.Right => Vector2I.Right,
-            _ => Vector2I.Zero
-        };
 
-        if (world.IsTileEmpty(Position + vector)) Position += vector;
-        else Nudge(vector);
+        Position = newPosition;
     }
 }
