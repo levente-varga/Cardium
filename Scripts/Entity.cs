@@ -15,8 +15,15 @@ public partial class Entity : TileAlignedGameObject
         get => HealthBar.MaxHealth;
         set => HealthBar.MaxHealth = value;
     }
-    public int Energy { get; protected set; } = 1;
-    public int MaxEnergy = 1;
+    public int Energy {
+        get => EnergyBar.Energy;
+        protected set => EnergyBar.Energy = value;
+    }
+    public int MaxEnergy
+    {
+        get => EnergyBar.MaxEnergy;
+        set => EnergyBar.MaxEnergy = value;
+    }
     public int Armor;
     public int Damage;
     public float Luck;
@@ -28,6 +35,7 @@ public partial class Entity : TileAlignedGameObject
     public List<Card> Inventory = new();
     
     public HealthBar HealthBar;
+    public EnergyBar EnergyBar;
     
     public delegate void OnDeathDelegate(Entity entity);
     public event OnDeathDelegate OnDeathEvent;
@@ -44,11 +52,11 @@ public partial class Entity : TileAlignedGameObject
     {
         base._Ready();
         
-        HealthBar = new HealthBar();
-        AddChild(HealthBar);
         Position = Vector2I.Zero;
         Name = "Entity";
         SetupHealthBar();
+        SetupEnergyBar();
+        SetInCombatStatus(false);
     }
 
     public override void _Process(double delta)
@@ -58,16 +66,21 @@ public partial class Entity : TileAlignedGameObject
     
     private void SetupHealthBar()
     {
-        HealthBar = GetNode<HealthBar>("HealthBar");
-        if (HealthBar == null) return;
+        HealthBar = new HealthBar();
+        AddChild(HealthBar);
         HealthBar.MaxHealth = MaxHealth;
         HealthBar.Health = Health;
     }
-    
-    public virtual void OnTurn(Entity source)
+
+    private void SetupEnergyBar()
     {
-        
+        EnergyBar = new EnergyBar();
+        AddChild(EnergyBar);
+        EnergyBar.MaxEnergy = MaxEnergy;
+        EnergyBar.Energy = Energy;
     }
+    
+    public virtual void OnTurn(Entity source) { }
 
     public virtual void OnDamaged(Entity source, int damage)
     {
@@ -76,11 +89,8 @@ public partial class Entity : TileAlignedGameObject
         if (Health <= 0) OnDeath(source);
     }
 
-    public virtual void OnTargeted(Entity source)
-    {
-        
-    }
-    
+    public virtual void OnTargeted(Entity source) { }
+
     public virtual void OnDeath(Entity source)
     {
         Health = 0;
@@ -116,11 +126,13 @@ public partial class Entity : TileAlignedGameObject
         if (InCombat)
         {
             HealthBar.Visible = true;
+            EnergyBar.Visible = true;
             OnEnterCombatEvent?.Invoke(this);
         }
         else
         {
             HealthBar.Visible = false;
+            EnergyBar.Visible = false;
             OnLeaveCombatEvent?.Invoke(this);
         }
     }
