@@ -279,6 +279,11 @@ public partial class World : Node2D
 		_grid.SetPointSolid(oldPosition, false);
 		_grid.SetPointSolid(newPosition, true);
 	}
+
+	private void OnInteractableSolidityChange(Interactable interactable, bool solid)
+	{
+		_grid.SetPointSolid(interactable.Position, solid);
+	}
     
 	private void SpawnEnemy(Enemy enemy, Vector2I position)
 	{
@@ -290,6 +295,7 @@ public partial class World : Node2D
 		Player.OnMoveEvent += enemy.OnPlayerMove;
 		AddChild(enemy);
 		enemy.SetPosition(position);
+		_grid.SetPointSolid(position);
 		_enemies.Add(enemy);
 	}
 	
@@ -298,6 +304,8 @@ public partial class World : Node2D
 	    if (!IsTileEmpty(position)) return;
 	    AddChild(interactable);
 	    interactable.SetPosition(position);
+	    interactable.OnSolidityChangeEvent += OnInteractableSolidityChange;
+	    _grid.SetPointSolid(interactable.Position, interactable.Solid);
 	    _interactables.Add(interactable);
     }
     
