@@ -32,12 +32,18 @@ public partial class Slime : Enemy
     {
         SpawnFloatingLabel("[Debug] Start of turn", fontSize: 20);
         
-        GD.Print("Slime OnTurn called");
         Energy = MaxEnergy;
 
         for (var i = 0; i < MaxEnergy && Energy > 0; i++)
         {
-            if (world.GetDistanceBetween(Position, player.Position) <= Range)
+            var distance = world.GetDistanceBetween(Position, player.Position);
+            if (distance == -1)
+            {
+                SpawnFloatingLabel("[Debug] Unreachable");
+                OnTurnFinished();
+                return;
+            } 
+            if (distance <= Range)
             {
                 Nudge(VectorToDirection(player.Position - Position));
                 player.ReceiveDamage(this, Damage);
@@ -51,7 +57,7 @@ public partial class Slime : Enemy
                 }
                 else
                 {
-                    SpawnFloatingLabel("Unable to move", color: Global.Magenta);
+                    SpawnFloatingLabel("[Debug] Unable to move", color: Global.Magenta);
                 }
             }
         }
