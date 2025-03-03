@@ -397,4 +397,9 @@ public partial class World : Node2D
 		path = path.GetRange(1, path.Count - 1);
 		return path.Select(p => new Vector2I((int)p.X / Global.TileSize.X, (int)p.Y / Global.TileSize.Y)).ToList();
 	}
+
+	public Vector2[] GetPointPathBetween(Vector2I from, Vector2I to)
+	{
+		return _grid.GetPointPath(from, to).ToList().Select(p => new Vector2(p.X, p.Y) + Global.TileSize / 2).ToArray();
+	}
 }

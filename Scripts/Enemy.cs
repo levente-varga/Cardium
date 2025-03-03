@@ -1,24 +1,33 @@
+using System.Linq;
 using Godot;
 
 namespace Cardium.Scripts;
 
 public partial class Enemy : Entity
 {
+    private Path _path;
+    
+    
     public override void _Ready()
     {
         base._Ready();
+        _path = new Path();
+        AddChild(_path);
         
         HealthBar.Visible = false;
     }
     
     public override void _Process(double delta)
     {
+        _path.Visible = InCombat;
         base._Process(delta);
     }
 
     public override void OnTurn(Player player, World world)
     {
         base.OnTurn(player, world);
+        
+        _path.SetPath(world.GetPointPathBetween(Position, player.Position));
         
         if (Energy > 0)
         {
