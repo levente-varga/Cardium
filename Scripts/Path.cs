@@ -17,6 +17,7 @@ public partial class Path : Line2D
     public override void _Process(double delta)
     {
         GlobalPosition = Vector2.Zero;
+        Visible = Global.Debug;
         
         base._Process(delta);
     }

@@ -209,6 +209,13 @@ public partial class World : Node2D
 
     public override void _Input(InputEvent @event)
     {
+	    if (InputMap.EventIsAction(@event, "Debug") && @event.IsPressed())
+	    {
+		    GD.Print("Debug " + (Global.Debug ? "on" : "off"));
+		    Global.Debug = !Global.Debug;
+		    _combatManager.UpdateDebugLabel();
+	    }
+	    
     	if (@event is not InputEventMouseButton { Pressed: true, ButtonIndex: MouseButton.Left } mouseButton) return;
 	    
 	    var globalMousePosition = mouseButton.Position + Camera.ViewRect.Position;

@@ -78,8 +78,13 @@ public class CombatManager
         UpdateDebugLabel();
     }
     
-    private void UpdateDebugLabel()
+    public void UpdateDebugLabel()
     {
+        if (!Global.Debug)
+        {
+            _debugLabel.Text = "";
+            return;
+        }
         _debugLabel.Text = "Turn order: \n"
             + "Current turn: " + _currentTurnEntity?.Name
             + "\n\nTurn order:";

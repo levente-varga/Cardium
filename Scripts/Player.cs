@@ -42,11 +42,12 @@ public partial class Player : Entity
 			//return;
 		}
 
-		DebugLabel.Text = $"Health: {Health} / {MaxHealth}\n"
-		                  + $"Energy: {Energy} / {MaxEnergy}\n"
-		                  + $"Position: {Position}\n"
-		                  + $"InCombat: {InCombat}\n"
-		                  + $"Turn: {_turnOngoing}\n";
+		DebugLabel.Text = "";
+		if (Global.Debug) DebugLabel.Text = $"Health: {Health} / {MaxHealth}\n"
+		                                    + $"Energy: {Energy} / {MaxEnergy}\n"
+		                                    + $"Position: {Position}\n"
+		                                    + $"InCombat: {InCombat}\n"
+		                                    + $"Turn: {_turnOngoing}\n";
 		
 		base._Process(delta);
 	}
@@ -115,7 +116,7 @@ public partial class Player : Entity
 
 	public override void OnTurn(Player player, World world)
 	{
-		SpawnFloatingLabel("[Debug] Start of turn", color: Global.Magenta, fontSize: 20);
+		if (Global.Debug) SpawnFloatingLabel("[Debug] Start of turn", color: Global.Magenta, fontSize: 20);
 		Energy = MaxEnergy;
 		_turnOngoing = true;
 	}

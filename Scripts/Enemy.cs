@@ -27,7 +27,7 @@ public partial class Enemy : Entity
     {
         _path.SetPath(world.GetPointPathBetween(Position, player.Position));
         
-        SpawnFloatingLabel("[Debug] Start of turn", color: Global.Magenta, fontSize: 20);
+        if (Global.Debug) SpawnFloatingLabel("[Debug] Start of turn", color: Global.Magenta, fontSize: 20);
         
         Energy = MaxEnergy;
 
@@ -36,7 +36,7 @@ public partial class Enemy : Entity
             var distance = world.GetDistanceBetween(Position, player.Position);
             if (distance == -1)
             {
-                SpawnFloatingLabel("[Debug] Unreachable", color: Global.Magenta, fontSize: 20);
+                if (Global.Debug) SpawnFloatingLabel("[Debug] Unreachable", color: Global.Magenta, fontSize: 20);
                 OnTurnFinished();
                 return;
             } 
@@ -54,7 +54,7 @@ public partial class Enemy : Entity
                 }
                 else
                 {
-                    SpawnFloatingLabel("[Debug] Unable to move", color: Global.Magenta, fontSize: 20);
+                    if (Global.Debug) SpawnFloatingLabel("[Debug] Unable to move", color: Global.Magenta, fontSize: 20);
                 }
             }
         }

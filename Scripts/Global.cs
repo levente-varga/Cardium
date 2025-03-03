@@ -23,4 +23,6 @@ public static class Global
     public static readonly Color Magenta = new ("FF23D9");
     public static readonly Color Purple = new ("7D3CD7");
     public static readonly Color Green = new ("38D973");
+
+    public static bool Debug = false;
 }
