@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Godot;
 
 namespace Cardium.Scripts;
@@ -84,7 +85,7 @@ public partial class Entity : TileAlignedGameObject
         EnergyBar.Energy = Energy;
     }
     
-    public virtual void OnTurn(Player player, World world) { }
+    public virtual async Task OnTurn(Player player, World world) { }
 
     public virtual void ReceiveDamage(Entity source, int damage)
     {
@@ -152,18 +153,18 @@ public partial class Entity : TileAlignedGameObject
         }
     }
 
-    protected void Move(Direction direction, World world, bool useEnergy = true)
+    protected async Task Move(Direction direction, World world, bool useEnergy = true)
     {
         var newPosition = Position + DirectionToVector(direction);
         if (world.IsTileEmpty(newPosition)) Move(newPosition, world, useEnergy);
         else
         {
             if (world.IsTileEnemy(newPosition) && useEnergy) Energy--; 
-            Nudge(direction);
+            await Nudge(direction);
         }
     }
     
-    protected void Move(Vector2I newPosition, World world, bool useEnergy = true)
+    protected async Task Move(Vector2I newPosition, World world, bool useEnergy = true)
     {
         GD.Print("Desire to move registered.");
         
@@ -178,7 +179,7 @@ public partial class Entity : TileAlignedGameObject
             }
             Energy--;
         }
-
+        
         Position = newPosition;
     }
     

@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Godot;
 
 namespace Cardium.Scripts;
@@ -91,8 +92,13 @@ public partial class TileAlignedGameObject : AnimatedSprite2D
         
         if (autoPlay) Play(name);
     }
+
+    protected SignalAwaiter WaitFor(float seconds)
+    {
+        return ToSignal(GetTree().CreateTimer(seconds), "timeout");
+    }
     
-    protected void Nudge(Direction direction)
+    protected async Task Nudge(Direction direction)
     {
         base.Position += DirectionToVector(direction) * Global.TileSize / 8;
         OnNudgeEvent?.Invoke(this, Position + DirectionToVector(direction));

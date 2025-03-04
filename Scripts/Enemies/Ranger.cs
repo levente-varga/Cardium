@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Godot;
 
 namespace Cardium.Scripts.Enemies;
@@ -25,7 +26,7 @@ public partial class Ranger : Enemy
         SetStillFrame(GD.Load<Texture2D>("res://assets/Sprites/player.png"));
     }
 
-    public override void OnTurn(Player player, World world)
+    public override async Task OnTurn(Player player, World world)
     {
         base.OnTurn(player, world);
         

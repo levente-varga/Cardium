@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading.Tasks;
 using Godot;
 
 namespace Cardium.Scripts;
@@ -23,7 +24,7 @@ public partial class Enemy : Entity
         base._Process(delta);
     }
 
-    public override void OnTurn(Player player, World world)
+    public override async Task OnTurn(Player player, World world)
     {
         Path.SetPath(world.GetPointPathBetween(Position, player.Position));
         
@@ -42,15 +43,18 @@ public partial class Enemy : Entity
             } 
             if (distance <= Range)
             {
-                Nudge(VectorToDirection(player.Position - Position));
+                await WaitFor(0.2f);
+                await Nudge(VectorToDirection(player.Position - Position));
                 player.ReceiveDamage(this, Damage);
+                await WaitFor(0.2f);
             }
             else
             {
                 var path = world.GetPathBetween(Position, player.Position);
-                if (path.Count > 1)
+                if (path is { Count: > 1 })
                 {
-                    Move(path[0], world);
+                    await Move(path[0], world);
+                    await WaitFor(0.2f);
                 }
                 else
                 {
@@ -59,7 +63,9 @@ public partial class Enemy : Entity
             }
         }
         
-        base.OnTurn(player, world);
+        await base.OnTurn(player, world);
+
+        await WaitFor(0.2f);
         
         OnTurnFinished();
     }

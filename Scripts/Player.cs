@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Godot;
 
 namespace Cardium.Scripts;
@@ -114,7 +115,7 @@ public partial class Player : Entity
 		World.Interact(interactablePositions[0]);
 	}
 
-	public override void OnTurn(Player player, World world)
+	public override async Task OnTurn(Player player, World world)
 	{
 		if (Global.Debug) SpawnFloatingLabel("[Debug] Start of turn", color: Global.Magenta, fontSize: 20);
 		Energy = MaxEnergy;

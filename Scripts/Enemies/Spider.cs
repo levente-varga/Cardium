@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Godot;
 
 namespace Cardium.Scripts.Enemies;
@@ -27,7 +28,7 @@ public partial class Spider : Enemy
         base._Process(delta);
     }
 
-    public override void OnTurn(Player player, World world)
+    public override async Task OnTurn(Player player, World world)
     {
         OnTurnFinished();
         
