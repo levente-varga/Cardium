@@ -337,6 +337,7 @@ public partial class World : Node2D
 
 		    if (atlasCoords == Global.SlimeAtlasCoords) enemy = new Slime();
 		    else if (atlasCoords == Global.SpiderAtlasCoords) enemy = new Spider();
+		    else if (atlasCoords == Global.RangerAtlasCoords) enemy = new Ranger();
 		    else continue;
 		    
 		    SpawnEnemy(enemy, cell);

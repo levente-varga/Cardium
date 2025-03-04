@@ -14,7 +14,7 @@ public partial class Ranger : Enemy
         Description = "Stays just in range.";
         MaxHealth = 1;
         Health = MaxHealth;
-        MaxEnergy = 2;
+        MaxEnergy = 1;
         Energy = MaxEnergy;
         Armor = 0;
         Damage = 1;
@@ -22,7 +22,7 @@ public partial class Ranger : Enemy
         Vision = 7;
         CombatVision = 10;
         
-        SetAnimation("idle", GD.Load<Texture2D>("res://assets/Animations/Ranger.png"), 8, 12);
+        SetStillFrame(GD.Load<Texture2D>("res://assets/Sprites/player.png"));
     }
 
     public override void OnTurn(Player player, World world)
@@ -55,6 +55,8 @@ public partial class Ranger : Enemy
                     continue;
                 }
 
+                Path.SetPath(world.GetPointPathBetween(Position, tile));
+                
                 for (var i = 0; i < path.Count && Energy > 0; i++)
                 {
                     Move(path[i], world);

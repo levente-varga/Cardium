@@ -5,27 +5,27 @@ namespace Cardium.Scripts;
 
 public partial class Enemy : Entity
 {
-    private Path _path;
+    protected Path Path;
     
     
     public override void _Ready()
     {
         base._Ready();
-        _path = new Path();
-        AddChild(_path);
+        Path = new Path();
+        AddChild(Path);
         
         HealthBar.Visible = false;
     }
     
     public override void _Process(double delta)
     {
-        _path.Visible = InCombat;
+        Path.Visible = InCombat;
         base._Process(delta);
     }
 
     public override void OnTurn(Player player, World world)
     {
-        _path.SetPath(world.GetPointPathBetween(Position, player.Position));
+        Path.SetPath(world.GetPointPathBetween(Position, player.Position));
         
         if (Global.Debug) SpawnFloatingLabel("[Debug] Start of turn", color: Global.Magenta, fontSize: 20);
         

@@ -1186,7 +1186,7 @@ tile_set = SubResource("TileSet_3rv6q")
 z_index = 2
 use_parent_material = true
 scale = Vector2(4, 4)
-tile_map_data = PackedByteArray("AAADAPn/AAAbAAgAAAAMAP//AAAbAAgAAAAMAAEAAAAbAAgAAAAZAPT/AAAbAAgAAAATAPj/AAAcAAUAAAARAAkAAAAbAAgAAAA=")
+tile_map_data = PackedByteArray("AAADAPn/AAAbAAgAAAAMAP//AAAbAAgAAAAMAAEAAAAbAAgAAAAZAPT/AAAbAAgAAAATAPj/AAAcAAUAAAARAAkAAAAbAAgAAAAfAAAAAAAcAAEAAAA=")
 tile_set = SubResource("TileSet_3rv6q")
 
 [node name="LootLayer" type="TileMapLayer" parent="World"]
