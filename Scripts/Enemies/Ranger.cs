@@ -28,7 +28,9 @@ public partial class Ranger : Enemy
 
     public override async Task OnTurn(Player player, World world)
     {
-        base.OnTurn(player, world);
+        TurnMarker.Visible = true;
+        
+        await base.OnTurn(player, world);
         
         var tilesExactlyInRange = world.GetEmptyTilesExactlyInRange(player.Position, Range);
         var tileDistances = tilesExactlyInRange.Select(tile => Position.DistanceTo(tile)).ToList();

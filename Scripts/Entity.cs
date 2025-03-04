@@ -38,6 +38,7 @@ public partial class Entity : TileAlignedGameObject
     
     public HealthBar HealthBar;
     public EnergyBar EnergyBar;
+    public TurnMarker TurnMarker;
     
     public delegate void OnDeathDelegate(Entity entity);
     public event OnDeathDelegate OnDeathEvent;
@@ -61,6 +62,7 @@ public partial class Entity : TileAlignedGameObject
         Name = "Entity";
         SetupHealthBar();
         SetupEnergyBar();
+        SetupTurnMarker();
         SetInCombatStatus(false);
     }
 
@@ -83,6 +85,13 @@ public partial class Entity : TileAlignedGameObject
         AddChild(EnergyBar);
         EnergyBar.MaxEnergy = MaxEnergy;
         EnergyBar.Energy = Energy;
+    }
+    
+    private void SetupTurnMarker()
+    {
+        TurnMarker = new TurnMarker();
+        AddChild(TurnMarker);
+        TurnMarker.Visible = false;
     }
     
     public virtual async Task OnTurn(Player player, World world) { }
@@ -133,6 +142,7 @@ public partial class Entity : TileAlignedGameObject
     
     protected void OnTurnFinished()
     {
+        TurnMarker.Visible = false;
         OnTurnFinishedEvent?.Invoke(this);
     }
 
@@ -149,6 +159,7 @@ public partial class Entity : TileAlignedGameObject
         {
             HealthBar.Visible = false;
             EnergyBar.Visible = false;
+            TurnMarker.Visible = false;
             OnLeaveCombatEvent?.Invoke(this);
         }
     }

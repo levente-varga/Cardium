@@ -95,10 +95,6 @@ public partial class Player : Entity
 		else if (InputMap.EventIsAction(@event, "Skip"))
 		{
 			Energy--;
-			if (Energy <= 0)
-			{
-				OnTurnFinished();
-			}
 		}
 	}
 	
@@ -117,6 +113,8 @@ public partial class Player : Entity
 
 	public override async Task OnTurn(Player player, World world)
 	{
+		TurnMarker.Visible = true;
+		
 		if (Global.Debug) SpawnFloatingLabel("[Debug] Start of turn", color: Global.Magenta, fontSize: 20);
 		Energy = MaxEnergy;
 		_turnOngoing = true;

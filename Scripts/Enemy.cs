@@ -26,6 +26,8 @@ public partial class Enemy : Entity
 
     public override async Task OnTurn(Player player, World world)
     {
+        TurnMarker.Visible = true;
+        
         Path.SetPath(world.GetPointPathBetween(Position, player.Position));
         
         if (Global.Debug) SpawnFloatingLabel("[Debug] Start of turn", color: Global.Magenta, fontSize: 20);
