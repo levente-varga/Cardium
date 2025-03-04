@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using Godot;
 
 namespace Cardium.Scripts.Enemies;
@@ -27,21 +29,45 @@ public partial class Ranger : Enemy
     {
         base.OnTurn(player, world);
         
+        var tilesExactlyInRange = world.GetEmptyTilesExactlyInRange(player.Position, Range);
+        var tileDistances = tilesExactlyInRange.Select(tile => Position.DistanceTo(tile)).ToList();
+        
+        // Move if not exactly in range
+        if (tileDistances.Min() != 0)
+        {
+            var orderedTiles = new List<Vector2I>();
+
+            // TODO: improve sort from O(n^2)
+            foreach (var t in tilesExactlyInRange)
+            {
+                var minDistance = tileDistances.Min();
+                var index = tileDistances.IndexOf(minDistance);
+                orderedTiles.Add(tilesExactlyInRange[index]);
+                tileDistances[index] = int.MaxValue;
+            }
+        
+            foreach (var tile in orderedTiles)
+            {
+                var path = world.GetPathBetween(Position, tile);
+                if (path == null)
+                {
+                    GD.Print("Path skipped, unreachable");
+                    continue;
+                }
+
+                for (var i = 0; i < path.Count && Energy > 0; i++)
+                {
+                    Move(path[i], world);
+                }
+                
+                break;
+            }
+        }
+        
+        // Attack
         for (var i = 0; i < MaxEnergy && Energy > 0; i++)
         {
-            var distance = world.GetDistanceBetween(Position, player.Position);
-            if (distance == Range)
-            {
-                // TODO: Attack player
-            }
-            else if (distance > Range)
-            {
-                // TODO: Move towards player until in Range
-            }
-            else
-            {
-                // TODO: Move away from player while in Range
-            }
+            player.ReceiveDamage(this, Damage);
         }
     }
 }

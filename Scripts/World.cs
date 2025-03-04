@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -406,9 +407,9 @@ public partial class World : Node2D
 		return _grid.GetPointPath(from, to).Length - 1;
 	}
 	
-	public List<Vector2I> GetPathBetween(Vector2I from, Vector2I to)
+	public List<Vector2I>? GetPathBetween(Vector2I from, Vector2I to)
 	{
-		if (!_grid.IsInBoundsv(from) || !_grid.IsInBoundsv(to)) return new List<Vector2I>();
+		if (!_grid.IsInBoundsv(from) || !_grid.IsInBoundsv(to)) return null;
 		if (from == to) return new List<Vector2I>();
 		var path = _grid.GetPointPath(from, to).ToList();
 		if (path.Count <= 1) return new List<Vector2I>();
@@ -419,5 +420,37 @@ public partial class World : Node2D
 	public Vector2[] GetPointPathBetween(Vector2I from, Vector2I to)
 	{
 		return _grid.GetPointPath(from, to).ToList().Select(p => new Vector2(p.X, p.Y) + Global.TileSize / 2).ToArray();
+	}
+
+	private static List<Vector2I> GetTilesExactlyInRange(Vector2I position, float range)
+	{
+		var r = Mathf.CeilToInt(range);
+        
+		var tiles = new List<Vector2I>();
+        
+		for (var x = -r + 1; x <= r; x++)
+		{
+			for (var y = -r + 1; y <= r; y++)
+			{
+				var offset = new Vector2I(x, y);
+				var distance = offset.Length();
+				if (distance <= range) tiles.Add(position + offset);
+			}
+		}
+        
+		return tiles;
+	}
+    
+	public List<Vector2I> GetEmptyTilesExactlyInRange(Vector2I position, float range)
+	{
+		var tiles = GetTilesExactlyInRange(position, range);
+
+		for (var i = 0; i < tiles.Count; i++)
+		{
+			var tile = tiles[i];
+			if (!IsTileEmpty(tile)) tiles.Remove(tile);
+		}
+        
+		return tiles;
 	}
 }
