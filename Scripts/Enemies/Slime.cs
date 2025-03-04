@@ -17,9 +17,9 @@ public partial class Slime : Enemy
         Armor = 0;
         Damage = 1;
         Luck = 0f;
-        Vision = 2f;
-        CombatVision = 4f;
-        Range = 1f;
+        Vision = 2;
+        CombatVision = 4;
+        Range = 1;
         Description = "A slime enemy.";
     }
     

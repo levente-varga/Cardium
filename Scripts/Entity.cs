@@ -29,7 +29,7 @@ public partial class Entity : TileAlignedGameObject
     public float Luck;
     public float Vision;
     public float CombatVision;
-    public float Range;
+    public int Range;
     public string Description;
     public bool InCombat { get; private set; }
     
@@ -185,5 +185,37 @@ public partial class Entity : TileAlignedGameObject
     public void Heal(int amount)
     {
         Health = Math.Min(MaxHealth, Health + amount);
+    }
+
+    public List<Vector2I> GetTilesExactlyInRange(float range)
+    {
+        var r = Mathf.CeilToInt(range);
+        
+        var tiles = new List<Vector2I>();
+        
+        for (var x = -r + 1; x <= r; x++)
+        {
+            for (var y = -r + 1; y <= r; y++)
+            {
+                var offset = new Vector2I(x, y);
+                var distance = offset.Length();
+                if (distance <= range) tiles.Add(Position + offset);
+            }
+        }
+        
+        return tiles;
+    }
+    
+    public List<Vector2I> GetEmptyTilesExactlyInRange(float range, World world)
+    {
+        var tiles = GetTilesExactlyInRange(range);
+
+        for (var i = 0; i < tiles.Count; i++)
+        {
+            var tile = tiles[i];
+            if (!world.IsTileEmpty(tile)) tiles.Remove(tile);
+        }
+        
+        return tiles;
     }
 }

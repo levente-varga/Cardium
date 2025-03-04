@@ -17,8 +17,8 @@ public partial class Spider : Enemy
         Armor = 0;
         Damage = 2;
         Luck = 0f;
-        Vision = 4f;
-        Range = 1f;
+        Vision = 4;
+        Range = 1;
         Description = "A spider enemy.";
     }
     
