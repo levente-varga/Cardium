@@ -23,6 +23,7 @@ public partial class World : Node2D
 	[Export] public TileMapLayer WallLayer;
 	[Export] public TileMapLayer ObjectLayer;
 	[Export] public TileMapLayer EnemyLayer;
+	[Export] public TileMapLayer EnemyGroupLayer;
 	[Export] public TileMapLayer LootLayer;
 	[Export] public TileMapLayer FogLayer;
 	
@@ -352,6 +353,14 @@ public partial class World : Node2D
 		    else if (atlasCoords == Global.SpiderAtlasCoords) enemy = new Spider();
 		    else if (atlasCoords == Global.RangerAtlasCoords) enemy = new Ranger();
 		    else continue;
+		    
+		    var groupIdAtlasCoords = EnemyGroupLayer.GetCellAtlasCoords(cell);
+		    var groupId = groupIdAtlasCoords.X - Global.ZeroAtlasCoords.X;
+		    if (groupIdAtlasCoords.Y == Global.ZeroAtlasCoords.Y && groupId is >= 0 and <= 9)
+		    {
+			    enemy.GroupId = groupId;
+		    }
+		    EnemyGroupLayer.SetCell(cell, -1, new Vector2I(-1, -1));
 		    
 		    SpawnEnemy(enemy, cell);
 	    }

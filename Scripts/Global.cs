@@ -17,6 +17,8 @@ public static class Global
     public static readonly Vector2I SpiderAtlasCoords = new (28, 5);
     public static readonly Vector2I RangerAtlasCoords = new (28, 1);
     
+    public static readonly Vector2I ZeroAtlasCoords = new (35, 17);
+    
     public static readonly Color Yellow = new ("F4B41B");
     public static readonly Color Red = new ("E6482E");
     public static readonly Color White = new ("FFFFFF");

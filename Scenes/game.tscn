@@ -1138,7 +1138,7 @@ offset_left = 960.0
 offset_right = 1000.0
 offset_bottom = 23.0
 
-[node name="World" type="Node2D" parent="." node_paths=PackedStringArray("Camera", "Player", "Hand", "DebugLabel1", "DebugLabel2", "DebugLabel3", "DebugLabel4", "GroundLayer", "DecorLayer", "WallLayer", "ObjectLayer", "EnemyLayer", "LootLayer", "FogLayer")]
+[node name="World" type="Node2D" parent="." node_paths=PackedStringArray("Camera", "Player", "Hand", "DebugLabel1", "DebugLabel2", "DebugLabel3", "DebugLabel4", "GroundLayer", "DecorLayer", "WallLayer", "ObjectLayer", "EnemyLayer", "EnemyGroupLayer", "LootLayer", "FogLayer")]
 z_index = -1
 script = ExtResource("4_ayy7p")
 Camera = NodePath("../Camera2D")
@@ -1153,6 +1153,7 @@ DecorLayer = NodePath("DecorLayer")
 WallLayer = NodePath("WallLayer")
 ObjectLayer = NodePath("ObjectLayer")
 EnemyLayer = NodePath("EnemyLayer")
+EnemyGroupLayer = NodePath("EnemyGroupLayer")
 LootLayer = NodePath("LootLayer")
 FogLayer = NodePath("FogLayer")
 
@@ -1187,6 +1188,13 @@ z_index = 2
 use_parent_material = true
 scale = Vector2(4, 4)
 tile_map_data = PackedByteArray("AAADAPn/AAAbAAgAAAAMAP//AAAbAAgAAAAMAAEAAAAbAAgAAAAZAPT/AAAbAAgAAAATAPj/AAAcAAUAAAARAAkAAAAbAAgAAAAfAAAAAAAcAAEAAAA=")
+tile_set = SubResource("TileSet_3rv6q")
+
+[node name="EnemyGroupLayer" type="TileMapLayer" parent="World"]
+z_index = 2
+use_parent_material = true
+scale = Vector2(4, 4)
+tile_map_data = PackedByteArray("AAAMAAEAAAAjABEAAAAMAP//AAAjABEAAAA=")
 tile_set = SubResource("TileSet_3rv6q")
 
 [node name="LootLayer" type="TileMapLayer" parent="World"]
