@@ -423,26 +423,26 @@ public partial class World : Node2D
 		return _grid.GetPointPath(from, to).ToList().Select(p => new Vector2(p.X, p.Y) + Global.TileSize / 2).ToArray();
 	}
 
-	private static List<Vector2I> GetTilesExactlyInRange(Vector2I position, float range)
+	private static List<Vector2I> GetTilesExactlyInRange(Vector2I position, int range)
 	{
 		var r = Mathf.CeilToInt(range);
         
 		var tiles = new List<Vector2I>();
         
-		for (var x = -r + 1; x <= r; x++)
+		for (var i = -r; i <= r; i++)
 		{
-			for (var y = -r + 1; y <= r; y++)
-			{
-				var offset = new Vector2I(x, y);
-				var distance = offset.Length();
-				if (distance <= range) tiles.Add(position + offset);
-			}
+			var x = position.X + r;
+			var dy = r - Math.Abs(i);
+			var y1 = position.Y + (dy);
+			var y2 = position.Y - (dy);
+			tiles.Add(new Vector2I(x, y1));
+			if (y1 != y2) tiles.Add(new Vector2I(x, y2));
 		}
         
 		return tiles;
 	}
     
-	public List<Vector2I> GetEmptyTilesExactlyInRange(Vector2I position, float range)
+	public List<Vector2I> GetEmptyTilesExactlyInRange(Vector2I position, int range)
 	{
 		var tiles = GetTilesExactlyInRange(position, range);
 

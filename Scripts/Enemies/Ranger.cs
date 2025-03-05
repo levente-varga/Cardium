@@ -19,9 +19,9 @@ public partial class Ranger : Enemy
         Energy = MaxEnergy;
         Armor = 0;
         Damage = 1;
-        Range = 6;
-        Vision = 7;
-        CombatVision = 10;
+        Range = 4;
+        Vision = 5;
+        CombatVision = 7;
         
         SetStillFrame(GD.Load<Texture2D>("res://assets/Sprites/player.png"));
     }
@@ -30,10 +30,14 @@ public partial class Ranger : Enemy
     {
         TurnMarker.Visible = true;
         
-        await base.OnTurn(player, world);
-        
         var tilesExactlyInRange = world.GetEmptyTilesExactlyInRange(player.Position, Range);
         var tileDistances = tilesExactlyInRange.Select(tile => Position.DistanceTo(tile)).ToList();
+        
+        SpawnDebugFloatingLabel("Found " + tilesExactlyInRange.Count + " empty tiles in range");
+        await WaitFor(0.3f);
+        
+        SpawnDebugFloatingLabel("Minimum distance: " + tileDistances.Min());
+        await WaitFor(0.3f);
         
         // Move if not exactly in range
         if (tileDistances.Min() != 0)
@@ -62,17 +66,22 @@ public partial class Ranger : Enemy
                 
                 for (var i = 0; i < path.Count && Energy > 0; i++)
                 {
-                    Move(path[i], world);
+                    await Move(path[i], world);
                 }
                 
                 break;
             }
         }
         
+        SpawnDebugFloatingLabel("In range, attacking with " + Energy + " energy left");
+        
         // Attack
         for (var i = 0; i < MaxEnergy && Energy > 0; i++)
         {
             player.ReceiveDamage(this, Damage);
+            Energy--;
         }
+        
+        OnTurnFinished();
     }
 }

@@ -135,6 +135,11 @@ public partial class TileAlignedGameObject : AnimatedSprite2D
         };
         GetTree().Root.AddChild(label);
     }
+
+    protected void SpawnDebugFloatingLabel(string text)
+    {
+        if (Global.Debug) SpawnFloatingLabel("[Debug] " + text, color: Global.Magenta, fontSize: 20);
+    }
     
     protected static Vector2I DirectionToVector(Direction direction)
     {
