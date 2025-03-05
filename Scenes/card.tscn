@@ -77,5 +77,32 @@ offset_top = -160.0
 offset_right = 112.0
 offset_bottom = 160.0
 
+[node name="Art" type="Sprite2D" parent="Body"]
+
+[node name="Control" type="Control" parent="Body"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = -96.0
+offset_top = 16.0
+offset_right = 96.0
+offset_bottom = 144.0
+
+[node name="Description" type="RichTextLabel" parent="Body/Control"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -96.0
+offset_top = -16.0
+offset_right = 96.0
+offset_bottom = 16.0
+grow_horizontal = 2
+grow_vertical = 2
+bbcode_enabled = true
+text = "[center]Test text[/center]"
+fit_content = true
+
 [connection signal="mouse_entered" from="Body/Hitbox" to="." method="OnMouseEntered"]
 [connection signal="mouse_exited" from="Body/Hitbox" to="." method="OnMouseExited"]
