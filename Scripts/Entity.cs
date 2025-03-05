@@ -167,7 +167,7 @@ public partial class Entity : TileAlignedGameObject
     protected async Task Move(Direction direction, World world, bool useEnergy = true)
     {
         var newPosition = Position + DirectionToVector(direction);
-        if (world.IsTileEmpty(newPosition)) Move(newPosition, world, useEnergy);
+        if (world.IsTileEmpty(newPosition)) await Move(newPosition, world, useEnergy);
         else
         {
             if (world.IsTileEnemy(newPosition) && useEnergy) Energy--; 

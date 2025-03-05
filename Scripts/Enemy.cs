@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Threading.Tasks;
 using Godot;
 
@@ -7,7 +6,7 @@ namespace Cardium.Scripts;
 public partial class Enemy : Entity
 {
     protected Path Path;
-    
+    public int? GroupId;
     
     public override void _Ready()
     {

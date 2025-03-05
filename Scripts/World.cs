@@ -145,7 +145,7 @@ public partial class World : Node2D
 	    ObjectLayer.GetCellTileData(position + Vector2I.Left) != null ||
 	    ObjectLayer.GetCellTileData(position + Vector2I.Right) != null;
     
-    public Enemy GetEnemyAt(Vector2I position) => _enemies.FirstOrDefault(enemy => enemy.Position == position);
+    public Enemy? GetEnemyAt(Vector2I position) => _enemies.FirstOrDefault(enemy => enemy.Position == position);
     
     public bool IsTileEmpty(Vector2I position) => 
 	    !IsTileWall(position)
@@ -277,10 +277,23 @@ public partial class World : Node2D
 	    Attack(enemy, source);
 	}
     
-    private void AddEnemyToCombat(Entity enemy)
+    private void AddEnemyToCombat(Entity entity)
 	{
-	    _combatManager.EnterCombat((Enemy)enemy);
-	    GD.Print("Enemy entered combat.");
+		var enemy = (Enemy)entity;
+		
+	    _combatManager.EnterCombat(enemy);
+	    if (enemy.GroupId is not null)
+	    {
+		    foreach (var e in _enemies)
+		    {
+			    if (!e.InCombat && e.GroupId == enemy.GroupId)
+			    {
+				    e.OnCombatStart();
+			    }
+		    }
+	    }
+	    
+	    GD.Print(entity.Name + " entered combat.");
 	}
 
 	private void OnEntityMove(TileAlignedGameObject source, Vector2I oldPosition, Vector2I newPosition)
