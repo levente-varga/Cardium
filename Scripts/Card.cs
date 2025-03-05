@@ -4,19 +4,30 @@ namespace Cardium.Scripts;
 
 public partial class Card : Node2D
 {
-	public enum Type
+	public enum CardType
 	{
 		Combat,
 		Action,
 	}
 	
+	public enum CardRarity
+	{
+		Common,
+		Rare,
+		Epic,
+		Legendary
+	}
+	
+	public int Cost { get; protected set; }
+	public string Description { get; protected set; }
+	public CardType Type { get; protected set; }
+	public CardRarity Rarity { get; protected set; }
+	public Sprite2D Art { get; protected set; }
+	
 	private AnimationPlayer _animationPlayer;
 	private Node2D _body;
 	private Sprite2D _sprite;
 	private Control _hitbox;
-	
-	public CardBehavior Behavior;
-	
 
 	public override void _Ready()
 	{
@@ -43,10 +54,12 @@ public partial class Card : Node2D
 		
 	}
 
-	// public abstract void OnPlay(Player player);
-	// public abstract void OnDiscard(Player player);
-	// public abstract void OnDrawn(Player player);
-	// public abstract void OnDestroy(Player player);
+	public virtual void OnPlay(Player player) {}
+	public virtual void OnPlay(Player player, Entity target) {}
+	public virtual void OnPlay(Player player, Vector2I position, World world) {}
+	public virtual void OnDiscard(Player player) {}
+	public virtual void OnDrawn(Player player) {}
+	public virtual void OnDestroy(Player player) {}
 	
 
 	public void OnMouseEntered() {
