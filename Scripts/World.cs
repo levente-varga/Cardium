@@ -63,7 +63,7 @@ public partial class World : Node2D
     
     public override void _Process(double delta)
     {
-	    
+	    DebugLabel3.Text = "Region: " + _region;
     }
     
     private void SetupLayers()
@@ -431,7 +431,7 @@ public partial class World : Node2D
         
 		for (var i = -r; i <= r; i++)
 		{
-			var x = position.X + r;
+			var x = position.X + i;
 			var dy = r - Math.Abs(i);
 			var y1 = position.Y + (dy);
 			var y2 = position.Y - (dy);
@@ -442,13 +442,14 @@ public partial class World : Node2D
 		return tiles;
 	}
     
-	public List<Vector2I> GetEmptyTilesExactlyInRange(Vector2I position, int range)
+	public List<Vector2I> GetEmptyTilesExactlyInRange(Vector2I position, int range, Vector2I? exclude = null)
 	{
 		var tiles = GetTilesExactlyInRange(position, range);
 
 		for (var i = 0; i < tiles.Count; i++)
 		{
 			var tile = tiles[i];
+			if (tile == exclude) continue;
 			if (!IsTileEmpty(tile)) tiles.Remove(tile);
 		}
         

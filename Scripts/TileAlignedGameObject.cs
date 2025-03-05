@@ -112,13 +112,15 @@ public partial class TileAlignedGameObject : AnimatedSprite2D
         tween.Play();
     }
     
-    public void SpawnFallingLabel(string text, Color? color = null)
+    public void SpawnFallingLabel(string text, Color? color = null, int? fontSize = null, int? lifetimeMillis = null)
     {
         Labels.FallingLabel label = new()
         {
             Text = text,
             Position = GlobalPosition + Global.TileSize / 2,
             Color = color,
+            FontSize = fontSize,
+            LifetimeMillis = lifetimeMillis,
         };
         GetTree().Root.AddChild(label);
     }
@@ -139,6 +141,11 @@ public partial class TileAlignedGameObject : AnimatedSprite2D
     protected void SpawnDebugFloatingLabel(string text)
     {
         if (Global.Debug) SpawnFloatingLabel("[Debug] " + text, color: Global.Magenta, fontSize: 20);
+    }
+    
+    protected void SpawnDebugFallingLabel(string text)
+    {
+        if (Global.Debug) SpawnFallingLabel("[Debug] " + text, color: Global.Magenta, fontSize: 20);
     }
     
     protected static Vector2I DirectionToVector(Direction direction)

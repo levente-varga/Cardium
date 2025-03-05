@@ -7,6 +7,8 @@ namespace Cardium.Scripts.Enemies;
 
 public partial class Ranger : Enemy
 {
+    private Label DebugLabel;
+    
     public override void _Ready()
     {
         base._Ready();
@@ -23,21 +25,34 @@ public partial class Ranger : Enemy
         Vision = 5;
         CombatVision = 7;
         
+        DebugLabel = GetNode<Label>("/root/Root/Camera2D/CanvasLayer/Label4");
+        
         SetStillFrame(GD.Load<Texture2D>("res://assets/Sprites/player.png"));
     }
 
     public override async Task OnTurn(Player player, World world)
     {
         TurnMarker.Visible = true;
+
+        Energy = MaxEnergy;
         
-        var tilesExactlyInRange = world.GetEmptyTilesExactlyInRange(player.Position, Range);
+        var tilesExactlyInRange = world.GetEmptyTilesExactlyInRange(player.Position, Range, exclude: Position);
         var tileDistances = tilesExactlyInRange.Select(tile => Position.DistanceTo(tile)).ToList();
         
-        SpawnDebugFloatingLabel("Found " + tilesExactlyInRange.Count + " empty tiles in range");
-        await WaitFor(0.3f);
+        Path.SetPath(tilesExactlyInRange.Select(v => new Vector2(v.X, v.Y) * Global.TileSize.X + Global.TileSize / 2).ToArray());
         
-        SpawnDebugFloatingLabel("Minimum distance: " + tileDistances.Min());
-        await WaitFor(0.3f);
+        SpawnDebugFallingLabel("Found " + tilesExactlyInRange.Count + " empty tiles in range");
+        await WaitFor(0.7f);
+        
+        SpawnDebugFallingLabel("Minimum distance: " + tileDistances.Min());
+        await WaitFor(0.7f);
+
+        DebugLabel.Text = "Position: " + Position + "\n" +
+                          "Tiles in range: ";
+        foreach (var tile in tilesExactlyInRange)
+        {
+            DebugLabel.Text += tile + " ";
+        }
         
         // Move if not exactly in range
         if (tileDistances.Min() != 0)
@@ -58,8 +73,15 @@ public partial class Ranger : Enemy
                 var path = world.GetPathBetween(Position, tile);
                 if (path == null)
                 {
-                    GD.Print("Path skipped, unreachable");
+                    SpawnDebugFallingLabel("Path to " + tile + " skipped, unreachable");
+                    await WaitFor(0.15f);
                     continue;
+                }
+                else
+                {
+                    await WaitFor(0.2f);
+                    SpawnDebugFallingLabel("Path succeeded, found " + path);
+                    await WaitFor(0.5f);
                 }
 
                 Path.SetPath(world.GetPointPathBetween(Position, tile));
@@ -71,6 +93,12 @@ public partial class Ranger : Enemy
                 
                 break;
             }
+        }
+        
+        if (Energy == 0)
+        {
+            OnTurnFinished();
+            return;
         }
         
         SpawnDebugFloatingLabel("In range, attacking with " + Energy + " energy left");
