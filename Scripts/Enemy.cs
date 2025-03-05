@@ -28,6 +28,8 @@ public partial class Enemy : Entity
     {
         TurnMarker.Visible = true;
         
+        await Delay(300);
+        
         Path.SetPath(world.GetPointPathBetween(Position, player.Position));
         
         if (Global.Debug) SpawnFloatingLabel("[Debug] Start of turn", color: Global.Magenta, fontSize: 20);
@@ -45,10 +47,9 @@ public partial class Enemy : Entity
             } 
             if (distance <= Range)
             {
-                await WaitFor(0.2f);
-                await Nudge(VectorToDirection(player.Position - Position));
+                Nudge(VectorToDirection(player.Position - Position));
                 player.ReceiveDamage(this, Damage);
-                await WaitFor(0.2f);
+                await Delay(300);
             }
             else
             {
@@ -56,7 +57,7 @@ public partial class Enemy : Entity
                 if (path is { Count: > 1 })
                 {
                     await Move(path[0], world);
-                    await WaitFor(0.2f);
+                    await Delay(300);
                 }
                 else
                 {
@@ -66,8 +67,6 @@ public partial class Enemy : Entity
         }
         
         await base.OnTurn(player, world);
-
-        await WaitFor(0.2f);
         
         OnTurnFinished();
     }

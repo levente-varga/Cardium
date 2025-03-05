@@ -171,7 +171,7 @@ public partial class Entity : TileAlignedGameObject
         else
         {
             if (world.IsTileEnemy(newPosition) && useEnergy) Energy--; 
-            await Nudge(direction);
+            Nudge(direction);
         }
     }
     

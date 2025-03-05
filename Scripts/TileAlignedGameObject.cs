@@ -93,12 +93,17 @@ public partial class TileAlignedGameObject : AnimatedSprite2D
         if (autoPlay) Play(name);
     }
 
-    protected SignalAwaiter WaitFor(float seconds)
+    protected static async Task Delay(int milliseconds)
     {
-        return ToSignal(GetTree().CreateTimer(seconds), "timeout");
+        await Task.Delay(milliseconds);
     }
     
-    protected async Task Nudge(Direction direction)
+    protected static async Task DebugDelay(int milliseconds)
+    {
+        if (Global.Debug) await Delay(milliseconds);
+    }
+    
+    protected void Nudge(Direction direction)
     {
         base.Position += DirectionToVector(direction) * Global.TileSize / 8;
         OnNudgeEvent?.Invoke(this, Position + DirectionToVector(direction));

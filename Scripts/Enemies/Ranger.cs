@@ -17,7 +17,7 @@ public partial class Ranger : Enemy
         Description = "Stays just in range.";
         MaxHealth = 1;
         Health = MaxHealth;
-        MaxEnergy = 1;
+        MaxEnergy = 2;
         Energy = MaxEnergy;
         Armor = 0;
         Damage = 1;
@@ -33,8 +33,9 @@ public partial class Ranger : Enemy
     public override async Task OnTurn(Player player, World world)
     {
         TurnMarker.Visible = true;
-
         Energy = MaxEnergy;
+        
+        await Delay(300);
         
         var tilesExactlyInRange = world.GetEmptyTilesExactlyInRange(player.Position, Range, exclude: Position);
         var tileDistances = tilesExactlyInRange.Select(tile => Position.DistanceTo(tile)).ToList();
@@ -42,10 +43,9 @@ public partial class Ranger : Enemy
         Path.SetPath(tilesExactlyInRange.Select(v => new Vector2(v.X, v.Y) * Global.TileSize.X + Global.TileSize / 2).ToArray());
         
         SpawnDebugFallingLabel("Found " + tilesExactlyInRange.Count + " empty tiles in range");
-        await WaitFor(0.7f);
-        
+        await DebugDelay(700);
         SpawnDebugFallingLabel("Minimum distance: " + tileDistances.Min());
-        await WaitFor(0.7f);
+        await DebugDelay(700);
 
         DebugLabel.Text = "Position: " + Position + "\n" +
                           "Tiles in range: ";
@@ -60,7 +60,7 @@ public partial class Ranger : Enemy
             var orderedTiles = new List<Vector2I>();
             
             SpawnDebugFallingLabel("Finding closest tile to move to");
-            await WaitFor(0.7f);
+            await DebugDelay(700);
 
             // TODO: improve sort from O(n^2)
             foreach (var t in tilesExactlyInRange)
@@ -74,7 +74,7 @@ public partial class Ranger : Enemy
             if (orderedTiles.Count == 0)
             {
                 SpawnDebugFallingLabel("No tiles in orderedTiles list");
-                await WaitFor(0.7f);
+                await DebugDelay(700);
             }
         
             foreach (var tile in orderedTiles)
@@ -83,14 +83,14 @@ public partial class Ranger : Enemy
                 if (path == null)
                 {
                     SpawnDebugFallingLabel("Path to " + tile + " skipped, unreachable");
-                    await WaitFor(0.15f);
+                    await DebugDelay(700);
                     continue;
                 }
                 else
                 {
-                    await WaitFor(0.3f);
+                    await DebugDelay(700);
                     SpawnDebugFallingLabel("Path accepted, " + path.Count + " tiles");
-                    await WaitFor(0.7f);
+                    await DebugDelay(700);
                 }
 
                 Path.SetPath(world.GetPointPathBetween(Position, tile));
@@ -98,7 +98,7 @@ public partial class Ranger : Enemy
                 for (var i = 0; i < path.Count && Energy > 0; i++)
                 {
                     await Move(path[i], world);
-                    
+                    await Delay(300);
                 }
                 
                 break;
@@ -112,15 +112,15 @@ public partial class Ranger : Enemy
         }
         
         SpawnDebugFloatingLabel(Energy + " energy left after moving");
-        await WaitFor(0.7f);
+        await DebugDelay(700);
         
         // Attack
         for (var i = 0; i < MaxEnergy && Energy > 0; i++)
         {
             player.ReceiveDamage(this, Damage);
+            Nudge(VectorToDirection(player.Position - Position));
             Energy--;
-            SpawnDebugFallingLabel("Attacked player");
-            await WaitFor(0.7f);
+            await Delay(300);
         }
         
         OnTurnFinished();
