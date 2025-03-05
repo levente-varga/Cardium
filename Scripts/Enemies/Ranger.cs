@@ -58,6 +58,9 @@ public partial class Ranger : Enemy
         if (tileDistances.Min() != 0)
         {
             var orderedTiles = new List<Vector2I>();
+            
+            SpawnDebugFallingLabel("Finding closest tile to move to");
+            await WaitFor(0.7f);
 
             // TODO: improve sort from O(n^2)
             foreach (var t in tilesExactlyInRange)
@@ -66,6 +69,12 @@ public partial class Ranger : Enemy
                 var index = tileDistances.IndexOf(minDistance);
                 orderedTiles.Add(tilesExactlyInRange[index]);
                 tileDistances[index] = int.MaxValue;
+            }
+
+            if (orderedTiles.Count == 0)
+            {
+                SpawnDebugFallingLabel("No tiles in orderedTiles list");
+                await WaitFor(0.7f);
             }
         
             foreach (var tile in orderedTiles)
@@ -79,9 +88,9 @@ public partial class Ranger : Enemy
                 }
                 else
                 {
-                    await WaitFor(0.2f);
-                    SpawnDebugFallingLabel("Path succeeded, found " + path);
-                    await WaitFor(0.5f);
+                    await WaitFor(0.3f);
+                    SpawnDebugFallingLabel("Path accepted, " + path.Count + " tiles");
+                    await WaitFor(0.7f);
                 }
 
                 Path.SetPath(world.GetPointPathBetween(Position, tile));
@@ -89,6 +98,7 @@ public partial class Ranger : Enemy
                 for (var i = 0; i < path.Count && Energy > 0; i++)
                 {
                     await Move(path[i], world);
+                    
                 }
                 
                 break;
@@ -101,13 +111,16 @@ public partial class Ranger : Enemy
             return;
         }
         
-        SpawnDebugFloatingLabel("In range, attacking with " + Energy + " energy left");
+        SpawnDebugFloatingLabel(Energy + " energy left after moving");
+        await WaitFor(0.7f);
         
         // Attack
         for (var i = 0; i < MaxEnergy && Energy > 0; i++)
         {
             player.ReceiveDamage(this, Damage);
             Energy--;
+            SpawnDebugFallingLabel("Attacked player");
+            await WaitFor(0.7f);
         }
         
         OnTurnFinished();

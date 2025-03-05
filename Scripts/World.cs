@@ -413,7 +413,7 @@ public partial class World : Node2D
 		if (!_grid.IsInBoundsv(from) || !_grid.IsInBoundsv(to)) return null;
 		if (from == to) return new List<Vector2I>();
 		var path = _grid.GetPointPath(from, to).ToList();
-		if (path.Count <= 1) return new List<Vector2I>();
+		if (path.Count == 0) return null;
 		path = path.GetRange(1, path.Count - 1);
 		return path.Select(p => new Vector2I((int)p.X / Global.TileSize.X, (int)p.Y / Global.TileSize.Y)).ToList();
 	}
