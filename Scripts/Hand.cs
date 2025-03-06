@@ -10,6 +10,8 @@ public partial class Hand : Node2D
 	[Export] public float HandHeight = 64;
 	[Export] public float MaxHandEnclosedAngle = 30f;
 	[Export] public float DefaultCardAngle = 7f;
+	
+	public bool RightHanded = true;
 
 	private readonly List<Node2D> _cards = new();
 	private List<float> _cardAngles = new();
@@ -69,7 +71,7 @@ public partial class Hand : Node2D
 		var angles = new List<float>();
 
 		var handEnclosedAngle = MathF.Min(MaxHandEnclosedAngle, (cardCount - 1) * DefaultCardAngle);
-		var handStartAngle = -handEnclosedAngle / 2 - 90;
+		var handStartAngle = 270 - handEnclosedAngle / 2;
 		float cardAngle = 0;
 		if (cardCount > 1) cardAngle = handEnclosedAngle / (cardCount - 1);
 
@@ -114,7 +116,7 @@ public partial class Hand : Node2D
 	{
 		if (_cards.Count >= MaxHandSize) return;
 		var card = _cardScene.Instantiate<Node2D>();
-		_cardAngles.Add(-45);
+		_cardAngles.Add(315);
 		_cards.Add(card);
 		AddChild(card);
 		PositionHand();
