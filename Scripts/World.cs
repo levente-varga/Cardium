@@ -178,24 +178,23 @@ public partial class World : Node2D
 
     private void UpdateFogOfWar()
     {
-	    var roundedVision = (int)Math.Ceiling(Player.Vision + 1);
-	    var topLeftTile = Player.Position - new Vector2I(roundedVision, roundedVision);
-	    for (var x = topLeftTile.X; x < topLeftTile.X + roundedVision * 2; x++)
+	    var extendedVision = Player.Vision + 1;
+	    
+	    for (var x = -extendedVision; x <= extendedVision; x++)
 	    {
-		    for (var y = topLeftTile.Y; y < topLeftTile.Y + roundedVision * 2; y++)
+		    for (var y = -(extendedVision - Math.Abs(x)); y <= extendedVision - Math.Abs(x); y++)
 		    {
-			    var coords = new Vector2I(x, y);
-			    if (Player.InVision(coords))
-			    {
-				    //DrawRect(new Rect2(x * TileSize.X, y * TileSize.Y, TileSize.X, TileSize.Y), new Color("F4B41B"));
-				    FogLayer.SetCell(coords, 2, new Vector2I(2, 0));
-			    }
-			    else
+			    var coords = Player.Position + new Vector2I(x, y);
+			    if (Math.Abs(x) + Math.Abs(y) == extendedVision)
 			    {
 				    if (FogLayer.GetCellAtlasCoords(coords).X == 2)
 				    {
 					    FogLayer.SetCell(coords, 2, new Vector2I(1, 0));
 				    }
+			    }
+			    else
+			    {
+				    FogLayer.SetCell(coords, 2, new Vector2I(2, 0));
 			    }
 		    }
 	    }

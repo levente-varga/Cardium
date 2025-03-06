@@ -28,8 +28,8 @@ public partial class Entity : TileAlignedGameObject
     public int Armor;
     public int Damage;
     public float Luck;
-    public float Vision;
-    public float CombatVision;
+    public int Vision;
+    public int CombatVision;
     public int Range;
     public string Description;
     public bool InCombat { get; private set; }

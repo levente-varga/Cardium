@@ -20,7 +20,7 @@ public partial class Player : Entity
 	{
 		base._Ready();
 		
-		Vision = 3.5f;
+		Vision = 4;
 		Name = "Player";
 		Damage = 1;
 		MaxHealth = 5;
