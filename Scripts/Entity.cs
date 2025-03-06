@@ -117,17 +117,17 @@ public partial class Entity : TileAlignedGameObject
 
     public bool InRange(Vector2I position)
     {
-        return Position.DistanceTo(position) <= Range;
+        return ManhattanDistanceTo(position) <= Range;
     }
     
     public bool InVision(Vector2I position)
     {
-        return Position.DistanceTo(position) <= Vision;
+        return ManhattanDistanceTo(position) <= Vision;
     }
     
     public bool InCombatVision(Vector2I position)
     {
-        return Position.DistanceTo(position) <= CombatVision;
+        return ManhattanDistanceTo(position) <= CombatVision;
     }
 
     public void OnCombatStart()
