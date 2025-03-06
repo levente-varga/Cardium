@@ -115,7 +115,7 @@ public partial class Hand : Node2D
 	public void AddCard()
 	{
 		if (_cards.Count >= MaxHandSize) return;
-		var card = _cardScene.Instantiate<Node2D>();
+		var card = new Card();
 		_cardAngles.Add(315);
 		_cards.Add(card);
 		AddChild(card);
