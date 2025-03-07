@@ -26,7 +26,6 @@ public partial class Bonfire : Interactable
             if (source.Health == source.MaxHealth) return;
             var healAmount = source.MaxHealth - source.Health;
             source.Heal(healAmount);
-            SpawnFallingLabel(healAmount.ToString(), color: Global.Green);
             return;
         }
         

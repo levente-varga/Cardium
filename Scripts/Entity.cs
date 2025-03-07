@@ -196,6 +196,10 @@ public partial class Entity : TileAlignedGameObject
     
     public void Heal(int amount)
     {
-        Health = Math.Min(MaxHealth, Health + amount);
+        var actualAmount = Math.Min(MaxHealth - Health, amount);
+        if (actualAmount <= 0) return;
+        
+        Health += actualAmount;
+        SpawnFloatingLabel(actualAmount.ToString(), color: Global.Green);
     }
 }
