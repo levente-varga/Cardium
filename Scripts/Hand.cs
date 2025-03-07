@@ -121,6 +121,8 @@ public partial class Hand : Node2D
 		_cards.Add(card);
 		AddChild(card);
 		PositionHand();
+		
+		card.OnDragEndEvent += OnCardDragEnd;
 	}
 
 
@@ -139,10 +141,17 @@ public partial class Hand : Node2D
 	{
 		if (@event is InputEventMouseButton { Pressed: true, ButtonIndex: MouseButton.Left })
 		{
-			AddCard();
+			//AddCard();
 		}
 
 		if (@event is not InputEventMouseButton { Pressed: true, ButtonIndex: MouseButton.Right }) return;
-		RemoveCard();
+		//RemoveCard();
+	}
+	
+	public void OnCardDragEnd(Card card, Vector2 mousePosition)
+	{
+		if (mousePosition.Y > 500) return;
+		RemoveCard(_cards.IndexOf(card));
+		PositionHand();
 	}
 }

@@ -25,9 +25,6 @@ public partial class Card : Node2D
 	public Sprite2D Art { get; protected set; }
 
 	private bool _dragging;
-	private bool _mouseDown;
-	
-	private const float _dragMinDistance = 20;
 	
 	private Tween _hoverTween;
 	
@@ -102,14 +99,6 @@ public partial class Card : Node2D
 
 	public override void _Process(double delta)
 	{
-		if (_mouseDown && !_dragging) {
-			if (GetGlobalMousePosition().DistanceTo(_mouseDownPosition) > _dragMinDistance)
-			{
-				_dragging = true;
-				OnDragStartEvent?.Invoke(this);
-			}
-		}
-		
 		if (_dragging)
 		{
 			_body.GlobalPosition = _body.GlobalPosition.Lerp(GetGlobalMousePosition(), Global.LerpWeight * (float)delta);
@@ -169,17 +158,16 @@ public partial class Card : Node2D
 	}
 	
 	public void OnMouseDown() {
-		_mouseDownPosition = GetGlobalMousePosition();
-		_mouseDown = true;
+		_mouseDownPosition = GetViewport().GetMousePosition();
 		_dragging = true;
 		ZIndex = 2;
+		OnDragStartEvent?.Invoke(this);
 	}
 	
 	public void OnMouseUp() {
 		PlayUnhoverAnimation();
-		_mouseDown = false;
 		_dragging = false;
 		ZIndex = 1;
-		OnDragEndEvent?.Invoke(this, GetGlobalMousePosition());
+		OnDragEndEvent?.Invoke(this, GetViewport().GetMousePosition());
 	}
 }
