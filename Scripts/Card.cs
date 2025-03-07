@@ -36,6 +36,7 @@ public partial class Card : Node2D
 	private Sprite2D _artBackground;
 	private Button _hitbox;
 	private Control _descriptionArea;
+	private Label _nameLabel;
 	
 	private Vector2 _mouseDownPosition;
 	
@@ -96,12 +97,23 @@ public partial class Card : Node2D
 		_descriptionArea.Position = new Vector2(3, 30);
 		_descriptionArea.Size = new Vector2(32, 21);
 		
+		_nameLabel = new Label();
+		_nameLabel.Text = Name;
+		_nameLabel.HorizontalAlignment = HorizontalAlignment.Center;
+		_nameLabel.VerticalAlignment = VerticalAlignment.Center;
+		_nameLabel.Position = new Vector2(-12, 1) * Global.CardScale;
+		_nameLabel.Size = new Vector2(24, 4) * Global.CardScale;
+		var font = GD.Load<FontFile>("res://Assets/Fonts/alagard.ttf");
+		_nameLabel.AddThemeFontOverride("font", font);
+		_nameLabel.AddThemeFontSizeOverride("font_size", 20);
+		
 		_body = new Node2D();
 		_body.AddChild(_hitbox);
 		_body.AddChild(_artBackground);
 		_body.AddChild(_art);
 		_body.AddChild(_sprite);
 		_body.AddChild(_descriptionArea);
+		_body.AddChild(_nameLabel);
 		
 		_base = new Node2D();
 		_base.AddChild(_body);
