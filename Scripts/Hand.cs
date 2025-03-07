@@ -19,6 +19,8 @@ public partial class Hand : Node2D
 	private PackedScene _cardScene;
 	private Vector2 _handOrigin = Vector2.Zero;
 
+	private Rect2 _playArea;
+
 
 	public override void _Ready()
 	{
@@ -30,6 +32,13 @@ public partial class Hand : Node2D
 		);
 		
 		PositionHand();
+		
+		_playArea = new Rect2(
+			0,
+			0,
+			GetViewport().GetVisibleRect().Size.X,
+			GetViewport().GetVisibleRect().Size.Y -400
+		);
 	}
 	
 	public override void _Process(double delta)
@@ -123,6 +132,7 @@ public partial class Hand : Node2D
 		PositionHand();
 		
 		card.OnDragEndEvent += OnCardDragEnd;
+		card.OnDragEvent += OnCardDrag;
 	}
 
 
@@ -147,10 +157,16 @@ public partial class Hand : Node2D
 		if (@event is not InputEventMouseButton { Pressed: true, ButtonIndex: MouseButton.Right }) return;
 		//RemoveCard();
 	}
-	
-	public void OnCardDragEnd(Card card, Vector2 mousePosition)
+
+	private void OnCardDrag(Card card, Vector2 mousePosition)
 	{
-		if (mousePosition.Y > 500) return;
+		if (_playArea.HasPoint(mousePosition)) card.OnEnterPlayArea();
+		else card.OnExitPlayArea();
+	}
+	
+	private void OnCardDragEnd(Card card, Vector2 mousePosition)
+	{
+		if (!_playArea.HasPoint(mousePosition)) return;
 		RemoveCard(_cards.IndexOf(card));
 		PositionHand();
 	}

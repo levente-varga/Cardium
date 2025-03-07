@@ -25,6 +25,7 @@ public partial class Card : Node2D
 	public Sprite2D Art { get; protected set; }
 
 	private bool _dragging;
+	private bool _shaking;
 	
 	private Tween _hoverTween;
 	
@@ -43,6 +44,16 @@ public partial class Card : Node2D
 	
 	public delegate void OnDragEndDelegate(Card card, Vector2 mousePosition);
 	public event OnDragEndDelegate OnDragEndEvent;
+	
+	public delegate void OnDragDelegate(Card card, Vector2 mousePosition);
+	public event OnDragDelegate OnDragEvent;
+
+	
+	private float ShakeIntensity = 5f; // Max shake offset
+	private float ShakeDecay = 5f; // How fast the shake fades
+	private Vector2 _originalPosition;
+	private float _shakeAmount = 5f;
+	
 
 	public override void _Ready()
 	{
@@ -99,10 +110,21 @@ public partial class Card : Node2D
 
 	public override void _Process(double delta)
 	{
+		if (_shaking)
+		{
+			_body.GlobalPosition += new Vector2(
+				(float)GD.RandRange(-_shakeAmount, _shakeAmount),
+				(float)GD.RandRange(-_shakeAmount, _shakeAmount)
+			);
+
+			// Gradually reduce shake intensity
+			//_shakeAmount = Mathf.Max(0, _shakeAmount - (ShakeDecay * (float)delta));
+		}
 		if (_dragging)
 		{
 			_body.GlobalPosition = _body.GlobalPosition.Lerp(GetGlobalMousePosition(), Global.LerpWeight * (float)delta);
 			_body.GlobalRotation = Mathf.Lerp(_body.GlobalRotation, 0, (float)delta);
+			OnDragEvent?.Invoke(this, GetViewport().GetMousePosition());
 		}
 		else
 		{
@@ -117,6 +139,16 @@ public partial class Card : Node2D
 	public virtual void OnDiscard(Player player) {}
 	public virtual void OnDrawn(Player player) {}
 	public virtual void OnDestroy(Player player) {}
+
+	public virtual void OnEnterPlayArea()
+	{
+		_shaking = true;	
+	}
+	
+	public virtual void OnExitPlayArea()
+	{
+		_shaking = false;
+	}
 
 	private void ResetHoverTween()
 	{
@@ -142,29 +174,29 @@ public partial class Card : Node2D
 			.SetEase(Tween.EaseType.Out)
 			.SetTrans(Tween.TransitionType.Expo);
 	}
-
-	public void OnMouseEntered() {
+	
+	private void OnMouseEntered() {
 		if (_dragging) return;
 		PlayHoverAnimation();
 	}
 
-	public void OnMouseExited() {
+	private void OnMouseExited() {
 		if (_dragging) return;
 		PlayUnhoverAnimation();
 	}
 	
-	public void OnMousePressed() {
+	private void OnMousePressed() {
 		
 	}
 	
-	public void OnMouseDown() {
+	private void OnMouseDown() {
 		_mouseDownPosition = GetViewport().GetMousePosition();
 		_dragging = true;
 		ZIndex = 2;
 		OnDragStartEvent?.Invoke(this);
 	}
 	
-	public void OnMouseUp() {
+	private void OnMouseUp() {
 		PlayUnhoverAnimation();
 		_dragging = false;
 		ZIndex = 1;
