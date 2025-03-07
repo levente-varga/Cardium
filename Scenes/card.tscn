@@ -66,26 +66,31 @@ libraries = {
 [node name="Body" type="Node2D" parent="."]
 
 [node name="Sprite" type="Sprite2D" parent="Body"]
-scale = Vector2(6, 6)
 texture = ExtResource("2_1gojk")
+centered = false
 
-[node name="Hitbox" type="Control" parent="Body"]
-layout_mode = 3
-anchors_preset = 0
-offset_left = -112.0
-offset_top = -160.0
-offset_right = 112.0
-offset_bottom = 160.0
+[node name="Hitbox" type="Button" parent="Body"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_right = 38.0
+offset_bottom = 324.0
+grow_horizontal = 2
+grow_vertical = 2
+flat = true
 
 [node name="Art" type="Sprite2D" parent="Body"]
+position = Vector2(3, 3)
 
 [node name="Control" type="Control" parent="Body"]
 layout_mode = 3
 anchors_preset = 0
-offset_left = -96.0
-offset_top = 16.0
-offset_right = 96.0
-offset_bottom = 144.0
+offset_left = 3.0
+offset_top = 30.0
+offset_right = 35.0
+offset_bottom = 51.0
 
 [node name="Description" type="RichTextLabel" parent="Body/Control"]
 layout_mode = 1
@@ -103,6 +108,14 @@ grow_vertical = 2
 bbcode_enabled = true
 text = "[center]Test text[/center]"
 fit_content = true
+
+[node name="Art2" type="Control" parent="Body"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 3.0
+offset_top = 3.0
+offset_right = 35.0
+offset_bottom = 27.0
 
 [connection signal="mouse_entered" from="Body/Hitbox" to="." method="OnMouseEntered"]
 [connection signal="mouse_exited" from="Body/Hitbox" to="." method="OnMouseExited"]

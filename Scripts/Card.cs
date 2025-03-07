@@ -1,4 +1,3 @@
-using System;
 using Godot;
 
 namespace Cardium.Scripts;
@@ -32,7 +31,10 @@ public partial class Card : Node2D
 	private Node2D _base;
 	private Node2D _body;
 	private Sprite2D _sprite;
+	private Sprite2D _art;
+	private Sprite2D _artBackground;
 	private Button _hitbox;
+	private Control _descriptionArea;
 
 	public override void _Ready()
 	{
@@ -40,8 +42,20 @@ public partial class Card : Node2D
 		
 		_sprite = new Sprite2D();
 		_sprite.Centered = true;
-		_sprite.Texture = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Card.png");
+		_sprite.Texture = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Combat card.png");
 		_sprite.Scale = new Vector2(Global.CardScale, Global.CardScale);
+		
+		_art = new Sprite2D();
+		_art.Centered = true;
+		_art.Texture = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Hurl.png");
+		_art.Scale = new Vector2(Global.CardScale, Global.CardScale);
+		_art.Position = new Vector2(0, -12) * Global.CardScale;
+		
+		_artBackground = new Sprite2D();
+		_artBackground.Centered = true;
+		_artBackground.Texture = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Art background.png");
+		_artBackground.Scale = new Vector2(Global.CardScale, Global.CardScale);
+		_artBackground.Position = new Vector2(0, -12) * Global.CardScale;
 		
 		_hitbox = new Button();
 		_hitbox.Flat = true;
@@ -58,10 +72,17 @@ public partial class Card : Node2D
 		_hitbox.AddThemeStyleboxOverride("disabled", new StyleBoxEmpty());
 		_hitbox.AddThemeStyleboxOverride("focus", new StyleBoxEmpty());
 		_hitbox.FocusMode = Control.FocusModeEnum.None;
+
+		_descriptionArea = new Control();
+		_descriptionArea.Position = new Vector2(3, 30);
+		_descriptionArea.Size = new Vector2(32, 21);
 		
 		_body = new Node2D();
 		_body.AddChild(_hitbox);
+		_body.AddChild(_artBackground);
+		_body.AddChild(_art);
 		_body.AddChild(_sprite);
+		_body.AddChild(_descriptionArea);
 		
 		_base = new Node2D();
 		_base.AddChild(_body);
