@@ -1113,9 +1113,10 @@ DebugLabel = NodePath("../Camera2D/CanvasLayer/Label2")
 script = ExtResource("3_evct5")
 Target = NodePath("../Player")
 
-[node name="Hand" type="Node2D" parent="Camera2D"]
+[node name="Hand" type="Node2D" parent="Camera2D" node_paths=PackedStringArray("Player")]
 z_index = 10
 script = ExtResource("1_3ixgw")
+Player = NodePath("../../Player")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="Camera2D"]
 

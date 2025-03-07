@@ -22,7 +22,7 @@ public partial class Card : Node2D
 	public string Description { get; protected set; }
 	public CardType Type { get; protected set; }
 	public CardRarity Rarity { get; protected set; }
-	public Sprite2D Art { get; protected set; }
+	public Texture2D Art { get; protected set; }
 
 	private bool _dragging;
 	private bool _shaking;
@@ -66,7 +66,7 @@ public partial class Card : Node2D
 		
 		_art = new Sprite2D();
 		_art.Centered = true;
-		_art.Texture = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Hurl.png");
+		_art.Texture = Art;
 		_art.Scale = new Vector2(Global.CardScale, Global.CardScale);
 		_art.Position = new Vector2(0, -12) * Global.CardScale;
 		

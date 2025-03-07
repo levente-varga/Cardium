@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
+using Cardium.Scripts.Cards;
 using Godot;
 
 namespace Cardium.Scripts;
 
 public partial class Hand : Node2D
 {
+	[Export] public Player Player;
 	[Export] public float HandRadius = 1000f;
 	[Export] public float HandHeight = 64;
 	[Export] public float MaxHandEnclosedAngle = 30f;
@@ -125,7 +127,7 @@ public partial class Hand : Node2D
 	public void AddCard()
 	{
 		if (_cards.Count >= MaxHandSize) return;
-		var card = new Card();
+		var card = new HealCard();
 		_cardAngles.Add(315);
 		_cards.Add(card);
 		AddChild(card);
@@ -169,5 +171,6 @@ public partial class Hand : Node2D
 		if (!_playArea.HasPoint(mousePosition)) return;
 		RemoveCard(_cards.IndexOf(card));
 		PositionHand();
+		card.OnPlay(Player);
 	}
 }
