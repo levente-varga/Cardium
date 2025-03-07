@@ -1,7 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://c8tbfjcyg4o24"]
+[gd_scene load_steps=8 format=3 uid="uid://c8tbfjcyg4o24"]
 
 [ext_resource type="Script" path="res://Scripts/Card.cs" id="1_wrdv8"]
-[ext_resource type="Texture2D" uid="uid://djs8kevewtnbl" path="res://Assets/Sprites/Cards/Card.png" id="2_1gojk"]
+[ext_resource type="Texture2D" uid="uid://c780cg0mxpik5" path="res://Assets/Sprites/Cards/Combat card.png" id="2_whev3"]
 
 [sub_resource type="Animation" id="Animation_2okwy"]
 resource_name = "Deselect"
@@ -55,6 +55,8 @@ _data = {
 "Select": SubResource("Animation_k0cb6")
 }
 
+[sub_resource type="Theme" id="Theme_cp7fn"]
+
 [node name="Card" type="Node2D"]
 script = ExtResource("1_wrdv8")
 
@@ -66,8 +68,7 @@ libraries = {
 [node name="Body" type="Node2D" parent="."]
 
 [node name="Sprite" type="Sprite2D" parent="Body"]
-texture = ExtResource("2_1gojk")
-centered = false
+texture = ExtResource("2_whev3")
 
 [node name="Hitbox" type="Button" parent="Body"]
 anchors_preset = 8
@@ -75,8 +76,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_right = 38.0
-offset_bottom = 324.0
+offset_left = -19.0
+offset_top = -27.0
+offset_right = 19.0
+offset_bottom = 27.0
 grow_horizontal = 2
 grow_vertical = 2
 flat = true
@@ -105,6 +108,7 @@ offset_right = 96.0
 offset_bottom = 16.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = SubResource("Theme_cp7fn")
 bbcode_enabled = true
 text = "[center]Test text[/center]"
 fit_content = true
@@ -112,10 +116,10 @@ fit_content = true
 [node name="Art2" type="Control" parent="Body"]
 layout_mode = 3
 anchors_preset = 0
-offset_left = 3.0
-offset_top = 3.0
-offset_right = 35.0
-offset_bottom = 27.0
+offset_left = -16.0
+offset_top = -25.0
+offset_right = 8.0
+offset_bottom = -21.0
 
 [connection signal="mouse_entered" from="Body/Hitbox" to="." method="OnMouseEntered"]
 [connection signal="mouse_exited" from="Body/Hitbox" to="." method="OnMouseExited"]

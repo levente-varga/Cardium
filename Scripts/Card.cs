@@ -115,9 +115,24 @@ public partial class Card : Node2D
 		_body.AddChild(_descriptionArea);
 		_body.AddChild(_nameLabel);
 		
+		SetupCostMarker();
+		
 		_base = new Node2D();
 		_base.AddChild(_body);
 		AddChild(_base);
+	}
+
+	private void SetupCostMarker()
+	{
+		for (var i = 0; i < Cost; i++)
+		{
+			var costMarker = new Sprite2D();
+			costMarker.Texture = GD.Load<Texture2D>(i == Cost - 1 ? "res://Assets/Sprites/Cards/EnergyEnd.png" : "res://Assets/Sprites/Cards/EnergyDot.png");
+			costMarker.Centered = false;
+			costMarker.Scale = Vector2.One * Global.CardScale;
+			costMarker.Position = new Vector2(-16 + i * 2, -25) * Global.CardScale;
+			_body.AddChild(costMarker);
+		}
 	}
 
 	public override void _Process(double delta)
