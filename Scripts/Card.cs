@@ -36,6 +36,7 @@ public partial class Card : Node2D
 	private Sprite2D _artBackground;
 	private Button _hitbox;
 	private Control _descriptionArea;
+	private RichTextLabel _description;
 	private Label _nameLabel;
 	
 	private Vector2 _mouseDownPosition;
@@ -92,10 +93,15 @@ public partial class Card : Node2D
 		_hitbox.AddThemeStyleboxOverride("disabled", new StyleBoxEmpty());
 		_hitbox.AddThemeStyleboxOverride("focus", new StyleBoxEmpty());
 		_hitbox.FocusMode = Control.FocusModeEnum.None;
-
+		
+		_description = new RichTextLabel();
+		_description.Text = Description;
+		_description.BbcodeEnabled = true;
+		
 		_descriptionArea = new Control();
-		_descriptionArea.Position = new Vector2(3, 30);
-		_descriptionArea.Size = new Vector2(32, 21);
+		_descriptionArea.Position = new Vector2(-16, 6) * Global.CardScale;
+		_descriptionArea.Size = new Vector2(32, 18) * Global.CardScale;
+		_descriptionArea.AddChild(_description);
 		
 		_nameLabel = new Label();
 		_nameLabel.Text = Name;
