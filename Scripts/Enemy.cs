@@ -7,6 +7,7 @@ public partial class Enemy : Entity
 {
     protected Path Path;
     public int? GroupId;
+    public int CombatVision;
     
     public override void _Ready()
     {
@@ -23,10 +24,8 @@ public partial class Enemy : Entity
         base._Process(delta);
     }
 
-    public override async Task OnTurn(Player player, World world)
+    protected override async Task Turn(Player player, World world)
     {
-        TurnMarker.Visible = true;
-        
         await Delay(300);
         
         Path.SetPath(world.GetPointPathBetween(Position, player.Position));
@@ -41,13 +40,13 @@ public partial class Enemy : Entity
             if (distance == -1)
             {
                 if (Global.Debug) SpawnFloatingLabel("[Debug] Unreachable", color: Global.Magenta, fontSize: 20);
-                OnTurnFinished();
+                OnTurnEnd();
                 return;
             } 
-            if (distance <= Range)
+            if (distance <= BaseRange)
             {
                 Nudge(VectorToDirection(player.Position - Position));
-                player.ReceiveDamage(this, Damage);
+                player.ReceiveDamage(this, BaseDamage);
                 await Delay(300);
             }
             else
@@ -65,9 +64,7 @@ public partial class Enemy : Entity
             }
         }
         
-        await base.OnTurn(player, world);
-        
-        OnTurnFinished();
+        await base.Turn(player, world);
     }
 
     public override void ReceiveDamage(Entity source, int damage)
@@ -76,7 +73,12 @@ public partial class Enemy : Entity
         
         base.ReceiveDamage(source, damage);
     }
-
+    
+    public bool InCombatVision(Vector2I position)
+    {
+        return ManhattanDistanceTo(position) <= CombatVision;
+    }
+    
     public override void OnTargeted(Entity source)
     {
         base.OnTargeted(source);
