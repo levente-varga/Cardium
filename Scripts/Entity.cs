@@ -49,7 +49,8 @@ public partial class Entity : TileAlignedGameObject
     
     public delegate void OnLeaveCombatDelegate(Entity entity);
     public event OnLeaveCombatDelegate OnLeaveCombatEvent;
-    
+
+    // TODO: could be removed, and only await used in CombatManager
     public delegate void OnTurnFinishedDelegate(Entity entity);
     public event OnTurnFinishedDelegate OnTurnFinishedEvent;
     
