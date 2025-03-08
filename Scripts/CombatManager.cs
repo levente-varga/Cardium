@@ -52,7 +52,9 @@ public class CombatManager
         
         _turnOrder.Remove(entity);
         _turnOrder.Add(entity);
+        entity.UpdateBuffsOnEndOfTurn();
         _currentTurnEntity = _turnOrder[0];
+        _currentTurnEntity.UpdateBuffsOnEndOfTurn();
         _currentTurnEntity.OnTurn(_player, _world);
 
         UpdateDebugLabel();

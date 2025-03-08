@@ -214,4 +214,20 @@ public partial class Entity : TileAlignedGameObject
     {
         Buffs.Remove(buff);
     }
+
+    public void UpdateBuffsOnStartOfTurn()
+    {
+        foreach (var buff in Buffs)
+        {
+            buff.OnStartOfTurn();
+        }
+    }
+    
+    public void UpdateBuffsOnEndOfTurn()
+    {
+        foreach (var buff in Buffs)
+        {
+            buff.OnEndOfTurn();
+        }
+    }
 }
