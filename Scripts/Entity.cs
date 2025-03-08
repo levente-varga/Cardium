@@ -35,6 +35,7 @@ public partial class Entity : TileAlignedGameObject
     public bool InCombat { get; private set; }
     
     public List<Card> Inventory = new();
+    public List<Buff> Buffs = new();
     
     public HealthBar HealthBar;
     public EnergyBar EnergyBar;
@@ -201,5 +202,16 @@ public partial class Entity : TileAlignedGameObject
         
         Health += actualAmount;
         SpawnFloatingLabel(actualAmount.ToString(), color: Global.Green);
+    }
+
+    public void AddBuff(Buff buff)
+    {
+        buff.Target = this;
+        Buffs.Add(buff);
+    }
+
+    public void RemoveBuff(Buff buff)
+    {
+        Buffs.Remove(buff);
     }
 }
