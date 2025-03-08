@@ -20,9 +20,9 @@ public partial class Player : Entity
 	{
 		base._Ready();
 		
-		Vision = 4;
+		BaseVision = 4;
 		Name = "Player";
-		Damage = 1;
+		BaseDamage = 1;
 		MaxHealth = 5;
 		Health = MaxHealth;
 		MaxEnergy = 3;
@@ -39,7 +39,7 @@ public partial class Player : Entity
 		if (Energy <= 0 && _turnOngoing)
 		{
 			_turnOngoing = false;
-			OnTurnFinished();
+			OnTurnEnd();
 			//return;
 		}
 
@@ -111,12 +111,19 @@ public partial class Player : Entity
 		World.Interact(interactablePositions[0]);
 	}
 
-	public override async Task OnTurn(Player player, World world)
+	protected override async Task Turn(Player player, World world)
 	{
-		TurnMarker.Visible = true;
-		
-		if (Global.Debug) SpawnFloatingLabel("[Debug] Start of turn", color: Global.Magenta, fontSize: 20);
-		Energy = MaxEnergy;
+		if (Global.Debug) SpawnDebugFloatingLabel("Start of turn");
 		_turnOngoing = true;
+
+		await WhileTurnOngoing();
+	}
+	
+	private async Task WhileTurnOngoing()
+	{
+		while (_turnOngoing)
+		{ 
+			await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+		}
 	}
 }

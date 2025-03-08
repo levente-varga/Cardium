@@ -15,11 +15,11 @@ public partial class Spider : Enemy
         Health = MaxHealth;
         MaxEnergy = 2;
         Energy = MaxEnergy;
-        Armor = 0;
-        Damage = 2;
-        Luck = 0f;
-        Vision = 4;
-        Range = 1;
+        BaseArmor = 0;
+        BaseDamage = 2;
+        BaseLuck = 0f;
+        BaseVision = 4;
+        BaseRange = 1;
         Description = "A spider enemy.";
     }
     
@@ -28,16 +28,9 @@ public partial class Spider : Enemy
         base._Process(delta);
     }
 
-    public override async Task OnTurn(Player player, World world)
+    protected override async Task Turn(Player player, World world)
     {
-        OnTurnFinished();
-        
-        if (Energy > 0)
-        {
-            // TODO: Implement enemy AI
-        }
-        
-        base.OnTurn(player, world);
+        await base.Turn(player, world);
     }
 
     public override void ReceiveDamage(Entity source, int damage)

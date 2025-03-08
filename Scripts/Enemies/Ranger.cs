@@ -19,10 +19,10 @@ public partial class Ranger : Enemy
         Health = MaxHealth;
         MaxEnergy = 2;
         Energy = MaxEnergy;
-        Armor = 0;
-        Damage = 1;
-        Range = 4;
-        Vision = 5;
+        BaseArmor = 0;
+        BaseDamage = 1;
+        BaseRange = 4;
+        BaseVision = 5;
         CombatVision = 7;
         
         DebugLabel = GetNode<Label>("/root/Root/Camera2D/CanvasLayer/Label4");
@@ -30,14 +30,11 @@ public partial class Ranger : Enemy
         SetStillFrame(GD.Load<Texture2D>("res://assets/Sprites/player.png"));
     }
 
-    public override async Task OnTurn(Player player, World world)
+    protected override async Task Turn(Player player, World world)
     {
-        TurnMarker.Visible = true;
-        Energy = MaxEnergy;
-        
         await Delay(300);
         
-        var tilesExactlyInRange = world.GetEmptyTilesExactlyInRange(player.Position, Range, exclude: Position);
+        var tilesExactlyInRange = world.GetEmptyTilesExactlyInRange(player.Position, BaseRange, exclude: Position);
         var tileDistances = tilesExactlyInRange.Select(tile => Position.DistanceTo(tile)).ToList();
         
         Path.SetPath(tilesExactlyInRange.Select(v => new Vector2(v.X, v.Y) * Global.TileSize.X + Global.TileSize / 2).ToArray());
@@ -107,7 +104,7 @@ public partial class Ranger : Enemy
         
         if (Energy == 0)
         {
-            OnTurnFinished();
+            OnTurnEnd();
             return;
         }
         
@@ -117,12 +114,10 @@ public partial class Ranger : Enemy
         // Attack
         for (var i = 0; i < MaxEnergy && Energy > 0; i++)
         {
-            player.ReceiveDamage(this, Damage);
+            player.ReceiveDamage(this, BaseDamage);
             Nudge(VectorToDirection(player.Position - Position));
             Energy--;
             await Delay(300);
         }
-        
-        OnTurnFinished();
     }
 }

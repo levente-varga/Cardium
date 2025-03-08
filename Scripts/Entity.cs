@@ -25,12 +25,24 @@ public partial class Entity : TileAlignedGameObject
         get => EnergyBar.MaxEnergy;
         set => EnergyBar.MaxEnergy = value;
     }
-    public int Armor;
-    public int Damage;
-    public float Luck;
-    public int Vision;
-    public int CombatVision;
-    public int Range;
+    protected int BaseArmor;
+    protected int BaseDamage;
+    protected int BaseVision;
+    protected int BaseRange;
+    protected float BaseLuck;
+
+    public int TempArmor { private get; set; }
+    public int TempDamage { private get; set; }
+    public int TempRange { private get; set; }
+    public int TempVision { private get; set; }
+    public float TempLuck { private get; set; }
+
+    public int Armor => BaseArmor + TempArmor;
+    public int Damage => BaseDamage + TempDamage;
+    public int Vision => BaseVision + TempVision;
+    public int Range => BaseRange + TempRange;
+    public float Luck => BaseLuck + TempLuck;
+
     public string Description;
     public bool InCombat { get; private set; }
     
@@ -96,7 +108,14 @@ public partial class Entity : TileAlignedGameObject
         TurnMarker.Visible = false;
     }
     
-    public virtual async Task OnTurn(Player player, World world) { }
+    protected virtual async Task Turn(Player player, World world) { }
+
+    public async Task OnTurn(Player player, World world)
+    {
+        OnTurnStart();
+        await Turn(player, world);
+        OnTurnEnd();
+    }
 
     public virtual void ReceiveDamage(Entity source, int damage)
     {
@@ -104,7 +123,7 @@ public partial class Entity : TileAlignedGameObject
         
         // TODO: Implement dodge based on luck
         
-        Health -= Math.Min(1, damage - Armor);
+        Health -= Math.Min(1, damage - BaseArmor);
         if (Health <= 0) OnDeath(source);
     }
 
@@ -119,17 +138,12 @@ public partial class Entity : TileAlignedGameObject
 
     public bool InRange(Vector2I position)
     {
-        return ManhattanDistanceTo(position) <= Range;
+        return ManhattanDistanceTo(position) <= BaseRange;
     }
     
     public bool InVision(Vector2I position)
     {
-        return ManhattanDistanceTo(position) <= Vision;
-    }
-    
-    public bool InCombatVision(Vector2I position)
-    {
-        return ManhattanDistanceTo(position) <= CombatVision;
+        return ManhattanDistanceTo(position) <= BaseVision;
     }
 
     public void OnCombatStart()
@@ -142,10 +156,19 @@ public partial class Entity : TileAlignedGameObject
         SetInCombatStatus(false);
     }
     
-    protected void OnTurnFinished()
+    protected void OnTurnStart() 
+    {
+        Energy = MaxEnergy;
+        TurnMarker.Visible = true;
+        ResetTemporaryStats();
+        UpdateBuffsOnStartOfTurn();
+    }
+    
+    protected void OnTurnEnd()
     {
         TurnMarker.Visible = false;
         OnTurnFinishedEvent?.Invoke(this);
+        UpdateBuffsOnEndOfTurn();
     }
 
     protected void SetInCombatStatus(bool inCombat)
@@ -216,7 +239,7 @@ public partial class Entity : TileAlignedGameObject
         Buffs.Remove(buff);
     }
 
-    public void UpdateBuffsOnStartOfTurn()
+    private void UpdateBuffsOnStartOfTurn()
     {
         foreach (var buff in Buffs)
         {
@@ -224,11 +247,20 @@ public partial class Entity : TileAlignedGameObject
         }
     }
     
-    public void UpdateBuffsOnEndOfTurn()
+    private void UpdateBuffsOnEndOfTurn()
     {
         foreach (var buff in Buffs)
         {
             buff.OnEndOfTurn();
         }
+    }
+    
+    private void ResetTemporaryStats()
+    {
+        TempArmor = 0;
+        TempDamage = 0;
+        TempRange = 0;
+        TempVision = 0;
+        TempLuck = 0;
     }
 }
