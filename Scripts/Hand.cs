@@ -12,23 +12,19 @@ public partial class Hand : Node2D
 	[Export] public float HandHeight = 64;
 	[Export] public float MaxHandEnclosedAngle = 30f;
 	[Export] public float DefaultCardAngle = 7f;
+	[Export] public float TiltAngle = 0f;
+	[Export] public Vector2 Origin = Vector2.Zero;
 	
 	public bool RightHanded = true;
 
-	private readonly List<Node2D> _cards = new();
+	private readonly List<Card> _cards = new();
 	private List<float> _cardAngles = new();
 	private const int MaxHandSize = 10;
-	private PackedScene _cardScene;
-	private Vector2 _handOrigin = Vector2.Zero;
-
 	private Rect2 _playArea;
-
 
 	public override void _Ready()
 	{
-		_cardScene = GD.Load<PackedScene>("res://Scenes/Card.tscn");
-
-		_handOrigin = new Vector2(
+		Origin = new Vector2(
 			0,
 			GetViewport().GetVisibleRect().Size.Y - HandHeight + HandRadius / 2
 		);
@@ -68,7 +64,7 @@ public partial class Hand : Node2D
 
 	private void SetCardPosition(int index, float angle) {
 		if (index >= _cards.Count || index < 0) return;
-		Vector2 cardPosition = GetPointOnCircle(_handOrigin, HandRadius, angle);
+		Vector2 cardPosition = GetPointOnCircle(Origin, HandRadius, angle);
 
 		_cards[index].Position = cardPosition;
 		_cards[index].Rotation = DegreeToRadian(angle + 90);
@@ -151,13 +147,14 @@ public partial class Hand : Node2D
 
 	public override void _Input(InputEvent @event)
 	{
-		if (@event is InputEventMouseButton { Pressed: true, ButtonIndex: MouseButton.Left })
+		if (@event is InputEventKey { Pressed: true, KeyLabel: Key.P })
 		{
-			//AddCard();
+			AddCard();
 		}
-
-		if (@event is not InputEventMouseButton { Pressed: true, ButtonIndex: MouseButton.Right }) return;
-		//RemoveCard();
+		if (@event is InputEventKey { Pressed: true, KeyLabel: Key.O })
+		{
+			RemoveCard();
+		}
 	}
 
 	private void OnCardDrag(Card card, Vector2 mousePosition)

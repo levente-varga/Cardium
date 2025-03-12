@@ -62,7 +62,7 @@ public partial class Card : Node2D
 		ZIndex = 1;
 		
 		_sprite = new Sprite2D();
-		_sprite.Centered = true;
+		_sprite.Centered = false;
 		_sprite.Texture = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Combat card.png");
 		_sprite.Scale = new Vector2(Global.CardScale, Global.CardScale);
 		
@@ -70,13 +70,13 @@ public partial class Card : Node2D
 		_art.Centered = true;
 		_art.Texture = Art;
 		_art.Scale = new Vector2(Global.CardScale, Global.CardScale);
-		_art.Position = new Vector2(0, -12) * Global.CardScale;
+		_art.Position = new Vector2(19, 15) * Global.CardScale;
 		
 		_artBackground = new Sprite2D();
 		_artBackground.Centered = true;
 		_artBackground.Texture = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Art background.png");
 		_artBackground.Scale = new Vector2(Global.CardScale, Global.CardScale);
-		_artBackground.Position = new Vector2(0, -12) * Global.CardScale;
+		_artBackground.Position = new Vector2(19, 15) * Global.CardScale;
 		
 		_hitbox = new Button();
 		_hitbox.Flat = true;
@@ -93,21 +93,24 @@ public partial class Card : Node2D
 		_hitbox.AddThemeStyleboxOverride("disabled", new StyleBoxEmpty());
 		_hitbox.AddThemeStyleboxOverride("focus", new StyleBoxEmpty());
 		_hitbox.FocusMode = Control.FocusModeEnum.None;
+		_hitbox.MouseFilter = Control.MouseFilterEnum.Stop;
 		
 		_description = new RichTextLabel();
 		_description.Text = Description;
 		_description.BbcodeEnabled = true;
+		_description.MouseFilter = Control.MouseFilterEnum.Ignore;
 		
 		_descriptionArea = new Control();
-		_descriptionArea.Position = new Vector2(-16, 6) * Global.CardScale;
+		_descriptionArea.Position = new Vector2(3, 33) * Global.CardScale;
 		_descriptionArea.Size = new Vector2(32, 18) * Global.CardScale;
+		_description.MouseFilter = Control.MouseFilterEnum.Ignore;
 		_descriptionArea.AddChild(_description);
 		
 		_nameLabel = new Label();
 		_nameLabel.Text = Name;
 		_nameLabel.HorizontalAlignment = HorizontalAlignment.Center;
 		_nameLabel.VerticalAlignment = VerticalAlignment.Center;
-		_nameLabel.Position = new Vector2(-12, 1) * Global.CardScale;
+		_nameLabel.Position = new Vector2(7, 28) * Global.CardScale;
 		_nameLabel.Size = new Vector2(24, 4) * Global.CardScale;
 		var font = GD.Load<FontFile>("res://Assets/Fonts/alagard.ttf");
 		_nameLabel.AddThemeFontOverride("font", font);
@@ -115,11 +118,11 @@ public partial class Card : Node2D
 		
 		_body = new Node2D();
 		_body.AddChild(_hitbox);
-		_body.AddChild(_artBackground);
-		_body.AddChild(_art);
-		_body.AddChild(_sprite);
-		_body.AddChild(_descriptionArea);
-		_body.AddChild(_nameLabel);
+		_hitbox.AddChild(_artBackground);
+		_hitbox.AddChild(_art);
+		_hitbox.AddChild(_sprite);
+		//_hitbox.AddChild(_descriptionArea);
+		_hitbox.AddChild(_nameLabel);
 		
 		SetupCostMarker();
 		
