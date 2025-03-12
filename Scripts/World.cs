@@ -39,6 +39,8 @@ public partial class World : Node2D
     private Vector2I? _end = null;
     private Line2D _line;
     
+    public Vector2I HoveredCell => GetTilePosition(GetGlobalMousePosition());
+    
     public override void _Ready()
     {
 	    //Input.MouseMode = Input.MouseModeEnum.Hidden;
@@ -65,6 +67,8 @@ public partial class World : Node2D
     public override void _Process(double delta)
     {
 	    DebugLabel3.Text = "Region: " + _region;
+	    
+	    QueueRedraw();
     }
     
     private void SetupLayers()
@@ -160,7 +164,9 @@ public partial class World : Node2D
     public override void _Draw()
     {
     	if (_end != null) DrawRect(new Rect2(_end.Value * _grid.CellSize, _grid.CellSize), Global.Yellow, false, 4);
-    	//DrawRect(new Rect2(_end * _grid.CellSize, _grid.CellSize), Colors.OrangeRed);
+	    
+	    if (Global.Debug) DrawRect(new Rect2(HoveredCell * _grid.CellSize, _grid.CellSize), Colors.Orange);
+
 
     	for (var x = 0; x < _grid.Region.Size.X; x++) {
     		for (var y = 0; y < _grid.Region.Size.Y; y++) {
