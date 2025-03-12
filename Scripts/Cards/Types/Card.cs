@@ -169,9 +169,7 @@ public partial class Card : Node2D
 		}
 	}
 
-	public virtual void OnPlay(Player player) {}
-	public virtual void OnPlay(Player player, Entity target) {}
-	public virtual void OnPlay(Player player, Vector2I position, World world) {}
+	
 	public virtual void OnDiscard(Player player) {}
 	public virtual void OnDrawn(Player player) {}
 	public virtual void OnDestroy(Player player) {}

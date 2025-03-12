@@ -166,8 +166,10 @@ public partial class Hand : Node2D
 	private void OnCardDragEnd(Card card, Vector2 mousePosition)
 	{
 		if (!_playArea.HasPoint(mousePosition)) return;
+		if (Player.Energy < card.Cost) return;
+		Player.SpendEnergy(card.Cost);
 		RemoveCard(_cards.IndexOf(card));
 		PositionHand();
-		card.OnPlay(Player);
+		Player.World.PlayCard(card);
 	}
 }

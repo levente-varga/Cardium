@@ -1,8 +1,9 @@
+using Cardium.Scripts.Cards.Types;
 using Godot;
 
 namespace Cardium.Scripts.Cards;
 
-public partial class PushCard : Card
+public partial class PushCard : EntityTargetingCard
 {
     public override void _Ready()
     {
@@ -15,7 +16,7 @@ public partial class PushCard : Card
         base._Ready();
     }
     
-    public override void OnPlay(Player player)
+    public override void OnPlay(Player player, Entity target)
     {
         // TODO: Implement
     }

@@ -263,4 +263,10 @@ public partial class Entity : TileAlignedGameObject
         TempVision = 0;
         TempLuck = 0;
     }
+    
+    public void SpendEnergy(int amount)
+    {
+        Energy -= amount;
+        if (Energy < 0) Energy = 0;
+    }
 }

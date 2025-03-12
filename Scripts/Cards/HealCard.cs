@@ -1,8 +1,9 @@
+using Cardium.Scripts.Cards.Types;
 using Godot;
 
 namespace Cardium.Scripts.Cards;
 
-public partial class HealCard : Card
+public partial class HealCard : PlayerTargetingCard
 {
     public override void _Ready()
     {

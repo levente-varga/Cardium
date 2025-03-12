@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Cardium.Scripts.Cards.Types;
 using Cardium.Scripts.Enemies;
 using Cardium.Scripts.Interactables;
 using Godot;
@@ -488,5 +489,27 @@ public partial class World : Node2D
 		}
         
 		return tiles;
+	}
+
+	public void PlayCard(Card card)
+	{
+		switch (card)
+		{
+			case PlayerTargetingCard playerTargetingCard:
+				playerTargetingCard.OnPlay(Player);
+				break;
+			case EntityTargetingCard entityTargetingCard:
+				// TODO: Implement entity targeting
+				entityTargetingCard.OnPlay(Player, null);
+				break;
+			case InteractableTargetingCard interactableTargetingCard:
+				// TODO: Implement interactable targeting
+				interactableTargetingCard.OnPlay(Player, null);
+				break;
+			case LocationTargetingCard locationTargetingCard:
+				// TODO: Implement location targeting
+				locationTargetingCard.OnPlay(Player, Vector2I.Zero, null);
+				break;
+		}
 	}
 }

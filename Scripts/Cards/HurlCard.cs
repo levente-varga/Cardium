@@ -1,8 +1,9 @@
+using Cardium.Scripts.Cards.Types;
 using Godot;
 
 namespace Cardium.Scripts.Cards;
 
-public partial class HurlCard : Card
+public partial class HurlCard : LocationTargetingCard
 {
     public override void _Ready()
     {
@@ -15,7 +16,7 @@ public partial class HurlCard : Card
         base._Ready();
     }
     
-    public override void OnPlay(Player player)
+    public override void OnPlay(Player player, Vector2I position, World world)
     {
         // TODO: Implement
     }
