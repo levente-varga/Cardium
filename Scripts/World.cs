@@ -66,7 +66,8 @@ public partial class World : Node2D
     
     public override void _Process(double delta)
     {
-	    DebugLabel3.Text = "Region: " + _region;
+	    DebugLabel3.Text = "Region: " + _region + "\n"
+		    + "Hovered cell: " + HoveredCell;
 	    
 	    QueueRedraw();
     }
@@ -135,11 +136,13 @@ public partial class World : Node2D
 	    }
     }
     
-    private Vector2I GetTilePosition(Vector2 position) => new (
+    private static Vector2I GetTilePosition(Vector2 position) => new (
 		Mathf.FloorToInt(position.X / Global.TileSize.X),
 		Mathf.FloorToInt(position.Y / Global.TileSize.Y)
 	);
     
+	private static void EraseCell(TileMapLayer map, Vector2I position) => map.SetCell(position, -1, new Vector2I(-1, -1));
+
     public bool IsTileEnemy(Vector2I position) => _enemies.Any(enemy => enemy.Position == position);
     public bool IsTileInteractable(Vector2I position) => _interactables.Any(interactable => interactable.Position == position && interactable.Solid);
     public bool IsTileWall(Vector2I position) => WallLayer.GetCellTileData(position) != null;
@@ -164,8 +167,12 @@ public partial class World : Node2D
     public override void _Draw()
     {
     	if (_end != null) DrawRect(new Rect2(_end.Value * _grid.CellSize, _grid.CellSize), Global.Yellow, false, 4);
-	    
-	    if (Global.Debug) DrawRect(new Rect2(HoveredCell * _grid.CellSize, _grid.CellSize), Colors.Orange);
+
+	    if (Global.Debug)
+	    {
+		    DrawRect(new Rect2(HoveredCell * _grid.CellSize, _grid.CellSize),
+			    Player.InRange(HoveredCell) ? Colors.Green : Colors.Orange);
+	    }
 
 
     	for (var x = 0; x < _grid.Region.Size.X; x++) {
@@ -352,7 +359,7 @@ public partial class World : Node2D
 		    Enemy enemy;
 		    
 		    var atlasCoords = EnemyLayer.GetCellAtlasCoords(cell);
-		    EnemyLayer.SetCell(cell, -1, new Vector2I(-1, -1));
+		    EraseCell(EnemyLayer, cell);
 
 		    if (atlasCoords == Global.SlimeAtlasCoords) enemy = new Slime();
 		    else if (atlasCoords == Global.SpiderAtlasCoords) enemy = new Spider();
@@ -365,7 +372,7 @@ public partial class World : Node2D
 		    {
 			    enemy.GroupId = groupId;
 		    }
-		    EnemyGroupLayer.SetCell(cell, -1, new Vector2I(-1, -1));
+		    EraseCell(EnemyGroupLayer, cell);
 		    
 		    SpawnEnemy(enemy, cell);
 	    }
@@ -378,7 +385,7 @@ public partial class World : Node2D
 		    Interactable interactable;
 		    
 		    var atlasCoords = ObjectLayer.GetCellAtlasCoords(cell);
-		    ObjectLayer.SetCell(cell, -1, new Vector2I(-1, -1));
+		    EraseCell(ObjectLayer, cell);
 		    
 		    if (atlasCoords == Global.BonfireAtlasCoords) interactable = new Bonfire();
 			else if (atlasCoords == Global.ChestAtlasCoords) interactable = new Chest();
@@ -394,7 +401,7 @@ public partial class World : Node2D
 	    foreach (var cell in LootLayer.GetUsedCells())
 	    {
 		    SpawnLoot(new CardLoot(), cell);
-		    LootLayer.SetCell(cell, -1, new Vector2I(-1, -1));
+		    EraseCell(LootLayer, cell);
 	    }
     }
 

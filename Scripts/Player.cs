@@ -21,6 +21,7 @@ public partial class Player : Entity
 		base._Ready();
 		
 		BaseVision = 4;
+		BaseRange = 2;
 		Name = "Player";
 		BaseDamage = 1;
 		MaxHealth = 5;
@@ -44,11 +45,16 @@ public partial class Player : Entity
 		}
 
 		DebugLabel.Text = "";
-		if (Global.Debug) DebugLabel.Text = $"Health: {Health} / {MaxHealth}\n"
-		                                    + $"Energy: {Energy} / {MaxEnergy}\n"
-		                                    + $"Position: {Position}\n"
-		                                    + $"InCombat: {InCombat}\n"
-		                                    + $"Turn: {_turnOngoing}\n";
+		if (Global.Debug)
+			DebugLabel.Text = $"Health: {Health} / {MaxHealth}\n"
+			                  + $"Energy: {Energy} / {MaxEnergy}\n"
+			                  + $"Position: {Position}\n"
+			                  + $"InCombat: {InCombat}\n"
+			                  + $"Turn: {_turnOngoing}\n"
+			                  + $"Range: {Range}\n"
+			                  + $"Vision: {Vision}\n"
+			                  + $"Damage: {Damage}\n"
+			                  + $"Armor: {Armor}\n";
 		
 		base._Process(delta);
 	}
