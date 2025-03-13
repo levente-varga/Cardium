@@ -13,7 +13,7 @@ namespace Cardium.Scripts;
 internal enum SelectionMode
 {
 	None,
-	Target,
+	Enemy,
 	Location,
 	Interactable,
 }
@@ -96,6 +96,25 @@ public partial class World : Node2D
 		    GD.Print("Debug " + (Global.Debug ? "on" : "off"));
 		    Global.Debug = !Global.Debug;
 		    _combatManager.UpdateDebugLabel();
+	    }
+	    else if (InputMap.EventIsAction(@event, "Select") && @event.IsPressed())
+	    {
+		    if (Utils.ManhattanDistanceBetween(_selectionOrigin, _selectedCell) > _selectionRange) return;
+		    switch (_selectionMode)
+		    {
+			    case SelectionMode.Enemy:
+				    if (IsEnemy(_selectedCell)) _selectionConfirmed = true;
+				    break;
+			    case SelectionMode.Interactable:
+				    if (IsInteractable(_selectedCell)) _selectionConfirmed = true;
+				    break;
+			    case SelectionMode.Location:
+				    _selectionConfirmed = true;
+				    break;
+			    case SelectionMode.None:
+				default:
+					break;
+		    }
 	    }
 	    else if (@event is InputEventMouseButton { Pressed: true, ButtonIndex: MouseButton.Left })
 	    {
@@ -212,11 +231,11 @@ public partial class World : Node2D
     
 	private static void EraseCell(TileMapLayer map, Vector2I position) => map.SetCell(position, -1, new Vector2I(-1, -1));
 	
-    public bool IsTileEnemy(Vector2I position) => GetEnemyAt(position) != null;
-    public bool IsTileInteractable(Vector2I position) => GetInteractableAt(position) != null;
-    public bool IsTileWall(Vector2I position) => WallLayer.GetCellTileData(position) != null;
+    public bool IsEnemy(Vector2I position) => GetEnemyAt(position) != null;
+    public bool IsInteractable(Vector2I position) => GetInteractableAt(position) != null;
+    public bool IsWall(Vector2I position) => WallLayer.GetCellTileData(position) != null;
 
-    public bool IsAnyTileInteractableNextTo(Vector2I position) =>
+    public bool IsAnyInteractableNextTo(Vector2I position) =>
 	    ObjectLayer.GetCellTileData(position + Vector2I.Down) != null ||
 	    ObjectLayer.GetCellTileData(position + Vector2I.Up) != null ||
 	    ObjectLayer.GetCellTileData(position + Vector2I.Left) != null ||
@@ -226,9 +245,9 @@ public partial class World : Node2D
     public Interactable? GetInteractableAt(Vector2I position) => _interactables.FirstOrDefault(interactable => interactable.Position == position);
     
     public bool IsTileEmpty(Vector2I position) => 
-	    !IsTileWall(position)
-	    && !IsTileInteractable(position)
-	    && !IsTileEnemy(position)
+	    !IsWall(position)
+	    && !IsInteractable(position)
+	    && !IsEnemy(position)
 	    && Player.Position != position;
 
     private void UpdateFogOfWar()
@@ -520,10 +539,10 @@ public partial class World : Node2D
 
 	private async Task<Enemy?> SelectEnemyTarget(int range, Vector2I from)
 	{
-		_selectionMode = SelectionMode.Target;
+		_selectionMode = SelectionMode.Enemy;
 		SetupSelection(range, from);
 		
-		await WaitUntilMet(() => _selectionCancelled || _selectionConfirmed && IsTileEnemy(_selectedCell));
+		await WaitUntilMet(() => _selectionCancelled || _selectionConfirmed && IsEnemy(_selectedCell));
 		
 		_selectionMode = SelectionMode.None;
 		
@@ -536,7 +555,7 @@ public partial class World : Node2D
 		_selectionMode = SelectionMode.Interactable;
 		SetupSelection(range, from);
 		
-		await WaitUntilMet(() => _selectionCancelled || _selectionConfirmed && IsTileInteractable(_selectedCell));
+		await WaitUntilMet(() => _selectionCancelled || _selectionConfirmed && IsInteractable(_selectedCell));
 		
 		_selectionMode = SelectionMode.None;
 

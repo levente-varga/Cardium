@@ -107,17 +107,12 @@ public partial class TileAlignedGameObject : AnimatedSprite2D
     {
         return ManhattanDistanceTo(other.Position);
     }
-    
+
     protected int ManhattanDistanceTo(Vector2I position)
     {
-        return ManhattanDistanceBetween(Position, position);
+        return Utils.ManhattanDistanceBetween(Position, position);
     }
-    
-    protected int ManhattanDistanceBetween(Vector2I a, Vector2I b)
-    {
-        return Mathf.Abs(a.X - b.X) + Mathf.Abs(a.Y - b.Y);
-    }
-    
+
     protected void Nudge(Direction direction)
     {
         base.Position += DirectionToVector(direction) * Global.TileSize / 8;

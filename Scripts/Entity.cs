@@ -195,7 +195,7 @@ public partial class Entity : TileAlignedGameObject
         if (world.IsTileEmpty(newPosition)) await Move(newPosition, world, useEnergy);
         else
         {
-            if (world.IsTileEnemy(newPosition) && useEnergy) Energy--; 
+            if (world.IsEnemy(newPosition) && useEnergy) Energy--; 
             Nudge(direction);
         }
     }
