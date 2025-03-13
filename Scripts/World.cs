@@ -211,9 +211,9 @@ public partial class World : Node2D
 	);
     
 	private static void EraseCell(TileMapLayer map, Vector2I position) => map.SetCell(position, -1, new Vector2I(-1, -1));
-
-    public bool IsTileEnemy(Vector2I position) => _enemies.Any(enemy => enemy.Position == position);
-    public bool IsTileInteractable(Vector2I position) => _interactables.Any(interactable => interactable.Position == position && interactable.Solid);
+	
+    public bool IsTileEnemy(Vector2I position) => GetEnemyAt(position) != null;
+    public bool IsTileInteractable(Vector2I position) => GetInteractableAt(position) != null;
     public bool IsTileWall(Vector2I position) => WallLayer.GetCellTileData(position) != null;
 
     public bool IsAnyTileInteractableNextTo(Vector2I position) =>
@@ -223,6 +223,7 @@ public partial class World : Node2D
 	    ObjectLayer.GetCellTileData(position + Vector2I.Right) != null;
     
     public Enemy? GetEnemyAt(Vector2I position) => _enemies.FirstOrDefault(enemy => enemy.Position == position);
+    public Interactable? GetInteractableAt(Vector2I position) => _interactables.FirstOrDefault(interactable => interactable.Position == position);
     
     public bool IsTileEmpty(Vector2I position) => 
 	    !IsTileWall(position)
@@ -519,26 +520,28 @@ public partial class World : Node2D
 
 	private async Task<Enemy?> SelectEnemyTarget(int range, Vector2I from)
 	{
-		Enemy target = new Enemy();
 		_selectionMode = SelectionMode.Target;
 		SetupSelection(range, from);
 		
-		// TODO: Implement entity targeting
+		await WaitUntilMet(() => _selectionCancelled || _selectionConfirmed && IsTileEnemy(_selectedCell));
 		
 		_selectionMode = SelectionMode.None;
-		return target;
+		
+		if (_selectionCancelled) return null;
+		return GetEnemyAt(_selectedCell);
 	}
 	
 	private async Task<Interactable?> SelectInteractableTarget(int range, Vector2I from)
 	{
-		Interactable target = new Interactable();
 		_selectionMode = SelectionMode.Interactable;
 		SetupSelection(range, from);
 		
-		// TODO: Implement entity targeting
+		await WaitUntilMet(() => _selectionCancelled || _selectionConfirmed && IsTileInteractable(_selectedCell));
 		
 		_selectionMode = SelectionMode.None;
-		return target;
+
+		if (_selectionCancelled) return null;
+		return GetInteractableAt(_selectedCell);
 	}
 	
 	private async Task<Vector2I?> SelectLocationTarget(int range, Vector2I from)
@@ -548,8 +551,9 @@ public partial class World : Node2D
 		
 		await WaitUntilMet(() => _selectionCancelled || _selectionConfirmed);
 		
-		if (_selectionCancelled) return null;
 		_selectionMode = SelectionMode.None;
+
+		if (_selectionCancelled) return null;
 		return _selectedCell;
 	}
 
