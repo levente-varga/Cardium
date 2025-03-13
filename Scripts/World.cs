@@ -45,6 +45,11 @@ public partial class World : Node2D
     private CombatManager _combatManager;
     
     private SelectionMode _selectionMode = SelectionMode.None;
+    private int _selectionRange = 0;
+    private Vector2I _selectionOrigin;
+    private Vector2I _selectedCell;
+    private bool _selectionCancelled = false;
+    private bool _selectionConfirmed = false;
 
     private Rect2I _region;
     private AStarGrid2D _grid;
@@ -82,6 +87,58 @@ public partial class World : Node2D
 		    + "Hovered cell: " + HoveredCell;
 	    
 	    QueueRedraw();
+    }
+
+    public override void _Input(InputEvent @event)
+    {
+	    if (InputMap.EventIsAction(@event, "Debug") && @event.IsPressed())
+	    {
+		    GD.Print("Debug " + (Global.Debug ? "on" : "off"));
+		    Global.Debug = !Global.Debug;
+		    _combatManager.UpdateDebugLabel();
+	    }
+	    else if (@event is InputEventMouseButton { Pressed: true, ButtonIndex: MouseButton.Left })
+	    {
+		    if (_selectionMode == SelectionMode.None) return;
+		    
+		    if (_grid.IsInBoundsv(HoveredCell)) {
+			    _selectedCell = HoveredCell;
+			    _end = HoveredCell;
+		    }
+
+		    UpdatePath();
+		    QueueRedraw();
+	    }
+	    else if (@event is InputEventMouseButton { Pressed: true, ButtonIndex: MouseButton.Right })
+	    {
+		    _selectionMode = SelectionMode.None;
+		    QueueRedraw();
+	    }
+    }
+    
+    public override void _Draw()
+    {
+    	if (_end != null) DrawRect(new Rect2(_end.Value * _grid.CellSize, _grid.CellSize), Global.Yellow, false, 4);
+
+	    if (Global.Debug)
+	    {
+		    DrawRect(new Rect2(HoveredCell * _grid.CellSize, _grid.CellSize),
+			    Player.InRange(HoveredCell) ? Colors.Green : Colors.Orange);
+	    }
+
+
+    	for (var x = 0; x < _grid.Region.Size.X; x++) {
+    		for (var y = 0; y < _grid.Region.Size.Y; y++) {
+    			var cell = new Vector2I(x, y) + _grid.Region.Position;
+    			if (_grid.IsPointSolid(cell)) {
+    				//DrawRect(new Rect2(cell.X * _grid.CellSize.X, cell.Y * _grid.CellSize.Y, _grid.CellSize.X, _grid.CellSize.Y), Colors.Aquamarine);
+    			}
+    		}
+    	}
+
+	    UpdateFogOfWar();
+	    
+    	base._Draw();
     }
     
     private void SetupLayers()
@@ -173,34 +230,6 @@ public partial class World : Node2D
 	    && !IsTileEnemy(position)
 	    && Player.Position != position;
 
-    /// <summary>
-    /// Draws the path from the start to the end
-    /// </summary>
-    public override void _Draw()
-    {
-    	if (_end != null) DrawRect(new Rect2(_end.Value * _grid.CellSize, _grid.CellSize), Global.Yellow, false, 4);
-
-	    if (Global.Debug)
-	    {
-		    DrawRect(new Rect2(HoveredCell * _grid.CellSize, _grid.CellSize),
-			    Player.InRange(HoveredCell) ? Colors.Green : Colors.Orange);
-	    }
-
-
-    	for (var x = 0; x < _grid.Region.Size.X; x++) {
-    		for (var y = 0; y < _grid.Region.Size.Y; y++) {
-    			var cell = new Vector2I(x, y) + _grid.Region.Position;
-    			if (_grid.IsPointSolid(cell)) {
-    				//DrawRect(new Rect2(cell.X * _grid.CellSize.X, cell.Y * _grid.CellSize.Y, _grid.CellSize.X, _grid.CellSize.Y), Colors.Aquamarine);
-    			}
-    		}
-    	}
-
-	    UpdateFogOfWar();
-	    
-    	base._Draw();
-    }
-
     private void UpdateFogOfWar()
     {
 	    var extendedVision = Player.Vision + 1;
@@ -231,28 +260,6 @@ public partial class World : Node2D
     private void UpdatePath() {
 	    if (_end is null) return;
 	    _line.Points = _grid.GetPointPath(Player.Position, _end.Value);
-    }
-
-    public override void _Input(InputEvent @event)
-    {
-	    if (InputMap.EventIsAction(@event, "Debug") && @event.IsPressed())
-	    {
-		    GD.Print("Debug " + (Global.Debug ? "on" : "off"));
-		    Global.Debug = !Global.Debug;
-		    _combatManager.UpdateDebugLabel();
-	    }
-	    
-    	if (@event is not InputEventMouseButton { Pressed: true, ButtonIndex: MouseButton.Left } mouseButton) return;
-	    
-	    var globalMousePosition = mouseButton.Position + Camera.ViewRect.Position;
-    	var cell = GetTilePosition(globalMousePosition);
-	    
-    	if (_grid.IsInBoundsv(cell)) {
-		    _end = cell;
-    	}
-
-    	UpdatePath();
-    	QueueRedraw();
     }
 
     private void OnPlayerMove(TileAlignedGameObject source, Vector2I oldPosition, Vector2I newPosition)
@@ -502,10 +509,19 @@ public partial class World : Node2D
 		return tiles;
 	}
 
-	private async Task<Enemy> SelectEnemyTarget(int range, Vector2I from)
+	private void SetupSelection(int range, Vector2I from)
+	{
+		_selectionRange = range;
+		_selectionOrigin = from;
+		_selectionCancelled = false;
+		_selectionConfirmed = false;
+	}
+
+	private async Task<Enemy?> SelectEnemyTarget(int range, Vector2I from)
 	{
 		Enemy target = new Enemy();
 		_selectionMode = SelectionMode.Target;
+		SetupSelection(range, from);
 		
 		// TODO: Implement entity targeting
 		
@@ -513,10 +529,11 @@ public partial class World : Node2D
 		return target;
 	}
 	
-	private async Task<Interactable> SelectInteractableTarget(int range, Vector2I from)
+	private async Task<Interactable?> SelectInteractableTarget(int range, Vector2I from)
 	{
 		Interactable target = new Interactable();
 		_selectionMode = SelectionMode.Interactable;
+		SetupSelection(range, from);
 		
 		// TODO: Implement entity targeting
 		
@@ -524,18 +541,27 @@ public partial class World : Node2D
 		return target;
 	}
 	
-	private async Task<Vector2I> SelectLocationTarget(int range, Vector2I from)
+	private async Task<Vector2I?> SelectLocationTarget(int range, Vector2I from)
 	{
-		Vector2I target = Vector2I.Zero;
 		_selectionMode = SelectionMode.Location;
+		SetupSelection(range, from);
 		
-		// TODO: Implement entity targeting
+		await WaitUntilMet(() => _selectionCancelled || _selectionConfirmed);
 		
+		if (_selectionCancelled) return null;
 		_selectionMode = SelectionMode.None;
-		return target;
+		return _selectedCell;
+	}
+
+	private async Task WaitUntilMet(Func<bool> condition)
+	{
+		while (!condition())
+		{
+			await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+		}
 	}
 	
-	public async void PlayCard(Card card)
+	public async Task<bool> PlayCard(Card card)
 	{
 		switch (card)
 		{
@@ -544,16 +570,20 @@ public partial class World : Node2D
 				break;
 			case EnemyTargetingCard enemyTargetingCard:
 				var enemy = await SelectEnemyTarget(enemyTargetingCard.Range, Player.Position);
+				if (enemy is null) return false;
 				enemyTargetingCard.OnPlay(Player, enemy);
 				break;
 			case InteractableTargetingCard interactableTargetingCard:
 				var interactable = await SelectInteractableTarget(interactableTargetingCard.Range, Player.Position);
+				if (interactable is null) return false;
 				interactableTargetingCard.OnPlay(Player, interactable);
 				break;
 			case LocationTargetingCard locationTargetingCard:
 				var position = await SelectLocationTarget(locationTargetingCard.Range, Player.Position);
-				locationTargetingCard.OnPlay(Player, position, this);
+				if (position is null) return false;
+				locationTargetingCard.OnPlay(Player, position.Value, this);
 				break;
 		}
+		return true;
 	}
 }
