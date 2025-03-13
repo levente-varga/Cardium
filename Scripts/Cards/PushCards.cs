@@ -3,7 +3,7 @@ using Godot;
 
 namespace Cardium.Scripts.Cards;
 
-public partial class PushCard : EntityTargetingCard
+public partial class PushCard : EnemyTargetingCard
 {
     public override void _Ready()
     {
@@ -16,7 +16,7 @@ public partial class PushCard : EntityTargetingCard
         base._Ready();
     }
     
-    public override void OnPlay(Player player, Entity target)
+    public override void OnPlay(Player player, Enemy target)
     {
         // TODO: Implement
     }

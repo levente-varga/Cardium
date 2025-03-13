@@ -2,12 +2,21 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Cardium.Scripts.Cards.Types;
 using Cardium.Scripts.Enemies;
 using Cardium.Scripts.Interactables;
 using Godot;
 
 namespace Cardium.Scripts;
+
+internal enum SelectionMode
+{
+	None,
+	Target,
+	Location,
+	Interactable,
+}
 
 public partial class World : Node2D
 {
@@ -34,6 +43,8 @@ public partial class World : Node2D
     private readonly List<TileMapLayer> _layers = new();
     
     private CombatManager _combatManager;
+    
+    private SelectionMode _selectionMode = SelectionMode.None;
 
     private Rect2I _region;
     private AStarGrid2D _grid;
@@ -491,24 +502,57 @@ public partial class World : Node2D
 		return tiles;
 	}
 
-	public void PlayCard(Card card)
+	private async Task<Enemy> SelectEnemyTarget(int range, Vector2I from)
+	{
+		Enemy target = new Enemy();
+		_selectionMode = SelectionMode.Target;
+		
+		// TODO: Implement entity targeting
+		
+		_selectionMode = SelectionMode.None;
+		return target;
+	}
+	
+	private async Task<Interactable> SelectInteractableTarget(int range, Vector2I from)
+	{
+		Interactable target = new Interactable();
+		_selectionMode = SelectionMode.Interactable;
+		
+		// TODO: Implement entity targeting
+		
+		_selectionMode = SelectionMode.None;
+		return target;
+	}
+	
+	private async Task<Vector2I> SelectLocationTarget(int range, Vector2I from)
+	{
+		Vector2I target = Vector2I.Zero;
+		_selectionMode = SelectionMode.Location;
+		
+		// TODO: Implement entity targeting
+		
+		_selectionMode = SelectionMode.None;
+		return target;
+	}
+	
+	public async void PlayCard(Card card)
 	{
 		switch (card)
 		{
 			case PlayerTargetingCard playerTargetingCard:
 				playerTargetingCard.OnPlay(Player);
 				break;
-			case EntityTargetingCard entityTargetingCard:
-				// TODO: Implement entity targeting
-				entityTargetingCard.OnPlay(Player, null);
+			case EnemyTargetingCard enemyTargetingCard:
+				var enemy = await SelectEnemyTarget(enemyTargetingCard.Range, Player.Position);
+				enemyTargetingCard.OnPlay(Player, enemy);
 				break;
 			case InteractableTargetingCard interactableTargetingCard:
-				// TODO: Implement interactable targeting
-				interactableTargetingCard.OnPlay(Player, null);
+				var interactable = await SelectInteractableTarget(interactableTargetingCard.Range, Player.Position);
+				interactableTargetingCard.OnPlay(Player, interactable);
 				break;
 			case LocationTargetingCard locationTargetingCard:
-				// TODO: Implement location targeting
-				locationTargetingCard.OnPlay(Player, Vector2I.Zero, null);
+				var position = await SelectLocationTarget(locationTargetingCard.Range, Player.Position);
+				locationTargetingCard.OnPlay(Player, position, this);
 				break;
 		}
 	}
