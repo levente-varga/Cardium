@@ -120,10 +120,7 @@ public partial class World : Node2D
 	    {
 		    if (_selectionMode == SelectionMode.None) return;
 		    
-		    if (_grid.IsInBoundsv(HoveredCell)) {
-			    _selectedCell = HoveredCell;
-			    _end = HoveredCell;
-		    }
+		    if (_grid.IsInBoundsv(HoveredCell)) _selectedCell = HoveredCell;
 
 		    UpdatePath();
 		    QueueRedraw();
@@ -139,6 +136,11 @@ public partial class World : Node2D
     {
     	if (_end != null) DrawRect(new Rect2(_end.Value * _grid.CellSize, _grid.CellSize), Global.Yellow, false, 4);
 
+	    if (Global.Debug || _selectionMode != SelectionMode.None) {
+		    var color = _selectionConfirmed ? Colors.Green : Colors.Red;
+		    DrawRect(new Rect2(_selectedCell * _grid.CellSize, _grid.CellSize), color, false, 4);
+	    }
+	    
 	    if (Global.Debug)
 	    {
 		    DrawRect(new Rect2(HoveredCell * _grid.CellSize, _grid.CellSize),
@@ -531,6 +533,7 @@ public partial class World : Node2D
 
 	private void SetupSelection(int range, Vector2I from)
 	{
+		_selectedCell = from;
 		_selectionRange = range;
 		_selectionOrigin = from;
 		_selectionCancelled = false;
