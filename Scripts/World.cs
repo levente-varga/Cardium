@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Cardium.Scripts.Cards;
 using Cardium.Scripts.Cards.Types;
 using Cardium.Scripts.Enemies;
 using Cardium.Scripts.Interactables;
@@ -295,22 +296,25 @@ public partial class World : Node2D
 		Attack(position, Player);
 	}
     
-    private void OnEnemyDeath(Entity entity)
+    private void OnEnemyDeath(Enemy enemy)
 	{
-		GD.Print(entity.Name + " died!");
-	    _enemies.Remove((Enemy)entity);
-	    Player.OnMoveEvent -= ((Enemy)entity).OnPlayerMove;
-	    entity.OnNudgeEvent -= OnNudge;
-	    entity.OnDeathEvent -= OnEnemyDeath;
-	    entity.OnEnterCombatEvent -= AddEnemyToCombat;
-	    RemoveChild(entity);
-	    entity.QueueFree();
-	    _grid.SetPointSolid(entity.Position, false);
-	    
-	    var cardLoot = new CardLoot();
-	    _loot.Add(cardLoot);
-	    AddChild(cardLoot);
-	    cardLoot.SetPosition(entity.Position);
+		GD.Print(enemy.Name + " died!");
+	    _enemies.Remove(enemy);
+	    Player.OnMoveEvent -= enemy.OnPlayerMove;
+	    enemy.OnNudgeEvent -= OnNudge;
+	    enemy.OnDeathEvent -= OnEnemyDeath;
+	    enemy.OnEnterCombatEvent -= AddEnemyToCombat;
+	    RemoveChild(enemy);
+	    enemy.QueueFree();
+	    _grid.SetPointSolid(enemy.Position, false);
+
+	    foreach (var card in enemy.Inventory)
+	    {
+		    var loot = new CardLoot(card);
+		    loot.SetPosition(enemy.Position);
+		    _loot.Add(loot);
+		    AddChild(loot);
+	    }
 	}
 
     public void Attack(Entity target, Entity source)
@@ -440,7 +444,8 @@ public partial class World : Node2D
     {
 	    foreach (var cell in LootLayer.GetUsedCells())
 	    {
-		    SpawnLoot(new CardLoot(), cell);
+		    // TODO: determine loot type
+		    SpawnLoot(new CardLoot(new HealCard()), cell);
 		    EraseCell(LootLayer, cell);
 	    }
     }

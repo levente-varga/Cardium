@@ -54,9 +54,6 @@ public partial class Entity : TileAlignedGameObject
     public EnergyBar EnergyBar;
     public TurnMarker TurnMarker;
     
-    public delegate void OnDeathDelegate(Entity entity);
-    public event OnDeathDelegate OnDeathEvent;
-    
     public delegate void OnEnterCombatDelegate(Entity entity);
     public event OnEnterCombatDelegate OnEnterCombatEvent;
     
@@ -134,7 +131,6 @@ public partial class Entity : TileAlignedGameObject
     {
         Health = 0;
         OnLeaveCombatEvent?.Invoke(this);
-        OnDeathEvent?.Invoke(this);
     }
 
     public bool InRange(Vector2I position)

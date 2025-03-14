@@ -9,6 +9,9 @@ public partial class Enemy : Entity
     public int? GroupId;
     public int CombatVision;
     
+    public delegate void OnDeathDelegate(Enemy enemy);
+    public event OnDeathDelegate OnDeathEvent;
+    
     public override void _Ready()
     {
         base._Ready();
@@ -87,6 +90,8 @@ public partial class Enemy : Entity
     protected override void OnDeath(Entity source)
     {
         base.OnDeath(source);
+        
+        OnDeathEvent?.Invoke(this);
     }
 
     public void OnPlayerMove(TileAlignedGameObject entity, Vector2I oldPosition, Vector2I newPosition)
