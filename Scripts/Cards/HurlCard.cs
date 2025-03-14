@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Cardium.Scripts.Cards.Types;
 using Godot;
 
@@ -5,12 +6,15 @@ namespace Cardium.Scripts.Cards;
 
 public partial class HurlCard : LocationTargetingCard
 {
+    public int Radius { get; protected set; } = 1;
+    
     public override void _Ready()
     {
         Name = "Hurl";
         Description = "Deals 2 damage to all enemies in an area.";
         Cost = 3;
         Range = 3;
+        Radius = 1;
         Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Hurl.png");
         Type = CardType.Combat;
         
@@ -19,6 +23,17 @@ public partial class HurlCard : LocationTargetingCard
     
     public override void OnPlay(Player player, Vector2I position, World world)
     {
-        // TODO: Implement
+        List<Enemy> enemies = new ();
+        foreach (var location in World.GetTilesInRange(position, Radius))
+        {
+            if (world.GetEnemyAt(location) is not null)
+            {
+                enemies.Add(world.GetEnemyAt(location));
+            }
+        }
+        foreach (var enemy in enemies)
+        {
+            enemy.ReceiveDamage(player, 2);
+        }
     }
 }

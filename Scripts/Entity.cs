@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Cardium.Scripts.Cards.Types;
 using Godot;
 
 namespace Cardium.Scripts;
@@ -46,7 +47,7 @@ public partial class Entity : TileAlignedGameObject
     public string Description;
     public bool InCombat { get; private set; }
     
-    public List<Cards.Types.Card> Inventory = new();
+    public List<Card> Inventory = new();
     public List<Buff> Buffs = new();
     
     public HealthBar HealthBar;
@@ -123,7 +124,7 @@ public partial class Entity : TileAlignedGameObject
         
         // TODO: Implement dodge based on luck
         
-        Health -= Math.Min(1, damage - BaseArmor);
+        Health -= Math.Max(1, damage - BaseArmor);
         if (Health <= 0) OnDeath(source);
     }
 
@@ -192,7 +193,7 @@ public partial class Entity : TileAlignedGameObject
     protected async Task Move(Direction direction, World world, bool useEnergy = true)
     {
         var newPosition = Position + DirectionToVector(direction);
-        if (world.IsTileEmpty(newPosition)) await Move(newPosition, world, useEnergy);
+        if (world.IsEmpty(newPosition)) await Move(newPosition, world, useEnergy);
         else
         {
             if (world.IsEnemy(newPosition) && useEnergy) Energy--; 
@@ -204,7 +205,7 @@ public partial class Entity : TileAlignedGameObject
     {
         GD.Print("Desire to move registered.");
         
-        if (!world.IsTileEmpty(newPosition)) return;
+        if (!world.IsEmpty(newPosition)) return;
         
         if (useEnergy)
         {

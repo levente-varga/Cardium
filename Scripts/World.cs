@@ -256,7 +256,7 @@ public partial class World : Node2D
     public Enemy? GetEnemyAt(Vector2I position) => _enemies.FirstOrDefault(enemy => enemy.Position == position);
     public Interactable? GetInteractableAt(Vector2I position) => _interactables.FirstOrDefault(interactable => interactable.Position == position);
     
-    public bool IsTileEmpty(Vector2I position) => 
+    public bool IsEmpty(Vector2I position) => 
 	    !IsWall(position)
 	    && !IsInteractable(position)
 	    && !IsEnemy(position)
@@ -264,25 +264,13 @@ public partial class World : Node2D
 
     private void UpdateFogOfWar()
     {
-	    var extendedVision = Player.Vision + 1;
+	    var tiles = GetTilesInRange(Player.Position, Player.Vision);
+	    var edge = GetTilesExactlyInRange(Player.Position, Player.Vision + 1);
 	    
-	    for (var x = -extendedVision; x <= extendedVision; x++)
+	    foreach (var tile in tiles) FogLayer.SetCell(tile, 2, new Vector2I(2, 0));
+	    foreach (var tile in edge.Where(tile => FogLayer.GetCellAtlasCoords(tile).X == 2))
 	    {
-		    for (var y = -(extendedVision - Math.Abs(x)); y <= extendedVision - Math.Abs(x); y++)
-		    {
-			    var coords = Player.Position + new Vector2I(x, y);
-			    if (Math.Abs(x) + Math.Abs(y) == extendedVision)
-			    {
-				    if (FogLayer.GetCellAtlasCoords(coords).X == 2)
-				    {
-					    FogLayer.SetCell(coords, 2, new Vector2I(1, 0));
-				    }
-			    }
-			    else
-			    {
-				    FogLayer.SetCell(coords, 2, new Vector2I(2, 0));
-			    }
-		    }
+		    FogLayer.SetCell(tile, 2, new Vector2I(1, 0));
 	    }
     }
 
@@ -373,7 +361,7 @@ public partial class World : Node2D
     
 	private void SpawnEnemy(Enemy enemy, Vector2I position)
 	{
-		if (!IsTileEmpty(position)) return;
+		if (!IsEmpty(position)) return;
 		enemy.OnDeathEvent += OnEnemyDeath;
 		enemy.OnEnterCombatEvent += AddEnemyToCombat;
 		enemy.OnNudgeEvent += OnNudge;
@@ -387,7 +375,7 @@ public partial class World : Node2D
 	
     private void SpawnInteractable(Interactable interactable, Vector2I position)
     {
-	    if (!IsTileEmpty(position)) return;
+	    if (!IsEmpty(position)) return;
 	    AddChild(interactable);
 	    interactable.SetPosition(position);
 	    interactable.OnSolidityChangeEvent += OnInteractableSolidityChange;
@@ -397,7 +385,7 @@ public partial class World : Node2D
     
     private void SpawnLoot(CardLoot loot, Vector2I position)
     {
-	    if (!IsTileEmpty(position)) return;
+	    if (!IsEmpty(position)) return;
 	    AddChild(loot);
 	    loot.SetPosition(position);
 	    _loot.Add(loot);
@@ -509,18 +497,31 @@ public partial class World : Node2D
 		return _grid.GetPointPath(from, to).ToList().Select(p => new Vector2(p.X, p.Y) + Global.TileSize / 2).ToArray();
 	}
 
-	private static List<Vector2I> GetTilesExactlyInRange(Vector2I position, int range)
+	public static List<Vector2I> GetTilesInRange(Vector2I from, int range)
 	{
-		var r = Mathf.CeilToInt(range);
-        
 		var tiles = new List<Vector2I>();
         
-		for (var i = -r; i <= r; i++)
+		for (var x = -range; x <= range; x++)
 		{
-			var x = position.X + i;
-			var dy = r - Math.Abs(i);
-			var y1 = position.Y + (dy);
-			var y2 = position.Y - (dy);
+			for (var y = -(range - Math.Abs(x)); y <= range - Math.Abs(x); y++)
+			{
+				tiles.Add(new Vector2I(from.X + x, from.Y + y));
+			}
+		}
+        
+		return tiles;
+	}
+	
+	private static List<Vector2I> GetTilesExactlyInRange(Vector2I from, int range)
+	{
+		var tiles = new List<Vector2I>();
+        
+		for (var i = -range; i <= range; i++)
+		{
+			var x = from.X + i;
+			var dy = range - Math.Abs(i);
+			var y1 = from.Y + dy;
+			var y2 = from.Y - dy;
 			tiles.Add(new Vector2I(x, y1));
 			if (y1 != y2) tiles.Add(new Vector2I(x, y2));
 		}
@@ -528,19 +529,8 @@ public partial class World : Node2D
 		return tiles;
 	}
     
-	public List<Vector2I> GetEmptyTilesExactlyInRange(Vector2I position, int range, Vector2I? exclude = null)
-	{
-		var tiles = GetTilesExactlyInRange(position, range);
-
-		for (var i = 0; i < tiles.Count; i++)
-		{
-			var tile = tiles[i];
-			if (tile == exclude) continue;
-			if (!IsTileEmpty(tile)) tiles.Remove(tile);
-		}
-        
-		return tiles;
-	}
+	public List<Vector2I> GetEmptyTilesExactlyInRange(Vector2I position, int range, Vector2I? exclude = null) =>
+		GetTilesExactlyInRange(position, range).Where(tile => tile == exclude || IsEmpty(tile)).ToList();
 
 	private void SetupSelection(int range, Vector2I from)
 	{
