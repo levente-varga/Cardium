@@ -163,13 +163,20 @@ public partial class Hand : Node2D
 
 	public override void _Input(InputEvent @event)
 	{
-		if (@event is InputEventKey { Pressed: true, KeyLabel: Key.P })
+		switch (@event)
 		{
-			AddCard(_cards.Count % 2 == 0 ? new HealCard() : new HurlCard());
-		}
-		if (@event is InputEventKey { Pressed: true, KeyLabel: Key.O })
-		{
-			RemoveLastCard();
+			case InputEventKey { Pressed: true, KeyLabel: Key.Key1 }:
+				AddCard(new HealCard());
+				break;
+			case InputEventKey { Pressed: true, KeyLabel: Key.Key2 }:
+				AddCard(new SmiteCard());
+				break;
+			case InputEventKey { Pressed: true, KeyLabel: Key.Key3 }:
+				AddCard(new HurlCard());
+				break;
+			case InputEventKey { Pressed: true, KeyLabel: Key.Key4 }:
+				AddCard(new PushCard());
+				break;
 		}
 	}
 

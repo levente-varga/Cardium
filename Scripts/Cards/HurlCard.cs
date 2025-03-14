@@ -10,7 +10,7 @@ public partial class HurlCard : LocationTargetingCard
 
     public HurlCard()
     {
-        Name = "Hurl";
+        DisplayName = "Hurl";
         Description = "Deals 2 damage to all enemies in an area.";
         Cost = 3;
         Range = 3;
@@ -23,7 +23,12 @@ public partial class HurlCard : LocationTargetingCard
     {
         base._Ready();
     }
-    
+
+    public override List<Vector2I> GetHighlightedTiles(Player player, Vector2I selectedTile, World world)
+    {
+        return World.GetTilesInRange(selectedTile, Radius);
+    }
+
     public override void OnPlay(Player player, Vector2I position, World world)
     {
         List<Enemy> enemies = new ();

@@ -7,7 +7,7 @@ public partial class ShieldCard : PlayerTargetingCard
 {
     public ShieldCard()
     {
-        Name = "Shield";
+        DisplayName = "Shield";
         Description = "Raises Armor by 2 for 3 turns.";
         Cost = 1;
         Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Shield.png");

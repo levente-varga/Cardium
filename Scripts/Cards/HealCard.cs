@@ -7,7 +7,7 @@ public partial class HealCard : PlayerTargetingCard
 {
     public HealCard()
     {
-        Name = "Heal";
+        DisplayName = "Heal";
         Description = "Heals for 3 missing health.";
         Cost = 1;
         Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Heal.png");

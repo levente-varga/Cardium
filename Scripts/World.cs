@@ -46,6 +46,7 @@ public partial class World : Node2D
     private CombatManager _combatManager;
     
     private SelectionMode _selectionMode = SelectionMode.None;
+    private TargetingCard? _selectedCard;
     private int _selectionRange = 0;
     private Vector2I _selectionOrigin;
     private Vector2I _selectedCell;
@@ -150,6 +151,10 @@ public partial class World : Node2D
 	    if (Global.Debug || _selectionMode != SelectionMode.None) {
 		    var color = _selectionConfirmed ? Colors.Green : Colors.Red;
 		    DrawRect(new Rect2(_selectedCell * _grid.CellSize, _grid.CellSize), color, false, 4);
+		    foreach (var tile in _selectedCard?.GetHighlightedTiles(Player, HoveredCell, this) ?? new List<Vector2I>())
+		    {
+			    DrawRect(new Rect2(tile * _grid.CellSize, _grid.CellSize), Colors.YellowGreen, false, 4);
+		    }
 	    }
 	    
 	    if (Global.Debug)
@@ -543,6 +548,7 @@ public partial class World : Node2D
 		_selectionOrigin = from;
 		_selectionCancelled = false;
 		_selectionConfirmed = false;
+		_selectedCard = null;
 	}
 
 	private async Task<Enemy?> SelectEnemyTarget(int range, Vector2I from)
@@ -595,6 +601,8 @@ public partial class World : Node2D
 	public async Task<bool> PlayCard(Card card)
 	{
 		var success = true;
+		
+		if (card is TargetingCard targetingCard) _selectedCard = targetingCard;
 		
 		switch (card)
 		{

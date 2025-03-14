@@ -28,6 +28,7 @@ public partial class Card : Node2D
 	}
 	
 	public int Cost { get; protected set; }
+	public string DisplayName { get; protected set; }
 	public string Description { get; protected set; }
 	public CardType Type { get; protected set; }
 	public CardRarity Rarity { get; protected set; }
@@ -136,11 +137,11 @@ public partial class Card : Node2D
 		_descriptionArea.AddChild(_description);
 		
 		_nameLabel = new Label();
-		_nameLabel.Text = Name;
+		_nameLabel.Text = DisplayName;
 		_nameLabel.HorizontalAlignment = HorizontalAlignment.Center;
 		_nameLabel.VerticalAlignment = VerticalAlignment.Center;
 		_nameLabel.Position = new Vector2(7, 28) * Global.CardScale;
-		_nameLabel.Size = new Vector2(CardSize.X - 7, 4) * Global.CardScale;
+		_nameLabel.Size = new Vector2(CardSize.X - 14, 4) * Global.CardScale;
 		var font = GD.Load<FontFile>("res://Assets/Fonts/alagard.ttf");
 		_nameLabel.AddThemeFontOverride("font", font);
 		_nameLabel.AddThemeFontSizeOverride("font_size", 20);
