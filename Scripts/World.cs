@@ -415,6 +415,7 @@ public partial class World : Node2D
 		    if (atlasCoords == Global.SlimeAtlasCoords) enemy = new Slime();
 		    else if (atlasCoords == Global.SpiderAtlasCoords) enemy = new Spider();
 		    else if (atlasCoords == Global.RangerAtlasCoords) enemy = new Ranger();
+		    else if (atlasCoords == Global.TargetDummyAtlasCoords) enemy = new TargetDummy();
 		    else continue;
 		    
 		    var groupIdAtlasCoords = EnemyGroupLayer.GetCellAtlasCoords(cell);

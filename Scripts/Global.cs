@@ -17,6 +17,7 @@ public static class Global
     public static readonly Vector2I SlimeAtlasCoords = new (27, 8);
     public static readonly Vector2I SpiderAtlasCoords = new (28, 5);
     public static readonly Vector2I RangerAtlasCoords = new (28, 1);
+    public static readonly Vector2I TargetDummyAtlasCoords = new (25, 0);
     
     public static readonly Vector2I ZeroAtlasCoords = new (35, 17);
     
