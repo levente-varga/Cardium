@@ -245,7 +245,7 @@ public partial class World : Node2D
 	private static void EraseCell(TileMapLayer map, Vector2I position) => map.SetCell(position, -1, new Vector2I(-1, -1));
 	
     public bool IsEnemy(Vector2I position) => GetEnemyAt(position) != null;
-    public bool IsInteractable(Vector2I position) => GetInteractableAt(position) != null;
+    public bool IsInteractable(Vector2I position) => GetInteractableAt(position) != null && GetInteractableAt(position) is { Solid: true };
     public bool IsWall(Vector2I position) => WallLayer.GetCellTileData(position) != null;
 
     public bool IsAnyInteractableNextTo(Vector2I position) =>
