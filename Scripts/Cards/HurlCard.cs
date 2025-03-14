@@ -10,6 +10,7 @@ public partial class HurlCard : LocationTargetingCard
         Name = "Hurl";
         Description = "Deals 2 damage to all enemies in an area.";
         Cost = 3;
+        Range = 3;
         Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Hurl.png");
         Type = CardType.Combat;
         

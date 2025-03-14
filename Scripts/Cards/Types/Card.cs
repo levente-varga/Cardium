@@ -1,6 +1,6 @@
 using Godot;
 
-namespace Cardium.Scripts;
+namespace Cardium.Scripts.Cards.Types;
 
 public partial class Card : Node2D
 {
@@ -17,13 +17,26 @@ public partial class Card : Node2D
 		Epic,
 		Legendary
 	}
+
+	public enum CardState
+	{
+		Idle,
+		Selected,
+		Dragging,
+		Ready,
+		Played,
+	}
 	
 	public int Cost { get; protected set; }
 	public string Description { get; protected set; }
 	public CardType Type { get; protected set; }
 	public CardRarity Rarity { get; protected set; }
+	public CardState State { get; protected set; }
 	public Texture2D Art { get; protected set; }
+	public bool InPlayArea { get; protected set; }
 
+	public bool Enabled = true;
+	
 	private bool _dragging;
 	private bool _shaking;
 	
@@ -38,6 +51,7 @@ public partial class Card : Node2D
 	private Control _descriptionArea;
 	private RichTextLabel _description;
 	private Label _nameLabel;
+	private Line2D _frame;
 	
 	private Vector2 _mouseDownPosition;
 	
@@ -56,10 +70,25 @@ public partial class Card : Node2D
 	private Vector2 _originalPosition;
 	private float _shakeAmount = 5f;
 	
+	private static readonly Vector2I CardSize = new (38, 54);
+	
 
 	public override void _Ready()
 	{
 		ZIndex = 1;
+		
+		_frame = new Line2D();
+		_frame.Points = new []
+		{
+			new Vector2(0, 0) * Global.CardScale,
+			new Vector2(0, CardSize.Y) * Global.CardScale,
+			new Vector2(CardSize.X, CardSize.Y) * Global.CardScale,
+			new Vector2(CardSize.X, 0) * Global.CardScale,
+			new Vector2(0, 0) * Global.CardScale,
+		};
+		_frame.DefaultColor = Colors.Aqua;
+		_frame.Visible = true;
+		_frame.Width = 1;
 		
 		_sprite = new Sprite2D();
 		_sprite.Centered = false;
@@ -70,13 +99,13 @@ public partial class Card : Node2D
 		_art.Centered = true;
 		_art.Texture = Art;
 		_art.Scale = new Vector2(Global.CardScale, Global.CardScale);
-		_art.Position = new Vector2(19, 15) * Global.CardScale;
+		_art.Position = new Vector2(CardSize.X / 2f, 15) * Global.CardScale;
 		
 		_artBackground = new Sprite2D();
 		_artBackground.Centered = true;
 		_artBackground.Texture = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Art background.png");
 		_artBackground.Scale = new Vector2(Global.CardScale, Global.CardScale);
-		_artBackground.Position = new Vector2(19, 15) * Global.CardScale;
+		_artBackground.Position = new Vector2(CardSize.X / 2f, 15) * Global.CardScale;
 		
 		_hitbox = new Button();
 		_hitbox.Flat = true;
@@ -102,7 +131,7 @@ public partial class Card : Node2D
 		
 		_descriptionArea = new Control();
 		_descriptionArea.Position = new Vector2(3, 33) * Global.CardScale;
-		_descriptionArea.Size = new Vector2(32, 18) * Global.CardScale;
+		_descriptionArea.Size = new Vector2(CardSize.X - 3, 18) * Global.CardScale;
 		_description.MouseFilter = Control.MouseFilterEnum.Ignore;
 		_descriptionArea.AddChild(_description);
 		
@@ -111,7 +140,7 @@ public partial class Card : Node2D
 		_nameLabel.HorizontalAlignment = HorizontalAlignment.Center;
 		_nameLabel.VerticalAlignment = VerticalAlignment.Center;
 		_nameLabel.Position = new Vector2(7, 28) * Global.CardScale;
-		_nameLabel.Size = new Vector2(24, 4) * Global.CardScale;
+		_nameLabel.Size = new Vector2(CardSize.X - 7, 4) * Global.CardScale;
 		var font = GD.Load<FontFile>("res://Assets/Fonts/alagard.ttf");
 		_nameLabel.AddThemeFontOverride("font", font);
 		_nameLabel.AddThemeFontSizeOverride("font_size", 20);
@@ -122,6 +151,7 @@ public partial class Card : Node2D
 		_hitbox.AddChild(_art);
 		_hitbox.AddChild(_sprite);
 		//_hitbox.AddChild(_descriptionArea);
+		_hitbox.AddChild(_frame);
 		_hitbox.AddChild(_nameLabel);
 		
 		SetupCostMarker();
@@ -146,6 +176,16 @@ public partial class Card : Node2D
 
 	public override void _Process(double delta)
 	{
+		_frame.DefaultColor = State switch
+		{
+			CardState.Selected => Colors.Green,
+			CardState.Dragging => Colors.Yellow,
+			CardState.Ready => Colors.Orange,
+			CardState.Played => Colors.Purple,
+			_ => Colors.Gray
+		};
+		_frame.Visible = Global.Debug;
+
 		if (_shaking)
 		{
 			_body.GlobalPosition += new Vector2(
@@ -176,12 +216,16 @@ public partial class Card : Node2D
 
 	public virtual void OnEnterPlayArea()
 	{
-		_shaking = true;	
+		_shaking = true;
+		State = CardState.Ready;
+		InPlayArea = true;
 	}
 	
 	public virtual void OnExitPlayArea()
 	{
 		_shaking = false;
+		State = _dragging ? CardState.Dragging : CardState.Idle;
+		InPlayArea = false;
 	}
 
 	private void ResetHoverTween()
@@ -210,12 +254,14 @@ public partial class Card : Node2D
 	}
 	
 	private void OnMouseEntered() {
-		if (_dragging) return;
+		if (!Enabled || _dragging) return;
+		State = CardState.Selected;
 		PlayHoverAnimation();
 	}
 
 	private void OnMouseExited() {
-		if (_dragging) return;
+		if (!Enabled || _dragging) return;
+		State = CardState.Idle;
 		PlayUnhoverAnimation();
 	}
 	
@@ -224,15 +270,21 @@ public partial class Card : Node2D
 	}
 	
 	private void OnMouseDown() {
+		if (!Enabled) return;
+		
 		_mouseDownPosition = GetViewport().GetMousePosition();
 		_dragging = true;
+		State = CardState.Dragging;
 		ZIndex = 2;
 		OnDragStartEvent?.Invoke(this);
 	}
 	
 	private void OnMouseUp() {
+		if (!Enabled) return;
+		
 		PlayUnhoverAnimation();
 		_dragging = false;
+		State = CardState.Idle;
 		ZIndex = 1;
 		OnDragEndEvent?.Invoke(this, GetViewport().GetMousePosition());
 	}

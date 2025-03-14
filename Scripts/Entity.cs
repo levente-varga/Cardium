@@ -46,7 +46,7 @@ public partial class Entity : TileAlignedGameObject
     public string Description;
     public bool InCombat { get; private set; }
     
-    public List<Card> Inventory = new();
+    public List<Cards.Types.Card> Inventory = new();
     public List<Buff> Buffs = new();
     
     public HealthBar HealthBar;

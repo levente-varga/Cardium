@@ -15,7 +15,7 @@ public class Deck
         get => _maxSize;
         set => _maxSize = Math.Max(value, 1);
     }
-    private readonly List<Card> _cards = new();
+    private readonly List<Cards.Types.Card> _cards = new();
     
     public void Shuffle ()
     {
@@ -28,17 +28,17 @@ public class Deck
         }
     }
 
-    public void Add(Card card)
+    public void Add(Cards.Types.Card card)
     {
         _cards.Add(card);
     }
     
-    public void Remove(Card card)
+    public void Remove(Cards.Types.Card card)
     {
         _cards.Remove(card);
     }
     
-    public Card Draw()
+    public Cards.Types.Card Draw()
     {
         if (_cards.Count == 0)
         {
@@ -52,7 +52,7 @@ public class Deck
     
     public int Size => _cards.Count;
     
-    public bool Contains(Card card)
+    public bool Contains(Cards.Types.Card card)
     {
         return _cards.Contains(card);
     }

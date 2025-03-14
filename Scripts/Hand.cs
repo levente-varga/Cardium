@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Cardium.Scripts.Cards;
+using Cardium.Scripts.Cards.Types;
 using Godot;
 
 namespace Cardium.Scripts;
@@ -16,6 +19,17 @@ public partial class Hand : Node2D
 	[Export] public Vector2 Origin = Vector2.Zero;
 	
 	public bool RightHanded = true;
+
+	private bool _enabled;
+	public bool Enabled
+	{
+		get => _enabled;
+		set
+		{
+			_enabled = value;
+			EnableCards(value);
+		}
+	}
 
 	private readonly List<Card> _cards = new();
 	private List<float> _cardAngles = new();
@@ -35,7 +49,7 @@ public partial class Hand : Node2D
 			0,
 			0,
 			GetViewport().GetVisibleRect().Size.X,
-			GetViewport().GetVisibleRect().Size.Y -400
+			GetViewport().GetVisibleRect().Size.Y / (3f / 2f)
 		);
 	}
 	
@@ -118,14 +132,14 @@ public partial class Hand : Node2D
 	{
 		return origin + GetPointOnCircle(radius, angle);
 	}
-
-
-	public void AddCard()
+	
+	
+	public void AddCard(Card card) => AddCard(card, _cards.Count);
+	public void AddCard(Card card, int index)
 	{
 		if (_cards.Count >= MaxHandSize) return;
-		var card = new HealCard();
 		_cardAngles.Add(315);
-		_cards.Add(card);
+		_cards.Insert(index, card);
 		AddChild(card);
 		PositionHand();
 		
@@ -133,14 +147,16 @@ public partial class Hand : Node2D
 		card.OnDragEvent += OnCardDrag;
 	}
 
-
-	private void RemoveCard() => RemoveCard(_cards.Count - 1);
-	private void RemoveCard(int i)
+	private void RemoveLastCard() => RemoveCard(_cards.Last());
+	private void RemoveCard(int index) => RemoveCard(_cards[index]);
+	private void RemoveCard(Card card)
 	{
-		if (_cards.Count == 0) return;
-		_cardAngles.RemoveAt(i);
-		_cards[i].QueueFree();
-		_cards.RemoveAt(i);
+		if (!_cards.Contains(card)) return;
+		_cardAngles.RemoveAt(_cards.IndexOf(card));
+		card.OnDragEndEvent -= OnCardDragEnd;
+		card.OnDragEvent -= OnCardDrag;
+		_cards.Remove(card);
+		card.QueueFree();
 		PositionHand();
 	}
 
@@ -149,27 +165,67 @@ public partial class Hand : Node2D
 	{
 		if (@event is InputEventKey { Pressed: true, KeyLabel: Key.P })
 		{
-			AddCard();
+			AddCard(_cards.Count % 2 == 0 ? new HealCard() : new HurlCard());
 		}
 		if (@event is InputEventKey { Pressed: true, KeyLabel: Key.O })
 		{
-			RemoveCard();
+			RemoveLastCard();
 		}
 	}
 
 	private void OnCardDrag(Card card, Vector2 mousePosition)
 	{
-		if (_playArea.HasPoint(mousePosition)) card.OnEnterPlayArea();
-		else card.OnExitPlayArea();
+		switch (card.InPlayArea)
+		{
+			case false when _playArea.HasPoint(mousePosition):
+				card.OnEnterPlayArea();
+				Utils.SpawnFallingLabel(GetTree(), card.GlobalPosition, "Entered play area");
+				break;
+			case true when !_playArea.HasPoint(mousePosition):
+				card.OnExitPlayArea();
+				Utils.SpawnFallingLabel(GetTree(), card.GlobalPosition, "Exited play area");
+				break;
+		}
 	}
 	
 	private void OnCardDragEnd(Card card, Vector2 mousePosition)
 	{
+		if (card.InPlayArea) card.OnExitPlayArea();
 		if (!_playArea.HasPoint(mousePosition)) return;
-		if (Player.Energy < card.Cost) return;
-		Player.SpendEnergy(card.Cost);
-		RemoveCard(_cards.IndexOf(card));
-		PositionHand();
-		Player.World.PlayCard(card);
+		if (Player.Energy < card.Cost)
+		{
+			Utils.SpawnFloatingLabel(GetTree(), Player.GlobalPosition, "Not enough energy!", color: Global.Purple);
+			return;
+		}
+		
+		card.OnEnterPlayArea();
+		PlayCard(card);
+	}
+
+	private async Task PlayCard(Card card)
+	{
+		Enabled = false;
+		var success = await Player.World.PlayCard(card);
+		Enabled = true;
+
+		if (success)
+		{
+			Player.SpendEnergy(card.Cost);
+			RemoveCard(card);
+			PositionHand();
+		}
+		else card.OnExitPlayArea();
+		
+		Utils.SpawnFloatingLabel(GetTree(), Player.GlobalPosition, "Play: " + (success ? "success" : "cancelled"));
+	}
+	
+	private void EnableCards(bool enable)
+	{
+		foreach (var card in _cards)
+		{
+			card.Enabled = enable;
+		}
+		
+		Utils.SpawnFallingLabel(GetTree(), Player.GlobalPosition, "Hand " + (enable ? "enabled" : "disabled"));
 	}
 }

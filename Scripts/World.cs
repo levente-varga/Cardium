@@ -83,8 +83,17 @@ public partial class World : Node2D
     
     public override void _Process(double delta)
     {
+	    DebugLabel1.Visible = Global.Debug;
+	    DebugLabel2.Visible = Global.Debug;
+	    DebugLabel3.Visible = Global.Debug;
+	    DebugLabel4.Visible = Global.Debug;
 	    DebugLabel3.Text = "Region: " + _region + "\n"
-		    + "Hovered cell: " + HoveredCell;
+	                       + "Hovered cell: " + HoveredCell + "\n"
+	                       + "Selection mode: " + _selectionMode + "\n"
+	                       + "Selection range: " + _selectionRange + "\n"
+	                       + "Selection origin: " + _selectionOrigin + "\n"
+	                       + "Selection confirmed: " + _selectionConfirmed + "\n"
+	                       + "Selection cancelled: " + _selectionCancelled + "\n";
 	    
 	    QueueRedraw();
     }
@@ -128,6 +137,7 @@ public partial class World : Node2D
 	    else if (@event is InputEventMouseButton { Pressed: true, ButtonIndex: MouseButton.Right })
 	    {
 		    _selectionMode = SelectionMode.None;
+		    _selectionCancelled = true;
 		    QueueRedraw();
 	    }
     }
@@ -473,7 +483,7 @@ public partial class World : Node2D
 			RemoveChild(loot);
 			loot.QueueFree();
 			// TODO: Add loot to player
-			Hand.AddCard();
+			Hand.AddCard(loot.Card);
 		}
 	}
 
@@ -589,6 +599,8 @@ public partial class World : Node2D
 	
 	public async Task<bool> PlayCard(Card card)
 	{
+		var success = true;
+		
 		switch (card)
 		{
 			case PlayerTargetingCard playerTargetingCard:
@@ -596,20 +608,21 @@ public partial class World : Node2D
 				break;
 			case EnemyTargetingCard enemyTargetingCard:
 				var enemy = await SelectEnemyTarget(enemyTargetingCard.Range, Player.Position);
-				if (enemy is null) return false;
-				enemyTargetingCard.OnPlay(Player, enemy);
+				if (enemy is null) success = false;
+				else enemyTargetingCard.OnPlay(Player, enemy);
 				break;
 			case InteractableTargetingCard interactableTargetingCard:
 				var interactable = await SelectInteractableTarget(interactableTargetingCard.Range, Player.Position);
-				if (interactable is null) return false;
-				interactableTargetingCard.OnPlay(Player, interactable);
+				if (interactable is null) success = false;
+				else interactableTargetingCard.OnPlay(Player, interactable);
 				break;
 			case LocationTargetingCard locationTargetingCard:
 				var position = await SelectLocationTarget(locationTargetingCard.Range, Player.Position);
-				if (position is null) return false;
-				locationTargetingCard.OnPlay(Player, position.Value, this);
+				if (position is null) success = false;
+				else locationTargetingCard.OnPlay(Player, position.Value, this);
 				break;
 		}
-		return true;
+		
+		return success;
 	}
 }

@@ -4,9 +4,9 @@ namespace Cardium.Scripts;
 
 public class Pile
 {
-    private readonly List<Card> _cards = new();
+    private readonly List<Cards.Types.Card> _cards = new();
 
-    public void Add(Card card)
+    public void Add(Cards.Types.Card card)
     {
         _cards.Add(card);
     }
@@ -16,14 +16,14 @@ public class Pile
         _cards.Clear();
     }
     
-    public void Remove(Card card)
+    public void Remove(Cards.Types.Card card)
     {
         _cards.Remove(card);
     }
     
     public int Size => _cards.Count;
     
-    public bool Contains(Card card)
+    public bool Contains(Cards.Types.Card card)
     {
         return _cards.Contains(card);
     }

@@ -44,17 +44,16 @@ public partial class Player : Entity
 			//return;
 		}
 
-		DebugLabel.Text = "";
-		if (Global.Debug)
-			DebugLabel.Text = $"Health: {Health} / {MaxHealth}\n"
-			                  + $"Energy: {Energy} / {MaxEnergy}\n"
-			                  + $"Position: {Position}\n"
-			                  + $"InCombat: {InCombat}\n"
-			                  + $"Turn: {_turnOngoing}\n"
-			                  + $"Range: {Range}\n"
-			                  + $"Vision: {Vision}\n"
-			                  + $"Damage: {Damage}\n"
-			                  + $"Armor: {Armor}\n";
+		DebugLabel.Visible = Global.Debug;
+		DebugLabel.Text = $"Health: {Health} / {MaxHealth}\n"
+		                  + $"Energy: {Energy} / {MaxEnergy}\n"
+		                  + $"Position: {Position}\n"
+		                  + $"InCombat: {InCombat}\n"
+		                  + $"Turn: {_turnOngoing}\n"
+		                  + $"Range: {Range}\n"
+		                  + $"Vision: {Vision}\n"
+		                  + $"Damage: {Damage}\n"
+		                  + $"Armor: {Armor}\n";
 		
 		base._Process(delta);
 	}
@@ -131,5 +130,10 @@ public partial class Player : Entity
 		{ 
 			await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
 		}
+	}
+	
+	public void EnableHand(bool enable)
+	{
+		_hand.Enabled = enable;
 	}
 }

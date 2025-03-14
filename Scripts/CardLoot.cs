@@ -4,7 +4,7 @@ namespace Cardium.Scripts;
 
 public partial class CardLoot : TileAlignedGameObject
 {
-    public Card Card;
+    public Cards.Types.Card Card;
 
     public override void _Ready()
     {
