@@ -476,8 +476,7 @@ public partial class World : Node2D
 			_loot.Remove(loot);
 			RemoveChild(loot);
 			loot.QueueFree();
-			// TODO: Add loot to player
-			Hand.AddCard(loot.Card);
+			Player.PickUpCard(loot.Card);
 		}
 	}
 

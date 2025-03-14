@@ -7,8 +7,8 @@ namespace Cardium.Scripts.Cards;
 public partial class HurlCard : LocationTargetingCard
 {
     public int Radius { get; protected set; } = 1;
-    
-    public override void _Ready()
+
+    public HurlCard()
     {
         Name = "Hurl";
         Description = "Deals 2 damage to all enemies in an area.";
@@ -17,7 +17,10 @@ public partial class HurlCard : LocationTargetingCard
         Radius = 1;
         Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Hurl.png");
         Type = CardType.Combat;
-        
+    }
+    
+    public override void _Ready()
+    {
         base._Ready();
     }
     

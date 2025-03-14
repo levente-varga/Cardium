@@ -16,16 +16,16 @@ public partial class Bonfire : Interactable
         base._Process(delta);
     }
 
-    public override void OnInteract(Entity source, Camera camera)
+    public override void OnInteract(Player player, Camera camera)
     {
-        base.OnInteract(source, camera);
+        base.OnInteract(player, camera);
         
         if (Interacted)
         {
             SpawnFloatingLabel("Rested", color: Global.White);
-            if (source.Health == source.MaxHealth) return;
-            var healAmount = source.MaxHealth - source.Health;
-            source.Heal(healAmount);
+            if (player.Health == player.MaxHealth) return;
+            var healAmount = player.MaxHealth - player.Health;
+            player.Heal(healAmount);
             return;
         }
         

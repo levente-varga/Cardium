@@ -16,9 +16,9 @@ public partial class Door : Interactable
         base._Process(delta);
     }
 
-    public override void OnInteract(Entity source, Camera camera)
+    public override void OnInteract(Player player, Camera camera)
     {
-        base.OnInteract(source, camera);
+        base.OnInteract(player, camera);
         
         if (Interacted) return;
         

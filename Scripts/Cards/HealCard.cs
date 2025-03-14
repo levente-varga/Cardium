@@ -5,14 +5,17 @@ namespace Cardium.Scripts.Cards;
 
 public partial class HealCard : PlayerTargetingCard
 {
-    public override void _Ready()
+    public HealCard()
     {
         Name = "Heal";
         Description = "Heals for 3 missing health.";
         Cost = 1;
         Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Heal.png");
         Type = CardType.Combat;
-        
+    }
+    
+    public override void _Ready()
+    {
         base._Ready();
     }
     

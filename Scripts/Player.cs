@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Cardium.Scripts.Cards.Types;
 using Godot;
 
 namespace Cardium.Scripts;
@@ -7,11 +8,11 @@ public partial class Player : Entity
 {
 	[Export] public World World;
 	[Export] public Label DebugLabel;
+	[Export] public Hand Hand;
 	
 	private Deck _combatDeck = new();
 	private Deck _actionDeck = new();
 	private Pile _discardPile = new();
-	private Hand _hand = new();
 	
 	private bool _nextToObject = false;
 	private bool _turnOngoing = false;
@@ -134,6 +135,11 @@ public partial class Player : Entity
 	
 	public void EnableHand(bool enable)
 	{
-		_hand.Enabled = enable;
+		Hand.Enabled = enable;
+	}
+	
+	public void PickUpCard(Card card)
+	{
+		Hand.AddCard(card);
 	}
 }

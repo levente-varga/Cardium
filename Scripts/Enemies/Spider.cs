@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Cardium.Scripts.Cards;
 using Godot;
 
 namespace Cardium.Scripts.Enemies;
@@ -21,6 +22,8 @@ public partial class Spider : Enemy
         BaseVision = 4;
         BaseRange = 1;
         Description = "A spider enemy.";
+        
+        Inventory.Add(new PushCard());
     }
     
     public override void _Process(double delta)

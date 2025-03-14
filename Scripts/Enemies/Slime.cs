@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Cardium.Scripts.Cards;
 using Godot;
 
 namespace Cardium.Scripts.Enemies;
@@ -22,6 +23,8 @@ public partial class Slime : Enemy
         CombatVision = 4;
         BaseRange = 1;
         Description = "A slime enemy.";
+        
+        Inventory.Add(new HealCard());
     }
     
     public override void _Process(double delta)
