@@ -115,9 +115,11 @@ public partial class World : Node2D
 		    {
 			    case SelectionMode.Enemy:
 				    if (IsEnemy(_selectedCell)) _selectionConfirmed = true;
+				    else Utils.SpawnFloatingLabel(GetTree(), Player.GlobalPosition, "Select an enemy!", color: Global.Red);
 				    break;
 			    case SelectionMode.Interactable:
 				    if (IsInteractable(_selectedCell)) _selectionConfirmed = true;
+				    else Utils.SpawnFloatingLabel(GetTree(), Player.GlobalPosition, "Select an object!", color: Global.Red);
 				    break;
 			    case SelectionMode.Location:
 				    _selectionConfirmed = true;
@@ -130,8 +132,12 @@ public partial class World : Node2D
 	    else if (@event is InputEventMouseButton { Pressed: true, ButtonIndex: MouseButton.Left })
 	    {
 		    if (_selectionMode == SelectionMode.None) return;
-		    
-		    if (_grid.IsInBoundsv(HoveredCell)) _selectedCell = HoveredCell;
+
+		    if (_grid.IsInBoundsv(HoveredCell))
+		    {
+			    _selectedCell = HoveredCell;
+			    _selectionConfirmed = false;
+		    }
 
 		    UpdatePath();
 		    QueueRedraw();

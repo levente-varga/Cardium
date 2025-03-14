@@ -177,6 +177,9 @@ public partial class Hand : Node2D
 			case InputEventKey { Pressed: true, KeyLabel: Key.Key4 }:
 				AddCard(new PushCard());
 				break;
+			case InputEventKey { Pressed: true, KeyLabel: Key.Key5 }: 
+				AddCard(new ChainCard());
+				break;
 		}
 	}
 
