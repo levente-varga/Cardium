@@ -6,7 +6,7 @@ namespace Cardium.Scripts.Cards;
 
 public partial class HurlCard : LocationTargetingCard
 {
-    public int Radius { get; protected set; } = 1;
+    public int Radius { get; protected set; }
 
     public HurlCard()
     {

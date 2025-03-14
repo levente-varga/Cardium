@@ -37,6 +37,7 @@ public partial class World : Node2D
 	[Export] public TileMapLayer EnemyGroupLayer;
 	[Export] public TileMapLayer LootLayer;
 	[Export] public TileMapLayer FogLayer;
+	[Export] public Overlay Overlay;
 	
 	private readonly List<Enemy> _enemies = new();
 	private readonly List<CardLoot> _loot = new();
@@ -96,6 +97,23 @@ public partial class World : Node2D
 	                       + "Selection origin: " + _selectionOrigin + "\n"
 	                       + "Selection confirmed: " + _selectionConfirmed + "\n"
 	                       + "Selection cancelled: " + _selectionCancelled + "\n";
+
+	    if (_selectionMode == SelectionMode.None)
+	    {
+		    Overlay.Tiles = new List<Overlay.OverlayTile>();
+	    }
+	    else {
+		    if (_selectedCard == null)
+		    {
+			    Overlay.Tiles = new List<Overlay.OverlayTile> { new () {Position = HoveredCell, Color = Colors.Red} };
+		    }
+		    else
+		    {
+			    Overlay.Tiles = _selectedCard.GetHighlightedTiles(Player, HoveredCell, this).Select(tile => 
+				    new Overlay.OverlayTile {Position = tile, Color = Colors.Red}).ToList();
+			    GD.Print("Selected card: " + _selectedCard + ", higlighted tiles: " + Overlay.Tiles.Count);
+		    }
+	    }
 	    
 	    QueueRedraw();
     }
@@ -152,20 +170,20 @@ public partial class World : Node2D
     
     public override void _Draw()
     {
-    	if (_end != null) DrawRect(new Rect2(_end.Value * _grid.CellSize, _grid.CellSize), Global.Yellow, false, 4);
+    	if (_end != null) DrawRect(new Rect2(Global.TileToWorld(_end.Value), Global.TileSize), Global.Yellow, false, 4);
 
 	    if (Global.Debug || _selectionMode != SelectionMode.None) {
 		    var color = _selectionConfirmed ? Colors.Green : Colors.Red;
-		    DrawRect(new Rect2(_selectedCell * _grid.CellSize, _grid.CellSize), color, false, 4);
+		    DrawRect(new Rect2(Global.TileToWorld(_selectedCell), Global.TileSize), color, false, 4);
 		    foreach (var tile in _selectedCard?.GetHighlightedTiles(Player, HoveredCell, this) ?? new List<Vector2I>())
 		    {
-			    DrawRect(new Rect2(tile * _grid.CellSize, _grid.CellSize), Colors.YellowGreen, false, 4);
+			    DrawRect(new Rect2(Global.TileToWorld(tile), Global.TileSize), Colors.YellowGreen, false, 4);
 		    }
 	    }
 	    
 	    if (Global.Debug)
 	    {
-		    DrawRect(new Rect2(HoveredCell * _grid.CellSize, _grid.CellSize),
+		    DrawRect(new Rect2(Global.TileToWorld(HoveredCell), Global.TileSize),
 			    Player.InRange(HoveredCell) ? Colors.Green : Colors.Orange);
 	    }
 
@@ -174,7 +192,7 @@ public partial class World : Node2D
     		for (var y = 0; y < _grid.Region.Size.Y; y++) {
     			var cell = new Vector2I(x, y) + _grid.Region.Position;
     			if (_grid.IsPointSolid(cell)) {
-    				//DrawRect(new Rect2(cell.X * _grid.CellSize.X, cell.Y * _grid.CellSize.Y, _grid.CellSize.X, _grid.CellSize.Y), Colors.Aquamarine);
+    				//DrawRect(new Rect2(Global.TileToWorld(cell), Global.TileSize), Colors.Aquamarine);
     			}
     		}
     	}
@@ -554,7 +572,6 @@ public partial class World : Node2D
 		_selectionOrigin = from;
 		_selectionCancelled = false;
 		_selectionConfirmed = false;
-		_selectedCard = null;
 	}
 
 	private async Task<Enemy?> SelectEnemyTarget(int range, Vector2I from)
@@ -608,7 +625,9 @@ public partial class World : Node2D
 	{
 		var success = true;
 		
-		if (card is TargetingCard targetingCard) _selectedCard = targetingCard;
+		_selectedCard = (TargetingCard?)card;
+		
+		GD.Print("Playing card: " + card.DisplayName + ", which is " + (_selectedCard == null ? "not " : "") + "a targeting card.");
 		
 		switch (card)
 		{
@@ -631,6 +650,8 @@ public partial class World : Node2D
 				else locationTargetingCard.OnPlay(Player, position.Value, this);
 				break;
 		}
+		
+		_selectedCard = null;
 		
 		return success;
 	}

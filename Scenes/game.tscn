@@ -1,10 +1,11 @@
-[gd_scene load_steps=10 format=4 uid="uid://cw3o4f0nr0f2v"]
+[gd_scene load_steps=11 format=4 uid="uid://cw3o4f0nr0f2v"]
 
 [ext_resource type="Script" path="res://Scripts/Hand.cs" id="1_3ixgw"]
 [ext_resource type="Script" path="res://Scripts/Camera.cs" id="3_evct5"]
 [ext_resource type="Script" path="res://Scripts/Player.cs" id="3_q31ct"]
 [ext_resource type="Script" path="res://Scripts/World.cs" id="4_ayy7p"]
 [ext_resource type="Texture2D" uid="uid://vre1mtm6rq0g" path="res://Assets/TileSets/colored-transparent.png" id="4_s82ru"]
+[ext_resource type="Script" path="res://Scripts/Overlay.cs" id="7_4aqu0"]
 [ext_resource type="Texture2D" uid="uid://cdescqx8vh087" path="res://Assets/TileSets/fog.png" id="11_b6upe"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_mdys3"]
@@ -1140,7 +1141,7 @@ offset_left = 960.0
 offset_right = 1000.0
 offset_bottom = 23.0
 
-[node name="World" type="Node2D" parent="." node_paths=PackedStringArray("Camera", "Player", "Hand", "DebugLabel1", "DebugLabel2", "DebugLabel3", "DebugLabel4", "GroundLayer", "DecorLayer", "WallLayer", "ObjectLayer", "EnemyLayer", "EnemyGroupLayer", "LootLayer", "FogLayer")]
+[node name="World" type="Node2D" parent="." node_paths=PackedStringArray("Camera", "Player", "Hand", "DebugLabel1", "DebugLabel2", "DebugLabel3", "DebugLabel4", "GroundLayer", "DecorLayer", "WallLayer", "ObjectLayer", "EnemyLayer", "EnemyGroupLayer", "LootLayer", "FogLayer", "Overlay")]
 z_index = -1
 script = ExtResource("4_ayy7p")
 Camera = NodePath("../Camera2D")
@@ -1158,6 +1159,7 @@ EnemyLayer = NodePath("EnemyLayer")
 EnemyGroupLayer = NodePath("EnemyGroupLayer")
 LootLayer = NodePath("LootLayer")
 FogLayer = NodePath("FogLayer")
+Overlay = NodePath("Overlay")
 
 [node name="GroundLayer" type="TileMapLayer" parent="World"]
 use_parent_material = true
@@ -1215,3 +1217,7 @@ tile_set = SubResource("TileSet_3rv6q")
 z_index = 4
 width = 4.0
 default_color = Color(0.956863, 0.705882, 0.105882, 1)
+
+[node name="Overlay" type="Node2D" parent="World"]
+z_index = 10
+script = ExtResource("7_4aqu0")
