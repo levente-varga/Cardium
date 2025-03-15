@@ -573,6 +573,9 @@ public partial class World : Node2D
 		_selectionCancelled = false;
 		_selectionConfirmed = false;
 	}
+	
+	public List<Enemy> GetEnemiesInRange(int range, Vector2I from) => _enemies.Where(enemy => Utils.ManhattanDistanceBetween(from, enemy.Position) <= range).ToList();
+	public List<Interactable> GetInteractablesInRange(int range, Vector2I from) => _interactables.Where(interactable => Utils.ManhattanDistanceBetween(from, interactable.Position) <= range).ToList();
 
 	private async Task<Enemy?> SelectEnemyTarget(int range, Vector2I from)
 	{

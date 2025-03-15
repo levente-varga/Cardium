@@ -1,3 +1,4 @@
+using System.Linq;
 using Cardium.Scripts.Cards.Types;
 using Godot;
 
@@ -5,6 +6,10 @@ namespace Cardium.Scripts.Cards;
 
 public partial class ChainCard : EnemyTargetingCard
 {
+    public int Damage { get; set; } = 1;
+    public int BounceRange { get; set; } = 3;
+    public int Bounces { get; set; } = 2;
+    
     public ChainCard()
     {
         DisplayName = "Chain";
@@ -17,6 +22,17 @@ public partial class ChainCard : EnemyTargetingCard
 
     public override void OnPlay(Player player, Enemy enemy, World world)
     {
+        var otherEnemies = world.GetEnemiesInRange(BounceRange, enemy.Position);
+
+        for (var i = 0; i < otherEnemies.Count && otherEnemies.Count < Bounces - 1; i++)
+        {
+            otherEnemies.AddRange(world.GetEnemiesInRange(BounceRange, otherEnemies[i].Position).Where(e => !otherEnemies.Contains(e)));
+        }
         
+        enemy.ReceiveDamage(player, Damage);
+        for (var i = 0; i < otherEnemies.Count && i < Bounces; i++)
+        {
+            otherEnemies[i].ReceiveDamage(player, Damage);
+        }
     }
 }
