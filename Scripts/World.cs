@@ -154,7 +154,7 @@ public partial class World : Node2D
 		    if (_grid.IsInBoundsv(HoveredCell))
 		    {
 			    _selectedCell = HoveredCell;
-			    _selectionConfirmed = false;
+			    _selectionConfirmed = true;
 		    }
 
 		    UpdatePath();
@@ -171,15 +171,6 @@ public partial class World : Node2D
     public override void _Draw()
     {
     	if (_end != null) DrawRect(new Rect2(Global.TileToWorld(_end.Value), Global.TileSize), Global.Yellow, false, 4);
-
-	    if (Global.Debug || _selectionMode != SelectionMode.None) {
-		    var color = _selectionConfirmed ? Colors.Green : Colors.Red;
-		    DrawRect(new Rect2(Global.TileToWorld(_selectedCell), Global.TileSize), color, false, 4);
-		    foreach (var tile in _selectedCard?.GetHighlightedTiles(Player, HoveredCell, this) ?? new List<Vector2I>())
-		    {
-			    DrawRect(new Rect2(Global.TileToWorld(tile), Global.TileSize), Colors.YellowGreen, false, 4);
-		    }
-	    }
 	    
 	    if (Global.Debug)
 	    {
