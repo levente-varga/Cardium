@@ -6,8 +6,8 @@ namespace Cardium.Scripts.Cards;
 
 public partial class ChainCard : EnemyTargetingCard
 {
-    public int Damage { get; set; } = 1;
-    public int BounceRange { get; set; } = 3;
+    public int Damage { get; set; } = 2;
+    public int BounceRange { get; set; } = 2;
     public int Bounces { get; set; } = 2;
     
     public ChainCard()

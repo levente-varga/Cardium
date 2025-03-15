@@ -5,6 +5,8 @@ namespace Cardium.Scripts.Cards;
 
 public partial class SmiteCard : EnemyTargetingCard
 {
+    public int Damage { get; set; } = 4;
+    
     public SmiteCard()
     {
         DisplayName = "Smite";
@@ -17,6 +19,6 @@ public partial class SmiteCard : EnemyTargetingCard
     
     public override void OnPlay(Player player, Enemy target, World world)
     {
-        target.ReceiveDamage(player, 3);
+        target.ReceiveDamage(player, Damage);
     }
 }
