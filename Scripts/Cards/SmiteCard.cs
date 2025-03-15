@@ -3,7 +3,7 @@ using Godot;
 
 namespace Cardium.Scripts.Cards;
 
-public partial class SmiteCard : LocationTargetingCard
+public partial class SmiteCard : EnemyTargetingCard
 {
     public SmiteCard()
     {
@@ -15,11 +15,8 @@ public partial class SmiteCard : LocationTargetingCard
         Type = CardType.Combat;
     }
     
-    public override void OnPlay(Player player, Vector2I position, World world)
+    public override void OnPlay(Player player, Enemy target, World world)
     {
-        if (world.GetEnemyAt(position) is not null)
-        {
-            world.GetEnemyAt(position)?.ReceiveDamage(player, 3);
-        }
+        target.ReceiveDamage(player, 3);
     }
 }

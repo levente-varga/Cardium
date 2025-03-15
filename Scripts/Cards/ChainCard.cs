@@ -15,7 +15,7 @@ public partial class ChainCard : EnemyTargetingCard
         Type = CardType.Combat;
     }
 
-    public override void OnPlay(Player player, Enemy enemy)
+    public override void OnPlay(Player player, Enemy enemy, World world)
     {
         
     }

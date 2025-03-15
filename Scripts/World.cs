@@ -637,12 +637,12 @@ public partial class World : Node2D
 			case EnemyTargetingCard enemyTargetingCard:
 				var enemy = await SelectEnemyTarget(enemyTargetingCard.Range, Player.Position);
 				if (enemy is null) success = false;
-				else enemyTargetingCard.OnPlay(Player, enemy);
+				else enemyTargetingCard.OnPlay(Player, enemy, this);
 				break;
 			case InteractableTargetingCard interactableTargetingCard:
 				var interactable = await SelectInteractableTarget(interactableTargetingCard.Range, Player.Position);
 				if (interactable is null) success = false;
-				else interactableTargetingCard.OnPlay(Player, interactable);
+				else interactableTargetingCard.OnPlay(Player, interactable, this);
 				break;
 			case LocationTargetingCard locationTargetingCard:
 				var position = await SelectLocationTarget(locationTargetingCard.Range, Player.Position);

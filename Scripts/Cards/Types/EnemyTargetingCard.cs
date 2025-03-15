@@ -2,6 +2,6 @@ namespace Cardium.Scripts.Cards.Types;
 
 public partial class EnemyTargetingCard : TargetingCard
 {
-    public virtual void OnPlay(Player player, Enemy target) {}
+    public virtual void OnPlay(Player player, Enemy target, World world) {}
 
 }
