@@ -16,6 +16,8 @@ public partial class Player : Entity
 	
 	private bool _nextToObject = false;
 	private bool _turnOngoing = false;
+
+	public bool CanMove => Hand.State == Hand.HandState.Idle && (!InCombat || InCombat && _turnOngoing);
 	
 	public override void _Ready()
 	{
@@ -80,7 +82,7 @@ public partial class Player : Entity
 			GetTree().Quit();
 		}
 		
-		if (InCombat && !_turnOngoing) return;
+		if (!CanMove) return;
 		
 		if (InputMap.EventIsAction(@event, "Right"))
 		{

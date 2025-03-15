@@ -10,6 +10,8 @@ namespace Cardium.Scripts;
 
 public partial class Hand : Node2D
 {
+	public enum HandState { Idle, Dragging, Playing }
+	
 	[Export] public Player Player;
 	[Export] public float HandRadius = 1000f;
 	[Export] public float HandHeight = 64;
@@ -19,6 +21,7 @@ public partial class Hand : Node2D
 	[Export] public Vector2 Origin = Vector2.Zero;
 	
 	public bool RightHanded = true;
+	public HandState State { get; private set; }
 
 	private bool _enabled;
 	public bool Enabled
@@ -185,6 +188,7 @@ public partial class Hand : Node2D
 
 	private void OnCardDrag(Card card, Vector2 mousePosition)
 	{
+		State = HandState.Dragging;
 		switch (card.InPlayArea)
 		{
 			case false when _playArea.HasPoint(mousePosition):
@@ -201,12 +205,17 @@ public partial class Hand : Node2D
 	private void OnCardDragEnd(Card card, Vector2 mousePosition)
 	{
 		if (card.InPlayArea) card.OnExitPlayArea();
+
+		State = HandState.Idle;
+		
 		if (!_playArea.HasPoint(mousePosition)) return;
 		if (Player.Energy < card.Cost)
 		{
 			Utils.SpawnFloatingLabel(GetTree(), Player.GlobalPosition, "Not enough energy!", color: Global.Purple);
 			return;
 		}
+		
+		State = HandState.Playing;
 		
 		card.OnEnterPlayArea();
 		PlayCard(card);
@@ -226,7 +235,9 @@ public partial class Hand : Node2D
 		}
 		else card.OnExitPlayArea();
 		
-		Utils.SpawnFloatingLabel(GetTree(), Player.GlobalPosition, "Play: " + (success ? "success" : "cancelled"));
+		if (!success) Utils.SpawnFloatingLabel(GetTree(), Player.GlobalPosition, "Cancelled");
+		
+		State = HandState.Idle;
 	}
 	
 	private void EnableCards(bool enable)
