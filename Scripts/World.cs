@@ -128,6 +128,17 @@ public partial class World : Node2D
 	    }
 	    else if (InputMap.EventIsAction(@event, "Select") && @event.IsPressed())
 	    {
+		    
+	    }
+	    else if (@event is InputEventMouseButton { Pressed: true, ButtonIndex: MouseButton.Left })
+	    {
+		    if (_selectionMode == SelectionMode.None) return;
+
+		    if (_grid.IsInBoundsv(HoveredCell))
+		    {
+			    _selectedCell = HoveredCell;
+		    }
+		    
 		    if (Utils.ManhattanDistanceBetween(_selectionOrigin, _selectedCell) > _selectionRange) return;
 		    switch (_selectionMode)
 		    {
@@ -143,18 +154,8 @@ public partial class World : Node2D
 				    _selectionConfirmed = true;
 				    break;
 			    case SelectionMode.None:
-				default:
-					break;
-		    }
-	    }
-	    else if (@event is InputEventMouseButton { Pressed: true, ButtonIndex: MouseButton.Left })
-	    {
-		    if (_selectionMode == SelectionMode.None) return;
-
-		    if (_grid.IsInBoundsv(HoveredCell))
-		    {
-			    _selectedCell = HoveredCell;
-			    _selectionConfirmed = true;
+			    default:
+				    break;
 		    }
 
 		    UpdatePath();
