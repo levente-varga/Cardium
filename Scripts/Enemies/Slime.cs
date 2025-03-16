@@ -10,7 +10,7 @@ public partial class Slime : Enemy
     {
         base._Ready();
         
-        SetAnimation("idle", GD.Load<Texture2D>("res://assets/Animations/Slime.png"), 8, 12);
+        SetAnimation("idle", GD.Load<Texture2D>("res://Assets/Animations/Slime.png"), 8, 12);
         Name = "Slime";
         MaxHealth = 3;
         Health = MaxHealth;

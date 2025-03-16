@@ -27,7 +27,7 @@ public partial class Ranger : Enemy
         
         DebugLabel = GetNode<Label>("/root/Root/Camera2D/CanvasLayer/Label4");
         
-        SetStillFrame(GD.Load<Texture2D>("res://assets/Sprites/player.png"));
+        SetStillFrame(GD.Load<Texture2D>("res://Assets/Sprites/player.png"));
     }
 
     protected override async Task Turn(Player player, World world)
