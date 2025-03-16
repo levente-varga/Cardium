@@ -190,6 +190,8 @@ public class CombatManager
 
     private void RemoveEnemyFromCombat(Enemy enemy)
     {
+        if (!enemy.InCombat) return;
+        
         _turnOrder.Remove(enemy);
         enemy.InCombat = false;
 
