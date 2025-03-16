@@ -78,22 +78,27 @@ public class CombatManager
 
     private async void AdvanceTurn()
     {
-        _currentTurnEntity ??= _turnOrder.FirstOrDefault();
-
-        if (_currentTurnEntity is null)
+        _currentTurnEntity = _turnOrder.FirstOrDefault();
+     
+        GD.Print("Starting turn for " + _currentTurnEntity?.Name);
+        GD.Print("Turn order: " + string.Join(", ", _turnOrder.Select(e => e.Name)));
+        
+        UpdateDebugLabel();
+        
+        if (_currentTurnEntity is null || EnemiesInCombat.Count == 0)
         {
             EndCombat();
             return;
         }
         
-        GD.Print(_currentTurnEntity.Name + " finished their turn.");
-        
-        _turnOrder.Remove(_currentTurnEntity);
-        _turnOrder.Add(_currentTurnEntity);
-        _currentTurnEntity = _turnOrder.FirstOrDefault();
-        UpdateDebugLabel();
+        await _currentTurnEntity.OnTurn(_player, _world);
 
-        await (_currentTurnEntity?.OnTurn(_player, _world) ?? Task.CompletedTask);
+        if (_currentTurnEntity is not null)
+        {
+            _turnOrder.Remove(_currentTurnEntity);
+            _turnOrder.Add(_currentTurnEntity);
+            GD.Print(_currentTurnEntity.Name + " finished their turn.");
+        }
         
         AdvanceTurn();
     }
@@ -199,7 +204,7 @@ public class CombatManager
         {
             foreach (var e in Enemies.Where(e => e.GroupId == enemy.GroupId))
             {
-                RemoveEnemyFromCombat(e);
+                if (CanLeaveCombat(e)) RemoveEnemyFromCombat(e);
             }
         }
 
@@ -223,9 +228,9 @@ public class CombatManager
         
         if (enemy.GroupId is not null)
         {
-            foreach (var e in Enemies.Where(e => !e.InCombat && e.GroupId == enemy.GroupId))
+            foreach (var e in Enemies.Where(e => e.GroupId == enemy.GroupId))
             {
-                AddEnemyToCombat(enemy);
+                AddEnemyToCombat(e);
             }
         }
         
