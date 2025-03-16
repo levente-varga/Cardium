@@ -45,7 +45,18 @@ public partial class Entity : TileAlignedGameObject
     public float Luck => BaseLuck + TempLuck;
 
     public string Description;
-    public bool InCombat { get; private set; }
+    private bool _inCombat;
+    public bool InCombat
+    {
+        get => _inCombat;
+        set 
+        {
+            _inCombat = value;
+            HealthBar.Visible = InCombat;
+            EnergyBar.Visible = InCombat;
+            if (!InCombat) TurnMarker.Visible = false;
+        }
+    }
     
     public List<Card> Inventory = new();
     public List<Buff> Buffs = new();
@@ -53,16 +64,6 @@ public partial class Entity : TileAlignedGameObject
     public HealthBar HealthBar;
     public EnergyBar EnergyBar;
     public TurnMarker TurnMarker;
-    
-    public delegate void OnEnterCombatDelegate(Entity entity);
-    public event OnEnterCombatDelegate OnEnterCombatEvent;
-    
-    public delegate void OnLeaveCombatDelegate(Entity entity);
-    public event OnLeaveCombatDelegate OnLeaveCombatEvent;
-
-    // TODO: could be removed, and only await used in CombatManager
-    public delegate void OnTurnFinishedDelegate(Entity entity);
-    public event OnTurnFinishedDelegate OnTurnFinishedEvent;
     
     private Vector2I _previousPosition;
     
@@ -75,7 +76,6 @@ public partial class Entity : TileAlignedGameObject
         SetupHealthBar();
         SetupEnergyBar();
         SetupTurnMarker();
-        SetInCombatStatus(false);
     }
 
     public override void _Process(double delta)
@@ -89,6 +89,7 @@ public partial class Entity : TileAlignedGameObject
         AddChild(HealthBar);
         HealthBar.MaxHealth = MaxHealth;
         HealthBar.Health = Health;
+        HealthBar.Visible = false;
     }
 
     private void SetupEnergyBar()
@@ -97,6 +98,7 @@ public partial class Entity : TileAlignedGameObject
         AddChild(EnergyBar);
         EnergyBar.MaxEnergy = MaxEnergy;
         EnergyBar.Energy = Energy;
+        EnergyBar.Visible = false;
     }
     
     private void SetupTurnMarker()
@@ -130,7 +132,6 @@ public partial class Entity : TileAlignedGameObject
     protected virtual void OnDeath(Entity source)
     {
         Health = 0;
-        OnLeaveCombatEvent?.Invoke(this);
     }
 
     public bool InRange(Vector2I position)
@@ -141,16 +142,6 @@ public partial class Entity : TileAlignedGameObject
     public bool InVision(Vector2I position)
     {
         return ManhattanDistanceTo(position) <= BaseVision;
-    }
-
-    public void OnCombatStart()
-    {
-        SetInCombatStatus(true);
-    }
-    
-    public void OnCombatEnd()
-    {
-        SetInCombatStatus(false);
     }
     
     protected void OnTurnStart() 
@@ -164,26 +155,7 @@ public partial class Entity : TileAlignedGameObject
     protected void OnTurnEnd()
     {
         TurnMarker.Visible = false;
-        OnTurnFinishedEvent?.Invoke(this);
         UpdateBuffsOnEndOfTurn();
-    }
-
-    protected void SetInCombatStatus(bool inCombat)
-    {
-        InCombat = inCombat;
-        if (InCombat)
-        {
-            HealthBar.Visible = true;
-            EnergyBar.Visible = true;
-            OnEnterCombatEvent?.Invoke(this);
-        }
-        else
-        {
-            HealthBar.Visible = false;
-            EnergyBar.Visible = false;
-            TurnMarker.Visible = false;
-            OnLeaveCombatEvent?.Invoke(this);
-        }
     }
 
     protected async Task Move(Direction direction, World world, bool useEnergy = true)

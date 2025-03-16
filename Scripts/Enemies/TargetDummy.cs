@@ -15,8 +15,8 @@ public partial class TargetDummy : Enemy
         MaxEnergy = 0;
         Energy = MaxEnergy;
         BaseArmor = 0;
-        BaseVision = 3;
-        CombatVision = 3;
+        BaseVision = 1;
+        CombatVision = 2;
         SetStillFrame(GD.Load<Texture2D>("res://Assets/Sprites/player.png"));
     }
 

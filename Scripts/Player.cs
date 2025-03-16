@@ -67,11 +67,11 @@ public partial class Player : Entity
 		
 		if (InputMap.EventIsAction(@event, "Interact"))
 		{
-			Interact();
+			
 		}
 		else if (InputMap.EventIsAction(@event, "Use"))
 		{
-			Attack();
+			
 		}
 		else if (InputMap.EventIsAction(@event, "Reset"))
 		{
@@ -104,11 +104,6 @@ public partial class Player : Entity
 		{
 			Energy--;
 		}
-	}
-	
-	public void Attack()
-	{
-		World.Attack(Position + Vector2I.Up, this);
 	}
 
 	public void Interact()

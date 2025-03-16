@@ -8,9 +8,19 @@ public partial class Enemy : Entity
     protected Path Path;
     public int? GroupId;
     public int CombatVision;
-    
+    public bool SeesPlayer { get; protected set; }
+
     public delegate void OnDeathDelegate(Enemy enemy);
     public event OnDeathDelegate OnDeathEvent;
+    
+    public delegate void OnPlayerSpottedDelegate(Enemy enemy);
+    public event OnPlayerSpottedDelegate OnPlayerSpottedEvent;
+    
+    public delegate void OnPlayerLostDelegate(Enemy enemy);
+    public event OnPlayerLostDelegate OnPlayerLostEvent;
+    
+    public delegate void OnDamaged(Enemy enemy);
+    public event OnDamaged OnDamagedEvent;
     
     public override void _Ready()
     {
@@ -74,6 +84,8 @@ public partial class Enemy : Entity
     {
         GD.Print(Name + " received " + damage + " damage from " + source.Name + ". Current health: " + Health + "/" + MaxHealth);
         
+        OnDamagedEvent?.Invoke(this);
+        
         base.ReceiveDamage(source, damage);
     }
     
@@ -94,19 +106,20 @@ public partial class Enemy : Entity
         OnDeathEvent?.Invoke(this);
     }
 
-    public void OnPlayerMove(TileAlignedGameObject entity, Vector2I oldPosition, Vector2I newPosition)
+    public void OnPlayerMove(Player player, Vector2I oldPosition, Vector2I newPosition, CombatManager manager)
     {
-        var player = entity as Player;
-        if (InVision(newPosition))
+        switch (SeesPlayer)
         {
-            if (InCombat) return;
-            SetInCombatStatus(true);
-            SpawnFloatingLabel("Spotted!", color: Global.Red, lifetimeMillis: 2000);
-            player?.OnCombatStart();
-        }
-        else if (InCombat && !InCombatVision(newPosition))
-        {
-            SetInCombatStatus(false);
+            case false when InVision(newPosition):
+                SeesPlayer = true;
+                OnPlayerSpottedEvent?.Invoke(this);
+                SpawnFloatingLabel("Spotted!", color: Global.Red, lifetimeMillis: 2000);
+                break;
+            case true when !InCombatVision(newPosition):
+                SeesPlayer = false;
+                OnPlayerLostEvent?.Invoke(this);
+                SpawnFloatingLabel("Lost!", color: Global.Red, lifetimeMillis: 2000);
+                break;
         }
     }
 }

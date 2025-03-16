@@ -39,7 +39,6 @@ public partial class World : Node2D
 	[Export] public TileMapLayer FogLayer;
 	[Export] public Overlay Overlay;
 	
-	private readonly List<Enemy> _enemies = new();
 	private readonly List<CardLoot> _loot = new();
 	private readonly List<Interactable> _interactables = new();
     private readonly List<TileMapLayer> _layers = new();
@@ -64,7 +63,8 @@ public partial class World : Node2D
     public override void _Ready()
     {
 	    //Input.MouseMode = Input.MouseModeEnum.Hidden;
-		    
+	    _combatManager = new CombatManager(Player, this, DebugLabel1);
+
 	    SetupLayers();
 	    SetupRegion();
 	    SetupFogOfWar();
@@ -75,13 +75,8 @@ public partial class World : Node2D
 	    SpawnEnemies();
 	    
 	    Player.OnMoveEvent += OnPlayerMove;
-	    Player.OnNudgeEvent += OnNudge;
-	    Player.OnEnterCombatEvent += entity => { Camera.Focus = true; };
-	    Player.OnLeaveCombatEvent += entity => { Camera.Focus = false; };
 	    
 	    Camera.JumpToTarget();
-	    
-	    _combatManager = new CombatManager(Player, this, DebugLabel1);
     }
     
     public override void _Process(double delta)
@@ -275,7 +270,7 @@ public partial class World : Node2D
 	    ObjectLayer.GetCellTileData(position + Vector2I.Left) != null ||
 	    ObjectLayer.GetCellTileData(position + Vector2I.Right) != null;
     
-    public Enemy? GetEnemyAt(Vector2I position) => _enemies.FirstOrDefault(enemy => enemy.Position == position);
+    public Enemy? GetEnemyAt(Vector2I position) => _combatManager.Enemies.FirstOrDefault(enemy => enemy.Position == position);
     public Interactable? GetInteractableAt(Vector2I position) => _interactables.FirstOrDefault(interactable => interactable.Position == position);
     
     public bool IsEmpty(Vector2I position) => 
@@ -304,76 +299,14 @@ public partial class World : Node2D
 	    _line.Points = _grid.GetPointPath(Player.Position, _end.Value);
     }
 
-    private void OnPlayerMove(TileAlignedGameObject source, Vector2I oldPosition, Vector2I newPosition)
+    private void OnPlayerMove(Vector2I oldPosition, Vector2I newPosition)
     {
 	    PickUpLoot();
 	    UpdatePath();
 	    QueueRedraw();
     }
-    
-    private void OnNudge(TileAlignedGameObject source, Vector2I position)
-	{
-		Interact(position);
-		Attack(position, Player);
-	}
-    
-    private void OnEnemyDeath(Enemy enemy)
-	{
-		GD.Print(enemy.Name + " died!");
-	    _enemies.Remove(enemy);
-	    Player.OnMoveEvent -= enemy.OnPlayerMove;
-	    enemy.OnNudgeEvent -= OnNudge;
-	    enemy.OnDeathEvent -= OnEnemyDeath;
-	    enemy.OnEnterCombatEvent -= AddEnemyToCombat;
-	    RemoveChild(enemy);
-	    enemy.QueueFree();
-	    _grid.SetPointSolid(enemy.Position, false);
 
-	    foreach (var card in enemy.Inventory)
-	    {
-		    var loot = new CardLoot(card);
-		    loot.SetPosition(enemy.Position);
-		    _loot.Add(loot);
-		    AddChild(loot);
-	    }
-	}
-
-    public void Attack(Entity target, Entity source)
-    {
-	    GD.Print(source.Name + " attacked " + target.Name + " for " + source.Damage + " damage!");
-	    target.ReceiveDamage(source, source.Damage);
-	    
-	    Camera.Shake(6 * source.Damage);
-    }
-    
-    public void Attack(Vector2I position, Entity source)
-	{
-	    var enemy = GetEnemyAt(position);
-	    if (enemy == null) return;
-	    
-	    Attack(enemy, source);
-	}
-    
-    private void AddEnemyToCombat(Entity entity)
-	{
-		var enemy = (Enemy)entity;
-		
-	    _combatManager.EnterCombat(enemy);
-	    if (enemy.GroupId is not null)
-	    {
-		    foreach (var e in _enemies)
-		    {
-			    if (!e.InCombat && e.GroupId == enemy.GroupId)
-			    {
-				    e.OnCombatStart();
-			    }
-		    }
-	    }
-	    
-	    GD.Print(entity.Name + " entered combat.");
-	}
-
-	private void OnEntityMove(TileAlignedGameObject source, Vector2I oldPosition, Vector2I newPosition)
+	public void OnEntityMove(Vector2I oldPosition, Vector2I newPosition)
 	{
 		_grid.SetPointSolid(oldPosition, false);
 		_grid.SetPointSolid(newPosition, true);
@@ -387,15 +320,24 @@ public partial class World : Node2D
 	private void SpawnEnemy(Enemy enemy, Vector2I position)
 	{
 		if (!IsEmpty(position)) return;
-		enemy.OnDeathEvent += OnEnemyDeath;
-		enemy.OnEnterCombatEvent += AddEnemyToCombat;
-		enemy.OnNudgeEvent += OnNudge;
-		enemy.OnMoveEvent += OnEntityMove;
-		Player.OnMoveEvent += enemy.OnPlayerMove;
 		AddChild(enemy);
+		_combatManager.AddEnemy(enemy);
 		enemy.SetPosition(position);
 		_grid.SetPointSolid(position);
-		_enemies.Add(enemy);
+	}
+
+	public void KillEnemy(Enemy enemy)
+	{
+		RemoveChild(enemy);
+		enemy.QueueFree();
+		_grid.SetPointSolid(enemy.Position, false);
+
+		foreach (var loot in enemy.Inventory.Select(card => new CardLoot(card)))
+		{
+			loot.SetPosition(enemy.Position);
+			_loot.Add(loot);
+			AddChild(loot);
+		}
 	}
 	
     private void SpawnInteractable(Interactable interactable, Vector2I position)
@@ -566,7 +508,7 @@ public partial class World : Node2D
 		_selectionConfirmed = false;
 	}
 	
-	public List<Enemy> GetEnemiesInRange(int range, Vector2I from) => _enemies.Where(enemy => Utils.ManhattanDistanceBetween(from, enemy.Position) <= range).ToList();
+	public List<Enemy> GetEnemiesInRange(int range, Vector2I from) => _combatManager.Enemies.Where(enemy => Utils.ManhattanDistanceBetween(from, enemy.Position) <= range).ToList();
 	public List<Interactable> GetInteractablesInRange(int range, Vector2I from) => _interactables.Where(interactable => Utils.ManhattanDistanceBetween(from, interactable.Position) <= range).ToList();
 
 	private async Task<Enemy?> SelectEnemyTarget(int range, Vector2I from)
@@ -621,8 +563,6 @@ public partial class World : Node2D
 		var success = true;
 		
 		_selectedCard = (TargetingCard?)card;
-		
-		GD.Print("Playing card: " + card.DisplayName + ", which is " + (_selectedCard == null ? "not " : "") + "a targeting card.");
 		
 		switch (card)
 		{

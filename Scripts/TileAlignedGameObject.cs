@@ -16,10 +16,10 @@ public partial class TileAlignedGameObject : AnimatedSprite2D
     public new Vector2I Position { get; set; }
     private Vector2I _previousPosition;
     
-    public delegate void OnMoveDelegate(TileAlignedGameObject source, Vector2I oldPosition, Vector2I newPosition);
+    public delegate void OnMoveDelegate(Vector2I oldPosition, Vector2I newPosition);
     public event OnMoveDelegate OnMoveEvent;
     
-    public delegate void OnNudgeDelegate(TileAlignedGameObject source, Vector2I position);
+    public delegate void OnNudgeDelegate(Vector2I position);
     public event OnNudgeDelegate OnNudgeEvent;
 
     public override void _Ready()
@@ -41,7 +41,7 @@ public partial class TileAlignedGameObject : AnimatedSprite2D
 
         if (_previousPosition != Position)
         {
-            OnMoveEvent?.Invoke(this, _previousPosition, Position);
+            OnMoveEvent?.Invoke(_previousPosition, Position);
             _previousPosition = Position;
         }
     }
@@ -54,29 +54,26 @@ public partial class TileAlignedGameObject : AnimatedSprite2D
 
     protected void SetStillFrame(Texture2D texture)
     {
-        // Create a new SpriteFrames resource
         var frames = new SpriteFrames();
         frames.AddAnimation("still");
         frames.SetAnimationLoop("still", false);
 
-        // Add a single frame
         frames.AddFrame("still", texture);
 
-        // Assign the SpriteFrames to the AnimatedSprite2D
         SpriteFrames = frames;
-        Play("still", 0); // Not necessary, but ensures it stays on this frame
+        Play("still", 0);
     }
 
     protected void SetAnimation(string name, Texture2D spriteSheet, int frames, double fps, bool autoPlay = true, bool loop = true)
     {
         var spriteFrames = new SpriteFrames();
-        spriteFrames.AddAnimation(name); // Animation name
+        spriteFrames.AddAnimation(name);
         spriteFrames.SetAnimationLoop(name, loop);
         spriteFrames.SetAnimationSpeed(name, fps);
 
         var frameSize = Global.SpriteSize;
 
-        for (var i = 0; i < frames; i++) // 4 frames
+        for (var i = 0; i < frames; i++)
         {
             var region = new Rect2I(i * frameSize.X, 0, frameSize.X, frameSize.Y);
             
@@ -116,7 +113,7 @@ public partial class TileAlignedGameObject : AnimatedSprite2D
     protected void Nudge(Direction direction)
     {
         base.Position += DirectionToVector(direction) * Global.TileSize / 8;
-        OnNudgeEvent?.Invoke(this, Position + DirectionToVector(direction));
+        //OnNudgeEvent?.Invoke(Position + DirectionToVector(direction));
     }
 
     public void Blink()

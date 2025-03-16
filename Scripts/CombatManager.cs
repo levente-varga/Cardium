@@ -1,4 +1,7 @@
+#nullable enable
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Godot;
 
 namespace Cardium.Scripts;
@@ -7,74 +10,32 @@ public class CombatManager
 {
     private readonly World _world;
     private readonly Player _player;
-    private readonly List<Enemy> _enemiesInCombat = new();
+    public readonly List<Enemy> Enemies = new();
+    public List<Enemy> EnemiesInCombat => Enemies.Where(e => e.InCombat).ToList();
     private readonly Label _debugLabel;
     
     private readonly List<Entity> _turnOrder = new();
-    private Entity _currentTurnEntity;
-
+    private Entity? _currentTurnEntity;
+    
+    public bool CombatOngoing => EnemiesInCombat.Count > 0;
+    
     public CombatManager(Player player, World world, Label debugLabel)
     {
         _player = player;
         _world = world;
         _debugLabel = debugLabel;
-        _player.OnTurnFinishedEvent += OnTurnFinished;
-
-        UpdateDebugLabel();
-    }
-    
-    public void EnterCombat(Enemy enemy)
-    {
-        if (_enemiesInCombat.Count == 0)
-        {
-            StartCombat();
-        }
-        
-        if (!_enemiesInCombat.Contains(enemy))
-        {
-            _enemiesInCombat.Add(enemy);
-            _turnOrder.Add(enemy);
-            enemy.OnTurnFinishedEvent += OnTurnFinished;
-            enemy.OnLeaveCombatEvent += OnLeaveCombat;
-        }
+        _player.OnMoveEvent += OnPlayerMove;
 
         UpdateDebugLabel();
     }
 
-    private void OnTurnFinished(Entity entity)
+    private void OnPlayerMove(Vector2I oldPos, Vector2I newPos)
     {
-        if (entity != _currentTurnEntity)
+        foreach (var enemy in Enemies)
         {
-            GD.Print("[ANOMALY] " + entity.Name + " finished their turn out of order.");
-            return;
-        }
-        GD.Print(entity.Name + " finished their turn.");
-        
-        _turnOrder.Remove(entity);
-        _turnOrder.Add(entity);
-        _currentTurnEntity = _turnOrder[0];
-        _currentTurnEntity.OnTurn(_player, _world);
-
-        UpdateDebugLabel();
-    }
-    
-    private void OnLeaveCombat(Entity entity)
-    {
-        _turnOrder.Remove(entity);
-        _enemiesInCombat.Remove(entity as Enemy);
-        entity.OnTurnFinishedEvent -= OnTurnFinished;
-
-        if (_enemiesInCombat.Count == 0)
-        {
-            EndCombat();
-            return;
+            enemy.OnPlayerMove(_player, oldPos, newPos, this);
         }
         
-        if (entity != _currentTurnEntity) return;
-        
-        _currentTurnEntity = _turnOrder[0];
-        _currentTurnEntity.OnTurn(_player, _world);
-
         UpdateDebugLabel();
     }
     
@@ -92,8 +53,8 @@ public class CombatManager
         {
             _debugLabel.Text += "\n" + entity.Name;
         }
-        _debugLabel.Text += "\n\nEnemies in combat: " + _enemiesInCombat.Count;
-        foreach (var entity in _enemiesInCombat)
+        _debugLabel.Text += "\n\nEnemies in combat: " + EnemiesInCombat.Count;
+        foreach (var entity in EnemiesInCombat)
         {
             _debugLabel.Text += "\n" + entity.Name;
         }
@@ -105,19 +66,170 @@ public class CombatManager
         {
             GD.Print("[ANOMALY] Player is already in the turn order on combat start.");
         }
-        else
-        {
-            _turnOrder.Add(_player);
-        }
-        _currentTurnEntity = _player;
-        _player.OnTurn(_player, _world);
+        
+        _world.Camera.Focus = true;
+        
+        _turnOrder.Add(_player);
+        _player.InCombat = true;
+        AdvanceTurn();
+        
         UpdateDebugLabel();
     }
 
+    private async void AdvanceTurn()
+    {
+        _currentTurnEntity ??= _turnOrder.FirstOrDefault();
+
+        if (_currentTurnEntity is null)
+        {
+            EndCombat();
+            return;
+        }
+        
+        GD.Print(_currentTurnEntity.Name + " finished their turn.");
+        
+        _turnOrder.Remove(_currentTurnEntity);
+        _turnOrder.Add(_currentTurnEntity);
+        _currentTurnEntity = _turnOrder.FirstOrDefault();
+        UpdateDebugLabel();
+
+        await (_currentTurnEntity?.OnTurn(_player, _world) ?? Task.CompletedTask);
+        
+        AdvanceTurn();
+    }
+    
     private void EndCombat()
     {
         _turnOrder.Remove(_player);
-        _player.OnCombatEnd();
+        _player.InCombat = false;
+        _currentTurnEntity = null;
+        _world.Camera.Focus = false;
         UpdateDebugLabel();
+    }
+    
+    public void AddEnemy(Enemy enemy)
+    {
+        GD.Print("[CM] Added enemy: " + enemy.Name);
+        Enemies.Add(enemy);
+        enemy.OnPlayerSpottedEvent += OnPlayerSpottedByEnemy;
+        enemy.OnPlayerLostEvent += OnPlayerLostByEnemy;
+        enemy.OnDamagedEvent += OnEnemyDamaged;
+        enemy.OnDeathEvent += OnEnemyDeath;
+        enemy.OnNudgeEvent += OnNudge;
+        enemy.OnMoveEvent += _world.OnEntityMove;
+    }
+    
+    private void OnEnemyDeath(Enemy enemy)
+    {
+        GD.Print(enemy.Name + " died!");
+        Enemies.Remove(enemy);
+        enemy.OnPlayerSpottedEvent -= OnPlayerSpottedByEnemy;
+        enemy.OnPlayerLostEvent -= OnPlayerLostByEnemy;
+        enemy.OnDamagedEvent -= OnEnemyDamaged;
+        enemy.OnDeathEvent -= OnEnemyDeath;
+        enemy.OnNudgeEvent -= OnNudge;
+        enemy.OnMoveEvent -= _world.OnEntityMove;
+        
+        if (enemy.InCombat) RemoveEnemyFromCombat(enemy);
+        
+        _world.KillEnemy(enemy);
+    }
+    
+    private void OnPlayerSpottedByEnemy(Enemy enemy)
+    {
+        if (!EnemiesInCombat.Contains(enemy))
+        {
+            AddEnemyToCombat(enemy);
+        }
+        
+        if (EnemiesInCombat.Count == 0) StartCombat();
+
+    }
+    
+    private void OnPlayerLostByEnemy(Enemy enemy)
+    {
+        if (CanLeaveCombat(enemy)) RemoveEnemyFromCombat(enemy);
+    }
+    
+    private void OnEnemyDamaged(Enemy enemy)
+    {
+        if (!EnemiesInCombat.Contains(enemy))
+        {
+            AddEnemyToCombat(enemy);
+        }
+    }
+    
+    private void OnNudge(Vector2I position)
+    {
+        //Interact(position);
+        //Attack(position, _player);
+    }
+
+    private void Attack(Entity target, Entity source)
+    {
+        GD.Print(source.Name + " attacked " + target.Name + " for " + source.Damage + " damage!");
+        target.ReceiveDamage(source, source.Damage);
+	    
+        _world.Camera.Shake(6 * source.Damage);
+    }
+    
+    public void Attack(Vector2I position, Entity source)
+    {
+        var enemy = _world.GetEnemyAt(position);
+        if (enemy == null) return;
+	    
+        Attack(enemy, source);
+    }
+
+    private bool CanLeaveCombat(Enemy enemy)
+    {
+        if (!enemy.InCombat) return false;
+        if (enemy.GroupId == null) return true;
+        return !Enemies.Any(e => e.GroupId == enemy.GroupId && e.SeesPlayer);
+    }
+
+    private void RemoveEnemyFromCombat(Enemy enemy)
+    {
+        _turnOrder.Remove(enemy);
+        enemy.InCombat = false;
+
+        if (enemy.GroupId != null)
+        {
+            foreach (var e in Enemies.Where(e => e.GroupId == enemy.GroupId))
+            {
+                RemoveEnemyFromCombat(e);
+            }
+        }
+
+        if (EnemiesInCombat.Count == 0)
+        {
+            EndCombat();
+            return;
+        }
+
+        UpdateDebugLabel();
+    }
+
+    private void AddEnemyToCombat(Enemy enemy)
+    {
+        if (enemy.InCombat) return;
+        
+        var shouldStartCombat = EnemiesInCombat.Count == 0;
+         
+        _turnOrder.Add(enemy);
+        enemy.InCombat = true;
+        
+        if (enemy.GroupId is not null)
+        {
+            foreach (var e in Enemies.Where(e => !e.InCombat && e.GroupId == enemy.GroupId))
+            {
+                AddEnemyToCombat(enemy);
+            }
+        }
+        
+        GD.Print(enemy.Name + " entered combat.");
+        UpdateDebugLabel();
+        
+        if (shouldStartCombat) StartCombat();
     }
 }
