@@ -133,8 +133,13 @@ public partial class World : Node2D
 		    {
 			    _selectedCell = HoveredCell;
 		    }
+
+		    if (Utils.ManhattanDistanceBetween(_selectionOrigin, _selectedCell) > _selectionRange)
+		    {
+			    Utils.SpawnFloatingLabel(GetTree(), Player.GlobalPosition, "Out of range!", color: Global.Red);
+			    return;
+		    }
 		    
-		    if (Utils.ManhattanDistanceBetween(_selectionOrigin, _selectedCell) > _selectionRange) return;
 		    switch (_selectionMode)
 		    {
 			    case SelectionMode.Enemy:
@@ -568,7 +573,6 @@ public partial class World : Node2D
 		{
 			case PlayerTargetingCard playerTargetingCard:
 				return playerTargetingCard.OnPlay(Player);
-				break;
 			case EnemyTargetingCard enemyTargetingCard:
 				var enemy = await SelectEnemyTarget(enemyTargetingCard.Range, Player.Position);
 				if (enemy is null) success = false;

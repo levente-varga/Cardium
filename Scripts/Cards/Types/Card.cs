@@ -7,7 +7,7 @@ public partial class Card : Node2D
 	public enum CardType
 	{
 		Combat,
-		Action,
+		Utility,
 	}
 	
 	public enum CardRarity
