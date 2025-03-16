@@ -29,7 +29,7 @@ public partial class HurlCard : LocationTargetingCard
         return World.GetTilesInRange(selectedTile, Radius);
     }
 
-    public override void OnPlay(Player player, Vector2I position, World world)
+    public override bool OnPlay(Player player, Vector2I position, World world)
     {
         List<Enemy> enemies = new ();
         foreach (var location in World.GetTilesInRange(position, Radius))
@@ -43,5 +43,7 @@ public partial class HurlCard : LocationTargetingCard
         {
             enemy.ReceiveDamage(player, 2);
         }
+        
+        return true;
     }
 }

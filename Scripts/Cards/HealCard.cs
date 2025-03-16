@@ -19,8 +19,10 @@ public partial class HealCard : PlayerTargetingCard
         base._Ready();
     }
     
-    public override void OnPlay(Player player)
+    public override bool OnPlay(Player player)
     {
         player.Heal(3);
+        
+        return true;
     }
 }

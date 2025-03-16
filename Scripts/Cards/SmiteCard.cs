@@ -17,8 +17,10 @@ public partial class SmiteCard : EnemyTargetingCard
         Type = CardType.Combat;
     }
     
-    public override void OnPlay(Player player, Enemy target, World world)
+    public override bool OnPlay(Player player, Enemy target, World world)
     {
         target.ReceiveDamage(player, Damage);
+        
+        return true;
     }
 }

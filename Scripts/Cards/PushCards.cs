@@ -19,8 +19,10 @@ public partial class PushCard : DirectionalCard
         base._Ready();
     }
     
-    public override void OnPlay(Player player, Direction direction, World world)
+    public override bool OnPlay(Player player, Direction direction, World world)
     {
         // TODO: Implement
+        
+        return true;
     }
 }

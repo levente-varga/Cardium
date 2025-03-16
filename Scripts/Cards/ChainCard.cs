@@ -20,7 +20,7 @@ public partial class ChainCard : EnemyTargetingCard
         Type = CardType.Combat;
     }
 
-    public override void OnPlay(Player player, Enemy enemy, World world)
+    public override bool OnPlay(Player player, Enemy enemy, World world)
     {
         var otherEnemies = world.GetEnemiesInRange(BounceRange, enemy.Position);
 
@@ -34,5 +34,7 @@ public partial class ChainCard : EnemyTargetingCard
         {
             otherEnemies[i].ReceiveDamage(player, Damage);
         }
+
+        return true;
     }
 }

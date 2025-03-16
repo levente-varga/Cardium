@@ -19,8 +19,10 @@ public partial class ShieldCard : PlayerTargetingCard
         base._Ready();
     }
     
-    public override void OnPlay(Player player)
+    public override bool OnPlay(Player player)
     {
         // TODO: Implement
+        
+        return true;
     }
 }

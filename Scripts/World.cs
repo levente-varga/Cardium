@@ -567,22 +567,22 @@ public partial class World : Node2D
 		switch (card)
 		{
 			case PlayerTargetingCard playerTargetingCard:
-				playerTargetingCard.OnPlay(Player);
+				return playerTargetingCard.OnPlay(Player);
 				break;
 			case EnemyTargetingCard enemyTargetingCard:
 				var enemy = await SelectEnemyTarget(enemyTargetingCard.Range, Player.Position);
 				if (enemy is null) success = false;
-				else enemyTargetingCard.OnPlay(Player, enemy, this);
+				else return enemyTargetingCard.OnPlay(Player, enemy, this);
 				break;
 			case InteractableTargetingCard interactableTargetingCard:
 				var interactable = await SelectInteractableTarget(interactableTargetingCard.Range, Player.Position);
 				if (interactable is null) success = false;
-				else interactableTargetingCard.OnPlay(Player, interactable, this);
+				else return interactableTargetingCard.OnPlay(Player, interactable, this);
 				break;
 			case LocationTargetingCard locationTargetingCard:
 				var position = await SelectLocationTarget(locationTargetingCard.Range, Player.Position);
 				if (position is null) success = false;
-				else locationTargetingCard.OnPlay(Player, position.Value, this);
+				else return locationTargetingCard.OnPlay(Player, position.Value, this);
 				break;
 		}
 		
