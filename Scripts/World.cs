@@ -46,7 +46,7 @@ public partial class World : Node2D
     private CombatManager _combatManager;
     
     private SelectionMode _selectionMode = SelectionMode.None;
-    private TargetingCard? _selectedCard;
+    private TargetingCard? _selectedTargetingCard;
     private int _selectionRange = 0;
     private Vector2I _selectionOrigin;
     private Vector2I _selectedCell;
@@ -98,15 +98,15 @@ public partial class World : Node2D
 		    Overlay.Tiles = new List<Overlay.OverlayTile>();
 	    }
 	    else {
-		    if (_selectedCard == null)
+		    if (_selectedTargetingCard == null)
 		    {
 			    Overlay.Tiles = new List<Overlay.OverlayTile> { new () {Position = HoveredCell, Color = Colors.Red} };
 		    }
 		    else
 		    {
-			    Overlay.Tiles = _selectedCard.GetHighlightedTiles(Player, HoveredCell, this).Select(tile => 
+			    Overlay.Tiles = _selectedTargetingCard.GetHighlightedTiles(Player, HoveredCell, this).Select(tile => 
 				    new Overlay.OverlayTile {Position = tile, Color = Colors.Red}).ToList();
-			    GD.Print("Selected card: " + _selectedCard + ", higlighted tiles: " + Overlay.Tiles.Count);
+			    GD.Print("Selected card: " + _selectedTargetingCard + ", higlighted tiles: " + Overlay.Tiles.Count);
 		    }
 	    }
 	    
@@ -477,7 +477,7 @@ public partial class World : Node2D
 		{
 			for (var y = -(range - Math.Abs(x)); y <= range - Math.Abs(x); y++)
 			{
-				tiles.Add(new Vector2I(from.X + x, from.Y + y));
+				tiles.Add(from + new Vector2I(x, y));
 			}
 		}
         
@@ -567,30 +567,30 @@ public partial class World : Node2D
 	{
 		var success = true;
 		
-		_selectedCard = (TargetingCard?)card;
+		_selectedTargetingCard = card as TargetingCard;
 		
 		switch (card)
 		{
 			case PlayerTargetingCard playerTargetingCard:
-				return playerTargetingCard.OnPlay(Player);
+				success =  playerTargetingCard.OnPlay(Player);
+				break;
 			case EnemyTargetingCard enemyTargetingCard:
 				var enemy = await SelectEnemyTarget(enemyTargetingCard.Range, Player.Position);
-				if (enemy is null) success = false;
-				else return enemyTargetingCard.OnPlay(Player, enemy, this);
+				success = enemy is not null && enemyTargetingCard.OnPlay(Player, enemy, this);
 				break;
 			case InteractableTargetingCard interactableTargetingCard:
 				var interactable = await SelectInteractableTarget(interactableTargetingCard.Range, Player.Position);
-				if (interactable is null) success = false;
-				else return interactableTargetingCard.OnPlay(Player, interactable, this);
+				success = interactable is not null && interactableTargetingCard.OnPlay(Player, interactable, this);
 				break;
 			case LocationTargetingCard locationTargetingCard:
 				var position = await SelectLocationTarget(locationTargetingCard.Range, Player.Position);
-				if (position is null) success = false;
-				else return locationTargetingCard.OnPlay(Player, position.Value, this);
+				success = position is not null && locationTargetingCard.OnPlay(Player, position.Value, this);
 				break;
 		}
 		
-		_selectedCard = null;
+		GD.Print("Played card");
+		
+		_selectedTargetingCard = null;
 		
 		return success;
 	}

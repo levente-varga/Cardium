@@ -23,7 +23,7 @@ public partial class Hand : Node2D
 	public bool RightHanded = true;
 	public HandState State { get; private set; }
 
-	private bool _enabled;
+	private bool _enabled = true;
 	public bool Enabled
 	{
 		get => _enabled;
@@ -148,6 +148,7 @@ public partial class Hand : Node2D
 		
 		card.OnDragEndEvent += OnCardDragEnd;
 		card.OnDragEvent += OnCardDrag;
+		card.Enabled = Enabled;
 	}
 
 	private void RemoveLastCard() => RemoveCard(_cards.Last());
@@ -229,7 +230,7 @@ public partial class Hand : Node2D
 		Enabled = false;
 		var success = await Player.World.PlayCard(card);
 		Enabled = true;
-
+		
 		if (success)
 		{
 			Player.SpendEnergy(card.Cost);
