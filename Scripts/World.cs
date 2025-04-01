@@ -34,7 +34,6 @@ public partial class World : Node2D
 	[Export] public TileMapLayer WallLayer;
 	[Export] public TileMapLayer ObjectLayer;
 	[Export] public TileMapLayer EnemyLayer;
-	[Export] public TileMapLayer EnemyGroupLayer;
 	[Export] public TileMapLayer LootLayer;
 	[Export] public TileMapLayer FogLayer;
 	[Export] public Overlay Overlay;
@@ -377,14 +376,6 @@ public partial class World : Node2D
 		    else if (atlasCoords == Global.RangerAtlasCoords) enemy = new Ranger();
 		    else if (atlasCoords == Global.TargetDummyAtlasCoords) enemy = new TargetDummy();
 		    else continue;
-		    
-		    var groupIdAtlasCoords = EnemyGroupLayer.GetCellAtlasCoords(cell);
-		    var groupId = groupIdAtlasCoords.X - Global.ZeroAtlasCoords.X;
-		    if (groupIdAtlasCoords.Y == Global.ZeroAtlasCoords.Y && groupId is >= 0 and <= 9)
-		    {
-			    enemy.GroupId = groupId;
-		    }
-		    EraseCell(EnemyGroupLayer, cell);
 		    
 		    SpawnEnemy(enemy, cell);
 	    }

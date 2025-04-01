@@ -117,9 +117,9 @@ fit_content = true
 layout_mode = 3
 anchors_preset = 0
 offset_left = -16.0
-offset_top = -25.0
-offset_right = 8.0
-offset_bottom = -21.0
+offset_top = 6.0
+offset_right = 16.0
+offset_bottom = 24.0
 
 [connection signal="mouse_entered" from="Body/Hitbox" to="." method="OnMouseEntered"]
 [connection signal="mouse_exited" from="Body/Hitbox" to="." method="OnMouseExited"]

@@ -14,13 +14,9 @@ public partial class Slime : Enemy
         Name = "Slime";
         MaxHealth = 3;
         Health = MaxHealth;
-        MaxEnergy = 1;
-        Energy = MaxEnergy;
         BaseArmor = 0;
         BaseDamage = 1;
         BaseLuck = 0f;
-        BaseVision = 2;
-        CombatVision = 4;
         BaseRange = 1;
         Description = "A slime enemy.";
         
@@ -32,19 +28,14 @@ public partial class Slime : Enemy
         base._Process(delta);
     }
 
-    protected override async Task Turn(Player player, World world)
+    protected override void TakeTurn(Player player, World world)
     {
-        await base.Turn(player, world);
+        base.TakeTurn(player, world);
     }
 
     public override void ReceiveDamage(Entity source, int damage)
     {
         base.ReceiveDamage(source, damage);
-    }
-
-    public override void OnTargeted(Entity source)
-    {
-        
     }
     
     protected override void OnDeath(Entity source)

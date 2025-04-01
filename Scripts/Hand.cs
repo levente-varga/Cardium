@@ -23,17 +23,6 @@ public partial class Hand : Node2D
 	public bool RightHanded = true;
 	public HandState State { get; private set; }
 
-	private bool _enabled = true;
-	public bool Enabled
-	{
-		get => _enabled;
-		set
-		{
-			_enabled = value;
-			EnableCards(value);
-		}
-	}
-
 	private readonly List<Card> _cards = new();
 	private List<float> _cardAngles = new();
 	private const int MaxHandSize = 10;
@@ -148,7 +137,6 @@ public partial class Hand : Node2D
 		
 		card.OnDragEndEvent += OnCardDragEnd;
 		card.OnDragEvent += OnCardDrag;
-		card.Enabled = Enabled;
 	}
 
 	private void RemoveLastCard() => RemoveCard(_cards.Last());
@@ -213,11 +201,6 @@ public partial class Hand : Node2D
 		State = HandState.Idle;
 		
 		if (!_playArea.HasPoint(mousePosition)) return;
-		if (Player.Energy < card.Cost)
-		{
-			Utils.SpawnFloatingLabel(GetTree(), Player.GlobalPosition, "Not enough energy!", color: Global.Purple);
-			return;
-		}
 		
 		State = HandState.Playing;
 		
@@ -227,13 +210,12 @@ public partial class Hand : Node2D
 
 	private async Task PlayCard(Card card)
 	{
-		Enabled = false;
+		//Enabled = false;
 		var success = await Player.World.PlayCard(card);
-		Enabled = true;
+		//Enabled = true;
 		
 		if (success)
 		{
-			Player.SpendEnergy(card.Cost);
 			RemoveCard(card);
 			PositionHand();
 		}

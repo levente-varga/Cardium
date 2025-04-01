@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Godot;
 
 namespace Cardium.Scripts.Enemies;
@@ -12,17 +11,12 @@ public partial class TargetDummy : Enemy
         Name = "Target Dummy";
         MaxHealth = 1000;
         Health = MaxHealth;
-        MaxEnergy = 0;
-        Energy = MaxEnergy;
         BaseArmor = 0;
-        BaseVision = 1;
-        CombatVision = 2;
         SetStillFrame(GD.Load<Texture2D>("res://Assets/Sprites/player.png"));
     }
 
-    protected override Task Turn(Player player, World world)
+    protected override void TakeTurn(Player player, World world)
     {
         Heal(MaxHealth);
-        return Task.CompletedTask;
     }
 }

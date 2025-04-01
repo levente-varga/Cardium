@@ -14,12 +14,9 @@ public partial class Spider : Enemy
         Name = "Spider";
         MaxHealth = 5;
         Health = MaxHealth;
-        MaxEnergy = 2;
-        Energy = MaxEnergy;
         BaseArmor = 0;
         BaseDamage = 2;
         BaseLuck = 0f;
-        BaseVision = 4;
         BaseRange = 1;
         Description = "A spider enemy.";
         
@@ -31,19 +28,14 @@ public partial class Spider : Enemy
         base._Process(delta);
     }
 
-    protected override async Task Turn(Player player, World world)
+    protected override void TakeTurn(Player player, World world)
     {
-        await base.Turn(player, world);
+        base.TakeTurn(player, world);
     }
 
     public override void ReceiveDamage(Entity source, int damage)
     {
         base.ReceiveDamage(source, damage);
-    }
-
-    public override void OnTargeted(Entity source)
-    {
-        
     }
     
     protected override void OnDeath(Entity source)
