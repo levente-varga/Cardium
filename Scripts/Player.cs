@@ -17,6 +17,9 @@ public partial class Player : Entity
 	public int TempVision;
 	public int Vision => BaseVision + TempVision;
 	
+	public delegate void OnActionDelegate();
+	public event OnActionDelegate OnActionEvent;
+	
 	public override void _Ready()
 	{
 		base._Ready();
@@ -28,9 +31,11 @@ public partial class Player : Entity
 		MaxHealth = 5;
 		Health = MaxHealth;
 
-		HealthBar.Visible = false;
+		HealthBar.Visible = true;
 		
 		SetStillFrame(GD.Load<Texture2D>("res://Assets/Sprites/player.png"));
+		
+		SetupActionListeners();
 	}
 
 	public override void _Process(double delta)
@@ -88,6 +93,17 @@ public partial class Player : Entity
 			
 		}
 	}
+
+	private void SetupActionListeners()
+	{
+		OnMoveEvent += OnMoveEventHandler;
+		OnNudgeEvent += OnNudgeEventHandler;
+		Hand.OnCardPlayedEvent += OnCardPlayedEventHandler;
+	}
+	
+	private void OnMoveEventHandler(Vector2I from, Vector2I to) => OnActionEvent?.Invoke();
+	private void OnNudgeEventHandler(Vector2I at) => OnActionEvent?.Invoke();
+	private void OnCardPlayedEventHandler(Card card) => OnActionEvent?.Invoke();
 
 	public void Interact()
 	{

@@ -27,6 +27,9 @@ public partial class Hand : Node2D
 	private List<float> _cardAngles = new();
 	private const int MaxHandSize = 10;
 	private Rect2 _playArea;
+	
+	public delegate void OnCardPlayedDelegate(Card card);
+	public event OnCardPlayedDelegate OnCardPlayedEvent;
 
 	public override void _Ready()
 	{
@@ -220,8 +223,15 @@ public partial class Hand : Node2D
 			PositionHand();
 		}
 		else card.OnExitPlayArea();
-		
-		if (!success) Utils.SpawnFloatingLabel(GetTree(), Player.GlobalPosition, "Cancelled");
+
+		if (success)
+		{
+			OnCardPlayedEvent?.Invoke(card);
+		}
+		else
+		{
+			Utils.SpawnFloatingLabel(GetTree(), Player.GlobalPosition, "Cancelled");
+		}
 		
 		State = HandState.Idle;
 	}

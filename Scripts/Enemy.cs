@@ -18,7 +18,7 @@ public partial class Enemy : Entity
         Path = new Path();
         AddChild(Path);
         
-        HealthBar.Visible = false;
+        HealthBar.Visible = true;
     }
     
     public override void _Process(double delta)
@@ -29,10 +29,10 @@ public partial class Enemy : Entity
 
     protected override void TakeTurn(Player player, World world)
     {
+        if (TurnsLived % 2 == 0) return;
+        
         Path.SetPath(world.GetPointPathBetween(Position, player.Position));
         
-        if (Global.Debug) SpawnFloatingLabel("[Debug] Start of turn", color: Global.Magenta, fontSize: 20);
-
         var distance = world.GetDistanceBetween(Position, player.Position);
         
         if (distance == -1)
@@ -75,10 +75,5 @@ public partial class Enemy : Entity
         base.OnDeath(source);
         
         OnDeathEvent?.Invoke(this);
-    }
-
-    public void OnPlayerMove(Player player, Vector2I oldPosition, Vector2I newPosition, CombatManager manager)
-    {
-        
     }
 }

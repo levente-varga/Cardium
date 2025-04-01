@@ -1,7 +1,5 @@
 #nullable enable
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Godot;
 
 namespace Cardium.Scripts;
@@ -20,16 +18,15 @@ public class CombatManager
         _player = player;
         _world = world;
         _debugLabel = debugLabel;
-        _player.OnMoveEvent += OnPlayerMove;
+        _player.OnActionEvent += OnPlayerAction;
 
         UpdateDebugLabel();
     }
 
-    private void OnPlayerMove(Vector2I oldPos, Vector2I newPos)
+    private void OnPlayerAction()
     {
         foreach (var enemy in Enemies)
         {
-            enemy.OnPlayerMove(_player, oldPos, newPos, this);
             enemy.OnTakeTurn(_player, _world);
         }
         

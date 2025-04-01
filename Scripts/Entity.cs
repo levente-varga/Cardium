@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Cardium.Scripts.Cards.Types;
 using Godot;
 
@@ -27,6 +26,8 @@ public partial class Entity : TileAlignedGameObject
     public int TempDamage { private get; set; }
     public int TempRange { private get; set; }
     public float TempLuck { private get; set; }
+    
+    public int TurnsLived { get; private set; }
 
     public int Armor => BaseArmor + TempArmor;
     public int Damage => BaseDamage + TempDamage;
@@ -62,13 +63,14 @@ public partial class Entity : TileAlignedGameObject
         AddChild(HealthBar);
         HealthBar.MaxHealth = MaxHealth;
         HealthBar.Health = Health;
-        HealthBar.Visible = false;
+        HealthBar.Visible = true;
     }
 
     protected virtual void TakeTurn(Player player, World world) { }
 
     public void OnTakeTurn(Player player, World world)
     {
+        TurnsLived++;
         GD.Print(Name + "'s turn started.");
         ResetTemporaryStats();
         UpdateBuffsOnStartOfTurn();
