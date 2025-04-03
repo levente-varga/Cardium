@@ -1102,14 +1102,14 @@ sources/2 = SubResource("TileSetAtlasSource_bcugv")
 
 [node name="Root" type="Node2D"]
 
-[node name="Player" type="AnimatedSprite2D" parent="." node_paths=PackedStringArray("World", "DebugLabel", "Hand")]
+[node name="Player" type="AnimatedSprite2D" parent="." node_paths=PackedStringArray("World", "DebugLabel", "_hand")]
 z_index = 5
 scale = Vector2(4, 4)
 centered = false
 script = ExtResource("3_q31ct")
 World = NodePath("../World")
 DebugLabel = NodePath("../Camera2D/CanvasLayer/Label2")
-Hand = NodePath("../Camera2D/Hand")
+_hand = NodePath("../Camera2D/Hand")
 
 [node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("Target")]
 script = ExtResource("3_evct5")
@@ -1141,7 +1141,7 @@ offset_left = 960.0
 offset_right = 1000.0
 offset_bottom = 23.0
 
-[node name="World" type="Node2D" parent="." node_paths=PackedStringArray("Camera", "Player", "Hand", "DebugLabel1", "DebugLabel2", "DebugLabel3", "DebugLabel4", "GroundLayer", "DecorLayer", "WallLayer", "ObjectLayer", "EnemyLayer", "EnemyGroupLayer", "LootLayer", "FogLayer", "Overlay")]
+[node name="World" type="Node2D" parent="." node_paths=PackedStringArray("Camera", "Player", "Hand", "DebugLabel1", "DebugLabel2", "DebugLabel3", "DebugLabel4", "GroundLayer", "DecorLayer", "WallLayer", "ObjectLayer", "EnemyLayer", "LootLayer", "FogLayer", "Overlay")]
 z_index = -1
 script = ExtResource("4_ayy7p")
 Camera = NodePath("../Camera2D")
@@ -1156,7 +1156,6 @@ DecorLayer = NodePath("DecorLayer")
 WallLayer = NodePath("WallLayer")
 ObjectLayer = NodePath("ObjectLayer")
 EnemyLayer = NodePath("EnemyLayer")
-EnemyGroupLayer = NodePath("EnemyGroupLayer")
 LootLayer = NodePath("LootLayer")
 FogLayer = NodePath("FogLayer")
 Overlay = NodePath("Overlay")
@@ -1192,13 +1191,6 @@ z_index = 2
 use_parent_material = true
 scale = Vector2(4, 4)
 tile_map_data = PackedByteArray("AAADAPn/AAAbAAgAAAAMAP//AAAbAAgAAAAMAAEAAAAbAAgAAAAZAPT/AAAbAAgAAAATAPj/AAAcAAUAAAARAAkAAAAbAAgAAAAfAAAAAAAcAAEAAAD5////AAAZAAAAAAD6////AAAZAAAAAAD7////AAAZAAAAAAD8////AAAZAAAAAAD8//7/AAAZAAAAAAD7//7/AAAZAAAAAAD6//7/AAAZAAAAAAD5//7/AAAZAAAAAAD4//7/AAAZAAAAAAD4////AAAZAAAAAAD4/wAAAAAZAAAAAAD4/wEAAAAZAAAAAAD4/wIAAAAZAAAAAAD5/wIAAAAZAAAAAAD6/wIAAAAZAAAAAAD7/wIAAAAZAAAAAAD7/wEAAAAZAAAAAAD8/wEAAAAZAAAAAAD8/wAAAAAZAAAAAAD7/wAAAAAZAAAAAAD6/wAAAAAZAAAAAAD5/wAAAAAZAAAAAAD5/wEAAAAZAAAAAAD6/wEAAAAZAAAAAAD8/wIAAAAZAAAAAAA=")
-tile_set = SubResource("TileSet_3rv6q")
-
-[node name="EnemyGroupLayer" type="TileMapLayer" parent="World"]
-z_index = 2
-use_parent_material = true
-scale = Vector2(4, 4)
-tile_map_data = PackedByteArray("AAAMAAEAAAAjABEAAAAMAP//AAAjABEAAAA=")
 tile_set = SubResource("TileSet_3rv6q")
 
 [node name="LootLayer" type="TileMapLayer" parent="World"]
