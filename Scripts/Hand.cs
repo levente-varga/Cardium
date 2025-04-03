@@ -12,7 +12,7 @@ public partial class Hand : Node2D
 {
 	public enum HandState { Idle, Dragging, Playing }
 	
-	[Export] public Player Player;
+	[Export] public Player Player = null!;
 	[Export] public float HandRadius = 1000f;
 	[Export] public float HandHeight = 64;
 	[Export] public float MaxHandEnclosedAngle = 30f;
@@ -23,21 +23,19 @@ public partial class Hand : Node2D
 	public bool RightHanded = true;
 	public HandState State { get; private set; }
 
-	private bool _enabled = true;
-	public bool Enabled
-	{
-		get => _enabled;
-		set
-		{
-			_enabled = value;
-			EnableCards(value);
-		}
-	}
-
 	private readonly List<Card> _cards = new();
 	private List<float> _cardAngles = new();
-	private const int MaxHandSize = 10;
+
+	private int _capacity = 1;
+	public int Capacity {
+		get => _capacity;
+		private set => _capacity = Math.Max(value, 1);
+	}
+	public int Size => _cards.Count;
 	private Rect2 _playArea;
+	
+	public delegate void OnCardPlayedDelegate(Card card);
+	public event OnCardPlayedDelegate? OnCardPlayedEvent;
 
 	public override void _Ready()
 	{
@@ -140,7 +138,7 @@ public partial class Hand : Node2D
 	public void AddCard(Card card) => AddCard(card, _cards.Count);
 	public void AddCard(Card card, int index)
 	{
-		if (_cards.Count >= MaxHandSize) return;
+		if (_cards.Count >= Capacity) return;
 		_cardAngles.Add(315);
 		_cards.Insert(index, card);
 		AddChild(card);
@@ -148,7 +146,6 @@ public partial class Hand : Node2D
 		
 		card.OnDragEndEvent += OnCardDragEnd;
 		card.OnDragEvent += OnCardDrag;
-		card.Enabled = Enabled;
 	}
 
 	private void RemoveLastCard() => RemoveCard(_cards.Last());
@@ -213,33 +210,34 @@ public partial class Hand : Node2D
 		State = HandState.Idle;
 		
 		if (!_playArea.HasPoint(mousePosition)) return;
-		if (Player.Energy < card.Cost)
-		{
-			Utils.SpawnFloatingLabel(GetTree(), Player.GlobalPosition, "Not enough energy!", color: Global.Purple);
-			return;
-		}
 		
 		State = HandState.Playing;
 		
 		card.OnEnterPlayArea();
-		PlayCard(card);
+		_ = PlayCard(card);
 	}
 
 	private async Task PlayCard(Card card)
 	{
-		Enabled = false;
+		//Enabled = false;
 		var success = await Player.World.PlayCard(card);
-		Enabled = true;
+		//Enabled = true;
 		
 		if (success)
 		{
-			Player.SpendEnergy(card.Cost);
 			RemoveCard(card);
 			PositionHand();
 		}
 		else card.OnExitPlayArea();
-		
-		if (!success) Utils.SpawnFloatingLabel(GetTree(), Player.GlobalPosition, "Cancelled");
+
+		if (success)
+		{
+			OnCardPlayedEvent?.Invoke(card);
+		}
+		else
+		{
+			Utils.SpawnFloatingLabel(GetTree(), Player.GlobalPosition, "Cancelled");
+		}
 		
 		State = HandState.Idle;
 	}

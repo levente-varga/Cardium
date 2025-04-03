@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Cardium.Scripts.Cards.Types;
 using Godot;
 
@@ -17,53 +16,30 @@ public partial class Entity : TileAlignedGameObject
         get => HealthBar.MaxHealth;
         set => HealthBar.MaxHealth = value;
     }
-    public int Energy {
-        get => EnergyBar.Energy;
-        protected set => EnergyBar.Energy = value;
-    }
-    public int MaxEnergy
-    {
-        get => EnergyBar.MaxEnergy;
-        set => EnergyBar.MaxEnergy = value;
-    }
+    
     protected int BaseArmor;
     protected int BaseDamage;
-    protected int BaseVision;
     protected int BaseRange;
     protected float BaseLuck;
 
     public int TempArmor { private get; set; }
     public int TempDamage { private get; set; }
     public int TempRange { private get; set; }
-    public int TempVision { private get; set; }
     public float TempLuck { private get; set; }
+    
+    public int TurnsLived { get; private set; }
 
     public int Armor => BaseArmor + TempArmor;
     public int Damage => BaseDamage + TempDamage;
-    public int Vision => BaseVision + TempVision;
     public int Range => BaseRange + TempRange;
     public float Luck => BaseLuck + TempLuck;
 
-    public string Description;
-    private bool _inCombat;
-    public bool InCombat
-    {
-        get => _inCombat;
-        set 
-        {
-            _inCombat = value;
-            HealthBar.Visible = InCombat;
-            EnergyBar.Visible = InCombat;
-            if (!InCombat) TurnMarker.Visible = false;
-        }
-    }
+    public string Description = "";
     
     public List<Card> Inventory = new();
     public List<Buff> Buffs = new();
     
-    public HealthBar HealthBar;
-    public EnergyBar EnergyBar;
-    public TurnMarker TurnMarker;
+    public HealthBar HealthBar = new ();
     
     private Vector2I _previousPosition;
     
@@ -74,8 +50,6 @@ public partial class Entity : TileAlignedGameObject
         Position = Vector2I.Zero;
         Name = "Entity";
         SetupHealthBar();
-        SetupEnergyBar();
-        SetupTurnMarker();
     }
 
     public override void _Process(double delta)
@@ -85,36 +59,23 @@ public partial class Entity : TileAlignedGameObject
     
     private void SetupHealthBar()
     {
-        HealthBar = new HealthBar();
         AddChild(HealthBar);
         HealthBar.MaxHealth = MaxHealth;
         HealthBar.Health = Health;
-        HealthBar.Visible = false;
+        HealthBar.Visible = true;
     }
 
-    private void SetupEnergyBar()
-    {
-        EnergyBar = new EnergyBar();
-        AddChild(EnergyBar);
-        EnergyBar.MaxEnergy = MaxEnergy;
-        EnergyBar.Energy = Energy;
-        EnergyBar.Visible = false;
-    }
-    
-    private void SetupTurnMarker()
-    {
-        TurnMarker = new TurnMarker();
-        AddChild(TurnMarker);
-        TurnMarker.Visible = false;
-    }
-    
-    protected virtual async Task Turn(Player player, World world) { }
+    protected virtual void TakeTurn(Player player, World world) { }
 
-    public async Task OnTurn(Player player, World world)
+    public void OnTakeTurn(Player player, World world)
     {
-        OnTurnStart();
-        await Turn(player, world);
-        OnTurnEnd();
+        TurnsLived++;
+        GD.Print(Name + "'s turn started.");
+        ResetTemporaryStats();
+        UpdateBuffsOnStartOfTurn();
+        TakeTurn(player, world);
+        UpdateBuffsOnEndOfTurn();
+        GD.Print(Name + "'s turn ended.");
     }
 
     public virtual void ReceiveDamage(Entity source, int damage)
@@ -126,9 +87,7 @@ public partial class Entity : TileAlignedGameObject
         Health -= Math.Max(1, damage - BaseArmor);
         if (Health <= 0) OnDeath(source);
     }
-
-    public virtual void OnTargeted(Entity source) { }
-
+    
     protected virtual void OnDeath(Entity source)
     {
         Health = 0;
@@ -139,51 +98,19 @@ public partial class Entity : TileAlignedGameObject
         return ManhattanDistanceTo(position) <= BaseRange;
     }
     
-    public bool InVision(Vector2I position)
-    {
-        return ManhattanDistanceTo(position) <= BaseVision;
-    }
-    
-    protected void OnTurnStart() 
-    {
-        Energy = MaxEnergy;
-        TurnMarker.Visible = true;
-        ResetTemporaryStats();
-        UpdateBuffsOnStartOfTurn();
-    }
-    
-    protected void OnTurnEnd()
-    {
-        TurnMarker.Visible = false;
-        UpdateBuffsOnEndOfTurn();
-    }
-
-    protected async Task Move(Direction direction, World world, bool useEnergy = true)
+    protected void Move(Direction direction, World world)
     {
         var newPosition = Position + DirectionToVector(direction);
-        if (world.IsEmpty(newPosition)) await Move(newPosition, world, useEnergy);
+        if (world.IsEmpty(newPosition)) Move(newPosition, world);
         else
         {
-            if (world.IsEnemy(newPosition) && useEnergy) Energy--; 
             Nudge(direction);
         }
     }
     
-    protected async Task Move(Vector2I newPosition, World world, bool useEnergy = true)
+    protected void Move(Vector2I newPosition, World world, bool useEnergy = true)
     {
-        GD.Print("Desire to move registered.");
-        
         if (!world.IsEmpty(newPosition)) return;
-        
-        if (useEnergy)
-        {
-            if (Energy <= 0)
-            {
-                GD.Print("Can't move, no energy left.");
-                return;
-            }
-            Energy--;
-        }
         
         Position = newPosition;
     }
@@ -229,13 +156,6 @@ public partial class Entity : TileAlignedGameObject
         TempArmor = 0;
         TempDamage = 0;
         TempRange = 0;
-        TempVision = 0;
         TempLuck = 0;
-    }
-    
-    public void SpendEnergy(int amount)
-    {
-        Energy -= amount;
-        if (Energy < 0) Energy = 0;
     }
 }

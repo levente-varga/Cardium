@@ -1,44 +1,40 @@
 using System;
 using System.Collections.Generic;
+using Cardium.Scripts.Cards.Types;
 
 namespace Cardium.Scripts;
 
 public class Deck
 {
-    public Deck(int maxSize = 30)
-    {
-        MaxSize = maxSize;
-    }
-
-    private int _maxSize = 1;
-    public int MaxSize { 
-        get => _maxSize;
-        set => _maxSize = Math.Max(value, 1);
-    }
-    private readonly List<Cards.Types.Card> _cards = new();
+    private readonly List<Card> _cards = new();
     
-    public void Shuffle ()
+    public Deck(int capacity = 30)
     {
-        // Fisher-Yates shuffle algorithm
-        for (var i = _cards.Count - 1; i > 0; i--)
-        {
-            var random = new Random();
-            var j = random.Next(0, i);
-            (_cards[i], _cards[j]) = (_cards[j], _cards[i]);
-        }
+        Capacity = capacity;
     }
 
-    public void Add(Cards.Types.Card card)
+    private int _capacity = 1;
+    public int Capacity { 
+        get => _capacity;
+        private set => _capacity = Math.Max(value, 1);
+    }
+
+    public int Size => _cards.Count;
+    public bool IsEmpty => _cards.Count == 0;
+    public bool IsNotEmpty => _cards.Count > 0;
+    public bool Contains(Card card) => _cards.Contains(card);
+
+    public void Add(Card card)
     {
         _cards.Add(card);
     }
     
-    public void Remove(Cards.Types.Card card)
+    public void Remove(Card card)
     {
         _cards.Remove(card);
     }
     
-    public Cards.Types.Card Draw()
+    public Card? Draw()
     {
         if (_cards.Count == 0)
         {
@@ -50,10 +46,18 @@ public class Deck
         return card;
     }
     
-    public int Size => _cards.Count;
-    
-    public bool Contains(Cards.Types.Card card)
+    public void Shuffle()
     {
-        return _cards.Contains(card);
+        FisherYatesShuffle();        
+    }
+
+    private void FisherYatesShuffle()
+    {
+        for (var i = _cards.Count - 1; i > 0; i--)
+        {
+            var random = new Random();
+            var j = random.Next(0, i);
+            (_cards[i], _cards[j]) = (_cards[j], _cards[i]);
+        }
     }
 }

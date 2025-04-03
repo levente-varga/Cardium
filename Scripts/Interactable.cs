@@ -17,7 +17,7 @@ public partial class Interactable : TileAlignedGameObject
     public bool Interacted = false;
     
     public delegate void OnSolidityChangeDelegate(Interactable interactable, bool solid);
-    public event OnSolidityChangeDelegate OnSolidityChangeEvent;
+    public event OnSolidityChangeDelegate? OnSolidityChangeEvent;
     
     public virtual void OnInteract(Player player, Camera camera)
     {

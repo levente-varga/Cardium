@@ -14,11 +14,12 @@ public partial class EnergyDot : Node2D
     private ulong _throwTime;
     private const float DefaultLifetimeMillis = 1200f;
     
-    private Polygon2D _dot;
-    private Polygon2D _shadow;
+    private Polygon2D _dot = new ();
+    private Polygon2D _shadow = new ();
 
     public bool IsThrown { get; private set; }
-    
+
+    public EnergyDot() : this(Vector2I.Zero) { }
     public EnergyDot(Vector2I offset)
     {
         _offset = offset;
@@ -29,7 +30,6 @@ public partial class EnergyDot : Node2D
         Name = "EnergyDot";
         ZIndex = 10;
         
-        _dot = new Polygon2D();
         _dot.Color = Global.Purple;
         _dot.Name = "Dot";
         _dot.Visible = true;
@@ -43,7 +43,6 @@ public partial class EnergyDot : Node2D
         };
         AddChild(_dot);
         
-        _shadow = new Polygon2D();
         _shadow.Color = Global.Black;
         _shadow.Name = "Shadow";
         _shadow.Visible = true;
@@ -73,7 +72,7 @@ public partial class EnergyDot : Node2D
         _velocity = Vector2.Zero;
         Position = _offset;
         Visible = false;
-        Modulate = new Color(Modulate.R, Modulate.G, Modulate.B, 1);
+        Modulate = new Color(Modulate.R, Modulate.G, Modulate.B);
     }
 
     public override void _Process(double delta)

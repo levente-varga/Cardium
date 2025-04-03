@@ -4,10 +4,10 @@ namespace Cardium.Scripts.Labels;
 
 public partial class LabelWithShadow : Node2D
 {
-    private Label _label;
-    private Label _shadow;
+    private Label _label = new ();
+    private Label _shadow = new ();
     
-    public string Text;
+    public string Text = "";
     public Color? Color;
     public int? FontSize = 40;
     
@@ -25,14 +25,13 @@ public partial class LabelWithShadow : Node2D
         _label.ZIndex = 1;
         AddChild(_label);
         
-        var shadow = new Label();
-        shadow.Text = Text;
-        shadow.AddThemeFontOverride("font", font);
-        shadow.AddThemeFontSizeOverride("font_size", FontSize ?? 40);
-        shadow.Modulate = new Color(0, 0, 0, 1f);
-        shadow.Position = new Vector2(4, 4);
-        shadow.ZIndex = _label.ZIndex - 1;
-        AddChild(shadow);
+        _shadow.Text = Text;
+        _shadow.AddThemeFontOverride("font", font);
+        _shadow.AddThemeFontSizeOverride("font_size", FontSize ?? 40);
+        _shadow.Modulate = new Color(0, 0, 0, 1f);
+        _shadow.Position = new Vector2(4, 4);
+        _shadow.ZIndex = _label.ZIndex - 1;
+        AddChild(_shadow);
     }
 
     public override void _Process(double delta)

@@ -1,4 +1,3 @@
-#nullable enable
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,29 +20,28 @@ internal enum SelectionMode
 
 public partial class World : Node2D
 {
-	[Export] public Camera Camera;
-	[Export] public Player Player;
-	[Export] public Hand Hand;
-	[Export] public Label DebugLabel1;
-	[Export] public Label DebugLabel2;
-	[Export] public Label DebugLabel3;
-	[Export] public Label DebugLabel4;
+	[Export] public Camera Camera = null!;
+	[Export] public Player Player= null!;
+	[Export] public Hand Hand = null!;
+	[Export] public Label DebugLabel1 = null!;
+	[Export] public Label DebugLabel2 = null!;
+	[Export] public Label DebugLabel3 = null!;
+	[Export] public Label DebugLabel4 = null!;
 	
-	[Export] public TileMapLayer GroundLayer;
-	[Export] public TileMapLayer DecorLayer;
-	[Export] public TileMapLayer WallLayer;
-	[Export] public TileMapLayer ObjectLayer;
-	[Export] public TileMapLayer EnemyLayer;
-	[Export] public TileMapLayer EnemyGroupLayer;
-	[Export] public TileMapLayer LootLayer;
-	[Export] public TileMapLayer FogLayer;
-	[Export] public Overlay Overlay;
+	[Export] public TileMapLayer GroundLayer = null!;
+	[Export] public TileMapLayer DecorLayer = null!;
+	[Export] public TileMapLayer WallLayer = null!;
+	[Export] public TileMapLayer ObjectLayer = null!;
+	[Export] public TileMapLayer EnemyLayer = null!;
+	[Export] public TileMapLayer LootLayer = null!;
+	[Export] public TileMapLayer FogLayer = null!;
+	[Export] public Overlay Overlay = null!;
 	
-	private readonly List<CardLoot> _loot = new();
-	private readonly List<Interactable> _interactables = new();
-    private readonly List<TileMapLayer> _layers = new();
+	private readonly List<CardLoot> _loot = new ();
+	private readonly List<Interactable> _interactables = new ();
+    private readonly List<TileMapLayer> _layers = new ();
     
-    private CombatManager _combatManager;
+    private CombatManager _combatManager = null!;
     
     private SelectionMode _selectionMode = SelectionMode.None;
     private TargetingCard? _selectedTargetingCard;
@@ -54,9 +52,9 @@ public partial class World : Node2D
     private bool _selectionConfirmed = false;
 
     private Rect2I _region;
-    private AStarGrid2D _grid;
+    private AStarGrid2D _grid = new ();
     private Vector2I? _end = null;
-    private Line2D _line;
+    private Line2D _line = new ();
     
     public Vector2I HoveredCell => GetTilePosition(GetGlobalMousePosition());
     
@@ -244,7 +242,6 @@ public partial class World : Node2D
     	_line = GetNode<Line2D>("Line2D");
 	    _line.DefaultColor = Global.Yellow;
 
-    	_grid = new AStarGrid2D();
     	_grid.Region = _region;
     	_grid.CellSize = Global.TileSize;
     	_grid.Offset = Vector2.Zero;
@@ -314,7 +311,7 @@ public partial class World : Node2D
 	public void OnEntityMove(Vector2I oldPosition, Vector2I newPosition)
 	{
 		_grid.SetPointSolid(oldPosition, false);
-		_grid.SetPointSolid(newPosition, true);
+		_grid.SetPointSolid(newPosition);
 	}
 
 	private void OnInteractableSolidityChange(Interactable interactable, bool solid)
@@ -377,14 +374,6 @@ public partial class World : Node2D
 		    else if (atlasCoords == Global.RangerAtlasCoords) enemy = new Ranger();
 		    else if (atlasCoords == Global.TargetDummyAtlasCoords) enemy = new TargetDummy();
 		    else continue;
-		    
-		    var groupIdAtlasCoords = EnemyGroupLayer.GetCellAtlasCoords(cell);
-		    var groupId = groupIdAtlasCoords.X - Global.ZeroAtlasCoords.X;
-		    if (groupIdAtlasCoords.Y == Global.ZeroAtlasCoords.Y && groupId is >= 0 and <= 9)
-		    {
-			    enemy.GroupId = groupId;
-		    }
-		    EraseCell(EnemyGroupLayer, cell);
 		    
 		    SpawnEnemy(enemy, cell);
 	    }

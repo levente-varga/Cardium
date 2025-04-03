@@ -34,9 +34,10 @@ public partial class HurlCard : LocationTargetingCard
         List<Enemy> enemies = new ();
         foreach (var location in World.GetTilesInRange(position, Radius))
         {
-            if (world.GetEnemyAt(location) is not null)
+            var enemy = world.GetEnemyAt(location);
+            if (enemy is not null)
             {
-                enemies.Add(world.GetEnemyAt(location));
+                enemies.Add(enemy);
             }
         }
         foreach (var enemy in enemies)

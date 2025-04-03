@@ -16,11 +16,11 @@ public partial class TileAlignedGameObject : AnimatedSprite2D
     public new Vector2I Position { get; set; }
     private Vector2I _previousPosition;
     
-    public delegate void OnMoveDelegate(Vector2I oldPosition, Vector2I newPosition);
-    public event OnMoveDelegate OnMoveEvent;
+    public delegate void OnMoveDelegate(Vector2I from, Vector2I to);
+    public event OnMoveDelegate? OnMoveEvent;
     
-    public delegate void OnNudgeDelegate(Vector2I position);
-    public event OnNudgeDelegate OnNudgeEvent;
+    public delegate void OnNudgeDelegate(Vector2I at);
+    public event OnNudgeDelegate? OnNudgeEvent;
 
     public override void _Ready()
     {
@@ -113,14 +113,14 @@ public partial class TileAlignedGameObject : AnimatedSprite2D
     protected void Nudge(Direction direction)
     {
         base.Position += DirectionToVector(direction) * Global.TileSize / 8;
-        //OnNudgeEvent?.Invoke(Position + DirectionToVector(direction));
+        OnNudgeEvent?.Invoke(Position + DirectionToVector(direction));
     }
 
     public void Blink()
     {
         Tween tween = CreateTween();
-        Modulate = new Color(0f, 0f, 0f, 1); // Set red
-        tween.TweenProperty(this, "modulate", new Color(1, 1, 1, 1), 0.2f);
+        Modulate = new Color(0f, 0f, 0f);
+        tween.TweenProperty(this, "modulate", new Color(1, 1, 1), 0.2f);
         tween.Play();
     }
 
