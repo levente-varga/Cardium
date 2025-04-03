@@ -7,8 +7,7 @@ public partial class Player : Entity
 {
 	[Export] public World World = null!;
 	[Export] public Label DebugLabel = null!;
-	[Export] public Hand Hand = null!;
-	
+	[Export] private Hand _hand = null!;
 	private readonly Deck _deck = new();
 	private Pile _discardPile = new();
 
@@ -45,7 +44,10 @@ public partial class Player : Entity
 		                  + $"Range: {Range}\n"
 		                  + $"Vision: {Vision}\n"
 		                  + $"Damage: {Damage}\n"
-		                  + $"Armor: {Armor}\n";	
+		                  + $"Armor: {Armor}\n"
+		                  + $"\n"
+		                  + $"Deck: {_deck.Size}/{_deck.Capacity}"
+		                  + $"Hand: {_hand.Size}/{_hand.Capacity}";
 		
 		base._Process(delta);
 	}
@@ -97,7 +99,7 @@ public partial class Player : Entity
 	{
 		OnMoveEvent += OnMoveEventHandler;
 		OnNudgeEvent += OnNudgeEventHandler;
-		Hand.OnCardPlayedEvent += OnCardPlayedEventHandler;
+		_hand.OnCardPlayedEvent += OnCardPlayedEventHandler;
 	}
 	
 	private void OnMoveEventHandler(Vector2I from, Vector2I to) => OnActionEvent?.Invoke();
@@ -107,7 +109,7 @@ public partial class Player : Entity
 		Card? drawnCard = _deck.Draw();
 		if (drawnCard != null)
 		{
-			Hand?.AddCard(drawnCard);
+			_hand?.AddCard(drawnCard);
 		}
 		OnActionEvent?.Invoke();
 	}
@@ -127,6 +129,6 @@ public partial class Player : Entity
 	
 	public void PickUpCard(Card card)
 	{
-		Hand?.AddCard(card);
+		_hand?.AddCard(card);
 	}
 }

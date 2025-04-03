@@ -8,15 +8,15 @@ public class Deck
 {
     private readonly List<Card> _cards = new();
     
-    public Deck(int maxSize = 30)
+    public Deck(int capacity = 30)
     {
-        MaxSize = maxSize;
+        Capacity = capacity;
     }
 
-    private int _maxSize = 1;
-    public int MaxSize { 
-        get => _maxSize;
-        private set => _maxSize = Math.Max(value, 1);
+    private int _capacity = 1;
+    public int Capacity { 
+        get => _capacity;
+        private set => _capacity = Math.Max(value, 1);
     }
 
     public int Size => _cards.Count;

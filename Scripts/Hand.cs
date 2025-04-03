@@ -25,7 +25,12 @@ public partial class Hand : Node2D
 
 	private readonly List<Card> _cards = new();
 	private List<float> _cardAngles = new();
-	public const int MaxHandSize = 5;
+
+	private int _capacity = 1;
+	public int Capacity {
+		get => _capacity;
+		private set => _capacity = Math.Max(value, 1);
+	}
 	public int Size => _cards.Count;
 	private Rect2 _playArea;
 	
@@ -133,7 +138,7 @@ public partial class Hand : Node2D
 	public void AddCard(Card card) => AddCard(card, _cards.Count);
 	public void AddCard(Card card, int index)
 	{
-		if (_cards.Count >= MaxHandSize) return;
+		if (_cards.Count >= Capacity) return;
 		_cardAngles.Add(315);
 		_cards.Insert(index, card);
 		AddChild(card);
