@@ -1,11 +1,13 @@
-[gd_scene load_steps=3 format=3 uid="uid://ctsrk0f3lx3n0"]
+[gd_scene load_steps=4 format=3 uid="uid://ctsrk0f3lx3n0"]
 
+[ext_resource type="Script" path="res://Scripts/Menu.cs" id="1_gw588"]
 [ext_resource type="Theme" uid="uid://ckiq2eob4d0lc" path="res://Scenes/theme.tres" id="1_gyx6d"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_biqaj"]
 font_size = 144
 
 [node name="Menu" type="Node2D"]
+script = ExtResource("1_gw588")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 anchor_mode = 0
