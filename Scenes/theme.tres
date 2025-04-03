@@ -1,0 +1,28 @@
+[gd_resource type="Theme" load_steps=7 format=3 uid="uid://ckiq2eob4d0lc"]
+
+[ext_resource type="FontFile" uid="uid://2rxest3pjy34" path="res://Assets/Fonts/alagard.ttf" id="1_u3hck"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7fwm8"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ctndu"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8b2wa"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_21bk1"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_trsqd"]
+
+[resource]
+default_font = ExtResource("1_u3hck")
+Button/colors/font_color = Color(0.933333, 0.933333, 0.933333, 1)
+Button/colors/font_disabled_color = Color(0.933333, 0.933333, 0.933333, 0.458824)
+Button/colors/font_hover_color = Color(0.857992, 0.387246, 0.228431, 1)
+Button/colors/font_pressed_color = Color(0.658251, 0.188208, 0, 1)
+Button/constants/h_separation = 0
+Button/font_sizes/font_size = 32
+Button/fonts/font = ExtResource("1_u3hck")
+Button/styles/disabled = SubResource("StyleBoxEmpty_7fwm8")
+Button/styles/focus = SubResource("StyleBoxEmpty_ctndu")
+Button/styles/hover = SubResource("StyleBoxEmpty_8b2wa")
+Button/styles/normal = SubResource("StyleBoxEmpty_21bk1")
+Button/styles/pressed = SubResource("StyleBoxEmpty_trsqd")
