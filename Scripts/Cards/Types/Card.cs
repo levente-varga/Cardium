@@ -28,12 +28,12 @@ public partial class Card : Node2D
 	}
 	
 	public int Cost { get; protected set; }
-	public string DisplayName { get; protected set; }
-	public string Description { get; protected set; }
+	public string DisplayName { get; protected set; } = "";
+	public string Description { get; protected set; } = "";
 	public CardType Type { get; protected set; }
 	public CardRarity Rarity { get; protected set; }
 	public CardState State { get; protected set; }
-	public Texture2D Art { get; protected set; }
+	public Texture2D Art { get; protected set; } = null!;
 	public bool InPlayArea { get; protected set; }
 
 	public bool Enabled = true;
@@ -41,33 +41,33 @@ public partial class Card : Node2D
 	private bool _dragging;
 	private bool _shaking;
 	
-	private Tween _hoverTween;
+	private Tween? _hoverTween;
 	
-	private Node2D _base;
-	private Node2D _body;
-	private Sprite2D _sprite;
-	private Sprite2D _art;
-	private Sprite2D _artBackground;
-	private Button _hitbox;
-	private Control _descriptionArea;
-	private RichTextLabel _description;
-	private Label _nameLabel;
-	private Line2D _frame;
+	private Node2D _base = null!;
+	private Node2D _body = null!;
+	private Sprite2D _sprite = null!;
+	private Sprite2D _art = null!;
+	private Sprite2D _artBackground = null!;
+	private Button _hitbox = null!;
+	private Control _descriptionArea = null!;
+	private RichTextLabel _description = null!;
+	private Label _nameLabel = null!;
+	private Line2D _frame = null!;
 	
 	private Vector2 _mouseDownPosition;
 	
 	public delegate void OnDragStartDelegate(Card card);
-	public event OnDragStartDelegate OnDragStartEvent;
+	public event OnDragStartDelegate? OnDragStartEvent;
 	
 	public delegate void OnDragEndDelegate(Card card, Vector2 mousePosition);
-	public event OnDragEndDelegate OnDragEndEvent;
+	public event OnDragEndDelegate? OnDragEndEvent;
 	
 	public delegate void OnDragDelegate(Card card, Vector2 mousePosition);
-	public event OnDragDelegate OnDragEvent;
+	public event OnDragDelegate? OnDragEvent;
 
 	
-	private float ShakeIntensity = 5f; // Max shake offset
-	private float ShakeDecay = 5f; // How fast the shake fades
+	private float _shakeIntensity = 5f; // Max shake offset
+	private float _shakeDecay = 5f; // How fast the shake fades
 	private Vector2 _originalPosition;
 	private float _shakeAmount = 5f;
 	

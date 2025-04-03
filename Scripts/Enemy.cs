@@ -4,18 +4,17 @@ namespace Cardium.Scripts;
 
 public partial class Enemy : Entity
 {
-    protected Path Path;
+    protected Path Path = new Path();
 
     public delegate void OnDeathDelegate(Enemy enemy);
-    public event OnDeathDelegate OnDeathEvent;
+    public event OnDeathDelegate? OnDeathEvent;
     
     public delegate void OnDamaged(Enemy enemy);
-    public event OnDamaged OnDamagedEvent;
+    public event OnDamaged? OnDamagedEvent;
     
     public override void _Ready()
     {
         base._Ready();
-        Path = new Path();
         AddChild(Path);
         
         HealthBar.Visible = true;

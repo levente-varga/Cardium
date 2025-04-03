@@ -4,13 +4,12 @@ namespace Cardium.Scripts;
 
 public partial class TurnMarker : Node2D
 {
-    private Polygon2D _dot;
+    private Polygon2D _dot = new ();
 
     public override void _Ready()
     {
         base._Ready();
         
-        _dot = new Polygon2D();
         _dot.Polygon = new Vector2[]
         {
             new (0, 0),

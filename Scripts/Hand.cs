@@ -12,7 +12,7 @@ public partial class Hand : Node2D
 {
 	public enum HandState { Idle, Dragging, Playing }
 	
-	[Export] public Player Player;
+	[Export] public Player Player = null!;
 	[Export] public float HandRadius = 1000f;
 	[Export] public float HandHeight = 64;
 	[Export] public float MaxHandEnclosedAngle = 30f;
@@ -25,11 +25,12 @@ public partial class Hand : Node2D
 
 	private readonly List<Card> _cards = new();
 	private List<float> _cardAngles = new();
-	private const int MaxHandSize = 10;
+	public const int MaxHandSize = 5;
+	public int Size => _cards.Count;
 	private Rect2 _playArea;
 	
 	public delegate void OnCardPlayedDelegate(Card card);
-	public event OnCardPlayedDelegate OnCardPlayedEvent;
+	public event OnCardPlayedDelegate? OnCardPlayedEvent;
 
 	public override void _Ready()
 	{
@@ -208,7 +209,7 @@ public partial class Hand : Node2D
 		State = HandState.Playing;
 		
 		card.OnEnterPlayArea();
-		PlayCard(card);
+		_ = PlayCard(card);
 	}
 
 	private async Task PlayCard(Card card)

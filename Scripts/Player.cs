@@ -5,12 +5,11 @@ namespace Cardium.Scripts;
 
 public partial class Player : Entity
 {
-	[Export] public World World;
-	[Export] public Label DebugLabel;
-	[Export] public Hand Hand;
+	[Export] public World World = null!;
+	[Export] public Label DebugLabel = null!;
+	[Export] public Hand Hand = null!;
 	
-	private Deck _combatDeck = new();
-	private Deck _actionDeck = new();
+	private readonly Deck _deck = new();
 	private Pile _discardPile = new();
 
 	public int BaseVision;
@@ -18,7 +17,7 @@ public partial class Player : Entity
 	public int Vision => BaseVision + TempVision;
 	
 	public delegate void OnActionDelegate();
-	public event OnActionDelegate OnActionEvent;
+	public event OnActionDelegate? OnActionEvent;
 	
 	public override void _Ready()
 	{
@@ -46,7 +45,7 @@ public partial class Player : Entity
 		                  + $"Range: {Range}\n"
 		                  + $"Vision: {Vision}\n"
 		                  + $"Damage: {Damage}\n"
-		                  + $"Armor: {Armor}\n";
+		                  + $"Armor: {Armor}\n";	
 		
 		base._Process(delta);
 	}
@@ -103,7 +102,15 @@ public partial class Player : Entity
 	
 	private void OnMoveEventHandler(Vector2I from, Vector2I to) => OnActionEvent?.Invoke();
 	private void OnNudgeEventHandler(Vector2I at) => OnActionEvent?.Invoke();
-	private void OnCardPlayedEventHandler(Card card) => OnActionEvent?.Invoke();
+	private void OnCardPlayedEventHandler(Card card)
+	{
+		Card? drawnCard = _deck.Draw();
+		if (drawnCard != null)
+		{
+			Hand?.AddCard(drawnCard);
+		}
+		OnActionEvent?.Invoke();
+	}
 
 	public void Interact()
 	{
@@ -120,6 +127,6 @@ public partial class Player : Entity
 	
 	public void PickUpCard(Card card)
 	{
-		Hand.AddCard(card);
+		Hand?.AddCard(card);
 	}
 }

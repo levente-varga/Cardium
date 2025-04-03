@@ -4,8 +4,6 @@ namespace Cardium.Scripts.Enemies;
 
 public partial class Ranger : Enemy
 {
-    private Label DebugLabel;
-    
     public override void _Ready()
     {
         base._Ready();
@@ -17,8 +15,6 @@ public partial class Ranger : Enemy
         BaseArmor = 0;
         BaseDamage = 1;
         BaseRange = 4;
-        
-        DebugLabel = GetNode<Label>("/root/Root/Camera2D/CanvasLayer/Label4");
         
         SetStillFrame(GD.Load<Texture2D>("res://Assets/Sprites/player.png"));
     }

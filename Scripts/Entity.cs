@@ -34,12 +34,12 @@ public partial class Entity : TileAlignedGameObject
     public int Range => BaseRange + TempRange;
     public float Luck => BaseLuck + TempLuck;
 
-    public string Description;
+    public string Description = "";
     
     public List<Card> Inventory = new();
     public List<Buff> Buffs = new();
     
-    public HealthBar HealthBar;
+    public HealthBar HealthBar = new ();
     
     private Vector2I _previousPosition;
     
@@ -59,7 +59,6 @@ public partial class Entity : TileAlignedGameObject
     
     private void SetupHealthBar()
     {
-        HealthBar = new HealthBar();
         AddChild(HealthBar);
         HealthBar.MaxHealth = MaxHealth;
         HealthBar.Health = Health;

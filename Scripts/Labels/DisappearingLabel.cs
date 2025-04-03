@@ -1,3 +1,4 @@
+using System;
 using Godot;
 
 namespace Cardium.Scripts.Labels;
@@ -5,8 +6,10 @@ namespace Cardium.Scripts.Labels;
 public partial class DisappearingLabel : LabelWithShadow
 {
     protected readonly ulong SpawnTime = Time.GetTicksMsec();
+    protected readonly Random Random = new ();
     public float? LifetimeMillis;
     private const float DefaultLifetimeMillis = 1200f;
+
     
     public override void _Ready()
     {

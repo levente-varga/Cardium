@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
+using Cardium.Scripts.Cards.Types;
 
 namespace Cardium.Scripts;
 
 public class Deck
 {
+    private readonly List<Card> _cards = new();
+    
     public Deck(int maxSize = 30)
     {
         MaxSize = maxSize;
@@ -13,32 +16,25 @@ public class Deck
     private int _maxSize = 1;
     public int MaxSize { 
         get => _maxSize;
-        set => _maxSize = Math.Max(value, 1);
-    }
-    private readonly List<Cards.Types.Card> _cards = new();
-    
-    public void Shuffle ()
-    {
-        // Fisher-Yates shuffle algorithm
-        for (var i = _cards.Count - 1; i > 0; i--)
-        {
-            var random = new Random();
-            var j = random.Next(0, i);
-            (_cards[i], _cards[j]) = (_cards[j], _cards[i]);
-        }
+        private set => _maxSize = Math.Max(value, 1);
     }
 
-    public void Add(Cards.Types.Card card)
+    public int Size => _cards.Count;
+    public bool IsEmpty => _cards.Count == 0;
+    public bool IsNotEmpty => _cards.Count > 0;
+    public bool Contains(Card card) => _cards.Contains(card);
+
+    public void Add(Card card)
     {
         _cards.Add(card);
     }
     
-    public void Remove(Cards.Types.Card card)
+    public void Remove(Card card)
     {
         _cards.Remove(card);
     }
     
-    public Cards.Types.Card Draw()
+    public Card? Draw()
     {
         if (_cards.Count == 0)
         {
@@ -50,10 +46,18 @@ public class Deck
         return card;
     }
     
-    public int Size => _cards.Count;
-    
-    public bool Contains(Cards.Types.Card card)
+    public void Shuffle()
     {
-        return _cards.Contains(card);
+        FisherYatesShuffle();        
+    }
+
+    private void FisherYatesShuffle()
+    {
+        for (var i = _cards.Count - 1; i > 0; i--)
+        {
+            var random = new Random();
+            var j = random.Next(0, i);
+            (_cards[i], _cards[j]) = (_cards[j], _cards[i]);
+        }
     }
 }

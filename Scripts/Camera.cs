@@ -5,7 +5,7 @@ namespace Cardium.Scripts;
 
 public partial class Camera : Camera2D
 {
-	[Export] public Node2D Target;
+	[Export] public Node2D Target = null!;
 
 	private float _shake;
 	private readonly Random _random = new Random();

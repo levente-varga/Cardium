@@ -1,19 +1,14 @@
-using System;
 using Godot;
 
 namespace Cardium.Scripts.Labels;
 
 public partial class FallingLabel : DisappearingLabel
 {
-    private readonly Random _random = new ();
     private Vector2 _velocity = new (0, 0);
-    
-    private Label _label;
-    private Label _shadow;
     
     public override void _Ready()
     {
-        _velocity = new Vector2(_random.Next(80, 100), _random.Next(-500, -400));
+        _velocity = new Vector2(Random.Next(80, 100), Random.Next(-500, -400));
         
         base._Ready();
     }
