@@ -24,14 +24,22 @@ public class Deck
     public bool IsNotEmpty => _cards.Count > 0;
     public bool Contains(Card card) => _cards.Contains(card);
 
-    public void Add(Card card)
+    /// <summary>Adds card to the bottom of the deck.</summary>
+    /// <param name="card">The card to be added.</param>
+    /// <returns>false if the deck is already full.</returns>
+    public bool Add(Card card)
     {
+        if (_cards.Count >= Capacity) return false;
         _cards.Add(card);
+        return true;
     }
     
-    public void Remove(Card card)
+    /// <summary>Removes card from the deck.</summary>
+    /// <param name="card">The card to be removed.</param>
+    /// <returns>false if the card was not in the deck.</returns>
+    public bool Remove(Card card)
     {
-        _cards.Remove(card);
+        return _cards.Remove(card);
     }
     
     public Card? Draw()

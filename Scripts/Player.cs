@@ -1,3 +1,4 @@
+using Cardium.Scripts.Cards;
 using Cardium.Scripts.Cards.Types;
 using Godot;
 
@@ -30,6 +31,8 @@ public partial class Player : Entity
 		Health = MaxHealth;
 
 		HealthBar.Visible = true;
+
+		FillDeck();
 		
 		SetStillFrame(GD.Load<Texture2D>("res://Assets/Sprites/player.png"));
 		
@@ -95,6 +98,15 @@ public partial class Player : Entity
 		}
 	}
 
+	private void FillDeck()
+	{
+		for (int i = 0; i < _deck.Capacity; i++)
+		{
+			_deck.Add(new SmiteCard());
+		}
+		_deck.Shuffle();
+	}
+
 	private void SetupActionListeners()
 	{
 		OnMoveEvent += OnMoveEventHandler;
@@ -109,7 +121,7 @@ public partial class Player : Entity
 		Card? drawnCard = _deck.Draw();
 		if (drawnCard != null)
 		{
-			_hand?.AddCard(drawnCard);
+			_hand?.Add(drawnCard);
 		}
 		OnActionEvent?.Invoke();
 	}
@@ -129,6 +141,6 @@ public partial class Player : Entity
 	
 	public void PickUpCard(Card card)
 	{
-		_hand?.AddCard(card);
+		_hand?.Add(card);
 	}
 }

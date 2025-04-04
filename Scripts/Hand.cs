@@ -26,7 +26,7 @@ public partial class Hand : Node2D
 	private readonly List<Card> _cards = new();
 	private List<float> _cardAngles = new();
 
-	private int _capacity = 1;
+	private int _capacity = 5;
 	public int Capacity {
 		get => _capacity;
 		private set => _capacity = Math.Max(value, 1);
@@ -135,8 +135,8 @@ public partial class Hand : Node2D
 	}
 	
 	
-	public void AddCard(Card card) => AddCard(card, _cards.Count);
-	public void AddCard(Card card, int index)
+	public void Add(Card card) => Add(card, _cards.Count);
+	public void Add(Card card, int index)
 	{
 		if (_cards.Count >= Capacity) return;
 		_cardAngles.Add(315);
@@ -148,9 +148,9 @@ public partial class Hand : Node2D
 		card.OnDragEvent += OnCardDrag;
 	}
 
-	private void RemoveLastCard() => RemoveCard(_cards.Last());
-	private void RemoveCard(int index) => RemoveCard(_cards[index]);
-	private void RemoveCard(Card card)
+	private void RemoveLast() => Remove(_cards.Last());
+	private void Remove(int index) => Remove(_cards[index]);
+	private void Remove(Card card)
 	{
 		if (!_cards.Contains(card)) return;
 		_cardAngles.RemoveAt(_cards.IndexOf(card));
@@ -167,22 +167,22 @@ public partial class Hand : Node2D
 		switch (@event)
 		{
 			case InputEventKey { Pressed: true, KeyLabel: Key.Key1 }:
-				AddCard(new HealCard());
+				Add(new HealCard());
 				break;
 			case InputEventKey { Pressed: true, KeyLabel: Key.Key2 }:
-				AddCard(new SmiteCard());
+				Add(new SmiteCard());
 				break;
 			case InputEventKey { Pressed: true, KeyLabel: Key.Key3 }:
-				AddCard(new HurlCard());
+				Add(new HurlCard());
 				break;
 			case InputEventKey { Pressed: true, KeyLabel: Key.Key4 }:
-				AddCard(new PushCard());
+				Add(new PushCard());
 				break;
 			case InputEventKey { Pressed: true, KeyLabel: Key.Key5 }: 
-				AddCard(new ChainCard());
+				Add(new ChainCard());
 				break;
 			case InputEventKey { Pressed: true, KeyLabel: Key.Key6 }:
-				AddCard(new KeyCard());
+				Add(new KeyCard());
 				break;
 		}
 	}
@@ -214,10 +214,10 @@ public partial class Hand : Node2D
 		State = HandState.Playing;
 		
 		card.OnEnterPlayArea();
-		_ = PlayCard(card);
+		_ = Play(card);
 	}
 
-	private async Task PlayCard(Card card)
+	private async Task Play(Card card)
 	{
 		//Enabled = false;
 		var success = await Player.World.PlayCard(card);
@@ -225,7 +225,7 @@ public partial class Hand : Node2D
 		
 		if (success)
 		{
-			RemoveCard(card);
+			Remove(card);
 			PositionHand();
 		}
 		else card.OnExitPlayArea();
