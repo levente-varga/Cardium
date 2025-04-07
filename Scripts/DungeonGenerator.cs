@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Godot;
-using Environment = System.Environment;
 
 namespace Cardium.Scripts;
 
@@ -37,8 +37,6 @@ public class DungeonGenerator {
       throw new Exception("The stage must be odd-sized.");
     }
     
-    GD.Print($"Generating a {size.X}x{size.Y} dungeon...");
-    
     InitArea(_size);
     GenerateRooms();
     GenerateMaze();
@@ -46,8 +44,6 @@ public class DungeonGenerator {
     RemoveDeadEnds();
     
     return Dungeon.From(Walls);
-
-    //RemoveDeadEnds();
   }
   
   /// Implementation of the "growing tree" algorithm from here:
@@ -134,7 +130,6 @@ public class DungeonGenerator {
         for (var y = room.Position.Y; y < room.End.Y; y++)
           Carve(new Vector2I(x, y));
     }
-    GD.Print($"Generated {rooms.Count} rooms");
   }
 
   private void GenerateMaze() {
@@ -147,6 +142,7 @@ public class DungeonGenerator {
     }
   }
   
+  [SuppressMessage("ReSharper.DPA", "DPA0000: DPA issues")]
   private void ConnectRegions() {
     // Find all the tiles that can connect two (or more) regions.
     var connectorRegions = new Dictionary<Vector2I, HashSet<int>>();
@@ -177,10 +173,6 @@ public class DungeonGenerator {
     
     var connectors = connectorRegions.Keys.ToList();
     
-    GD.Print($"Found {connectors.Count} potential connectors.");
-    
-    GD.Print(string.Join(Environment.NewLine, connectorRegions.Select(kvp => $"{kvp.Key}: {string.Join(", ", kvp.Value)}")));
-    
     // Keep track of which regions have been merged. This maps an original
     // region index to the one it has been merged into.
     var mergedRegions = new List<int>();
@@ -191,13 +183,9 @@ public class DungeonGenerator {
       openRegions.Add(i);
     }
     
-    GD.Print($"Open regions: {openRegions.Count}");
-
     // Keep connecting regions until we're down to one.
     while (openRegions.Count > 1) {
       var connector = connectors[_random.Next(0, connectors.Count)];
-
-      GD.Print($"Picked connector {connector} that has regions {string.Join(", ", connectorRegions[connector])}");
       
       // Carve the connection.
       AddJunction(connector);
@@ -219,11 +207,6 @@ public class DungeonGenerator {
 
       // The sources are no longer in use.
       openRegions = openRegions.Except(sources).ToList();
-      GD.Print($"Remaining open regions: {string.Join(", ", openRegions)}");
-      GD.Print($"Mapping:");
-      for (int i = 0; i < mergedRegions.Count; i++) {
-        GD.Print($"  {i} -> {mergedRegions[i]}");
-      }
       
       // Remove any connectors that aren't needed anymore.
       connectors.RemoveAll(pos => {
@@ -231,8 +214,11 @@ public class DungeonGenerator {
         if (connector.DistanceTo(pos) < 2) return true;
 
         // If the connector no longer spans different regions, we don't need it.
-        var adjacentRegions = connectorRegions[pos].Select(region => mergedRegions[region]).ToHashSet();
-
+        HashSet<int> adjacentRegions = new ();
+        foreach (var region in connectorRegions[pos]) {
+          adjacentRegions.Add(mergedRegions[region]);
+        }
+        
         if (adjacentRegions.Count > 1) return false;
         
         if (_random.Next(ExtraConnectorChance) == 0) AddJunction(pos);
