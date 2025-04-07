@@ -35,7 +35,7 @@ public class Dungeon
         WallLayer.TileSet = ResourceLoader.Load<TileSet>("res://Assets/TileSets/wall_atlas.tres");
     }
 
-    public static Dungeon From(List<List<bool>> walls)
+    public static Dungeon From(List<List<int>> walls)
     {
         var dungeon = new Dungeon();
         for (var x = 0; x < walls.Count; x++)
@@ -43,7 +43,15 @@ public class Dungeon
             for (var y = 0; y < walls[x].Count; y++)
             {
                 //dungeon._grid.SetPointSolid(new Vector2I(x, y), walls[x][y]);
-                dungeon.WallLayer.SetCell(new Vector2I(x, y), walls[x][y] ? 0 : -1, new Vector2I(23, 3));
+                dungeon.WallLayer.SetCell(
+                    new Vector2I(x, y), 
+                    0, 
+                    walls[x][y] == -1 
+                        ? new Vector2I(39, 21)
+                        : walls[x][y] == -2 
+                            ? new Vector2I(38, 21)
+                            : new Vector2I(35 + walls[x][y], 17)
+                    );
             }
         }
 

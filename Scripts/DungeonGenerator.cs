@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
+using Environment = System.Environment;
 
 namespace Cardium.Scripts;
 
@@ -16,8 +17,9 @@ public class DungeonGenerator {
   };
 
   //public Dungeon Dungeon = new();
-  public List<List<bool>> Walls = new();
+  public List<List<int>> Walls = new();
   private Vector2I _size;
+  private Rect2I _bounds;
   
   private readonly Random _random = new ();
 
@@ -30,6 +32,7 @@ public class DungeonGenerator {
 
   public Dungeon Generate(Vector2I size) {
     _size = size;
+    _bounds = new Rect2I(Vector2I.Zero, size);
     if (size.X % 2 == 0 || size.Y % 2 == 0) {
       throw new Exception("The stage must be odd-sized.");
     }
@@ -39,7 +42,7 @@ public class DungeonGenerator {
     InitArea(_size);
     GenerateRooms();
     GenerateMaze();
-    //ConnectRegions();
+    ConnectRegions();
     
     return Dungeon.From(Walls);
 
@@ -143,86 +146,108 @@ public class DungeonGenerator {
     }
   }
   
-  /*
   private void ConnectRegions() {
     // Find all the tiles that can connect two (or more) regions.
-    var connectorRegions = <Vector2I, Set<int>>{};
-    foreach (var pos in bounds.inflate(-1)) {
-      // Can't already be part of a region.
-      if (!IsWall(pos)) continue;
+    var connectorRegions = new Dictionary<Vector2I, HashSet<int>>();
+    
+    var shrunkenBounds = _bounds.Grow(-1);
 
-      var regions = new Set<int>();
-      foreach (var dir in Direction.CARDINAL) {
-        var region = _regions[pos + dir];
-        if (region != null) regions.add(region);
+    for (var x = shrunkenBounds.Position.X; x < shrunkenBounds.End.X; x++) {
+      for (var y = shrunkenBounds.Position.Y; y < shrunkenBounds.End.Y; y++) {
+        var pos = new Vector2I(x, y);
+        
+        if (!IsWall(pos)) continue;
+
+        var regions = new HashSet<int>();
+        foreach (var dir in Directions) {
+          var dirPos = pos + dir;
+          if (IsWall(dirPos)) continue;
+          var region = _regions[dirPos.X][dirPos.Y];
+          regions.Add(region);
+        }
+        
+        if (regions.Count < 2) continue;
+
+        connectorRegions[pos] = regions;
+
+        Walls[pos.X][pos.Y] = -2;
       }
-
-      if (regions.length < 2) continue;
-
-      connectorRegions[pos] = regions;
     }
-
-    var connectors = connectorRegions.keys.toList();
-
+    
+    var connectors = connectorRegions.Keys.ToList();
+    
+    GD.Print($"Found {connectors.Count} potential connectors.");
+    
+    GD.Print(string.Join(Environment.NewLine, connectorRegions.Select(kvp => $"{kvp.Key}: {string.Join(", ", kvp.Value)}")));
+    
     // Keep track of which regions have been merged. This maps an original
-    // region index to the one it has been merged to.
-    var merged = {};
-    var openRegions = new Set<int>();
+    // region index to the one it has been merged into.
+    var mergedRegions = new List<int>();
+    
+    var openRegions = new List<int>();
     for (var i = 0; i <= _currentRegion; i++) {
-      merged[i] = i;
-      openRegions.add(i);
+      mergedRegions.Add(i);
+      openRegions.Add(i);
     }
+    
+    GD.Print($"Open regions: {openRegions.Count}");
 
     // Keep connecting regions until we're down to one.
-    while (openRegions.length > 1) {
-      var connector = rng.item(connectors);
+    while (openRegions.Count > 1) {
+      var connector = connectors[_random.Next(0, connectors.Count)];
 
+      GD.Print($"Picked connector {connector} that has regions {string.Join(", ", connectorRegions[connector])}");
+      
       // Carve the connection.
       AddJunction(connector);
 
       // Merge the connected regions. We'll pick one region (arbitrarily) and
-      // map all of the other regions to its index.
-      var regions = connectorRegions[connector]
-        .map((region) => merged[region]);
-      var dest = regions.first;
-      var sources = regions.skip(1).toList();
+      // map all the other regions to its index.
+      var regions = connectorRegions[connector].Select(region => mergedRegions[region]).ToList();
+      var target = regions.First();
+      var sources = regions.Skip(1).ToList();
 
-      // Merge all of the affected regions. We have to look at *all* of the
+      // Merge all the affected regions. We have to look at all the
       // regions because other regions may have previously been merged with
       // some of the ones we're merging now.
       for (var i = 0; i <= _currentRegion; i++) {
-        if (sources.contains(merged[i])) {
-          merged[i] = dest;
+        if (sources.Contains(mergedRegions[i])) {
+          mergedRegions[i] = target;
         }
       }
 
       // The sources are no longer in use.
-      openRegions.removeAll(sources);
-
+      openRegions = openRegions.Except(sources).ToList();
+      GD.Print($"Remaining open regions: {string.Join(", ", openRegions)}");
+      GD.Print($"Mapping:");
+      for (int i = 0; i < mergedRegions.Count; i++) {
+        GD.Print($"  {i} -> {mergedRegions[i]}");
+      }
+      
       // Remove any connectors that aren't needed anymore.
-      connectors.removeWhere((pos) {
+      connectors.RemoveAll(pos => {
         // Don't allow connectors right next to each other.
-        if (connector - pos < 2) return true;
+        if (connector.DistanceTo(pos) < 2) return true;
 
-        // If the connector no long spans different regions, we don't need it.
-        var regions = connectorRegions[pos].map((region) => merged[region])
-          .toSet();
+        // If the connector no longer spans different regions, we don't need it.
+        var adjacentRegions = connectorRegions[pos].Select(region => mergedRegions[region]).ToHashSet();
 
-        if (regions.length > 1) return false;
+        if (adjacentRegions.Count > 1) return false;
 
-        // This connecter isn't needed, but connect it occasionally so that the
+        // This connector isn't needed, but connect it occasionally so that the
         // dungeon isn't singly-connected.
-        if (_random.Next(extraConnectorChance) == 0) AddJunction(pos);
+        //if (_random.Next(ExtraConnectorChance) == 0) AddJunction(pos);
 
         return true;
       });
     }
   }
-  */
 
   private void AddJunction(Vector2I tile) {
     SetWall(tile, false);
-    /* For supporting door generation
+    
+    // For supporting door generation:
+    /*
     if (_random.Next(4) < 1) {
       SetTile(tile, _random.Next(3) < 1 ? Tiles.openDoor : Tiles.floor);
     } else {
@@ -277,16 +302,16 @@ public class DungeonGenerator {
     _regions[tile.X][tile.Y] = _currentRegion;
   }
 
-  private bool IsWall(Vector2I tile) => Walls[tile.X][tile.Y];
-  private bool SetWall(Vector2I tile, bool value = true) => Walls[tile.X][tile.Y] = value;
+  private bool IsWall(Vector2I tile) => Walls[tile.X][tile.Y] < 0;
+  private void SetWall(Vector2I tile, bool value = true) => Walls[tile.X][tile.Y] = value ? -1 : _currentRegion;
 
   private void InitArea(Vector2I size) {
     for (var x = 0; x < size.X; x++) {
-      Walls.Add(new List<bool>());
+      Walls.Add(new List<int>());
       _regions.Add(new List<int>());
       for (var y = 0; y < size.Y; y++) {
-        Walls[x].Add(true);
-        _regions[x].Add(_currentRegion);
+        Walls[x].Add(-1);
+        _regions[x].Add(-1);
       }
     }
   }
