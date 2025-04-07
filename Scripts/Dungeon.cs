@@ -29,6 +29,12 @@ public class Dungeon
             );
     }
 
+    public Dungeon()
+    {
+        //WallLayer.Scale = new Vector2(4, 4);
+        WallLayer.TileSet = ResourceLoader.Load<TileSet>("res://Assets/TileSets/wall_atlas.tres");
+    }
+
     public static Dungeon From(List<List<bool>> walls)
     {
         var dungeon = new Dungeon();
@@ -36,8 +42,8 @@ public class Dungeon
         {
             for (var y = 0; y < walls[x].Count; y++)
             {
-                dungeon._grid.SetPointSolid(new Vector2I(x, y), walls[x][y]);
-                dungeon.WallLayer.SetCell(new Vector2I(x, y), walls[x][y] ? 0 : -1, new Vector2I(0, 0));
+                //dungeon._grid.SetPointSolid(new Vector2I(x, y), walls[x][y]);
+                dungeon.WallLayer.SetCell(new Vector2I(x, y), walls[x][y] ? 0 : -1, new Vector2I(23, 3));
             }
         }
 

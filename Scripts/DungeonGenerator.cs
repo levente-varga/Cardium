@@ -7,14 +7,14 @@ using Godot;
 namespace Cardium.Scripts;
 
 public class DungeonGenerator {
-  public int NumRoomTries;
+  public int NumRoomTries = 100;
   public int ExtraConnectorChance => 20;
   public int RoomExtraSize => 0;
   public int WindingPercent => 0;
 
   //public Dungeon Dungeon = new();
   public List<List<bool>> Walls = new();
-  private Dungeon _dungeon = new ();
+  private Size _size;
   
   private readonly Random _random = new ();
 
@@ -26,22 +26,27 @@ public class DungeonGenerator {
   int _currentRegion = -1;
 
   public Dungeon Generate(Size size) {
+    _size = size;
     if (size.Width % 2 == 0 || size.Height % 2 == 0) {
       throw new Exception("The stage must be odd-sized.");
     }
-
-    _dungeon = new Dungeon { Size = size };
     
-    InitWalls(_dungeon.Size);
-    foreach (var room in GenerateRooms()) {
+    GD.Print($"Generating a {size.Width}x{size.Height} dungeon...");
+    
+    InitWalls(_size);
+    var rooms = GenerateRooms();
+    
+    GD.Print($"Generated {rooms.Count} rooms");
+    
+    foreach (var room in rooms) {
       Fill(false, room);
     }
 
-    return _dungeon;
+    return Dungeon.From(Walls);
 
     // Fill in all the empty space with mazes.
-    for (var y = 1; y < _dungeon.Size.Height; y += 2) {
-      for (var x = 1; x < _dungeon.Size.Width; x += 2) {
+    for (var y = 1; y < _size.Height; y += 2) {
+      for (var x = 1; x < _size.Width; x += 2) {
         var tile = new Vector2I(x, y);
         if (IsWall(tile)) continue;
         //GrowMaze(tile);
@@ -122,8 +127,8 @@ public class DungeonGenerator {
       }
 
       Vector2I position = new (
-        _random.Next(0, (_dungeon.Size.Width - width) / 2 * 2 + 1),
-        _random.Next(0, (_dungeon.Size.Width - width) / 2 * 2 + 1)
+        _random.Next(0, (_size.Width - width) / 2) * 2 + 1,
+        _random.Next(0, (_size.Height - height) / 2) * 2 + 1
       );
 
       var room = new Rect2I(position.X, position.Y, width, height);
@@ -133,10 +138,12 @@ public class DungeonGenerator {
 
       rooms.Add(room);
 
-      StartRegion();
-      for (var x = room.Position.X; x < room.End.X; x++)
-        for (var y = room.Position.Y; y < room.End.Y; y++)
-          Carve(new Vector2I(x, y));
+      //StartRegion();
+      //for (var x = room.Position.X; x < room.End.X; x++)
+      //  for (var y = room.Position.Y; y < room.End.Y; y++)
+      //    Carve(new Vector2I(x, y));
+      
+      GD.Print($"Generated a room of size {width}x{height} at {position}");
     }
 
     return rooms;
@@ -291,9 +298,9 @@ public class DungeonGenerator {
   }
   
   private void Fill(bool wall, Rect2I? area = null) {
-    Rect2I fillArea = area ?? new Rect2I(0, 0, _dungeon.Size.Width, _dungeon.Size.Height);
-    for (var x = fillArea.Position.X; x < fillArea.Size.X; x++) {
-      for (var y = fillArea.Position.Y; y < fillArea.Size.Y; y++) {
+    Rect2I fillArea = area ?? new Rect2I(0, 0, _size.Width, _size.Height);
+    for (var x = fillArea.Position.X; x < fillArea.End.X; x++) {
+      for (var y = fillArea.Position.Y; y < fillArea.End.Y; y++) {
         Walls[x][y] = wall;
       }
     }
