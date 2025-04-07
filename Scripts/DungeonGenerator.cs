@@ -11,6 +11,10 @@ public class DungeonGenerator {
   public int RoomExtraSize => 1;
   public int WindingPercent => 50;
 
+  private static readonly List<Vector2I> Directions = new() {
+    Vector2I.Down, Vector2I.Up, Vector2I.Left, Vector2I.Right
+  };
+
   //public Dungeon Dungeon = new();
   public List<List<bool>> Walls = new();
   private Vector2I _size;
@@ -33,35 +37,20 @@ public class DungeonGenerator {
     GD.Print($"Generating a {size.X}x{size.Y} dungeon...");
     
     InitArea(_size);
-    var rooms = GenerateRooms();
-    
-    GD.Print($"Generated {rooms.Count} rooms");
-    
-    foreach (var room in rooms) {
-      Fill(false, room);
-    }
-
-    for (var y = 1; y < _size.Y; y += 2) {
-      for (var x = 1; x < _size.X; x += 2) {
-        var tile = new Vector2I(x, y);
-        if (!IsWall(tile)) continue;
-        GrowMaze(tile);
-      }
-    }
+    GenerateRooms();
+    GenerateMaze();
+    //ConnectRegions();
     
     return Dungeon.From(Walls);
 
-    //ConnectRegions();
     //RemoveDeadEnds();
-
-    return new Dungeon();
   }
   
   /// Implementation of the "growing tree" algorithm from here:
   /// http://www.astrolog.org/labyrnth/algrithm.htm.
   private void GrowMaze(Vector2I start) {
     var cells = new List<Vector2I>();
-    Vector2I lastDir = Vector2I.Zero;
+    Vector2I lastDirection = Vector2I.Zero;
 
     StartRegion();
     Carve(start);
@@ -73,39 +62,39 @@ public class DungeonGenerator {
       // See which adjacent cells are open.
       var unmadeCells = new List<Vector2I>();
 
-      foreach (var dir in new List<Vector2I>{ Vector2I.Down, Vector2I.Up, Vector2I.Left, Vector2I.Right }) {
-        if (CanCarve(cell, dir)) unmadeCells.Add(dir);
+      foreach (var direction in Directions) {
+        if (CanCarve(cell, direction)) unmadeCells.Add(direction);
       }
 
       if (unmadeCells.Count > 0) {
         // Based on how "windy" passages are, try to prefer carving in the
         // same direction.
-        Vector2I dir;
-        if (unmadeCells.Contains(lastDir) && _random.Next(100) > WindingPercent) {
-          dir = lastDir;
+        Vector2I direction;
+        if (unmadeCells.Contains(lastDirection) && _random.Next(100) > WindingPercent) {
+          direction = lastDirection;
         } 
         else {
-          dir = unmadeCells[_random.Next(0, unmadeCells.Count)];
+          direction = unmadeCells[_random.Next(0, unmadeCells.Count)];
         }
 
-        Carve(cell + dir);
-        Carve(cell + dir * 2);
+        Carve(cell + direction);
+        Carve(cell + direction * 2);
 
-        cells.Add(cell + dir * 2);
-        lastDir = dir;
+        cells.Add(cell + direction * 2);
+        lastDirection = direction;
       } 
       else {
         // No adjacent uncarved cells.
         cells.Remove(cell);
 
         // This path has ended.
-        lastDir = Vector2I.Zero;
+        lastDirection = Vector2I.Zero;
       }
     }
   }
 
   /// Places rooms ignoring the existing maze corridors.
-  private List<Rect2I> GenerateRooms() {
+  private void GenerateRooms() {
     List<Rect2I> rooms = new();
     for (var i = 0; i < NumRoomTries; i++) {
       // Pick a random room size. The funny math here does two things:
@@ -136,24 +125,31 @@ public class DungeonGenerator {
 
       rooms.Add(room);
 
-      //StartRegion();
-      //for (var x = room.Position.X; x < room.End.X; x++)
-      //  for (var y = room.Position.Y; y < room.End.Y; y++)
-      //    Carve(new Vector2I(x, y));
-      
-      GD.Print($"Generated a room of size {width}x{height} at {position}");
+      StartRegion();
+      for (var x = room.Position.X; x < room.End.X; x++)
+        for (var y = room.Position.Y; y < room.End.Y; y++)
+          Carve(new Vector2I(x, y));
     }
-
-    return rooms;
+    GD.Print($"Generated {rooms.Count} rooms");
   }
 
+  private void GenerateMaze() {
+    for (var y = 1; y < _size.Y; y += 2) {
+      for (var x = 1; x < _size.X; x += 2) {
+        var tile = new Vector2I(x, y);
+        if (!IsWall(tile)) continue;
+        GrowMaze(tile);
+      }
+    }
+  }
+  
   /*
   private void ConnectRegions() {
     // Find all the tiles that can connect two (or more) regions.
     var connectorRegions = <Vector2I, Set<int>>{};
     foreach (var pos in bounds.inflate(-1)) {
       // Can't already be part of a region.
-      if (getTile(pos) != Tiles.wall) continue;
+      if (!IsWall(pos)) continue;
 
       var regions = new Set<int>();
       foreach (var dir in Direction.CARDINAL) {
@@ -291,15 +287,6 @@ public class DungeonGenerator {
       for (var y = 0; y < size.Y; y++) {
         Walls[x].Add(true);
         _regions[x].Add(_currentRegion);
-      }
-    }
-  }
-  
-  private void Fill(bool wall, Rect2I? area = null) {
-    Rect2I fillArea = area ?? new Rect2I(0, 0, _size.X, _size.Y);
-    for (var x = fillArea.Position.X; x < fillArea.End.X; x++) {
-      for (var y = fillArea.Position.Y; y < fillArea.End.Y; y++) {
-        Walls[x][y] = wall;
       }
     }
   }
