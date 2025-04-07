@@ -1,20 +1,19 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using Godot;
 
 namespace Cardium.Scripts;
 
 public class DungeonGenerator {
-  public int NumRoomTries = 100;
+  public int NumRoomTries = 10;
   public int ExtraConnectorChance => 20;
-  public int RoomExtraSize => 0;
-  public int WindingPercent => 0;
+  public int RoomExtraSize => 1;
+  public int WindingPercent => 50;
 
   //public Dungeon Dungeon = new();
   public List<List<bool>> Walls = new();
-  private Size _size;
+  private Vector2I _size;
   
   private readonly Random _random = new ();
 
@@ -25,15 +24,15 @@ public class DungeonGenerator {
   /// The index of the current region being carved.
   int _currentRegion = -1;
 
-  public Dungeon Generate(Size size) {
+  public Dungeon Generate(Vector2I size) {
     _size = size;
-    if (size.Width % 2 == 0 || size.Height % 2 == 0) {
+    if (size.X % 2 == 0 || size.Y % 2 == 0) {
       throw new Exception("The stage must be odd-sized.");
     }
     
-    GD.Print($"Generating a {size.Width}x{size.Height} dungeon...");
+    GD.Print($"Generating a {size.X}x{size.Y} dungeon...");
     
-    InitWalls(_size);
+    InitArea(_size);
     var rooms = GenerateRooms();
     
     GD.Print($"Generated {rooms.Count} rooms");
@@ -42,16 +41,15 @@ public class DungeonGenerator {
       Fill(false, room);
     }
 
-    return Dungeon.From(Walls);
-
-    // Fill in all the empty space with mazes.
-    for (var y = 1; y < _size.Height; y += 2) {
-      for (var x = 1; x < _size.Width; x += 2) {
+    for (var y = 1; y < _size.Y; y += 2) {
+      for (var x = 1; x < _size.X; x += 2) {
         var tile = new Vector2I(x, y);
-        if (IsWall(tile)) continue;
-        //GrowMaze(tile);
+        if (!IsWall(tile)) continue;
+        GrowMaze(tile);
       }
     }
+    
+    return Dungeon.From(Walls);
 
     //ConnectRegions();
     //RemoveDeadEnds();
@@ -59,12 +57,11 @@ public class DungeonGenerator {
     return new Dungeon();
   }
   
-  /*
   /// Implementation of the "growing tree" algorithm from here:
   /// http://www.astrolog.org/labyrnth/algrithm.htm.
   private void GrowMaze(Vector2I start) {
     var cells = new List<Vector2I>();
-    Direction? lastDir = null;
+    Vector2I lastDir = Vector2I.Zero;
 
     StartRegion();
     Carve(start);
@@ -74,20 +71,21 @@ public class DungeonGenerator {
       var cell = cells.Last();
 
       // See which adjacent cells are open.
-      var unmadeCells = new List<Direction>();
+      var unmadeCells = new List<Vector2I>();
 
-      foreach (var dir in Direction.CARDINAL) {
+      foreach (var dir in new List<Vector2I>{ Vector2I.Down, Vector2I.Up, Vector2I.Left, Vector2I.Right }) {
         if (CanCarve(cell, dir)) unmadeCells.Add(dir);
       }
 
       if (unmadeCells.Count > 0) {
         // Based on how "windy" passages are, try to prefer carving in the
         // same direction.
-        Direction? dir;
+        Vector2I dir;
         if (unmadeCells.Contains(lastDir) && _random.Next(100) > WindingPercent) {
           dir = lastDir;
-        } else {
-          dir = rng.item(unmadeCells);
+        } 
+        else {
+          dir = unmadeCells[_random.Next(0, unmadeCells.Count)];
         }
 
         Carve(cell + dir);
@@ -95,16 +93,16 @@ public class DungeonGenerator {
 
         cells.Add(cell + dir * 2);
         lastDir = dir;
-      } else {
+      } 
+      else {
         // No adjacent uncarved cells.
-        cells.Remove(cells.Last());
+        cells.Remove(cell);
 
         // This path has ended.
-        lastDir = null;
+        lastDir = Vector2I.Zero;
       }
     }
   }
-  */
 
   /// Places rooms ignoring the existing maze corridors.
   private List<Rect2I> GenerateRooms() {
@@ -127,8 +125,8 @@ public class DungeonGenerator {
       }
 
       Vector2I position = new (
-        _random.Next(0, (_size.Width - width) / 2) * 2 + 1,
-        _random.Next(0, (_size.Height - height) / 2) * 2 + 1
+        _random.Next(0, (_size.X - width) / 2) * 2 + 1,
+        _random.Next(0, (_size.Y - height) / 2) * 2 + 1
       );
 
       var room = new Rect2I(position.X, position.Y, width, height);
@@ -261,20 +259,18 @@ public class DungeonGenerator {
     }
   }
   */
-
-  /*
+  
   /// Gets whether an opening can be carved from the given starting
   /// [Cell] at [pos] to the adjacent Cell facing [direction]. Returns `true`
   /// if the starting Cell is in bounds and the destination Cell is filled
   /// (or out of bounds).
-  private bool CanCarve(Vector2I pos, Direction direction) {
+  private bool CanCarve(Vector2I pos, Vector2I direction) {
     // Must end in bounds.
-    if (!bounds.contains(pos + direction * 3)) return false;
+    if (!new Rect2I(Vector2I.Zero, _size).HasPoint(pos + direction * 3)) return false;
 
     // Destination must not be open.
     return IsWall(pos + direction * 2);
   }
-  */
 
   private void StartRegion() {
     _currentRegion++;
@@ -288,17 +284,19 @@ public class DungeonGenerator {
   private bool IsWall(Vector2I tile) => Walls[tile.X][tile.Y];
   private bool SetWall(Vector2I tile, bool value = true) => Walls[tile.X][tile.Y] = value;
 
-  private void InitWalls(Size size) {
-    for (var x = 0; x < size.Width; x++) {
+  private void InitArea(Vector2I size) {
+    for (var x = 0; x < size.X; x++) {
       Walls.Add(new List<bool>());
-      for (var y = 0; y < size.Height; y++) {
+      _regions.Add(new List<int>());
+      for (var y = 0; y < size.Y; y++) {
         Walls[x].Add(true);
+        _regions[x].Add(_currentRegion);
       }
     }
   }
   
   private void Fill(bool wall, Rect2I? area = null) {
-    Rect2I fillArea = area ?? new Rect2I(0, 0, _size.Width, _size.Height);
+    Rect2I fillArea = area ?? new Rect2I(0, 0, _size.X, _size.Y);
     for (var x = fillArea.Position.X; x < fillArea.End.X; x++) {
       for (var y = fillArea.Position.Y; y < fillArea.End.Y; y++) {
         Walls[x][y] = wall;
