@@ -47,10 +47,10 @@ public class Dungeon
                     new Vector2I(x, y), 
                     0, 
                     walls[x][y] == -1 
-                        ? new Vector2I(39, 21)
+                        ? new Vector2I(48, 11)
                         : walls[x][y] == -2 
-                            ? new Vector2I(38, 21)
-                            : new Vector2I(35 + walls[x][y], 17)
+                            ? new Vector2I(48, 11)
+                            : new Vector2I(0, 0)
                     );
             }
         }

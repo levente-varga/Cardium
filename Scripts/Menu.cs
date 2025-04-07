@@ -39,7 +39,8 @@ public partial class Menu : Node2D
 	private void GenerateDungeon()
 	{
 		if (dungeon != null) RemoveChild(dungeon.WallLayer);
-		dungeon = new DungeonGenerator().Generate(new Vector2I(31, 31));
+		dungeon = new DungeonGenerator().Generate(new Vector2I(119, 67));
+		dungeon.WallLayer.ZIndex = 0;
 		AddChild(dungeon.WallLayer);
 	}
 

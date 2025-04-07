@@ -7,7 +7,7 @@ using Environment = System.Environment;
 namespace Cardium.Scripts;
 
 public class DungeonGenerator {
-  public int NumRoomTries = 10;
+  public int NumRoomTries = 100;
   public int ExtraConnectorChance => 20;
   public int RoomExtraSize => 1;
   public int WindingPercent => 50;
@@ -43,6 +43,7 @@ public class DungeonGenerator {
     GenerateRooms();
     GenerateMaze();
     ConnectRegions();
+    RemoveDeadEnds();
     
     return Dungeon.From(Walls);
 
@@ -233,10 +234,8 @@ public class DungeonGenerator {
         var adjacentRegions = connectorRegions[pos].Select(region => mergedRegions[region]).ToHashSet();
 
         if (adjacentRegions.Count > 1) return false;
-
-        // This connector isn't needed, but connect it occasionally so that the
-        // dungeon isn't singly-connected.
-        //if (_random.Next(ExtraConnectorChance) == 0) AddJunction(pos);
+        
+        if (_random.Next(ExtraConnectorChance) == 0) AddJunction(pos);
 
         return true;
       });
@@ -255,31 +254,34 @@ public class DungeonGenerator {
     }
     */
   }
-
-  /*
+  
   private void RemoveDeadEnds() {
     var done = false;
 
     while (!done) {
       done = true;
 
-      foreach (var pos in bounds.inflate(-1)) {
-        if (IsWall(pos)) continue;
+      var shrunkenBounds = _bounds.Grow(-1);
+      for (var x = shrunkenBounds.Position.X; x < shrunkenBounds.End.X; x++) {
+        for (var y = shrunkenBounds.Position.Y; y < shrunkenBounds.End.Y; y++) {
+          var pos = new Vector2I(x, y);
+          
+          if (IsWall(pos)) continue;
 
-        // If it only has one exit, it's a dead end.
-        var exits = 0;
-        foreach (var dir in Direction.CARDINAL) {
-          if (IsWall(pos + dir)) exits++;
+          // If it only has one exit, it's a dead end.
+          var exits = 0;
+          foreach (var dir in Directions) {
+            if (!IsWall(pos + dir)) exits++;
+          }
+
+          if (exits != 1) continue;
+
+          done = false;
+          SetWall(pos);
         }
-
-        if (exits != 1) continue;
-
-        done = false;
-        SetWall(pos);
       }
     }
   }
-  */
   
   /// Gets whether an opening can be carved from the given starting
   /// [Cell] at [pos] to the adjacent Cell facing [direction]. Returns `true`
