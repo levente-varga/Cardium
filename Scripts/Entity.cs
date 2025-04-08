@@ -17,14 +17,16 @@ public partial class Entity : TileAlignedGameObject
         set => HealthBar.MaxHealth = value;
     }
     
-    protected int BaseArmor;
-    protected int BaseDamage;
-    protected int BaseRange;
-    protected float BaseLuck;
+    protected int BaseArmor = 0;
+    protected int BaseDamage = 1;
+    protected int BaseRange = 1;
+    protected int BaseVision = 3;
+    protected float BaseLuck = 0;
 
     public int TempArmor { private get; set; }
     public int TempDamage { private get; set; }
     public int TempRange { private get; set; }
+    public int TempVision { private get; set; }
     public float TempLuck { private get; set; }
     
     public int TurnsLived { get; private set; }
@@ -32,7 +34,9 @@ public partial class Entity : TileAlignedGameObject
     public int Armor => BaseArmor + TempArmor;
     public int Damage => BaseDamage + TempDamage;
     public int Range => BaseRange + TempRange;
+    public int Vision => BaseVision + TempVision;
     public float Luck => BaseLuck + TempLuck;
+    public bool SeeingPlayer;
 
     public string Description = "";
     
@@ -70,6 +74,15 @@ public partial class Entity : TileAlignedGameObject
     public void OnTakeTurn(Player player, World world)
     {
         TurnsLived++;
+
+        if (!SeeingPlayer) {
+            if (world.GetDistanceBetween(Position, player.Position) <= Vision) {
+                SeeingPlayer = true;
+            }
+        }
+
+        if (!SeeingPlayer) return;
+        
         GD.Print(Name + "'s turn started.");
         ResetTemporaryStats();
         UpdateBuffsOnStartOfTurn();

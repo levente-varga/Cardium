@@ -11,10 +11,6 @@ public partial class Player : Entity
 	[Export] private Hand _hand = null!;
 	private readonly Deck _deck = new();
 	private Pile _discardPile = new();
-
-	public int BaseVision;
-	public int TempVision;
-	public int Vision => BaseVision + TempVision;
 	
 	public delegate void OnActionDelegate();
 	public event OnActionDelegate? OnActionEvent;
