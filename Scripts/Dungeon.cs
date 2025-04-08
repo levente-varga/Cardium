@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Cardium.Scripts.Enemies;
 using Godot;
 
 namespace Cardium.Scripts;
@@ -15,6 +16,8 @@ public class Dungeon {
   public TileMapLayer LootLayer = new();
   public TileMapLayer FogLayer = new();
   public Overlay Overlay = new();
+  
+  public List<Enemy> Enemies = new();
 
   // Data from the DungeonGenerator
   public List<List<bool>> Walls;
@@ -120,6 +123,18 @@ public class Dungeon {
   }
 
   private void SpawnEnemies() {
+    foreach (var room in Rooms) {
+      Vector2I tile = new(
+        _random.Next(room.Position.X, room.End.X - 1),
+        _random.Next(room.Position.Y, room.End.Y - 1)
+        );
+
+      Slime enemy = new() {
+        Position = tile
+      };
+      
+      Enemies.Add(enemy);
+    }
   }
 
   private void SpawnDoors() {
