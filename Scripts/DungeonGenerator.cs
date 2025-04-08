@@ -17,7 +17,8 @@ public class DungeonGenerator {
   };
 
   //public Dungeon Dungeon = new();
-  public List<List<int>> Walls = new();
+  private List<List<bool>> _walls = new();
+  private List<Rect2I> _rooms = new();
   private Vector2I _size;
   private Rect2I _bounds;
   
@@ -43,7 +44,10 @@ public class DungeonGenerator {
     ConnectRegions();
     RemoveDeadEnds();
     
-    return Dungeon.From(Walls);
+    return new Dungeon {
+      Walls = _walls,
+      Rooms = _rooms,
+    };
   }
   
   /// Implementation of the "growing tree" algorithm from here:
@@ -95,7 +99,7 @@ public class DungeonGenerator {
 
   /// Places rooms ignoring the existing maze corridors.
   private void GenerateRooms() {
-    List<Rect2I> rooms = new();
+    _rooms = new();
     for (var i = 0; i < NumRoomTries; i++) {
       // Pick a random room size. The funny math here does two things:
       // - It makes sure rooms are odd-sized to line up with maze.
@@ -120,10 +124,10 @@ public class DungeonGenerator {
 
       var room = new Rect2I(position.X, position.Y, width, height);
 
-      var overlaps = rooms.Any(other => room.Intersects(other));
+      var overlaps = _rooms.Any(other => room.Intersects(other));
       if (overlaps) continue;
 
-      rooms.Add(room);
+      _rooms.Add(room);
 
       StartRegion();
       for (var x = room.Position.X; x < room.End.X; x++)
@@ -166,8 +170,6 @@ public class DungeonGenerator {
         if (regions.Count < 2) continue;
 
         connectorRegions[pos] = regions;
-
-        Walls[pos.X][pos.Y] = -2;
       }
     }
     
@@ -290,15 +292,15 @@ public class DungeonGenerator {
     _regions[tile.X][tile.Y] = _currentRegion;
   }
 
-  private bool IsWall(Vector2I tile) => Walls[tile.X][tile.Y] < 0;
-  private void SetWall(Vector2I tile, bool value = true) => Walls[tile.X][tile.Y] = value ? -1 : _currentRegion;
+  private bool IsWall(Vector2I tile) => _walls[tile.X][tile.Y];
+  private void SetWall(Vector2I tile, bool value = true) => _walls[tile.X][tile.Y] = value;
 
   private void InitArea(Vector2I size) {
     for (var x = 0; x < size.X; x++) {
-      Walls.Add(new List<int>());
+      _walls.Add(new List<bool>());
       _regions.Add(new List<int>());
       for (var y = 0; y < size.Y; y++) {
-        Walls[x].Add(-1);
+        _walls[x].Add(true);
         _regions[x].Add(-1);
       }
     }

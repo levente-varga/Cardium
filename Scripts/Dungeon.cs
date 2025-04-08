@@ -16,6 +16,10 @@ public class Dungeon {
   public TileMapLayer FogLayer = new();
   public Overlay Overlay = new();
 
+  // Data from the DungeonGenerator
+  public List<List<bool>> Walls;
+  public List<Rect2I> Rooms;
+
   private readonly Dictionary<int, Vector2I> _bitmaskToWallAtlasCoord = new() {
     { 0b11010000, new Vector2I(0, 0) },
     { 0b01101000, new Vector2I(1, 0) },
