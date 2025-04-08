@@ -10,7 +10,7 @@ public partial class Camera : Camera2D
 	private float _shake;
 	private readonly Random _random = new Random();
 	
-	private Vector2 TargetCenter => Target.GlobalPosition + Global.TileSize / 2;
+	private Vector2 TargetCenter => Target.GlobalPosition + Global.GlobalTileSize / 2;
 
 	private bool _focus;
 	public bool Focus

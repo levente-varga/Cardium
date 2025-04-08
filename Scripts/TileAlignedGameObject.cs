@@ -30,13 +30,13 @@ public partial class TileAlignedGameObject : AnimatedSprite2D
 
     public override void _Process(double delta)
     {
-        if (base.Position.DistanceTo(Position * Global.TileSize) < 1)
+        if (base.Position.DistanceTo(Position * Global.GlobalTileSize) < 1)
         {
-            base.Position = Position * Global.TileSize;
+            base.Position = Position * Global.GlobalTileSize;
         }
         else
         {
-            base.Position = base.Position.Lerp(Position * Global.TileSize, Global.LerpWeight * (float) delta);
+            base.Position = base.Position.Lerp(Position * Global.GlobalTileSize, Global.LerpWeight * (float) delta);
         }
 
         if (_previousPosition != Position)
@@ -49,7 +49,7 @@ public partial class TileAlignedGameObject : AnimatedSprite2D
     public void SetPosition(Vector2I position)
     {
         Position = position;
-        base.Position = position * Global.TileSize;
+        base.Position = position * Global.GlobalTileSize;
     }
 
     protected void SetStillFrame(Texture2D texture)
@@ -112,7 +112,7 @@ public partial class TileAlignedGameObject : AnimatedSprite2D
 
     protected void Nudge(Direction direction)
     {
-        base.Position += DirectionToVector(direction) * Global.TileSize / 8;
+        base.Position += DirectionToVector(direction) * Global.GlobalTileSize / 8;
         OnNudgeEvent?.Invoke(Position + DirectionToVector(direction));
     }
 
@@ -125,10 +125,10 @@ public partial class TileAlignedGameObject : AnimatedSprite2D
     }
 
     public void SpawnFallingLabel(string text, Color? color = null, int? fontSize = null, int? lifetimeMillis = null) =>
-        Utils.SpawnFallingLabel(GetTree(), GlobalPosition + Global.TileSize / 2, text, color, fontSize, lifetimeMillis);
+        Utils.SpawnFallingLabel(GetTree(), GlobalPosition + Global.GlobalTileSize / 2, text, color, fontSize, lifetimeMillis);
     
     public void SpawnFloatingLabel(string text, Color? color = null, int? fontSize = null, int? lifetimeMillis = 2000) =>
-        Utils.SpawnFloatingLabel(GetTree(), GlobalPosition + Global.TileSize / 2, text, color, fontSize, lifetimeMillis);
+        Utils.SpawnFloatingLabel(GetTree(), GlobalPosition + Global.GlobalTileSize / 2, text, color, fontSize, lifetimeMillis);
 
     protected void SpawnDebugFloatingLabel(string text)
     {

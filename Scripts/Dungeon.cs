@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Cardium.Scripts.Cards.Types;
 using Cardium.Scripts.Enemies;
 using Godot;
 
@@ -11,15 +13,14 @@ public class Dungeon {
   public TileMapLayer GroundLayer { get; private set; } = new();
   public TileMapLayer DecorLayer { get; private set; }= new();
   public TileMapLayer WallLayer { get; private set; } = new();
-  public TileMapLayer ObjectLayer { get; private set; } = new();
-  public TileMapLayer EnemyLayer { get; private set; } = new();
-  public TileMapLayer LootLayer { get; private set; } = new();
   public TileMapLayer FogLayer { get; private set; } = new();
   public Overlay Overlay { get; private set; } = new();
   
   public Vector2I Size { get; private set; }
   
   public List<Enemy> Enemies { get; private set; } = new();
+  public List<Interactable> Interactables { get; private set; } = new();
+  public List<Card> Loot { get; private set; } = new();
 
   // Data from the DungeonGenerator
   private List<List<bool>> _walls;
@@ -35,13 +36,13 @@ public class Dungeon {
     var mask = 0;
 
     if (IsWall(new Vector2I(x - 1, y - 1))) mask |= 128;
-    if (IsWall(new Vector2I(x    , y - 1))) mask |= 1;
-    if (IsWall(new Vector2I(x + 1, y - 1))) mask |= 2;
-    if (IsWall(new Vector2I(x - 1, y    ))) mask |= 64;
-    if (IsWall(new Vector2I(x + 1, y    ))) mask |= 4;
-    if (IsWall(new Vector2I(x - 1, y + 1))) mask |= 32;
-    if (IsWall(new Vector2I(x    , y + 1))) mask |= 16;
-    if (IsWall(new Vector2I(x + 1, y + 1))) mask |= 8;
+    if (IsWall(new Vector2I(x    , y - 1))) mask |= 64;
+    if (IsWall(new Vector2I(x + 1, y - 1))) mask |= 32;
+    if (IsWall(new Vector2I(x - 1, y    ))) mask |= 16;
+    if (IsWall(new Vector2I(x + 1, y    ))) mask |= 8;
+    if (IsWall(new Vector2I(x - 1, y + 1))) mask |= 4;
+    if (IsWall(new Vector2I(x    , y + 1))) mask |= 2;
+    if (IsWall(new Vector2I(x + 1, y + 1))) mask |= 1;
 
     return mask;
   }
@@ -56,7 +57,7 @@ public class Dungeon {
   }
 
   public Dungeon(List<List<bool>> walls, List<Rect2I> rooms) {
-    _walls = new(walls); // TODO: should deep copy
+    _walls = new(walls); // TODO: should deep copy instead
     _rooms = new(rooms);
     
     // Assuming the received list of lists (walls) has uniform length
@@ -80,6 +81,8 @@ public class Dungeon {
         );
       }
     }
+    
+    PrettyWalls();
   }
 
   /// <summary>
@@ -88,12 +91,14 @@ public class Dungeon {
   private void PrettyWalls() {
     for (var x = 0; x < Size.X; x++) {
       for (var y = 0; y < Size.Y; y++) {
-        if (LayerIsEmptyAt(WallLayer, new Vector2I(x, y))) continue;
-        WallLayer.SetCell(
-          coords: new Vector2I(x, y),
-          sourceId: 1,
-          atlasCoords: _bitmaskToWallAtlasCoord[GetWallBitmask(x, y)]
-        );
+        var cell = new Vector2I(x, y);
+        if (LayerIsEmptyAt(WallLayer, cell)) continue;
+        var atlasCoords = WallLayer.GetCellAtlasCoords(cell);
+        int bitmask = GetWallBitmask(x, y);
+        if (_bitmaskToWallAtlasCoord.Keys.Contains(bitmask)) {
+          atlasCoords = _bitmaskToWallAtlasCoord[bitmask];
+        }
+        WallLayer.SetCell(cell, 1, atlasCoords);
       }
     }
   }

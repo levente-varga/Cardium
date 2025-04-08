@@ -7,8 +7,8 @@ public static class Global
     public static readonly Vector2I SpriteSize = new (16, 16);
     public const int Scale = 4;
     public const int CardScale = 6;
-    public static Vector2I TileSize => SpriteSize * Scale;
-    public static Vector2 TileToWorld(Vector2I tile) => tile * TileSize;
+    public static Vector2I GlobalTileSize => SpriteSize * Scale;
+    public static Vector2 TileToWorld(Vector2I tile) => tile * GlobalTileSize;
     public const float LerpWeight = 15f;
     
     public static readonly Vector2I ChestAtlasCoords = new (8, 6);

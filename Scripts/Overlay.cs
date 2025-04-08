@@ -32,7 +32,7 @@ public partial class Overlay : Node2D
 	{
 		foreach (var tile in _tiles)
 		{
-			DrawRect(new Rect2(Global.TileToWorld(tile.Position), Global.TileSize), tile.Color);
+			DrawRect(new Rect2(Global.TileToWorld(tile.Position), Global.GlobalTileSize), tile.Color);
 		}
 	}
 }

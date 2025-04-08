@@ -176,11 +176,11 @@ public partial class World : Node2D
     
     public override void _Draw()
     {
-    	if (_end != null) DrawRect(new Rect2(Global.TileToWorld(_end.Value), Global.TileSize), Global.Yellow, false, 4);
+    	if (_end != null) DrawRect(new Rect2(Global.TileToWorld(_end.Value), Global.GlobalTileSize), Global.Yellow, false, 4);
 	    
 	    if (Global.Debug)
 	    {
-		    DrawRect(new Rect2(Global.TileToWorld(HoveredCell), Global.TileSize),
+		    DrawRect(new Rect2(Global.TileToWorld(HoveredCell), Global.GlobalTileSize),
 			    Player.InRange(HoveredCell) ? Colors.Green : Colors.Orange);
 	    }
 
@@ -250,7 +250,7 @@ public partial class World : Node2D
 	    _line.DefaultColor = Global.Yellow;
 
     	_grid.Region = _region;
-    	_grid.CellSize = Global.TileSize;
+    	_grid.CellSize = Global.GlobalTileSize;
     	_grid.Offset = Vector2.Zero;
     	_grid.DiagonalMode = AStarGrid2D.DiagonalModeEnum.Never;
     	_grid.DefaultEstimateHeuristic = AStarGrid2D.Heuristic.Euclidean;
@@ -263,8 +263,8 @@ public partial class World : Node2D
     }
     
     private static Vector2I GetTilePosition(Vector2 position) => new (
-		Mathf.FloorToInt(position.X / Global.TileSize.X),
-		Mathf.FloorToInt(position.Y / Global.TileSize.Y)
+		Mathf.FloorToInt(position.X / Global.GlobalTileSize.X),
+		Mathf.FloorToInt(position.Y / Global.GlobalTileSize.Y)
 	);
     
 	private static void EraseCell(TileMapLayer map, Vector2I position) => map.SetCell(position, -1, new Vector2I(-1, -1));
@@ -457,12 +457,12 @@ public partial class World : Node2D
 		var path = _grid.GetPointPath(from, to).ToList();
 		if (path.Count == 0) return null;
 		path = path.GetRange(1, path.Count - 1);
-		return path.Select(p => new Vector2I((int)p.X / Global.TileSize.X, (int)p.Y / Global.TileSize.Y)).ToList();
+		return path.Select(p => new Vector2I((int)p.X / Global.GlobalTileSize.X, (int)p.Y / Global.GlobalTileSize.Y)).ToList();
 	}
 
 	public Vector2[] GetPointPathBetween(Vector2I from, Vector2I to)
 	{
-		return _grid.GetPointPath(from, to).ToList().Select(p => new Vector2(p.X, p.Y) + Global.TileSize / 2).ToArray();
+		return _grid.GetPointPath(from, to).ToList().Select(p => new Vector2(p.X, p.Y) + Global.GlobalTileSize / 2).ToArray();
 	}
 
 	public static List<Vector2I> GetTilesInRange(Vector2I from, int range)
