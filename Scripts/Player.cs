@@ -25,6 +25,8 @@ public partial class Player : Entity
 		BaseDamage = 1;
 		MaxHealth = 5;
 		Health = MaxHealth;
+		
+		Position = Vector2I.One;
 
 		HealthBar.Visible = true;
 

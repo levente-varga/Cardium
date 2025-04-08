@@ -59,23 +59,24 @@ public class Dungeon {
     _walls = new(walls); // TODO: should deep copy
     _rooms = new(rooms);
     
+    // Assuming the received list of lists (walls) has uniform length
     Size = new Vector2I(
       walls.Count > 0 ? walls[0].Count : 0,
       walls.Count
       );
     
-    //WallLayer.Scale = new Vector2(4, 4);
+    WallLayer.Scale = new Vector2(4, 4);
     WallLayer.TileSet = ResourceLoader.Load<TileSet>("res://Assets/TileSets/walls.tres");
     
     GD.Print($"Instantiated a {Size.X}x{Size.Y} dungeon");
     
     for (var x = 0; x < _walls.Count; x++) {
-      for (var y = 0; y < _walls[y].Count; y++) {
+      for (var y = 0; y < _walls[x].Count; y++) {
         //dungeon._grid.SetPointSolid(new Vector2I(x, y), walls[x][y]);
-        WallLayer.SetCell(
+        if (_walls[x][y]) WallLayer.SetCell(
           new Vector2I(x, y),
           1,
-          _walls[x][y] ? new Vector2I(4, 0) : Vector2I.Zero
+          new Vector2I(4, 0)
         );
       }
     }

@@ -22,7 +22,7 @@ internal enum SelectionMode
 public partial class World : Node2D
 {
 	[Export] public Camera Camera = null!;
-	[Export] public Player Player= null!;
+	[Export] public Player Player = null!;
 	[Export] public Hand Hand = null!;
 	[Export] public Label DebugLabel1 = null!;
 	[Export] public Label DebugLabel2 = null!;
@@ -69,6 +69,12 @@ public partial class World : Node2D
 	    SetupFogOfWar();
 	    SetupPath();
 	    UpdatePath();
+
+	    DungeonGenerator generator = new();
+	    Dungeon dungeon = generator.Generate(31, 31);
+	    WallLayer.QueueFree();
+	    WallLayer = dungeon.WallLayer;
+	    AddChild(WallLayer);
 	    
 	    SpawnInteractables();
 	    SpawnEnemies();
