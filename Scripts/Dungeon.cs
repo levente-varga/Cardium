@@ -8,20 +8,22 @@ namespace Cardium.Scripts;
 public class Dungeon {
   private AStarGrid2D _grid = new();
 
-  public TileMapLayer GroundLayer = new();
-  public TileMapLayer DecorLayer = new();
-  public TileMapLayer WallLayer = new();
-  public TileMapLayer ObjectLayer = new();
-  public TileMapLayer EnemyLayer = new();
-  public TileMapLayer LootLayer = new();
-  public TileMapLayer FogLayer = new();
-  public Overlay Overlay = new();
+  public TileMapLayer GroundLayer { get; private set; } = new();
+  public TileMapLayer DecorLayer { get; private set; }= new();
+  public TileMapLayer WallLayer { get; private set; } = new();
+  public TileMapLayer ObjectLayer { get; private set; } = new();
+  public TileMapLayer EnemyLayer { get; private set; } = new();
+  public TileMapLayer LootLayer { get; private set; } = new();
+  public TileMapLayer FogLayer { get; private set; } = new();
+  public Overlay Overlay { get; private set; } = new();
   
-  public List<Enemy> Enemies = new();
+  public Vector2I Size { get; private set; }
+  
+  public List<Enemy> Enemies { get; private set; } = new();
 
   // Data from the DungeonGenerator
-  public List<List<bool>> Walls;
-  public List<Rect2I> Rooms;
+  private List<List<bool>> _walls;
+  private List<Rect2I> _rooms;
 
   private readonly Dictionary<int, Vector2I> _bitmaskToWallAtlasCoord = new() {
     { 0b11010000, new Vector2I(0, 0) },
@@ -49,49 +51,34 @@ public class Dungeon {
 
   private Random _random = new ();
 
-  private Vector2I _size = new(31, 31);
-
-  public Vector2I Size {
-    get => _size;
-    set => SetSize(value);
-  }
-
   private static bool LayerIsEmptyAt(TileMapLayer layer, Vector2I tile) {
     return layer.GetCellSourceId(tile) == -1;
   }
 
-  public void SetSize(Vector2I size) {
-    _size = new (
-      Math.Max(1, size.X) / 2 * 2 + 1,
-      Math.Max(1, size.Y) / 2 * 2 + 1
-    );
-  }
-
-  public Dungeon() {
+  public Dungeon(List<List<bool>> walls, List<Rect2I> rooms) {
+    _walls = new(walls); // TODO: should deep copy
+    _rooms = new(rooms);
+    
+    Size = new Vector2I(
+      walls.Count > 0 ? walls[0].Count : 0,
+      walls.Count
+      );
+    
     //WallLayer.Scale = new Vector2(4, 4);
     WallLayer.TileSet = ResourceLoader.Load<TileSet>("res://Assets/TileSets/walls.tres");
-  }
-
-  public static Dungeon From(List<List<int>> walls) {
-    var dungeon = new Dungeon();
-    for (var x = 0; x < walls.Count; x++) {
-      for (var y = 0; y < walls[x].Count; y++) {
+    
+    GD.Print($"Instantiated a {Size.X}x{Size.Y} dungeon");
+    
+    for (var x = 0; x < _walls.Count; x++) {
+      for (var y = 0; y < _walls[y].Count; y++) {
         //dungeon._grid.SetPointSolid(new Vector2I(x, y), walls[x][y]);
-        dungeon.WallLayer.SetCell(
+        WallLayer.SetCell(
           new Vector2I(x, y),
           1,
-          walls[x][y] == -1
-            ? new Vector2I(2, 3)
-            : walls[x][y] == -2
-              ? new Vector2I(2, 3)
-              : new Vector2I(3, 3)
+          _walls[x][y] ? new Vector2I(4, 0) : Vector2I.Zero
         );
       }
     }
-
-    dungeon.PrettyWalls();
-
-    return dungeon;
   }
 
   /// <summary>
@@ -123,7 +110,7 @@ public class Dungeon {
   }
 
   private void SpawnEnemies() {
-    foreach (var room in Rooms) {
+    foreach (var room in _rooms) {
       Vector2I tile = new(
         _random.Next(room.Position.X, room.End.X - 1),
         _random.Next(room.Position.Y, room.End.Y - 1)

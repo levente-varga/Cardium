@@ -44,10 +44,7 @@ public class DungeonGenerator {
     ConnectRegions();
     RemoveDeadEnds();
     
-    return new Dungeon {
-      Walls = _walls,
-      Rooms = _rooms,
-    };
+    return new Dungeon(_walls, _rooms);
   }
   
   /// Implementation of the "growing tree" algorithm from here:
