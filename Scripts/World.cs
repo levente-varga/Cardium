@@ -29,20 +29,11 @@ public partial class World : Node2D
 	[Export] public Label DebugLabel3 = null!;
 	[Export] public Label DebugLabel4 = null!;
 	
-	[Export] public TileMapLayer GroundLayer = null!;
-	[Export] public TileMapLayer DecorLayer = null!;
-	[Export] public TileMapLayer WallLayer = null!;
-	[Export] public TileMapLayer ObjectLayer = null!;
-	[Export] public TileMapLayer EnemyLayer = null!;
-	[Export] public TileMapLayer LootLayer = null!;
-	[Export] public TileMapLayer FogLayer = null!;
 	[Export] public Overlay Overlay = null!;
 	
 	private readonly List<CardLoot> _loot = new ();
 	private readonly List<Interactable> _interactables = new ();
     private readonly List<TileMapLayer> _layers = new ();
-    
-    private CombatManager _combatManager = null!;
     
     private SelectionMode _selectionMode = SelectionMode.None;
     private TargetingCard? _selectedTargetingCard;
@@ -52,32 +43,33 @@ public partial class World : Node2D
     private bool _selectionCancelled = false;
     private bool _selectionConfirmed = false;
 
-    private Rect2I _region;
     private AStarGrid2D _grid = new ();
     private Vector2I? _end = null;
     private Line2D _line = new ();
-    
+
+    private readonly Dungeon _dungeon;
+    private CombatManager _combatManager = null!;
+
+    public World() {
+	    DungeonGenerator generator = new();
+	    _dungeon = generator.Generate(51, 51, 99);
+    }
+
     public Vector2I HoveredCell => GetTilePosition(GetGlobalMousePosition());
     
     public override void _Ready()
     {
-	    //Input.MouseMode = Input.MouseModeEnum.Hidden;
 	    _combatManager = new CombatManager(Player, this, DebugLabel1);
 	    
-	    SetupLayers();
-	    SetupRegion();
+	    //Input.MouseMode = Input.MouseModeEnum.Hidden;
 	    SetupFogOfWar();
 	    SetupPath();
 	    UpdatePath();
 
-	    DungeonGenerator generator = new();
-	    Dungeon dungeon = generator.Generate(51, 51);
-	    WallLayer.QueueFree();
-	    WallLayer = dungeon.WallLayer;
-	    AddChild(WallLayer);
-	    
-	    SpawnInteractables();
-	    SpawnEnemies();
+	    AddChild(_dungeon.WallLayer);
+	    AddChild(_dungeon.DecorLayer);
+	    AddChild(_dungeon.GroundLayer);
+	    AddChild(_dungeon.FogLayer);
 	    
 	    Player.OnMoveEvent += OnPlayerMove;
 	    
@@ -90,7 +82,7 @@ public partial class World : Node2D
 	    DebugLabel2.Visible = Global.Debug;
 	    DebugLabel3.Visible = Global.Debug;
 	    DebugLabel4.Visible = Global.Debug;
-	    DebugLabel3.Text = "Region: " + _region + "\n"
+	    DebugLabel3.Text = "Region: " + _dungeon.Rect + "\n"
 	                       + "Hovered cell: " + HoveredCell + "\n"
 	                       + "Selection mode: " + _selectionMode + "\n"
 	                       + "Selection range: " + _selectionRange + "\n"
@@ -198,48 +190,14 @@ public partial class World : Node2D
 	    
     	base._Draw();
     }
-    
-    private void SetupLayers()
-    {
-	    _layers.Clear();
-	    _layers.Add(GroundLayer);
-	    _layers.Add(DecorLayer);
-	    _layers.Add(WallLayer);
-	    _layers.Add(ObjectLayer);
-	    _layers.Add(EnemyLayer);
-	    _layers.Add(LootLayer);
-    }
-
-    private void SetupRegion()
-    {
-	    var topLeft = new Vector2I(int.MaxValue, int.MaxValue);
-	    var bottomRight = new Vector2I(int.MinValue, int.MinValue);
-
-	    foreach (var layer in _layers)
-	    {
-		    topLeft = new Vector2I(
-			    Math.Min(topLeft.X, layer.GetUsedRect().Position.X),
-			    Math.Min(topLeft.Y, layer.GetUsedRect().Position.Y)
-		    );
-		    bottomRight = new Vector2I(
-			    Math.Max(bottomRight.X, layer.GetUsedRect().End.X),
-			    Math.Max(bottomRight.Y, layer.GetUsedRect().End.Y)
-		    );
-	    }
-
-	    var region = new Rect2I { Position = topLeft, Size = bottomRight - topLeft };
-	    GD.Print("World region: ", region);
-
-	    _region = region;
-    }
 
     private void SetupFogOfWar()
     {
-	    for (var x = _region.Position.X; x < _region.End.X; x++)
+	    for (var x = _dungeon.Rect.Position.X; x < _dungeon.Rect.End.X; x++)
 	    {
-		    for (var y = _region.Position.Y; y < _region.End.Y; y++)
+		    for (var y = _dungeon.Rect.Position.Y; y < _dungeon.Rect.End.Y; y++)
 		    {
-			    FogLayer.SetCell(new Vector2I(x, y), 2, new Vector2I(0, 0));
+			    _dungeon.FogLayer.SetCell(new Vector2I(x, y), 2, new Vector2I(0, 0));
 		    }
 	    }
     }
@@ -249,14 +207,14 @@ public partial class World : Node2D
     	_line = GetNode<Line2D>("Line2D");
 	    _line.DefaultColor = Global.Yellow;
 
-    	_grid.Region = _region;
+    	_grid.Region = _dungeon.Rect;
     	_grid.CellSize = Global.GlobalTileSize;
     	_grid.Offset = Vector2.Zero;
     	_grid.DiagonalMode = AStarGrid2D.DiagonalModeEnum.Never;
     	_grid.DefaultEstimateHeuristic = AStarGrid2D.Heuristic.Euclidean;
 	    _grid.Update();
 	    
-	    foreach (var cell in WallLayer.GetUsedCells().Union(ObjectLayer.GetUsedCells()))
+	    foreach (var cell in _dungeon.WallLayer.GetUsedCells())
 	    {
 		    _grid.SetPointSolid(cell);
 	    }
@@ -271,13 +229,13 @@ public partial class World : Node2D
 	
     public bool IsEnemy(Vector2I position) => GetEnemyAt(position) != null;
     public bool IsInteractable(Vector2I position) => GetInteractableAt(position) != null && GetInteractableAt(position) is { Solid: true };
-    public bool IsWall(Vector2I position) => WallLayer.GetCellTileData(position) != null;
+    public bool IsWall(Vector2I position) => _dungeon.WallLayer.GetCellTileData(position) != null;
 
-    public bool IsAnyInteractableNextTo(Vector2I position) =>
-	    ObjectLayer.GetCellTileData(position + Vector2I.Down) != null ||
-	    ObjectLayer.GetCellTileData(position + Vector2I.Up) != null ||
-	    ObjectLayer.GetCellTileData(position + Vector2I.Left) != null ||
-	    ObjectLayer.GetCellTileData(position + Vector2I.Right) != null;
+    public bool IsAnyInteractableNextTo(Vector2I position) => _dungeon.Interactables.Any(i => 
+	    i.Position == position + Vector2I.Right || 
+	    i.Position == position + Vector2I.Left || 
+	    i.Position == position + Vector2I.Up || 
+	    i.Position == position + Vector2I.Down);
     
     public Enemy? GetEnemyAt(Vector2I position) => _combatManager.Enemies.FirstOrDefault(enemy => enemy.Position == position);
     public Interactable? GetInteractableAt(Vector2I position) => _interactables.FirstOrDefault(interactable => interactable.Position == position);
@@ -293,10 +251,10 @@ public partial class World : Node2D
 	    var tiles = GetTilesInRange(Player.Position, Player.Vision);
 	    var edge = GetTilesExactlyInRange(Player.Position, Player.Vision + 1);
 	    
-	    foreach (var tile in tiles) FogLayer.SetCell(tile, 2, new Vector2I(2, 0));
-	    foreach (var tile in edge.Where(tile => FogLayer.GetCellAtlasCoords(tile).X == 2))
+	    foreach (var tile in tiles) _dungeon.FogLayer.SetCell(tile, 2, new Vector2I(2, 0));
+	    foreach (var tile in edge.Where(tile => _dungeon.FogLayer.GetCellAtlasCoords(tile).X == 2))
 	    {
-		    FogLayer.SetCell(tile, 2, new Vector2I(1, 0));
+		    _dungeon.FogLayer.SetCell(tile, 2, new Vector2I(1, 0));
 	    }
     }
 
@@ -365,53 +323,6 @@ public partial class World : Node2D
 	    AddChild(loot);
 	    loot.SetPosition(position);
 	    _loot.Add(loot);
-    }
-    
-    private void SpawnEnemies()
-    {
-	    foreach (var cell in EnemyLayer.GetUsedCells())
-	    {
-		    Enemy enemy;
-		    
-		    var atlasCoords = EnemyLayer.GetCellAtlasCoords(cell);
-		    EraseCell(EnemyLayer, cell);
-
-		    if (atlasCoords == Global.SlimeAtlasCoords) enemy = new Slime();
-		    else if (atlasCoords == Global.SpiderAtlasCoords) enemy = new Spider();
-		    else if (atlasCoords == Global.RangerAtlasCoords) enemy = new Ranger();
-		    else if (atlasCoords == Global.TargetDummyAtlasCoords) enemy = new TargetDummy();
-		    else continue;
-		    
-		    SpawnEnemy(enemy, cell);
-	    }
-    }
-    
-    private void SpawnInteractables()
-    {
-	    foreach (var cell in ObjectLayer.GetUsedCells())
-	    {
-		    Interactable interactable;
-		    
-		    var atlasCoords = ObjectLayer.GetCellAtlasCoords(cell);
-		    EraseCell(ObjectLayer, cell);
-		    
-		    if (atlasCoords == Global.BonfireAtlasCoords) interactable = new Bonfire();
-			else if (atlasCoords == Global.ChestAtlasCoords) interactable = new Chest();
-		    else if (atlasCoords == Global.DoorAtlasCoords) interactable = new Door();
-		    else continue;
-		    
-		    SpawnInteractable(interactable, cell);
-	    }
-    }
-    
-    private void SpawnLoot()
-    {
-	    foreach (var cell in LootLayer.GetUsedCells())
-	    {
-		    // TODO: determine loot type
-		    SpawnLoot(new CardLoot(new HealCard()), cell);
-		    EraseCell(LootLayer, cell);
-	    }
     }
 
     public List<Vector2I> GetInteractablePositions(Vector2I position)
