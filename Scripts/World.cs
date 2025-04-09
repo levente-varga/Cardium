@@ -63,6 +63,10 @@ public partial class World : Node2D {
     AddChild(_dungeon.DecorLayer);
     AddChild(_dungeon.GroundLayer);
     AddChild(_dungeon.FogLayer);
+
+    foreach (var enemy in _dungeon.Enemies) {
+	    SpawnEnemy(enemy, enemy.Position);
+    }
     
     Player.OnMoveEvent += OnPlayerMove;
     

@@ -47,7 +47,7 @@ public class Dungeon {
     }
     _rooms = new List<Rect2I>(rooms);
     
-    // Assuming the received list of lists (walls) has uniform length
+    // Assuming the received list of lists (tiles) has uniform length
     Size = new Vector2I(
       _tiles.Count,
       _tiles.Count > 0 ? _tiles[0].Count : 0
@@ -72,6 +72,7 @@ public class Dungeon {
     FillBitmaskDictionary();
     PrettyWalls();
     Decorate();
+    SpawnEnemies();
   }
 
   /// <summary>
@@ -124,8 +125,8 @@ public class Dungeon {
   private void SpawnEnemies() {
     foreach (var room in _rooms) {
       Vector2I tile = new(
-        _random.Next(room.Position.X, room.End.X - 1),
-        _random.Next(room.Position.Y, room.End.Y - 1)
+        _random.Next(room.Position.X + 1, room.End.X - 2),
+        _random.Next(room.Position.Y + 1, room.End.Y - 2)
         );
 
       Slime enemy = new() {
