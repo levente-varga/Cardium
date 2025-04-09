@@ -243,8 +243,8 @@ public class Dungeon {
     // 0 wall - 3 corners (4)
     AddBitmaskEntries(new () {true , true , false, true , true , false, true , false}, new Vector2I(5, 3));
     AddBitmaskEntries(new () {false, true , true , true , true , false, true , false}, new Vector2I(7, 3));
-    AddBitmaskEntries(new () {false, true , false, true , true , true , true , false}, new Vector2I(7, 5));
-    AddBitmaskEntries(new () {false, true , false, true , true , false, true , true }, new Vector2I(5, 5));
+    AddBitmaskEntries(new () {false, true , false, true , true , true , true , false}, new Vector2I(5, 5));
+    AddBitmaskEntries(new () {false, true , false, true , true , false, true , true }, new Vector2I(7, 5));
     // 0 wall - 4 corners (1)
     AddBitmaskEntries(new () {false, true , false, true , true , false, true , false}, new Vector2I(6, 4));
   }
