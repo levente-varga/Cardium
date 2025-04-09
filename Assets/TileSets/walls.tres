@@ -56,4 +56,4 @@ separation = Vector2i(1, 1)
 7:2/0 = 0
 
 [resource]
-sources/1 = SubResource("TileSetAtlasSource_ydsbp")
+sources/0 = SubResource("TileSetAtlasSource_ydsbp")

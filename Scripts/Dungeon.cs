@@ -65,22 +65,20 @@ public class Dungeon {
     
     //WallLayer.Scale = new Vector2(4, 4);
     WallLayer.TileSet = ResourceLoader.Load<TileSet>("res://Assets/TileSets/walls.tres");
+    DecorLayer.TileSet = ResourceLoader.Load<TileSet>("res://Assets/TileSets/decor.tres");
     
     GD.Print($"Instantiated a {Size.X}x{Size.Y} dungeon");
     
     for (var x = 0; x < Size.X; x++) {
       for (var y = 0; y < Size.Y; y++) {
         //dungeon._grid.SetPointSolid(new Vector2I(x, y), walls[x][y]);
-        if (_walls[x][y]) WallLayer.SetCell(
-          new Vector2I(x, y),
-          1,
-          new Vector2I(4, 0)
-        );
+        if (_walls[x][y]) WallLayer.SetCell(new Vector2I(x, y), 0, new Vector2I(4, 0));
       }
     }
     
     FillBitmaskDictionary();
     PrettyWalls();
+    Decorate();
   }
 
   /// <summary>
@@ -96,7 +94,7 @@ public class Dungeon {
         if (_bitmaskToWallAtlasCoord.Keys.Contains(bitmask)) {
           atlasCoords = _bitmaskToWallAtlasCoord[bitmask];
         }
-        WallLayer.SetCell(cell, 1, atlasCoords);
+        WallLayer.SetCell(cell, 0, atlasCoords);
       }
     }
   }
@@ -105,8 +103,18 @@ public class Dungeon {
     for (var x = 0; x < Size.X; x++) {
       for (var y = 0; y < Size.Y; y++) {
         if (LayerIsEmptyAt(WallLayer, new Vector2I(x, y))) {
-          if (_random.Next(10) == 0) {
-            
+          var random = _random.Next(100);
+          if (random == 0) {
+            DecorLayer.SetCell(new Vector2I(x, y), 0, new Vector2I(8, 0));
+          }
+          else if (random <= 2) {
+            DecorLayer.SetCell(new Vector2I(x, y), 0, new Vector2I(5, 0));
+          }
+          else if (random <= 6) {
+            DecorLayer.SetCell(new Vector2I(x, y), 0, new Vector2I(2, 0));
+          }
+          else if (random <= 18) {
+            DecorLayer.SetCell(new Vector2I(x, y), 0, new Vector2I(1, 0));
           }
         }
       }

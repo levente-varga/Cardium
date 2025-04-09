@@ -1,4 +1,3 @@
-using System.Drawing;
 using Godot;
 
 namespace Cardium.Scripts;
@@ -38,10 +37,14 @@ public partial class Menu : Node2D
 
 	private void GenerateDungeon()
 	{
-		if (dungeon != null) RemoveChild(dungeon.WallLayer);
+		if (dungeon != null) {
+			RemoveChild(dungeon.WallLayer);
+			RemoveChild(dungeon.DecorLayer);
+		}
 		dungeon = new DungeonGenerator().Generate(new Vector2I(119, 67));
 		dungeon.WallLayer.ZIndex = 0;
 		AddChild(dungeon.WallLayer);
+		AddChild(dungeon.DecorLayer);
 	}
 
 	private void OnNewGameButtonPressed()
