@@ -26,10 +26,7 @@ public class Dungeon {
   private List<List<bool>> _walls;
   private List<Rect2I> _rooms;
 
-  private readonly Dictionary<int, Vector2I> _bitmaskToWallAtlasCoord = new() {
-    { 0b11010000, new Vector2I(0, 0) },
-    { 0b01101000, new Vector2I(1, 0) },
-  };
+  private readonly Dictionary<int, Vector2I> _bitmaskToWallAtlasCoord = new();
   
   int GetWallBitmask(int x, int y)
   {
@@ -62,17 +59,17 @@ public class Dungeon {
     
     // Assuming the received list of lists (walls) has uniform length
     Size = new Vector2I(
-      walls.Count > 0 ? walls[0].Count : 0,
-      walls.Count
+      walls.Count,
+      walls.Count > 0 ? walls[0].Count : 0
       );
     
-    WallLayer.Scale = new Vector2(4, 4);
+    //WallLayer.Scale = new Vector2(4, 4);
     WallLayer.TileSet = ResourceLoader.Load<TileSet>("res://Assets/TileSets/walls.tres");
     
     GD.Print($"Instantiated a {Size.X}x{Size.Y} dungeon");
     
-    for (var x = 0; x < _walls.Count; x++) {
-      for (var y = 0; y < _walls[x].Count; y++) {
+    for (var x = 0; x < Size.X; x++) {
+      for (var y = 0; y < Size.Y; y++) {
         //dungeon._grid.SetPointSolid(new Vector2I(x, y), walls[x][y]);
         if (_walls[x][y]) WallLayer.SetCell(
           new Vector2I(x, y),
@@ -82,6 +79,7 @@ public class Dungeon {
       }
     }
     
+    FillBitmaskDictionary();
     PrettyWalls();
   }
 
@@ -140,5 +138,104 @@ public class Dungeon {
   }
 
   private void SpawnExits() {
+  }
+
+  /// <summary>
+  /// Adds key-value pairs to the [_bitmaskToWallAtlasCoord] dictionary.
+  /// </summary>
+  /// <param name="pattern">
+  /// Defines the rules for the generated bitmasks. Each list item corresponds to
+  /// one bit in the bitmask (first item is the largest bit). If a value is true, its bit
+  /// must be 1, if false, 0. If null that bit is a variable. All bitmask that fit to this
+  /// pattern will be generated. The list's length must be 8.
+  /// </param>
+  /// <param name="value">The value assigned to each key-value pair.</param>
+  /// <exception cref="ArgumentException">The list's length must be 8.</exception>
+  private void AddBitmaskEntries(List<bool?> pattern, Vector2I value) {
+    if (pattern.Count != 8)
+      throw new ArgumentException("Pattern must have exactly 8 elements.");
+
+    pattern.Reverse();
+    
+    void Generate(int index, byte bitmask)
+    {
+      if (index == 8) {
+        if (_bitmaskToWallAtlasCoord.Keys.Contains(bitmask))
+          throw new Exception($"Dictionary already contains generated key: {bitmask}");
+        _bitmaskToWallAtlasCoord[bitmask] = value;
+        return;
+      }
+
+      if (pattern[index] == null || pattern[index] == true)
+        Generate(index + 1, (byte)(bitmask | (1 << index)));
+      if (pattern[index] == null || pattern[index] == false)
+        Generate(index + 1, bitmask);
+    }
+
+    Generate(0, 0);
+  }
+
+  private void FillBitmaskDictionary() {
+    //                                  TL     T      TR     L      R      BL     B      BR
+    // 4 walls (1)
+    AddBitmaskEntries(new () {null , false, null , false, false, null , false, null }, new Vector2I(4, 0));
+    // 3 walls (4)
+    AddBitmaskEntries(new () {null , true , null , false, false, null , false, null }, new Vector2I(5, 2));
+    AddBitmaskEntries(new () {null , false, null , true , false, null , false, null }, new Vector2I(3, 0));
+    AddBitmaskEntries(new () {null , false, null , false, true , null , false, null }, new Vector2I(1, 0));
+    AddBitmaskEntries(new () {null , false, null , false, false, null , true , null }, new Vector2I(5, 0));
+    // 2 walls - straight (2)
+    AddBitmaskEntries(new () {null , true , null , false, false, null , true , null }, new Vector2I(5, 1));
+    AddBitmaskEntries(new () {null , false, null , true , true , null , false, null }, new Vector2I(2, 0));
+    // 2 walls - corners (8)
+    AddBitmaskEntries(new () {false, true , null , true , false, null , false, null }, new Vector2I(4, 5));
+    AddBitmaskEntries(new () {true , true , null , true , false, null , false, null }, new Vector2I(3, 4));
+    AddBitmaskEntries(new () {null , true , false, false, true , null , false, null }, new Vector2I(0, 5));
+    AddBitmaskEntries(new () {null , true , true , false, true , null , false, null }, new Vector2I(1, 4));
+    AddBitmaskEntries(new () {null , false, null , true , false, false, true , null }, new Vector2I(4, 1));
+    AddBitmaskEntries(new () {null , false, null , true , false, true , true , null }, new Vector2I(3, 2));
+    AddBitmaskEntries(new () {null , false, null , false, true , null , true , false}, new Vector2I(0, 1));
+    AddBitmaskEntries(new () {null , false, null , false, true , null , true , true }, new Vector2I(1, 2));
+    // 1 wall - 0 corner (4)
+    AddBitmaskEntries(new () {null , false, null , true , true , true , true , true }, new Vector2I(2, 2));
+    AddBitmaskEntries(new () {null , true , true , false, true , null , true , true }, new Vector2I(1, 3));
+    AddBitmaskEntries(new () {true , true , null , true , false, true , true , null }, new Vector2I(3, 3));
+    AddBitmaskEntries(new () {true , true , true , true , true , null , false, null }, new Vector2I(2, 4));
+    // 1 wall - 1 corner (8)
+    AddBitmaskEntries(new () {null , false, null , true , true , false, true , true }, new Vector2I(3, 1));
+    AddBitmaskEntries(new () {null , false, null , true , true , true , true , false}, new Vector2I(1, 1));
+    AddBitmaskEntries(new () {null , true , false, false, true , null , true , true }, new Vector2I(0, 4));
+    AddBitmaskEntries(new () {null , true , true , false, true , null , true , false}, new Vector2I(0, 2));
+    AddBitmaskEntries(new () {false, true , null , true , false, true , true , null }, new Vector2I(4, 4));
+    AddBitmaskEntries(new () {true , true , null , true , false, false, true , null }, new Vector2I(4, 2));
+    AddBitmaskEntries(new () {false, true , true , true , true , null , false, null }, new Vector2I(3, 5));
+    AddBitmaskEntries(new () {true , true , false, true , true , null , false, null }, new Vector2I(1, 5));
+    // 1 wall - 2 corners (4)
+    AddBitmaskEntries(new () {null , false, null , true , true , false, true , false}, new Vector2I(2, 1));
+    AddBitmaskEntries(new () {null , true , false, false, true , null , true , false}, new Vector2I(0, 3));
+    AddBitmaskEntries(new () {false, true , null , true , false, false, true , null }, new Vector2I(4, 3));
+    AddBitmaskEntries(new () {false, true , false, true , true , null , false, null }, new Vector2I(2, 5));
+    // 0 wall - 0 corner (1)
+    AddBitmaskEntries(new () {true , true , true , true , true , true , true , true }, new Vector2I(0, 0));
+    // 0 wall - 1 corner (4)
+    AddBitmaskEntries(new () {false, true , true , true , true , true , true , true }, new Vector2I(7, 1));
+    AddBitmaskEntries(new () {true , true , false, true , true , true , true , true }, new Vector2I(6, 1));
+    AddBitmaskEntries(new () {true , true , true , true , true , false, true , true }, new Vector2I(7, 0));
+    AddBitmaskEntries(new () {true , true , true , true , true , true , true , false}, new Vector2I(6, 0));
+    // 0 wall - 2 corners - adjacent (4)
+    AddBitmaskEntries(new () {false, true , false, true , true , true , true , true }, new Vector2I(6, 5));
+    AddBitmaskEntries(new () {true , true , false, true , true , true , true , false}, new Vector2I(5, 4));
+    AddBitmaskEntries(new () {true , true , true , true , true , false, true , false}, new Vector2I(6, 3));
+    AddBitmaskEntries(new () {false, true , true , true , true , false, true , true }, new Vector2I(7, 4));
+    // 0 wall - 2 corners - diagonal (2)
+    AddBitmaskEntries(new () {false, true , true , true , true , true , true , false}, new Vector2I(7, 2));
+    AddBitmaskEntries(new () {true , true , false, true , true , false, true , true }, new Vector2I(6, 2));
+    // 0 wall - 3 corners (4)
+    AddBitmaskEntries(new () {true , true , false, true , true , false, true , false}, new Vector2I(5, 3));
+    AddBitmaskEntries(new () {false, true , true , true , true , false, true , false}, new Vector2I(7, 3));
+    AddBitmaskEntries(new () {false, true , false, true , true , true , true , false}, new Vector2I(7, 5));
+    AddBitmaskEntries(new () {false, true , false, true , true , false, true , true }, new Vector2I(5, 5));
+    // 0 wall - 4 corners (1)
+    AddBitmaskEntries(new () {false, true , false, true , true , false, true , false}, new Vector2I(6, 4));
   }
 }
