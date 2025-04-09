@@ -93,7 +93,14 @@ public class Dungeon {
     for (var x = 0; x < Size.X; x++) {
       for (var y = 0; y < Size.Y; y++) {
         if (LayerIsEmptyAt(WallLayer, new Vector2I(x, y))) {
+          float factor = 1;
+          if (_tiles[x][y] == Tiles.RoomCorner) factor = 0.4f;
+          else if (_tiles[x][y] == Tiles.RoomPerimeter) factor = 0.8f;
+          else if (_tiles[x][y] == Tiles.RoomInterior) factor = 1.2f;
+          
           var random = _random.Next(100);
+          random = (int)(random * factor);
+          
           if (random == 0) {
             DecorLayer.SetCell(new Vector2I(x, y), 0, new Vector2I(8, 0));
           }
