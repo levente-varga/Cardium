@@ -7,16 +7,27 @@ using Godot;
 
 namespace Cardium.Scripts;
 
+public enum TileType {
+  Wall,
+  RoomInterior,
+  RoomPerimeter,
+  RoomCorner,
+  RoomEntrance,
+  Corridor,
+  CorridorCorner,
+}
+
 public class Dungeon {
   private AStarGrid2D _grid = new();
 
   public TileMapLayer GroundLayer { get; private set; } = new();
-  public TileMapLayer DecorLayer { get; private set; }= new();
+  public TileMapLayer DecorLayer { get; private set; } = new();
   public TileMapLayer WallLayer { get; private set; } = new();
   public TileMapLayer FogLayer { get; private set; } = new();
   public Overlay Overlay { get; private set; } = new();
   
   public Vector2I Size { get; private set; }
+  public Rect2I Rect { get; private set; }
   
   public List<Enemy> Enemies { get; private set; } = new();
   public List<Interactable> Interactables { get; private set; } = new();
@@ -24,37 +35,16 @@ public class Dungeon {
 
   // Data from the DungeonGenerator
   private List<List<bool>> _walls;
+  private List<List<TileType>> _tiles;
   private List<Rect2I> _rooms;
 
   private readonly Dictionary<int, Vector2I> _bitmaskToWallAtlasCoord = new();
-  
-  int GetWallBitmask(int x, int y)
-  {
-    var mask = 0;
-
-    if (IsWall(new Vector2I(x - 1, y - 1))) mask |= 128;
-    if (IsWall(new Vector2I(x    , y - 1))) mask |= 64;
-    if (IsWall(new Vector2I(x + 1, y - 1))) mask |= 32;
-    if (IsWall(new Vector2I(x - 1, y    ))) mask |= 16;
-    if (IsWall(new Vector2I(x + 1, y    ))) mask |= 8;
-    if (IsWall(new Vector2I(x - 1, y + 1))) mask |= 4;
-    if (IsWall(new Vector2I(x    , y + 1))) mask |= 2;
-    if (IsWall(new Vector2I(x + 1, y + 1))) mask |= 1;
-
-    return mask;
-  }
-
-  private bool IsWall(Vector2I cell) => WallLayer.GetCellSourceId(cell) != -1 
-    || !new Rect2I(Vector2I.Zero, Size).HasPoint(cell);
 
   private Random _random = new ();
 
-  private static bool LayerIsEmptyAt(TileMapLayer layer, Vector2I tile) {
-    return layer.GetCellSourceId(tile) == -1;
-  }
-
   public Dungeon(List<List<bool>> walls, List<Rect2I> rooms) {
     _walls = new(walls); // TODO: should deep copy instead
+    _tiles = new();
     _rooms = new(rooms);
     
     // Assuming the received list of lists (walls) has uniform length
@@ -62,6 +52,7 @@ public class Dungeon {
       walls.Count,
       walls.Count > 0 ? walls[0].Count : 0
       );
+    Rect = new(Vector2I.Zero, Size);
     
     WallLayer.Scale = new Vector2(4, 4);
     DecorLayer.Scale = new Vector2(4, 4);
@@ -167,8 +158,7 @@ public class Dungeon {
 
     pattern.Reverse();
     
-    void Generate(int index, byte bitmask)
-    {
+    void Generate(int index, byte bitmask) {
       if (index == 8) {
         if (_bitmaskToWallAtlasCoord.Keys.Contains(bitmask))
           throw new Exception($"Dictionary already contains generated key: {bitmask}");
@@ -185,6 +175,23 @@ public class Dungeon {
     Generate(0, 0);
   }
 
+  private static bool LayerIsEmptyAt(TileMapLayer layer, Vector2I tile) => layer.GetCellSourceId(tile) == -1;
+  
+  private bool IsWall(Vector2I cell) => WallLayer.GetCellSourceId(cell) != -1 || !Rect.HasPoint(cell);
+  
+  private int GetWallBitmask(int x, int y) {
+    var mask = 0;
+    if (IsWall(new Vector2I(x - 1, y - 1))) mask |= 128;
+    if (IsWall(new Vector2I(x    , y - 1))) mask |= 64;
+    if (IsWall(new Vector2I(x + 1, y - 1))) mask |= 32;
+    if (IsWall(new Vector2I(x - 1, y    ))) mask |= 16;
+    if (IsWall(new Vector2I(x + 1, y    ))) mask |= 8;
+    if (IsWall(new Vector2I(x - 1, y + 1))) mask |= 4;
+    if (IsWall(new Vector2I(x    , y + 1))) mask |= 2;
+    if (IsWall(new Vector2I(x + 1, y + 1))) mask |= 1;
+    return mask;
+  }
+  
   private void FillBitmaskDictionary() {
     //                                  TL     T      TR     L      R      BL     B      BR
     // 4 walls (1)
