@@ -41,15 +41,18 @@ public class Dungeon {
   private Random _random = new ();
 
   public Dungeon(List<List<Tiles>> tiles, List<Rect2I> rooms) {
-    _tiles = new(tiles); // TODO: should deep copy instead
-    _rooms = new(rooms);
+    _tiles = new List<List<Tiles>>();
+    foreach (var row in tiles) {
+      _tiles.Add(new List<Tiles>(row));
+    }
+    _rooms = new List<Rect2I>(rooms);
     
     // Assuming the received list of lists (walls) has uniform length
     Size = new Vector2I(
       _tiles.Count,
       _tiles.Count > 0 ? _tiles[0].Count : 0
       );
-    Rect = new(Vector2I.Zero, Size);
+    Rect = new Rect2I(Vector2I.Zero, Size);
     
     WallLayer.Scale = new Vector2(4, 4);
     DecorLayer.Scale = new Vector2(4, 4);
