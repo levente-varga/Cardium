@@ -7,14 +7,13 @@ using Godot;
 
 namespace Cardium.Scripts;
 
-public enum TileType {
+public enum Tiles {
   Wall,
   RoomInterior,
   RoomPerimeter,
   RoomCorner,
   RoomEntrance,
   Corridor,
-  CorridorCorner,
 }
 
 public class Dungeon {
@@ -34,23 +33,21 @@ public class Dungeon {
   public List<Card> Loot { get; private set; } = new();
 
   // Data from the DungeonGenerator
-  private List<List<bool>> _walls;
-  private List<List<TileType>> _tiles;
+  private List<List<Tiles>> _tiles;
   private List<Rect2I> _rooms;
 
   private readonly Dictionary<int, Vector2I> _bitmaskToWallAtlasCoord = new();
 
   private Random _random = new ();
 
-  public Dungeon(List<List<bool>> walls, List<Rect2I> rooms) {
-    _walls = new(walls); // TODO: should deep copy instead
-    _tiles = new();
+  public Dungeon(List<List<Tiles>> tiles, List<Rect2I> rooms) {
+    _tiles = new(tiles); // TODO: should deep copy instead
     _rooms = new(rooms);
     
     // Assuming the received list of lists (walls) has uniform length
     Size = new Vector2I(
-      walls.Count,
-      walls.Count > 0 ? walls[0].Count : 0
+      _tiles.Count,
+      _tiles.Count > 0 ? _tiles[0].Count : 0
       );
     Rect = new(Vector2I.Zero, Size);
     
@@ -65,7 +62,7 @@ public class Dungeon {
     for (var x = 0; x < Size.X; x++) {
       for (var y = 0; y < Size.Y; y++) {
         //dungeon._grid.SetPointSolid(new Vector2I(x, y), walls[x][y]);
-        if (_walls[x][y]) WallLayer.SetCell(new Vector2I(x, y), 0, new Vector2I(4, 0));
+        if (_tiles[x][y] == Tiles.Wall) WallLayer.SetCell(new Vector2I(x, y), 0, new Vector2I(4, 0));
       }
     }
     

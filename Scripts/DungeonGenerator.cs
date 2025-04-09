@@ -17,7 +17,7 @@ public class DungeonGenerator {
   };
 
   //public Dungeon Dungeon = new();
-  private List<List<bool>> _walls = new();
+  private readonly List<List<Tiles>> _tiles = new();
   private List<Rect2I> _rooms = new();
   private Vector2I _size;
   private Rect2I _bounds;
@@ -26,7 +26,7 @@ public class DungeonGenerator {
 
   /// For each open position in the dungeon, the index of the connected region
   /// that that position is a part of.
-  private List<List<int>> _regions = new();
+  private readonly List<List<int>> _regions = new();
 
   /// The index of the current region being carved.
   int _currentRegion = -1;
@@ -46,7 +46,7 @@ public class DungeonGenerator {
     ConnectRegions();
     RemoveDeadEnds();
     
-    return new Dungeon(_walls, _rooms);
+    return new Dungeon(_tiles, _rooms);
   }
   
   /// Implementation of the "growing tree" algorithm from here:
@@ -129,9 +129,16 @@ public class DungeonGenerator {
       _rooms.Add(room);
 
       StartRegion();
-      for (var x = room.Position.X; x < room.End.X; x++)
-        for (var y = room.Position.Y; y < room.End.Y; y++)
-          Carve(new Vector2I(x, y));
+      for (var x = room.Position.X; x < room.End.X; x++) {
+        var perimeterX = x == room.Position.X || x == room.End.X - 1;
+        for (var y = room.Position.Y; y < room.End.Y; y++) {
+          var perimeterY = y == room.Position.Y || y == room.End.Y - 1;
+          var type = Tiles.RoomInterior;
+          if (perimeterX && perimeterY) type = Tiles.RoomCorner;
+          else if (perimeterX || perimeterY) type = Tiles.RoomPerimeter;
+          Carve(new Vector2I(x, y), type);
+        }
+      }
     }
   }
 
@@ -230,7 +237,7 @@ public class DungeonGenerator {
   }
 
   private void AddJunction(Vector2I tile) {
-    SetWall(tile, false);
+    SetWall(tile, Tiles.RoomEntrance);
     
     // For supporting door generation:
     /*
@@ -286,20 +293,20 @@ public class DungeonGenerator {
     _currentRegion++;
   }
 
-  private void Carve(Vector2I tile) {
-    SetWall(tile, false);
+  private void Carve(Vector2I tile, Tiles type = Tiles.Corridor) {
+    SetWall(tile, type);
     _regions[tile.X][tile.Y] = _currentRegion;
   }
 
-  private bool IsWall(Vector2I tile) => _walls[tile.X][tile.Y];
-  private void SetWall(Vector2I tile, bool value = true) => _walls[tile.X][tile.Y] = value;
+  private bool IsWall(Vector2I tile) => _tiles[tile.X][tile.Y] == Tiles.Wall;
+  private void SetWall(Vector2I tile, Tiles value = Tiles.Wall) => _tiles[tile.X][tile.Y] = value;
 
   private void InitArea(Vector2I size) {
     for (var x = 0; x < size.X; x++) {
-      _walls.Add(new List<bool>());
+      _tiles.Add(new List<Tiles>());
       _regions.Add(new List<int>());
       for (var y = 0; y < size.Y; y++) {
-        _walls[x].Add(true);
+        _tiles[x].Add(Tiles.Wall);
         _regions[x].Add(-1);
       }
     }
