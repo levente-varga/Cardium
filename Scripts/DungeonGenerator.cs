@@ -31,8 +31,9 @@ public class DungeonGenerator {
   /// The index of the current region being carved.
   int _currentRegion = -1;
 
-  public Dungeon Generate(int width, int height) => Generate(new Vector2I(width, height)); 
-  public Dungeon Generate(Vector2I size) {
+  public Dungeon Generate(int width, int height, int roomTries = 100) => Generate(new Vector2I(width, height), roomTries); 
+  public Dungeon Generate(Vector2I size, int roomTries = 100) {
+    NumRoomTries = roomTries;
     _size = size;
     _bounds = new Rect2I(Vector2I.Zero, size);
     if (size.X % 2 == 0 || size.Y % 2 == 0) {

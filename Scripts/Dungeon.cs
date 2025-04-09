@@ -63,7 +63,9 @@ public class Dungeon {
       walls.Count > 0 ? walls[0].Count : 0
       );
     
-    //WallLayer.Scale = new Vector2(4, 4);
+    WallLayer.Scale = new Vector2(4, 4);
+    DecorLayer.Scale = new Vector2(4, 4);
+    
     WallLayer.TileSet = ResourceLoader.Load<TileSet>("res://Assets/TileSets/walls.tres");
     DecorLayer.TileSet = ResourceLoader.Load<TileSet>("res://Assets/TileSets/decor.tres");
     

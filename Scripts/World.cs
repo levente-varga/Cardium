@@ -71,7 +71,7 @@ public partial class World : Node2D
 	    UpdatePath();
 
 	    DungeonGenerator generator = new();
-	    Dungeon dungeon = generator.Generate(31, 31);
+	    Dungeon dungeon = generator.Generate(51, 51);
 	    WallLayer.QueueFree();
 	    WallLayer = dungeon.WallLayer;
 	    AddChild(WallLayer);
