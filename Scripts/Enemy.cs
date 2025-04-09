@@ -5,6 +5,8 @@ namespace Cardium.Scripts;
 public partial class Enemy : Entity
 {
     protected Path Path = new Path();
+    
+    public bool SeeingPlayer;
 
     public delegate void OnDeathDelegate(Enemy enemy);
     public event OnDeathDelegate? OnDeathEvent;
@@ -28,6 +30,14 @@ public partial class Enemy : Entity
 
     protected override void TakeTurn(Player player, World world)
     {
+        if (!SeeingPlayer) {
+            if (world.GetDistanceBetween(Position, player.Position) <= Vision) {
+                SeeingPlayer = true;
+            }
+        }
+
+        if (!SeeingPlayer) return;
+        
         if (TurnsLived % 2 == 0) return;
         
         Path.SetPath(world.GetPointPathBetween(Position, player.Position));

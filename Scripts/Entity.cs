@@ -36,7 +36,6 @@ public partial class Entity : TileAlignedGameObject
     public int Range => BaseRange + TempRange;
     public int Vision => BaseVision + TempVision;
     public float Luck => BaseLuck + TempLuck;
-    public bool SeeingPlayer;
 
     public string Description = "";
     
@@ -74,14 +73,6 @@ public partial class Entity : TileAlignedGameObject
     public void OnTakeTurn(Player player, World world)
     {
         TurnsLived++;
-
-        if (!SeeingPlayer) {
-            if (world.GetDistanceBetween(Position, player.Position) <= Vision) {
-                SeeingPlayer = true;
-            }
-        }
-
-        if (!SeeingPlayer) return;
         
         GD.Print(Name + "'s turn started.");
         ResetTemporaryStats();
