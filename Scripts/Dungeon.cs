@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Cardium.Scripts.Cards.Types;
 using Cardium.Scripts.Enemies;
+using Cardium.Scripts.Interactables;
 using Godot;
 
 namespace Cardium.Scripts;
 
-public enum Tiles {
+public enum TileTypes {
   Wall,
   RoomInterior,
   RoomPerimeter,
@@ -16,19 +17,20 @@ public enum Tiles {
   Corridor,
 }
 
-public enum Rooms {
-  Small, // 3x3
-  Medium, //3x5
-  Normal,
+public enum RoomTypes {
+  Uncategorized,
+  Spawn,
+  Exit,
+  Bonfire,
 }
 
 public struct Room {
   public Rect2I Rect;
-  public Rooms Type;
+  public RoomTypes Type;
 
-  public Room(Rect2I rect, Rooms type) {
-    this.Rect = rect;
-    this.Type = type;
+  public Room(Rect2I rect, RoomTypes type) {
+    Rect = rect;
+    Type = type;
   }
 }
 
@@ -49,30 +51,42 @@ public class Dungeon {
   public List<Card> Loot { get; private set; } = new();
 
   // Data from the DungeonGenerator
-  private List<List<Tiles>> _tiles;
-  private List<Room> _rooms;
+  public List<List<TileTypes>> Tiles;
+  public List<Room> Rooms;
 
   private readonly Dictionary<int, Vector2I> _bitmaskToWallAtlasCoord = new();
 
   private Random _random = new ();
 
-  public Dungeon(List<List<Tiles>> tiles, List<Rect2I> rooms) {
-    _tiles = new List<List<Tiles>>();
+  public Dungeon(List<List<TileTypes>> tiles, List<Rect2I> rooms) {
+    Tiles = new List<List<TileTypes>>();
     foreach (var row in tiles) {
-      _tiles.Add(new List<Tiles>(row));
+      Tiles.Add(new List<TileTypes>(row));
     }
-    _rooms = new List<Room>();
+    Rooms = new List<Room>();
+    var spawnRoomPicked = false;
+    var bonfires = 0;
     foreach (var room in rooms) {
-      var type = Rooms.Normal;
-      if (room.Size == new Vector2I(3, 3)) type = Rooms.Small;
-      else if (room.Size == new Vector2I(3, 5) || room.Size == new Vector2I(5, 3)) type = Rooms.Medium;
-      _rooms.Add(new Room(room, type));
+      var type = RoomTypes.Uncategorized;
+      if (room.Size == new Vector2I(3, 3) || room.Size == new Vector2I(5, 3) || room.Size == new Vector2I(3, 5)) {
+        if (!spawnRoomPicked) {
+          type = RoomTypes.Spawn;
+          spawnRoomPicked = true;
+        }
+        else {
+          if (_random.Next(bonfires) == 0) {
+            bonfires++;
+            type = RoomTypes.Bonfire;
+          }
+        }
+      }
+      Rooms.Add(new Room(room, type));
     }
     
     // Assuming the received list of lists (tiles) has uniform length
     Size = new Vector2I(
-      _tiles.Count,
-      _tiles.Count > 0 ? _tiles[0].Count : 0
+      Tiles.Count,
+      Tiles.Count > 0 ? Tiles[0].Count : 0
       );
     Rect = new Rect2I(Vector2I.Zero, Size);
     
@@ -82,19 +96,30 @@ public class Dungeon {
     WallLayer.TileSet = ResourceLoader.Load<TileSet>("res://Assets/TileSets/walls.tres");
     DecorLayer.TileSet = ResourceLoader.Load<TileSet>("res://Assets/TileSets/decor.tres");
     
-    GD.Print($"Instantiated a {Size.X}x{Size.Y} dungeon");
-    
     for (var x = 0; x < Size.X; x++) {
       for (var y = 0; y < Size.Y; y++) {
         //dungeon._grid.SetPointSolid(new Vector2I(x, y), walls[x][y]);
-        if (_tiles[x][y] == Tiles.Wall) WallLayer.SetCell(new Vector2I(x, y), 0, new Vector2I(4, 0));
+        if (Tiles[x][y] == TileTypes.Wall) WallLayer.SetCell(new Vector2I(x, y), 0, new Vector2I(4, 0));
       }
     }
     
     FillBitmaskDictionary();
     PrettyWalls();
     Decorate();
+    SpawnBonfires();
     SpawnEnemies();
+    
+    GD.Print($"Generated a {Size.X}x{Size.Y} dungeon with\n" +
+             $"  {Rooms.Count} rooms\n" +
+             $"  {Enemies.Count} enemies\n" +
+             $"    {Enemies.Where(e => e is Slime).ToList().Count} slimes\n" +
+             $"    {Enemies.Where(e => e is Spider).ToList().Count} spiders\n" +
+             $"    {Enemies.Where(e => e is Ranger).ToList().Count} rangers\n" +
+             $"  {Interactables.Count} interactables\n" +
+             $"    {Interactables.Where(i => i is Bonfire).ToList().Count} bonfires\n" +
+             $"    {Interactables.Where(i => i is Chest).ToList().Count} chests\n" +
+             $"  {Loot.Count} loot");
+
   }
 
   /// <summary>
@@ -120,9 +145,9 @@ public class Dungeon {
       for (var y = 0; y < Size.Y; y++) {
         if (LayerIsEmptyAt(WallLayer, new Vector2I(x, y))) {
           float factor = 1;
-          if (_tiles[x][y] == Tiles.RoomCorner) factor = 0.4f;
-          else if (_tiles[x][y] == Tiles.RoomPerimeter) factor = 0.8f;
-          else if (_tiles[x][y] == Tiles.RoomInterior) factor = 1.2f;
+          if (Tiles[x][y] == Scripts.TileTypes.RoomCorner) factor = 0.4f;
+          else if (Tiles[x][y] == Scripts.TileTypes.RoomPerimeter) factor = 0.8f;
+          else if (Tiles[x][y] == Scripts.TileTypes.RoomInterior) factor = 1.2f;
           
           var random = _random.Next(100);
           random = (int)(random * factor);
@@ -145,7 +170,7 @@ public class Dungeon {
   }
 
   private void SpawnEnemies() {
-    foreach (var room in _rooms) {
+    foreach (var room in Rooms.Where(room => room.Type == RoomTypes.Uncategorized)) {
       Vector2I tile = new(
         _random.Next(room.Rect.Position.X + 1, room.Rect.End.X - 2),
         _random.Next(room.Rect.Position.Y + 1, room.Rect.End.Y - 2)
@@ -163,6 +188,20 @@ public class Dungeon {
   }
 
   private void SpawnBonfires() {
+    foreach (var room in Rooms.Where(room => room.Type == RoomTypes.Bonfire)) {
+      List<Vector2I> bonfirePositionCandidates = new();
+      for (int x = room.Rect.Position.X; x < room.Rect.End.X; x++) {
+        for (int y = room.Rect.Position.Y; y < room.Rect.End.Y; y++) {
+          if (Tiles[x][y] == TileTypes.RoomInterior) bonfirePositionCandidates.Add(new Vector2I(x, y));
+        }
+      }
+
+      GD.Print($"Found {bonfirePositionCandidates.Count} bonfire position candidates");
+
+      Bonfire bonfire = new();
+      bonfire.Position = bonfirePositionCandidates[_random.Next(bonfirePositionCandidates.Count)];
+      Interactables.Add(bonfire);
+    }
   }
 
   private void SpawnChests() {

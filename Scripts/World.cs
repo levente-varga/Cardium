@@ -26,7 +26,6 @@ public partial class World : Node2D {
 	[Export] public Overlay Overlay = null!;
 	
 	private readonly List<CardLoot> _loot = new ();
-	private readonly List<Interactable> _interactables = new ();
   private readonly List<TileMapLayer> _layers = new ();
   
   private SelectionMode _selectionMode = SelectionMode.None;
@@ -66,6 +65,10 @@ public partial class World : Node2D {
 
     foreach (var enemy in _dungeon.Enemies) {
 	    SpawnEnemy(enemy, enemy.Position);
+    }
+
+    foreach (var interactable in _dungeon.Interactables) {
+	    SpawnInteractable(interactable, interactable.Position);
     }
     
     Player.OnMoveEvent += OnPlayerMove;
@@ -219,7 +222,7 @@ public partial class World : Node2D {
     i.Position == position + Vector2I.Down);
   
   public Enemy? GetEnemyAt(Vector2I position) => _combatManager.Enemies.FirstOrDefault(enemy => enemy.Position == position);
-  public Interactable? GetInteractableAt(Vector2I position) => _interactables.FirstOrDefault(interactable => interactable.Position == position);
+  public Interactable? GetInteractableAt(Vector2I position) => _dungeon.Interactables.FirstOrDefault(interactable => interactable.Position == position);
   
   public bool IsEmpty(Vector2I position) => 
     !IsWall(position)
@@ -261,7 +264,6 @@ public partial class World : Node2D {
 	}
 	
 	private void SpawnEnemy(Enemy enemy, Vector2I position) {
-		if (!IsEmpty(position)) return;
 		AddChild(enemy);
 		_combatManager.AddEnemy(enemy);
 		enemy.SetPosition(position);
@@ -281,12 +283,12 @@ public partial class World : Node2D {
 	}
 	
   private void SpawnInteractable(Interactable interactable, Vector2I position) {
-    if (!IsEmpty(position)) return;
+	  GD.Print($"Trying to spawn a {interactable.GetType()} at {position}, which is {(IsEmpty(position) ? "" : "not")} empty");
     AddChild(interactable);
     interactable.SetPosition(position);
     interactable.OnSolidityChangeEvent += OnInteractableSolidityChange;
     _grid.SetPointSolid(interactable.Position, interactable.Solid);
-    _interactables.Add(interactable);
+    GD.Print("Success");
   }
   
   private void SpawnLoot(CardLoot loot, Vector2I position) {
@@ -304,11 +306,11 @@ public partial class World : Node2D {
 	    position + Vector2I.Right,
     };
     
-    return _interactables.Where(i => adjacentPositions.Contains(i.Position)).ToList().Select(i => i.Position).ToList();
+    return _dungeon.Interactables.Where(i => adjacentPositions.Contains(i.Position)).ToList().Select(i => i.Position).ToList();
   }
   
   public void Interact(Vector2I position) {
-    var interactable = _interactables.FirstOrDefault(interactable => interactable.Position == position);
+    var interactable = _dungeon.Interactables.FirstOrDefault(interactable => interactable.Position == position);
     interactable?.OnInteract(Player, Camera);
 	}
   
@@ -378,7 +380,7 @@ public partial class World : Node2D {
 	}
 	
 	public List<Enemy> GetEnemiesInRange(int range, Vector2I from) => _combatManager.Enemies.Where(enemy => Utils.ManhattanDistanceBetween(from, enemy.Position) <= range).ToList();
-	public List<Interactable> GetInteractablesInRange(int range, Vector2I from) => _interactables.Where(interactable => Utils.ManhattanDistanceBetween(from, interactable.Position) <= range).ToList();
+	public List<Interactable> GetInteractablesInRange(int range, Vector2I from) => _dungeon.Interactables.Where(interactable => Utils.ManhattanDistanceBetween(from, interactable.Position) <= range).ToList();
 	
 	private async Task<Enemy?> SelectEnemyTarget(int range, Vector2I from) {
 		_selectionMode = SelectionMode.Enemy;
