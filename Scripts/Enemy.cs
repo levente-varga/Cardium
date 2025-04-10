@@ -30,8 +30,10 @@ public partial class Enemy : Entity
 
     protected override void TakeTurn(Player player, World world)
     {
+        var distance = world.GetDistanceBetween(Position, player.Position);
+        
         if (!SeeingPlayer) {
-            if (world.GetDistanceBetween(Position, player.Position) <= Vision) {
+            if (distance != -1 && distance <= Vision) {
                 SeeingPlayer = true;
             }
         }
@@ -41,8 +43,6 @@ public partial class Enemy : Entity
         if (TurnsLived % 2 == 0) return;
         
         Path.SetPath(world.GetPointPathBetween(Position, player.Position));
-        
-        var distance = world.GetDistanceBetween(Position, player.Position);
         
         if (distance == -1)
         {
