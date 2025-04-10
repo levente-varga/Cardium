@@ -49,6 +49,8 @@ public partial class HealthBar : Polygon2D
 	private static float ActualWidth => Width - 2 * HorizontalMargin;
 	private float SmoothWidth => ActualWidth * _smoothHealth;
 	
+	private Vector2[] _polygonBuffer = new Vector2[4];
+	
 	public override void _Ready()
 	{
 		Name = "HealthBar";
@@ -59,15 +61,17 @@ public partial class HealthBar : Polygon2D
 		UpdatePolygon();
 	}
 	
-	private void UpdatePolygon()
-	{
-		Polygon = new Vector2[]
-		{
-			new (HorizontalMargin, -VerticalGap),
-			new (HorizontalMargin, -VerticalGap - Thickness),
-			new (HorizontalMargin + SmoothWidth, -VerticalGap - Thickness),
-			new (HorizontalMargin + SmoothWidth, -VerticalGap),
-		};
+	private void UpdatePolygon() {
+		_polygonBuffer[0].X = HorizontalMargin;
+		_polygonBuffer[0].Y = -VerticalGap;
+		_polygonBuffer[1].X = HorizontalMargin;
+		_polygonBuffer[1].Y = -VerticalGap - Thickness;
+		_polygonBuffer[2].X = HorizontalMargin + SmoothWidth;
+		_polygonBuffer[2].Y = -VerticalGap - Thickness;
+		_polygonBuffer[3].X = HorizontalMargin + SmoothWidth;
+		_polygonBuffer[3].Y = -VerticalGap;
+
+		Polygon = _polygonBuffer;
 	}
 
 	public override void _Process(double delta)
