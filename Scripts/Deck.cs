@@ -56,16 +56,6 @@ public class Deck
     
     public void Shuffle()
     {
-        FisherYatesShuffle();        
-    }
-
-    private void FisherYatesShuffle()
-    {
-        for (var i = _cards.Count - 1; i > 0; i--)
-        {
-            var random = new Random();
-            var j = random.Next(0, i);
-            (_cards[i], _cards[j]) = (_cards[j], _cards[i]);
-        }
+        Utils.FisherYatesShuffle(_cards);        
     }
 }

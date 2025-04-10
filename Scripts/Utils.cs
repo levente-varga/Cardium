@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using Godot;
 
 namespace Cardium.Scripts;
@@ -33,5 +35,17 @@ public class Utils
             LifetimeMillis = lifetimeMillis,
         };
         tree.Root.AddChild(label);
+    }
+    
+    public static void FisherYatesShuffle<T>(List<T> list)
+    {
+        if (list.Count < 2) return;
+        
+        var random = new Random();
+        for (var i = list.Count - 1; i > 0; i--)
+        {
+            var j = random.Next(0, i);
+            (list[i], list[j]) = (list[j], list[i]);
+        }
     }
 }
