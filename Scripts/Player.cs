@@ -8,8 +8,8 @@ public partial class Player : Entity
 {
 	[Export] public World World = null!;
 	[Export] public Label DebugLabel = null!;
-	[Export] private Hand _hand = null!;
-	private readonly Deck _deck = new();
+	[Export] public Hand Hand = null!;
+	public readonly Deck Deck = new();
 	private Pile _discardPile = new();
 	
 	public delegate void OnActionDelegate();
@@ -47,8 +47,8 @@ public partial class Player : Entity
 		                  + $"Damage: {Damage}\n"
 		                  + $"Armor: {Armor}\n"
 		                  + $"\n"
-		                  + $"Deck: {_deck.Size}/{_deck.Capacity}"
-		                  + $"Hand: {_hand.Size}/{_hand.Capacity}";
+		                  + $"Deck: {Deck.Size}/{Deck.Capacity}"
+		                  + $"Hand: {Hand.Size}/{Hand.Capacity}";
 		
 		base._Process(delta);
 	}
@@ -98,28 +98,28 @@ public partial class Player : Entity
 
 	private void FillDeck()
 	{
-		for (int i = 0; i < _deck.Capacity; i++)
+		for (int i = 0; i < Deck.Capacity; i++)
 		{
-			_deck.Add(new SmiteCard());
+			Deck.Add(new SmiteCard());
 		}
-		_deck.Shuffle();
+		Deck.Shuffle();
 	}
 
 	private void SetupActionListeners()
 	{
 		OnMoveEvent += OnMoveEventHandler;
 		OnNudgeEvent += OnNudgeEventHandler;
-		_hand.OnCardPlayedEvent += OnCardPlayedEventHandler;
+		Hand.OnCardPlayedEvent += OnCardPlayedEventHandler;
 	}
 	
 	private void OnMoveEventHandler(Vector2I from, Vector2I to) => OnActionEvent?.Invoke();
 	private void OnNudgeEventHandler(Vector2I at) => OnActionEvent?.Invoke();
 	private void OnCardPlayedEventHandler(Card card)
 	{
-		Card? drawnCard = _deck.Draw();
+		Card? drawnCard = Deck.Draw();
 		if (drawnCard != null)
 		{
-			_hand?.Add(drawnCard);
+			Hand?.Add(drawnCard);
 		}
 		OnActionEvent?.Invoke();
 	}
@@ -139,6 +139,6 @@ public partial class Player : Entity
 	
 	public void PickUpCard(Card card)
 	{
-		_hand?.Add(card);
+		Hand?.Add(card);
 	}
 }
