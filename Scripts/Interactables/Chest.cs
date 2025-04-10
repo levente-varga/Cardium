@@ -7,13 +7,13 @@ namespace Cardium.Scripts.Interactables;
 
 public partial class Chest : Interactable
 {
-    private readonly List<Card> _inventory = new ();
+    public readonly List<Card> Content = new ();
     
     public override void _Ready()
     {
         base._Ready();
 
-        _inventory.Add(new HurlCard());
+        Content.Add(new HurlCard());
 
         SetAnimation("open", ResourceLoader.Load<Texture2D>("res://Assets/Animations/Chest.png"), 6, 12, false, false);
     }
@@ -34,8 +34,8 @@ public partial class Chest : Interactable
         Play("open");
         SpawnFallingLabel("Opened!");
         
-        foreach (var card in _inventory) player.PickUpCard(card);
+        foreach (var card in Content) player.PickUpCard(card);
         
-        SpawnFallingLabel(_inventory.Count + " cards added to inventory!");
+        SpawnFallingLabel(Content.Count + " cards added to inventory!");
     }
 }

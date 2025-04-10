@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Cardium.Scripts.Cards;
 using Cardium.Scripts.Cards.Types;
 using Cardium.Scripts.Enemies;
 using Cardium.Scripts.Interactables;
@@ -236,6 +237,16 @@ public class Dungeon {
   }
 
   private void SpawnChests() {
+    var chests = 0;
+    foreach (var room in Rooms.Where(room => room.Type == RoomTypes.Uncategorized)) {
+      if (_random.Next(chests) > 0) continue;
+      var tileCandidates = GetRoomPerimeterTiles(room);
+      Chest chest = new();
+      chest.Position = tileCandidates[_random.Next(tileCandidates.Count / 2)];
+      chest.Content.Add(new SmiteCard()); // TODO: randomize content
+      Interactables.Add(chest);
+      chests++;
+    }
   }
 
   private void SpawnExits() {
@@ -265,6 +276,16 @@ public class Dungeon {
     for (var x = room.Rect.Position.X; x < room.Rect.End.X; x++) {
       for (var y = room.Rect.Position.Y; y < room.Rect.End.Y; y++) {
         if (Tiles[x][y] == TileTypes.RoomInterior) tiles.Add(new Vector2I(x, y));
+      }
+    }
+    return tiles;
+  }
+  
+  private List<Vector2I> GetRoomPerimeterTiles(Room room) {
+    List<Vector2I> tiles = new();
+    for (var x = room.Rect.Position.X; x < room.Rect.End.X; x++) {
+      for (var y = room.Rect.Position.Y; y < room.Rect.End.Y; y++) {
+        if (Tiles[x][y] == TileTypes.RoomPerimeter) tiles.Add(new Vector2I(x, y));
       }
     }
     return tiles;
