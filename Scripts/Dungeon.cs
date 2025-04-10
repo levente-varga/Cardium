@@ -63,25 +63,7 @@ public class Dungeon {
     foreach (var row in tiles) {
       Tiles.Add(new List<TileTypes>(row));
     }
-    Rooms = new List<Room>();
-    var spawnRoomPicked = false;
-    var bonfires = 0;
-    foreach (var room in rooms) {
-      var type = RoomTypes.Uncategorized;
-      if (room.Size == new Vector2I(3, 3) || room.Size == new Vector2I(5, 3) || room.Size == new Vector2I(3, 5)) {
-        if (!spawnRoomPicked) {
-          type = RoomTypes.Spawn;
-          spawnRoomPicked = true;
-        }
-        else {
-          if (_random.Next(bonfires) == 0) {
-            bonfires++;
-            type = RoomTypes.Bonfire;
-          }
-        }
-      }
-      Rooms.Add(new Room(room, type));
-    }
+    CategorizeRooms(rooms);
     
     // Assuming the received list of lists (tiles) has uniform length
     Size = new Vector2I(
@@ -106,7 +88,10 @@ public class Dungeon {
     FillBitmaskDictionary();
     PrettyWalls();
     Decorate();
+    SpawnExits();
     SpawnBonfires();
+    SpawnChests();
+    SpawnDoors();
     SpawnEnemies();
     
     GD.Print($"Generated a {Size.X}x{Size.Y} dungeon with\n" +
@@ -116,6 +101,7 @@ public class Dungeon {
              $"    {Enemies.Where(e => e is Spider).ToList().Count} spiders\n" +
              $"    {Enemies.Where(e => e is Ranger).ToList().Count} rangers\n" +
              $"  {Interactables.Count} interactables\n" +
+             $"    {Interactables.Where(i => i is Ladder).ToList().Count} exits\n" +
              $"    {Interactables.Where(i => i is Bonfire).ToList().Count} bonfires\n" +
              $"    {Interactables.Where(i => i is Chest).ToList().Count} chests\n" +
              $"  {Loot.Count} loot");
@@ -137,6 +123,33 @@ public class Dungeon {
         }
         WallLayer.SetCell(cell, 0, atlasCoords);
       }
+    }
+  }
+
+  private void CategorizeRooms(List<Rect2I> rooms) {
+    Rooms = new List<Room>();
+    var spawnRoomPicked = false;
+    var bonfires = 0;
+    var exits = 0;
+    foreach (var room in rooms) {
+      var type = RoomTypes.Uncategorized;
+      if (room.Size == new Vector2I(3, 3) || room.Size == new Vector2I(5, 3) || room.Size == new Vector2I(3, 5)) {
+        if (!spawnRoomPicked) {
+          type = RoomTypes.Spawn;
+          spawnRoomPicked = true;
+        }
+        else {
+          if (_random.Next((int)Mathf.Pow(exits, 2)) == 0) {
+            exits++;
+            type = RoomTypes.Exit;
+          }
+          else if (_random.Next(bonfires) == 0) {
+            bonfires++;
+            type = RoomTypes.Bonfire;
+          }
+        }
+      }
+      Rooms.Add(new Room(room, type));
     }
   }
 
@@ -189,17 +202,10 @@ public class Dungeon {
 
   private void SpawnBonfires() {
     foreach (var room in Rooms.Where(room => room.Type == RoomTypes.Bonfire)) {
-      List<Vector2I> bonfirePositionCandidates = new();
-      for (int x = room.Rect.Position.X; x < room.Rect.End.X; x++) {
-        for (int y = room.Rect.Position.Y; y < room.Rect.End.Y; y++) {
-          if (Tiles[x][y] == TileTypes.RoomInterior) bonfirePositionCandidates.Add(new Vector2I(x, y));
-        }
-      }
-
-      GD.Print($"Found {bonfirePositionCandidates.Count} bonfire position candidates");
-
+      List<Vector2I> tileCandidates = GetRoomInteriorTiles(room);
+      
       Bonfire bonfire = new();
-      bonfire.Position = bonfirePositionCandidates[_random.Next(bonfirePositionCandidates.Count)];
+      bonfire.Position = tileCandidates[_random.Next(tileCandidates.Count)];
       Interactables.Add(bonfire);
     }
   }
@@ -208,6 +214,23 @@ public class Dungeon {
   }
 
   private void SpawnExits() {
+    foreach (var room in Rooms.Where(room => room.Type == RoomTypes.Exit)) {
+      List<Vector2I> tileCandidates = GetRoomInteriorTiles(room);
+      
+      Ladder ladder = new();
+      ladder.Position = tileCandidates[_random.Next(tileCandidates.Count)];
+      Interactables.Add(ladder);
+    }
+  }
+
+  private List<Vector2I> GetRoomInteriorTiles(Room room) {
+    List<Vector2I> tiles = new();
+    for (int x = room.Rect.Position.X; x < room.Rect.End.X; x++) {
+      for (int y = room.Rect.Position.Y; y < room.Rect.End.Y; y++) {
+        if (Tiles[x][y] == TileTypes.RoomInterior) tiles.Add(new Vector2I(x, y));
+      }
+    }
+    return tiles;
   }
 
   /// <summary>
