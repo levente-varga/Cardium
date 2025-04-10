@@ -145,7 +145,7 @@ public class Dungeon {
           spawnRoomPicked = true;
         }
         else {
-          if (_random.Next((int)Mathf.Pow(exits, 2)) == 0) {
+          if (_random.Next((int)Mathf.Pow(exits * 1.5f, 2)) == 0) {
             exits++;
             type = RoomTypes.Exit;
           }
@@ -217,9 +217,10 @@ public class Dungeon {
     for (var x = 0; x < Size.X; x++) {
       for (var y = 0; y < Size.Y; y++) {
         if (Tiles[x][y] != TileTypes.Entrance) continue;
-        if (_random.Next(doors * 2 + 2) != 0) continue;
+        if (_random.Next(doors + 2) > 0) continue;
         Door door = new() { Position = new Vector2I(x, y) };
         Interactables.Add(door);
+        doors++;
       }
     }
   }

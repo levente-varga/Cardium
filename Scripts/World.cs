@@ -45,7 +45,7 @@ public partial class World : Node2D {
 
   public World() {
     DungeonGenerator generator = new();
-    _dungeon = generator.Generate(51, 51, 99);
+    _dungeon = generator.Generate(99, 99, 99);
   }
 
   public Vector2I HoveredCell => GetTilePosition(GetGlobalMousePosition());
