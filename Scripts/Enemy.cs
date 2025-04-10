@@ -46,11 +46,10 @@ public partial class Enemy : Entity
         
         if (distance == -1)
         {
+            // Unreachable, but might still be able to get closer
             if (Global.Debug) SpawnFloatingLabel("[Debug] Unreachable", color: Global.Magenta, fontSize: 20);
-            return;
-        } 
-        
-        if (distance <= BaseRange)
+        }
+        else if (distance <= BaseRange)
         {
             Nudge(VectorToDirection(player.Position - Position));
             player.ReceiveDamage(this, BaseDamage);

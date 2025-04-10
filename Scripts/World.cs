@@ -334,14 +334,14 @@ public partial class World : Node2D {
 	public List<Vector2I>? GetPathBetween(Vector2I from, Vector2I to) {
 		if (!_grid.IsInBoundsv(from) || !_grid.IsInBoundsv(to)) return null;
 		if (from == to) return new List<Vector2I>();
-		var path = _grid.GetPointPath(from, to).ToList();
+		var path = _grid.GetPointPath(from, to, true).ToList();
 		if (path.Count == 0) return null;
 		path = path.GetRange(1, path.Count - 1);
 		return path.Select(p => new Vector2I((int)p.X / Global.GlobalTileSize.X, (int)p.Y / Global.GlobalTileSize.Y)).ToList();
 	}
 	
 	public Vector2[] GetPointPathBetween(Vector2I from, Vector2I to) {
-		return _grid.GetPointPath(from, to).ToList().Select(p => new Vector2(p.X, p.Y) + Global.GlobalTileSize / 2).ToArray();
+		return _grid.GetPointPath(from, to, true).ToList().Select(p => new Vector2(p.X, p.Y) + Global.GlobalTileSize / 2).ToArray();
 	}
 	
 	public static List<Vector2I> GetTilesInRange(Vector2I from, int range) {
