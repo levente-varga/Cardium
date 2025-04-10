@@ -50,7 +50,6 @@ public partial class Entity : TileAlignedGameObject
     {
         base._Ready();
         
-        Position = Vector2I.Zero;
         Name = "Entity";
         SetupHealthBar();
     }

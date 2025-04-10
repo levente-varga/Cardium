@@ -63,15 +63,15 @@ public partial class World : Node2D {
     AddChild(_dungeon.GroundLayer);
     AddChild(_dungeon.FogLayer);
 
+    SpawnPlayer(Player, _dungeon.Player.Position);
+    
     foreach (var enemy in _dungeon.Enemies) {
-	    SpawnEnemy(enemy, enemy.Position);
+	    SpawnEnemy(enemy);
     }
 
     foreach (var interactable in _dungeon.Interactables) {
-	    SpawnInteractable(interactable, interactable.Position);
+	    SpawnInteractable(interactable);
     }
-    
-    Player.OnMoveEvent += OnPlayerMove;
     
     Camera.JumpToTarget();
   }
@@ -263,11 +263,10 @@ public partial class World : Node2D {
 		_grid.SetPointSolid(interactable.Position, solid);
 	}
 	
-	private void SpawnEnemy(Enemy enemy, Vector2I position) {
+	private void SpawnEnemy(Enemy enemy) {
 		AddChild(enemy);
 		_combatManager.AddEnemy(enemy);
-		enemy.SetPosition(position);
-		_grid.SetPointSolid(position);
+		_grid.SetPointSolid(enemy.Position);
 	}
 	
 	public void KillEnemy(Enemy enemy) {
@@ -282,13 +281,17 @@ public partial class World : Node2D {
 		}
 	}
 	
-  private void SpawnInteractable(Interactable interactable, Vector2I position) {
-	  GD.Print($"Trying to spawn a {interactable.GetType()} at {position}, which is {(IsEmpty(position) ? "" : "not")} empty");
+  private void SpawnInteractable(Interactable interactable) {
     AddChild(interactable);
-    interactable.SetPosition(position);
     interactable.OnSolidityChangeEvent += OnInteractableSolidityChange;
     _grid.SetPointSolid(interactable.Position, interactable.Solid);
-    GD.Print("Success");
+  }
+  
+  private void SpawnPlayer(Player player, Vector2I position) {
+	  //AddChild(player);
+	  player.Position = position;
+	  player.OnMoveEvent += OnPlayerMove;
+	  _grid.SetPointSolid(player.Position);
   }
   
   private void SpawnLoot(CardLoot loot, Vector2I position) {
@@ -431,7 +434,7 @@ public partial class World : Node2D {
 		
 		switch (card) {
 			case PlayerTargetingCard playerTargetingCard:
-				success =  playerTargetingCard.OnPlay(Player);
+				success = playerTargetingCard.OnPlay(Player);
 				break;
 			case EnemyTargetingCard enemyTargetingCard:
 				var enemy = await SelectEnemyTarget(enemyTargetingCard.Range, Player.Position);

@@ -46,7 +46,8 @@ public class Dungeon {
   
   public Vector2I Size { get; private set; }
   public Rect2I Rect { get; private set; }
-  
+
+  public Player Player { get; private set; } = new();
   public List<Enemy> Enemies { get; private set; } = new();
   public List<Interactable> Interactables { get; private set; } = new();
   public List<Card> Loot { get; private set; } = new();
@@ -94,6 +95,7 @@ public class Dungeon {
     SpawnChests();
     SpawnDoors();
     SpawnEnemies();
+    SpawnPlayer();
     
     GD.Print($"Generated a {Size.X}x{Size.Y} dungeon with\n" +
              $"  {Rooms.Count} rooms\n" +
@@ -183,7 +185,7 @@ public class Dungeon {
       }
     }
   }
-
+  
   private void SpawnEnemies() {
     foreach (var room in Rooms.Where(room => room.Type == RoomTypes.Uncategorized)) {
       Vector2I tile = new(
@@ -229,6 +231,13 @@ public class Dungeon {
       ladder.Position = tileCandidates[_random.Next(tileCandidates.Count)];
       Interactables.Add(ladder);
     }
+  }
+  
+  private void SpawnPlayer() {
+    var room = Rooms.FirstOrDefault(room => room.Type == RoomTypes.Spawn);
+    var tileCandidates = GetRoomInteriorTiles(room);
+    
+    Player.Position = tileCandidates[_random.Next(tileCandidates.Count)];
   }
 
   private List<Vector2I> GetRoomInteriorTiles(Room room) {
