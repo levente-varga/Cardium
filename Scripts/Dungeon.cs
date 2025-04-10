@@ -15,7 +15,6 @@ public enum TileTypes {
   RoomCorner,
   Doorway,
   Entrance,
-  EntranceWithDoor,
   Corridor,
 }
 
@@ -198,9 +197,11 @@ public class Dungeon {
   }
 
   private void SpawnDoors() {
+    var doors = 0;
     for (var x = 0; x < Size.X; x++) {
       for (var y = 0; y < Size.Y; y++) {
-        if (Tiles[x][y] != TileTypes.EntranceWithDoor) continue;
+        if (Tiles[x][y] != TileTypes.Entrance) continue;
+        if (_random.Next(doors * 2 + 2) != 0) continue;
         Door door = new() { Position = new Vector2I(x, y) };
         Interactables.Add(door);
       }

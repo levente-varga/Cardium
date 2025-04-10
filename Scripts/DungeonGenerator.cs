@@ -242,7 +242,7 @@ public class DungeonGenerator {
       }
     }
 
-    SetTile(tile, _random.Next(4) == 0 ? TileTypes.EntranceWithDoor : TileTypes.Entrance);
+    SetTile(tile, TileTypes.Entrance);
   }
   
   private void RemoveDeadEnds() {
