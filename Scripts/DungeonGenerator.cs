@@ -151,7 +151,6 @@ public class DungeonGenerator {
     }
   }
   
-  [SuppressMessage("ReSharper.DPA", "DPA0000: DPA issues")]
   private void ConnectRegions() {
     // Find all the tiles that can connect two (or more) regions.
     var connectorRegions = new Dictionary<Vector2I, HashSet<int>>();
@@ -236,16 +235,14 @@ public class DungeonGenerator {
   }
 
   private void AddJunction(Vector2I tile) {
-    SetWall(tile, TileTypes.RoomEntrance);
-    
-    // For supporting door generation:
-    /*
-    if (_random.Next(4) < 1) {
-      SetTile(tile, _random.Next(3) < 1 ? Tiles.openDoor : Tiles.floor);
-    } else {
-      SetTile(tile, Tiles.closedDoor);
+    for (var x = tile.X - 1; x <= tile.X + 1; x++) {
+      for (var y = tile.Y - 1; y <= tile.Y + 1; y++) {
+        if (Mathf.Abs(x + y) != 1) continue;
+        if (_tiles[x][y] == TileTypes.RoomPerimeter) SetTile(new Vector2I(x, y), TileTypes.Doorway);
+      }
     }
-    */
+
+    SetTile(tile, _random.Next(4) == 0 ? TileTypes.EntranceWithDoor : TileTypes.Entrance);
   }
   
   private void RemoveDeadEnds() {
@@ -270,7 +267,7 @@ public class DungeonGenerator {
           if (exits != 1) continue;
 
           done = false;
-          SetWall(pos);
+          SetTile(pos);
         }
       }
     }
@@ -293,12 +290,12 @@ public class DungeonGenerator {
   }
 
   private void Carve(Vector2I tile, TileTypes type = TileTypes.Corridor) {
-    SetWall(tile, type);
+    SetTile(tile, type);
     _regions[tile.X][tile.Y] = _currentRegion;
   }
 
   private bool IsWall(Vector2I tile) => _tiles[tile.X][tile.Y] == TileTypes.Wall;
-  private void SetWall(Vector2I tile, TileTypes value = TileTypes.Wall) => _tiles[tile.X][tile.Y] = value;
+  private void SetTile(Vector2I tile, TileTypes value = TileTypes.Wall) => _tiles[tile.X][tile.Y] = value;
 
   private void InitArea(Vector2I size) {
     for (var x = 0; x < size.X; x++) {

@@ -13,7 +13,9 @@ public enum TileTypes {
   RoomInterior,
   RoomPerimeter,
   RoomCorner,
-  RoomEntrance,
+  Doorway,
+  Entrance,
+  EntranceWithDoor,
   Corridor,
 }
 
@@ -104,6 +106,7 @@ public class Dungeon {
              $"    {Interactables.Where(i => i is Ladder).ToList().Count} exits\n" +
              $"    {Interactables.Where(i => i is Bonfire).ToList().Count} bonfires\n" +
              $"    {Interactables.Where(i => i is Chest).ToList().Count} chests\n" +
+             $"    {Interactables.Where(i => i is Door).ToList().Count} doors\n" +
              $"  {Loot.Count} loot");
 
   }
@@ -158,9 +161,9 @@ public class Dungeon {
       for (var y = 0; y < Size.Y; y++) {
         if (LayerIsEmptyAt(WallLayer, new Vector2I(x, y))) {
           float factor = 1;
-          if (Tiles[x][y] == Scripts.TileTypes.RoomCorner) factor = 0.4f;
-          else if (Tiles[x][y] == Scripts.TileTypes.RoomPerimeter) factor = 0.8f;
-          else if (Tiles[x][y] == Scripts.TileTypes.RoomInterior) factor = 1.2f;
+          if (Tiles[x][y] == TileTypes.RoomCorner) factor = 0.4f;
+          else if (Tiles[x][y] == TileTypes.RoomPerimeter) factor = 0.8f;
+          else if (Tiles[x][y] == TileTypes.RoomInterior) factor = 1.2f;
           
           var random = _random.Next(100);
           random = (int)(random * factor);
@@ -189,20 +192,24 @@ public class Dungeon {
         _random.Next(room.Rect.Position.Y + 1, room.Rect.End.Y - 2)
         );
 
-      Slime enemy = new() {
-        Position = tile
-      };
-      
+      Slime enemy = new() { Position = tile };
       Enemies.Add(enemy);
     }
   }
 
   private void SpawnDoors() {
+    for (var x = 0; x < Size.X; x++) {
+      for (var y = 0; y < Size.Y; y++) {
+        if (Tiles[x][y] != TileTypes.EntranceWithDoor) continue;
+        Door door = new() { Position = new Vector2I(x, y) };
+        Interactables.Add(door);
+      }
+    }
   }
 
   private void SpawnBonfires() {
     foreach (var room in Rooms.Where(room => room.Type == RoomTypes.Bonfire)) {
-      List<Vector2I> tileCandidates = GetRoomInteriorTiles(room);
+      var tileCandidates = GetRoomInteriorTiles(room);
       
       Bonfire bonfire = new();
       bonfire.Position = tileCandidates[_random.Next(tileCandidates.Count)];
@@ -215,7 +222,7 @@ public class Dungeon {
 
   private void SpawnExits() {
     foreach (var room in Rooms.Where(room => room.Type == RoomTypes.Exit)) {
-      List<Vector2I> tileCandidates = GetRoomInteriorTiles(room);
+      var tileCandidates = GetRoomInteriorTiles(room);
       
       Ladder ladder = new();
       ladder.Position = tileCandidates[_random.Next(tileCandidates.Count)];
@@ -225,8 +232,8 @@ public class Dungeon {
 
   private List<Vector2I> GetRoomInteriorTiles(Room room) {
     List<Vector2I> tiles = new();
-    for (int x = room.Rect.Position.X; x < room.Rect.End.X; x++) {
-      for (int y = room.Rect.Position.Y; y < room.Rect.End.Y; y++) {
+    for (var x = room.Rect.Position.X; x < room.Rect.End.X; x++) {
+      for (var y = room.Rect.Position.Y; y < room.Rect.End.Y; y++) {
         if (Tiles[x][y] == TileTypes.RoomInterior) tiles.Add(new Vector2I(x, y));
       }
     }
