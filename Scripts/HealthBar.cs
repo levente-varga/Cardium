@@ -14,14 +14,15 @@ public partial class HealthBar : Polygon2D
 		set
 		{
 			var previousHealth = Health;
+			var totalChange = value - previousHealth;
 			_health = Math.Max(0, value);
 			if (Health > MaxHealth)
 			{
 				_health = MaxHealth;
 			}
-			if (Health < previousHealth)
+			if (totalChange < 0)
 			{
-				SpawnFloatingLabel((previousHealth - Health).ToString());
+				SpawnFloatingLabel(Mathf.Abs(totalChange).ToString());
 			}
 		}
 	}

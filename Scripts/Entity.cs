@@ -81,8 +81,9 @@ public partial class Entity : TileAlignedGameObject
         GD.Print(Name + "'s turn ended.");
     }
 
-    public virtual void ReceiveDamage(Entity source, int damage)
-    {
+    public virtual void ReceiveDamage(Entity source, int damage) {
+        if (damage < 1) return;
+        
         Blink();
         
         // TODO: Implement dodge based on luck
