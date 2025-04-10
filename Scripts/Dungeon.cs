@@ -193,7 +193,19 @@ public class Dungeon {
         _random.Next(room.Rect.Position.Y + 1, room.Rect.End.Y - 2)
         );
 
-      Slime enemy = new() { Position = tile };
+      Enemy enemy ;
+      
+      if (_random.Next(20) == 0) {
+        enemy = new Ranger();
+      }
+      else if (_random.Next(8) == 0) {
+        enemy = new Spider();
+      }
+      else {
+        enemy = new Slime();
+      }
+      
+      enemy.Position = tile;
       Enemies.Add(enemy);
     }
   }

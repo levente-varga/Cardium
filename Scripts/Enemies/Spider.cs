@@ -13,6 +13,7 @@ public partial class Spider : Enemy
         Name = "Spider";
         MaxHealth = 5;
         Health = MaxHealth;
+        BaseVision = 4;
         BaseArmor = 0;
         BaseDamage = 2;
         BaseLuck = 0f;

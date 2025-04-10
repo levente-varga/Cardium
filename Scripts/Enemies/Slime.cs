@@ -13,6 +13,7 @@ public partial class Slime : Enemy
         Name = "Slime";
         MaxHealth = 3;
         Health = MaxHealth;
+        BaseVision = 2;
         BaseArmor = 0;
         BaseDamage = 1;
         BaseLuck = 0f;

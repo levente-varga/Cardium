@@ -23,7 +23,7 @@ public partial class Player : Entity
 		BaseRange = 2;
 		Name = "Player";
 		BaseDamage = 1;
-		MaxHealth = 5;
+		MaxHealth = 10;
 		Health = MaxHealth;
 		
 		Position = Vector2I.One;
