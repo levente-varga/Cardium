@@ -62,6 +62,7 @@ public partial class World : Node2D {
     AddChild(_dungeon.DecorLayer);
     AddChild(_dungeon.GroundLayer);
     AddChild(_dungeon.FogLayer);
+    _dungeon.FogLayer.ZIndex = 10;
 
     SpawnPlayer(Player, _dungeon.Player.Position);
     
@@ -183,7 +184,7 @@ public partial class World : Node2D {
   private void SetupFogOfWar() {
     for (var x = _dungeon.Rect.Position.X; x < _dungeon.Rect.End.X; x++) {
 	    for (var y = _dungeon.Rect.Position.Y; y < _dungeon.Rect.End.Y; y++) {
-		    _dungeon.FogLayer.SetCell(new Vector2I(x, y), 2, new Vector2I(0, 0));
+		    _dungeon.FogLayer.SetCell(new Vector2I(x, y), 0, new Vector2I(0, 0));
 	    }
     }
   }
@@ -234,9 +235,9 @@ public partial class World : Node2D {
     var tiles = GetTilesInRange(Player.Position, Player.Vision);
     var edge = GetTilesExactlyInRange(Player.Position, Player.Vision + 1);
     
-    foreach (var tile in tiles) _dungeon.FogLayer.SetCell(tile, 2, new Vector2I(2, 0));
+    foreach (var tile in tiles) _dungeon.FogLayer.SetCell(tile, 0, new Vector2I(2, 0));
     foreach (var tile in edge.Where(tile => _dungeon.FogLayer.GetCellAtlasCoords(tile).X == 2)) {
-	    _dungeon.FogLayer.SetCell(tile, 2, new Vector2I(1, 0));
+	    _dungeon.FogLayer.SetCell(tile, 0, new Vector2I(1, 0));
     }
   }
   

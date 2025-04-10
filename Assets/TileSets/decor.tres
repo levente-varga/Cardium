@@ -3,6 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://bivy7ravgim4k" path="res://Assets/TileSets/decorations.png" id="1_jx7i6"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_bjf13"]
+resource_name = "Decor"
 texture = ExtResource("1_jx7i6")
 separation = Vector2i(1, 1)
 1:0/0 = 0

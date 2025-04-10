@@ -19,7 +19,7 @@ public partial class Player : Entity
 	{
 		base._Ready();
 		
-		BaseVision = 4;
+		BaseVision = 3;
 		BaseRange = 2;
 		Name = "Player";
 		BaseDamage = 1;

@@ -19,7 +19,7 @@ public partial class Enemy : Entity
         base._Ready();
         AddChild(Path);
         
-        HealthBar.Visible = true;
+        HealthBar.Visible = false;
     }
     
     public override void _Process(double delta)
@@ -35,6 +35,7 @@ public partial class Enemy : Entity
         if (!SeeingPlayer) {
             if (distance != -1 && distance <= Vision) {
                 SeeingPlayer = true;
+                HealthBar.Visible = true;
             }
         }
 

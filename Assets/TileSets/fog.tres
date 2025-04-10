@@ -1,0 +1,14 @@
+[gd_resource type="TileSet" load_steps=3 format=3 uid="uid://bja7bs8cam15p"]
+
+[ext_resource type="Texture2D" uid="uid://cdescqx8vh087" path="res://Assets/TileSets/fog.png" id="1_pso1d"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_nes22"]
+resource_name = "Fog"
+texture = ExtResource("1_pso1d")
+separation = Vector2i(1, 1)
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+
+[resource]
+sources/0 = SubResource("TileSetAtlasSource_nes22")
