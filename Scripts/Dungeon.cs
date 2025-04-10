@@ -234,6 +234,11 @@ public class Dungeon {
   }
   
   private void SpawnPlayer() {
+    if (Rooms.Where(room => room.Type == RoomTypes.Spawn).ToList().Count == 0) {
+      GD.Print("[ERROR] No spawn room was generated");
+      return;
+    }
+    
     var room = Rooms.FirstOrDefault(room => room.Type == RoomTypes.Spawn);
     var tileCandidates = GetRoomInteriorTiles(room);
     
