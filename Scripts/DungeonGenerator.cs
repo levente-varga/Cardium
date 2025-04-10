@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Godot;
 
@@ -8,15 +7,16 @@ namespace Cardium.Scripts;
 
 public class DungeonGenerator {
   public int NumRoomTries = 100;
-  public int ExtraConnectorChance => 20;
+  public int ExtraConnectorChance => 10;
   public int RoomExtraSize => 1;
-  public int WindingPercent => 50;
+  public int WindingPercent => 70;
+  public int MinSmallRooms => 2;
+  public Vector2I MinSize => new Vector2I(11, 11);
 
   private static readonly List<Vector2I> Directions = new() {
     Vector2I.Down, Vector2I.Up, Vector2I.Left, Vector2I.Right
   };
-
-  //public Dungeon Dungeon = new();
+  
   private readonly List<List<TileTypes>> _tiles = new();
   private List<Rect2I> _rooms = new();
   private Vector2I _size;
@@ -33,12 +33,18 @@ public class DungeonGenerator {
 
   public Dungeon Generate(int width, int height, int roomTries = 100) => Generate(new Vector2I(width, height), roomTries); 
   public Dungeon Generate(Vector2I size, int roomTries = 100) {
+    GD.Print($"Started generating a {size.X}x{size.Y} dungeon");
+    
+    if (size.X % 2 == 0 || size.Y % 2 == 0) {
+      throw new Exception("The dungeon must be odd-sized.");
+    }
+    if (size.X <= MinSize.X || size.Y <= MinSize.Y) {
+      throw new Exception($"The dungeon must be at least {MinSize.X}x{MinSize.Y} to ensure everything fits inside.");
+    }
+    
     NumRoomTries = roomTries;
     _size = size;
     _bounds = new Rect2I(Vector2I.Zero, size);
-    if (size.X % 2 == 0 || size.Y % 2 == 0) {
-      throw new Exception("The stage must be odd-sized.");
-    }
     
     InitArea(_size);
     GenerateRooms();
@@ -87,10 +93,7 @@ public class DungeonGenerator {
         lastDirection = direction;
       } 
       else {
-        // No adjacent uncarved cells.
         cells.Remove(cell);
-
-        // This path has ended.
         lastDirection = Vector2I.Zero;
       }
     }
@@ -98,12 +101,16 @@ public class DungeonGenerator {
 
   private void GenerateRooms() {
     _rooms = new();
+
+    // Generate the minimum required small (3x3) rooms, for a guaranteed exit and spawn point
+    var remainingSmallRooms = MinSmallRooms;
+    while (remainingSmallRooms > 0) {
+      if (PlaceRoom(3, 3)) {
+        remainingSmallRooms--;
+      }
+    }
+    
     for (var i = 0; i < NumRoomTries; i++) {
-      // Pick a random room size. The funny math here does two things:
-      // - It makes sure rooms are odd-sized to line up with maze.
-      // - It avoids creating rooms that are too rectangular: too tall and
-      //   narrow or too wide and flat.
-      // TODO: This isn't very flexible or tunable. Do something better here.
       var size = _random.Next(1, 3 + RoomExtraSize) * 2 + 1;
       var rectangularity = _random.Next(0, 1 + size / 2) * 2;
       var width = size;
@@ -115,30 +122,37 @@ public class DungeonGenerator {
         height += rectangularity;
       }
 
-      Vector2I position = new (
-        _random.Next(0, (_size.X - width) / 2) * 2 + 1,
-        _random.Next(0, (_size.Y - height) / 2) * 2 + 1
-      );
+      PlaceRoom(new Vector2I(width, height));
+    }
+  }
 
-      var room = new Rect2I(position.X, position.Y, width, height);
+  private bool PlaceRoom(int width, int height) => PlaceRoom(new Vector2I(width, height)); 
+  private bool PlaceRoom(Vector2I size) {
+    Vector2I position = new (
+      _random.Next(0, (_size.X - size.X) / 2) * 2 + 1,
+      _random.Next(0, (_size.Y - size.Y) / 2) * 2 + 1
+    );
 
-      var overlaps = _rooms.Any(other => room.Intersects(other));
-      if (overlaps) continue;
+    var room = new Rect2I(position.X, position.Y, size.X, size.Y);
 
-      _rooms.Add(room);
+    var overlaps = _rooms.Any(other => room.Intersects(other));
+    if (overlaps) return false;
 
-      StartRegion();
-      for (var x = room.Position.X; x < room.End.X; x++) {
-        var perimeterX = x == room.Position.X || x == room.End.X - 1;
-        for (var y = room.Position.Y; y < room.End.Y; y++) {
-          var perimeterY = y == room.Position.Y || y == room.End.Y - 1;
-          var type = TileTypes.RoomInterior;
-          if (perimeterX && perimeterY) type = TileTypes.RoomCorner;
-          else if (perimeterX || perimeterY) type = TileTypes.RoomPerimeter;
-          Carve(new Vector2I(x, y), type);
-        }
+    _rooms.Add(room);
+
+    StartRegion();
+    for (var x = room.Position.X; x < room.End.X; x++) {
+      var perimeterX = x == room.Position.X || x == room.End.X - 1;
+      for (var y = room.Position.Y; y < room.End.Y; y++) {
+        var perimeterY = y == room.Position.Y || y == room.End.Y - 1;
+        var type = TileTypes.RoomInterior;
+        if (perimeterX && perimeterY) type = TileTypes.RoomCorner;
+        else if (perimeterX || perimeterY) type = TileTypes.RoomPerimeter;
+        Carve(new Vector2I(x, y), type);
       }
     }
+
+    return true;
   }
 
   private void GenerateMaze() {
