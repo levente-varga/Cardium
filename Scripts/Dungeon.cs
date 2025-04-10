@@ -16,6 +16,22 @@ public enum Tiles {
   Corridor,
 }
 
+public enum Rooms {
+  Small, // 3x3
+  Medium, //3x5
+  Normal,
+}
+
+public struct Room {
+  public Rect2I Rect;
+  public Rooms Type;
+
+  public Room(Rect2I rect, Rooms type) {
+    this.Rect = rect;
+    this.Type = type;
+  }
+}
+
 public class Dungeon {
   private AStarGrid2D _grid = new();
 
@@ -34,7 +50,7 @@ public class Dungeon {
 
   // Data from the DungeonGenerator
   private List<List<Tiles>> _tiles;
-  private List<Rect2I> _rooms;
+  private List<Room> _rooms;
 
   private readonly Dictionary<int, Vector2I> _bitmaskToWallAtlasCoord = new();
 
@@ -45,7 +61,13 @@ public class Dungeon {
     foreach (var row in tiles) {
       _tiles.Add(new List<Tiles>(row));
     }
-    _rooms = new List<Rect2I>(rooms);
+    _rooms = new List<Room>();
+    foreach (var room in rooms) {
+      var type = Rooms.Normal;
+      if (room.Size == new Vector2I(3, 3)) type = Rooms.Small;
+      else if (room.Size == new Vector2I(3, 5) || room.Size == new Vector2I(5, 3)) type = Rooms.Medium;
+      _rooms.Add(new Room(room, type));
+    }
     
     // Assuming the received list of lists (tiles) has uniform length
     Size = new Vector2I(
@@ -125,8 +147,8 @@ public class Dungeon {
   private void SpawnEnemies() {
     foreach (var room in _rooms) {
       Vector2I tile = new(
-        _random.Next(room.Position.X + 1, room.End.X - 2),
-        _random.Next(room.Position.Y + 1, room.End.Y - 2)
+        _random.Next(room.Rect.Position.X + 1, room.Rect.End.X - 2),
+        _random.Next(room.Rect.Position.Y + 1, room.Rect.End.Y - 2)
         );
 
       Slime enemy = new() {
