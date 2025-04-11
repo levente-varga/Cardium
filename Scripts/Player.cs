@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Cardium.Scripts.Cards;
 using Cardium.Scripts.Cards.Types;
 using Godot;
@@ -31,6 +32,8 @@ public partial class Player : Entity
 		HealthBar.Visible = true;
 
 		FillDeck();
+		Hand.Deck = Deck;
+		Hand.DrawCards(5);
 		
 		SetStillFrame(GD.Load<Texture2D>("res://Assets/Sprites/player.png"));
 		
@@ -119,8 +122,10 @@ public partial class Player : Entity
 		Card? drawnCard = Deck.Draw();
 		if (drawnCard != null)
 		{
-			Hand?.Add(drawnCard);
+			Hand.Add(drawnCard);
 		}
+
+		Hand.DrawCards(1);
 		OnActionEvent?.Invoke();
 	}
 

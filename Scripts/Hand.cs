@@ -19,6 +19,8 @@ public partial class Hand : Node2D
 	[Export] public float DefaultCardAngle = 7f;
 	[Export] public float TiltAngle = 0f;
 	[Export] public Vector2 Origin = Vector2.Zero;
+
+	public Deck Deck = new();
 	
 	public bool RightHanded = true;
 	public HandState State { get; private set; }
@@ -31,20 +33,19 @@ public partial class Hand : Node2D
 		get => _capacity;
 		private set => _capacity = Math.Max(value, 1);
 	}
+	
 	public int Size => _cards.Count;
 	private Rect2 _playArea;
 	
 	public delegate void OnCardPlayedDelegate(Card card);
 	public event OnCardPlayedDelegate? OnCardPlayedEvent;
 
-	public override void _Ready()
-	{
-		Origin = new Vector2(
-			0,
-			GetViewport().GetVisibleRect().Size.Y - HandHeight + HandRadius / 2
-		);
-		
-		PositionHand();
+	public override void _EnterTree() {
+		Origin = new (0, GetViewport().GetVisibleRect().Size.Y - HandHeight + HandRadius / 2);
+	}
+
+	public override void _Ready() {
+		PositionCards();
 		
 		_playArea = new Rect2(
 			0,
@@ -54,32 +55,40 @@ public partial class Hand : Node2D
 		);
 	}
 	
-	public override void _Process(double delta)
-	{
+	public override void _Process(double delta) {
 		
 	}
 
-
-	private void PositionHand()
-	{	
-		var oldCardAngles = new List<float>(_cardAngles);
-		_cardAngles = GetCardAngles();
-
-		for (var i = 0; i < _cards.Count; i++)
-		{
-			var tween = CreateTween();
-			var index = i;
-			tween.TweenMethod(Callable.From<float>(value => SetCardPosition(index, value)), oldCardAngles[index], _cardAngles[index], 0.4f)
-				.SetEase(Tween.EaseType.Out)
-				.SetTrans(Tween.TransitionType.Expo);
-			tween.TweenCallback(Callable.From(() => { tween.Dispose(); }));
+	public void DrawCards(int count) {
+		for (var i = 0; i < count; i++) {
+			var card = Deck.Draw();
+			if (card == null) break;
+			Add(card, false);
 		}
 	}
 
+	private void PositionCards() {	
+		var oldCardAngles = new List<float>(_cardAngles);
+		_cardAngles = GetCardAngles();
 
+		for (var i = 0; i < _cards.Count; i++) {
+			var tween = CreateTween();
+			var index = i;
+			
+			tween.TweenMethod(Callable.From<float>(value => SetCardPosition(index, value)), 
+					oldCardAngles[index],
+					_cardAngles[i], 
+					0.4f)
+				.SetEase(Tween.EaseType.Out)
+				.SetTrans(Tween.TransitionType.Expo)
+				.SetDelay(0.08 * index);
+			tween.TweenCallback(Callable.From(() => { tween.Dispose(); }));
+		}
+	}
+	
 	private void SetCardPosition(int index, float angle) {
 		if (index >= _cards.Count || index < 0) return;
-		Vector2 cardPosition = GetPointOnCircle(Origin, HandRadius, angle);
+		var cardPosition = GetPointOnCircle(Origin, HandRadius, angle);
 
 		_cards[index].Position = cardPosition;
 		_cards[index].Rotation = DegreeToRadian(angle + 90);
@@ -89,8 +98,7 @@ public partial class Hand : Node2D
 
 
 	private List<float> GetCardAngles() => GetCardAngles(_cards.Count);
-	private List<float> GetCardAngles(int cardCount)
-	{
+	private List<float> GetCardAngles(int cardCount) {
 		var angles = new List<float>();
 
 		var handEnclosedAngle = MathF.Min(MaxHandEnclosedAngle, (cardCount - 1) * DefaultCardAngle);
@@ -98,8 +106,7 @@ public partial class Hand : Node2D
 		float cardAngle = 0;
 		if (cardCount > 1) cardAngle = handEnclosedAngle / (cardCount - 1);
 
-		for (var i = 0; i < cardCount; i++)
-		{
+		for (var i = 0; i < cardCount; i++) {
 			var angle = handStartAngle + cardAngle * i;
 			angles.Add(angle);
 		}
@@ -107,42 +114,28 @@ public partial class Hand : Node2D
 		return angles;
 	}
 
+	private float DegreeToRadian(float angle) => (float)(MathF.PI * angle / 180.0);
+	private float RadianToDegree(float angle) => (float)(angle * (180.0 / MathF.PI));
 
-	private float DegreeToRadian(float angle)
-	{
-		return (float)(MathF.PI * angle / 180.0);
-	}
-
-
-	private float RadianToDegree(float angle)
-	{
-		return (float)(angle * (180.0 / MathF.PI));
-	}
-
-
-	private Vector2 GetPointOnCircle(float radius, float angle)
-	{
+	private Vector2 GetPointOnCircle(float radius, float angle) {
 		return new Vector2(
 			radius * MathF.Cos(DegreeToRadian(angle)),
 			radius * MathF.Sin(DegreeToRadian(angle))
 		);
 	}
 
-
-	private Vector2 GetPointOnCircle(Vector2 origin, float radius, float angle)
-	{
+	private Vector2 GetPointOnCircle(Vector2 origin, float radius, float angle) {
 		return origin + GetPointOnCircle(radius, angle);
 	}
 	
-	
-	public void Add(Card card) => Add(card, _cards.Count);
-	public void Add(Card card, int index)
-	{
+	public void Add(Card card, bool positionHand = true) => Add(card, _cards.Count, positionHand);
+	public void Add(Card card, int index, bool positionHand = true) {
 		if (_cards.Count >= Capacity) return;
-		_cardAngles.Add(315);
+		_cardAngles.Add(360);
 		_cards.Insert(index, card);
 		AddChild(card);
-		PositionHand();
+		SetCardPosition(index, _cardAngles[index]);
+		if (positionHand) PositionCards();
 		
 		card.OnDragEndEvent += OnCardDragEnd;
 		card.OnDragEvent += OnCardDrag;
@@ -150,22 +143,18 @@ public partial class Hand : Node2D
 
 	private void RemoveLast() => Remove(_cards.Last());
 	private void Remove(int index) => Remove(_cards[index]);
-	private void Remove(Card card)
-	{
+	private void Remove(Card card) {
 		if (!_cards.Contains(card)) return;
 		_cardAngles.RemoveAt(_cards.IndexOf(card));
 		card.OnDragEndEvent -= OnCardDragEnd;
 		card.OnDragEvent -= OnCardDrag;
 		_cards.Remove(card);
 		card.QueueFree();
-		PositionHand();
+		PositionCards();
 	}
 
-
-	public override void _Input(InputEvent @event)
-	{
-		switch (@event)
-		{
+	public override void _Input(InputEvent @event) {
+		switch (@event) {
 			case InputEventKey { Pressed: true, KeyLabel: Key.Key1 }:
 				Add(new HealCard());
 				break;
@@ -190,11 +179,9 @@ public partial class Hand : Node2D
 		}
 	}
 
-	private void OnCardDrag(Card card, Vector2 mousePosition)
-	{
+	private void OnCardDrag(Card card, Vector2 mousePosition) {
 		State = HandState.Dragging;
-		switch (card.InPlayArea)
-		{
+		switch (card.InPlayArea) {
 			case false when _playArea.HasPoint(mousePosition):
 				card.OnEnterPlayArea();
 				Utils.SpawnFallingLabel(GetTree(), card.GlobalPosition, "Entered play area");
@@ -206,8 +193,7 @@ public partial class Hand : Node2D
 		}
 	}
 	
-	private void OnCardDragEnd(Card card, Vector2 mousePosition)
-	{
+	private void OnCardDragEnd(Card card, Vector2 mousePosition) {
 		if (card.InPlayArea) card.OnExitPlayArea();
 
 		State = HandState.Idle;
@@ -220,35 +206,29 @@ public partial class Hand : Node2D
 		_ = Play(card);
 	}
 
-	private async Task Play(Card card)
-	{
+	private async Task Play(Card card) {
 		//Enabled = false;
 		var success = await Player.World.PlayCard(card);
 		//Enabled = true;
 		
-		if (success)
-		{
+		if (success) {
 			Remove(card);
-			PositionHand();
+			PositionCards();
 		}
 		else card.OnExitPlayArea();
 
-		if (success)
-		{
+		if (success) {
 			OnCardPlayedEvent?.Invoke(card);
 		}
-		else
-		{
+		else {
 			Utils.SpawnFloatingLabel(GetTree(), Player.GlobalPosition, "Cancelled");
 		}
 		
 		State = HandState.Idle;
 	}
 	
-	private void EnableCards(bool enable)
-	{
-		foreach (var card in _cards)
-		{
+	private void EnableCards(bool enable) {
+		foreach (var card in _cards) {
 			card.Enabled = enable;
 		}
 		
