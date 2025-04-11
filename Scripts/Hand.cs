@@ -141,51 +141,35 @@ public partial class Hand : Node2D
 		card.OnDragEvent += OnCardDrag;
 	}
 
-	public Card? RemoveLast() => Remove(_cards.Last());
-	public Card? Remove(int index) => Remove(_cards[index]);
-	public Card? Remove(Card card) {
+	public Card? RemoveLast(bool positionHand = true) => _cards.Count > 0 ? Remove(_cards.Last(), positionHand) : null;
+	public Card? Remove(int index, bool positionHand = true) => _cards.Count > index ? Remove(_cards[index], positionHand) : null;
+	public Card? Remove(Card card, bool positionHand = true) {
 		if (!_cards.Contains(card)) return null;
 		_cardAngles.RemoveAt(_cards.IndexOf(card));
 		card.OnDragEndEvent -= OnCardDragEnd;
 		card.OnDragEvent -= OnCardDrag;
 		_cards.Remove(card);
-		PositionCards();
+		RemoveChild(card);
+		if (positionHand) PositionCards();
 		return card;
 	}
 
 	public override void _Input(InputEvent @event) {
-		Card? card = null;
-		
-		switch (@event) {
-			case InputEventKey { Pressed: true, KeyLabel: Key.Key1 }:
-				card = new HealCard();
-				break;
-			case InputEventKey { Pressed: true, KeyLabel: Key.Key2 }:
-				card = new SmiteCard();
-				break;
-			case InputEventKey { Pressed: true, KeyLabel: Key.Key3 }:
-				card = new HurlCard();
-				break;
-			case InputEventKey { Pressed: true, KeyLabel: Key.Key4 }:
-				card = new PushCard();
-				break;
-			case InputEventKey { Pressed: true, KeyLabel: Key.Key5 }: 
-				card = new ChainCard();
-				break;
-			case InputEventKey { Pressed: true, KeyLabel: Key.Key6 }:
-				card = new KeyCard();
-				break;
-			case InputEventKey { Pressed: true, KeyLabel: Key.Key7 }:
-				card = new HolyCard();
-				break;
-			case InputEventKey { Pressed: true, KeyLabel: Key.Key8 }:
-				card = new ShuffleCard();
-				break;
-		}
-		
+		Card? card = @event switch {
+			InputEventKey { Pressed: true, KeyLabel: Key.Key1 } => new HealCard(),
+			InputEventKey { Pressed: true, KeyLabel: Key.Key2 } => new SmiteCard(),
+			InputEventKey { Pressed: true, KeyLabel: Key.Key3 } => new HurlCard(),
+			InputEventKey { Pressed: true, KeyLabel: Key.Key4 } => new PushCard(),
+			InputEventKey { Pressed: true, KeyLabel: Key.Key5 } => new ChainCard(),
+			InputEventKey { Pressed: true, KeyLabel: Key.Key6 } => new KeyCard(),
+			InputEventKey { Pressed: true, KeyLabel: Key.Key7 } => new HolyCard(),
+			InputEventKey { Pressed: true, KeyLabel: Key.Key8 } => new ShuffleCard(),
+			_ => null
+		};
+
 		if (card == null) return;
 
-		RemoveLast();
+		RemoveLast(false);
 		Add(card);
 	}
 

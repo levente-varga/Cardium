@@ -1,3 +1,4 @@
+using System;
 using Cardium.Scripts.Cards;
 using Cardium.Scripts.Cards.Types;
 using Godot;
@@ -98,11 +99,21 @@ public partial class Player : Entity
 		}
 	}
 
-	private void FillDeck()
-	{
-		for (int i = 0; i < Deck.Capacity; i++)
-		{
-			Deck.Add(new SmiteCard());
+	private void FillDeck() {
+		var r = new Random();
+		for (var i = 0; i < Deck.Capacity; i++) {
+			var type = r.Next(8);
+			Card card = type switch {
+				0 => new HealCard(),
+				1 => new SmiteCard(),
+				2 => new HurlCard(),
+				3 => new PushCard(),
+				4 => new ChainCard(),
+				5 => new KeyCard(),
+				6 => new HolyCard(),
+				_ => new ShuffleCard(),
+			};
+			Deck.Add(card);
 		}
 		Deck.Shuffle();
 	}
