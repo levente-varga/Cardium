@@ -109,8 +109,9 @@ public partial class Player : Entity
 				2 => new HurlCard(),
 				3 => new PushCard(),
 				4 => new ChainCard(),
-				5 => new KeyCard(),
-				6 => new HolyCard(),
+				5 => new GoldenKeyCard(),
+				6 => new WoodenKeyCard(),
+				7 => new HolyCard(),
 				_ => new ShuffleCard(),
 			};
 			Deck.Add(card);

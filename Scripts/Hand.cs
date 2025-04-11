@@ -175,9 +175,10 @@ public partial class Hand : Node2D
 			InputEventKey { Pressed: true, KeyLabel: Key.Key3 } => new HurlCard(),
 			InputEventKey { Pressed: true, KeyLabel: Key.Key4 } => new PushCard(),
 			InputEventKey { Pressed: true, KeyLabel: Key.Key5 } => new ChainCard(),
-			InputEventKey { Pressed: true, KeyLabel: Key.Key6 } => new KeyCard(),
-			InputEventKey { Pressed: true, KeyLabel: Key.Key7 } => new HolyCard(),
-			InputEventKey { Pressed: true, KeyLabel: Key.Key8 } => new ShuffleCard(),
+			InputEventKey { Pressed: true, KeyLabel: Key.Key6 } => new GoldenKeyCard(),
+			InputEventKey { Pressed: true, KeyLabel: Key.Key7 } => new GoldenKeyCard(),
+			InputEventKey { Pressed: true, KeyLabel: Key.Key8 } => new HolyCard(),
+			InputEventKey { Pressed: true, KeyLabel: Key.Key9 } => new ShuffleCard(),
 			_ => null
 		};
 
