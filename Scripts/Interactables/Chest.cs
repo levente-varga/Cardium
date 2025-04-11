@@ -34,8 +34,6 @@ public partial class Chest : Interactable
         Play("open");
         SpawnFallingLabel("Opened!");
         
-        foreach (var card in Content) player.PickUpCard(card);
-        
-        SpawnFallingLabel(Content.Count + " cards added to inventory!");
+        foreach (var card in Content) player.PickUpCard(card); 
     }
 }
