@@ -28,13 +28,15 @@ public partial class Hand : Node2D
 	private readonly List<Card> _cards = new();
 	private List<float> _cardAngles = new();
 
-	private int _capacity = 5;
+	private int _capacity = 4;
 	public int Capacity {
 		get => _capacity;
 		private set => _capacity = Math.Max(value, 1);
 	}
 	
 	public int Size => _cards.Count;
+	public bool IsFull => _cards.Count == Capacity;
+	public bool IsNotFull => _cards.Count < Capacity;
 	private Rect2 _playArea;
 	
 	public delegate void OnCardPlayedDelegate(Card card);
@@ -59,15 +61,18 @@ public partial class Hand : Node2D
 		
 	}
 
-	public void DrawCards(int count) {
+	public void DrawCards(int count, bool positionHand = true) {
 		for (var i = 0; i < count; i++) {
 			var card = Deck.Draw();
 			if (card == null) break;
 			Add(card, false);
+			GD.Print($"Hand size: {Size}");
 		}
+		if (positionHand) PositionCards();
 	}
 
-	private void PositionCards() {	
+	private void PositionCards() {
+		GD.Print($"Positioning hand ({Size})");
 		var oldCardAngles = new List<float>(_cardAngles);
 		_cardAngles = GetCardAngles();
 
@@ -154,6 +159,8 @@ public partial class Hand : Node2D
 		return card;
 	}
 
+	public List<Card> GetCards() => new(_cards);
+
 	public override void _Input(InputEvent @event) {
 		Card? card = @event switch {
 			InputEventKey { Pressed: true, KeyLabel: Key.Key1 } => new HealCard(),
@@ -208,13 +215,10 @@ public partial class Hand : Node2D
 		if (success) {
 			Remove(card);
 			PositionCards();
-		}
-		else card.OnExitPlayArea();
-
-		if (success) {
 			OnCardPlayedEvent?.Invoke(card);
 		}
 		else {
+			card.OnExitPlayArea();
 			Utils.SpawnFloatingLabel(GetTree(), Player.GlobalPosition, "Cancelled");
 		}
 		

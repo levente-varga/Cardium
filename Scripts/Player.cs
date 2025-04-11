@@ -33,7 +33,7 @@ public partial class Player : Entity
 
 		FillDeck();
 		Hand.Deck = Deck;
-		Hand.DrawCards(5);
+		Hand.DrawCards(Hand.Capacity);
 		
 		SetStillFrame(GD.Load<Texture2D>("res://Assets/Sprites/player.png"));
 		
@@ -127,15 +127,8 @@ public partial class Player : Entity
 	
 	private void OnMoveEventHandler(Vector2I from, Vector2I to) => OnActionEvent?.Invoke();
 	private void OnNudgeEventHandler(Vector2I at) => OnActionEvent?.Invoke();
-	private void OnCardPlayedEventHandler(Card card)
-	{
-		Card? drawnCard = Deck.Draw();
-		if (drawnCard != null)
-		{
-			Hand.Add(drawnCard);
-		}
-
-		Hand.DrawCards(1);
+	private void OnCardPlayedEventHandler(Card card) {
+		if (Hand.IsNotFull) Hand.DrawCards(1);
 		OnActionEvent?.Invoke();
 	}
 
@@ -154,6 +147,6 @@ public partial class Player : Entity
 	
 	public void PickUpCard(Card card)
 	{
-		Hand?.Add(card);
+		Deck.Add(card);
 	}
 }

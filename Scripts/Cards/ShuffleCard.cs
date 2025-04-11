@@ -9,7 +9,7 @@ public partial class ShuffleCard : PlayerTargetingCard
   public ShuffleCard()
   {
     DisplayName = "Reshuffle";
-    Description = "Reshuffles hand into deck, and draws the same amount of cards.";
+    Description = "Puts cards from hand into deck, shuffles it, then draws the same amount of cards.";
     Cost = 1;
     Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Shuffle.png");
     Type = CardType.Combat;
@@ -23,19 +23,21 @@ public partial class ShuffleCard : PlayerTargetingCard
   public override bool OnPlay(Player player) {
     List<Card> cards = new();
     
-    for (var i = 0; i < player.Hand.Size; i++) {
-      var card = player.Hand.Remove(i);
-      if (card == null) continue;
+    foreach (var card in player.Hand.GetCards()) {
+      if (card == this) continue;
+      if (player.Hand.Remove(card, false) == null) {
+        continue;
+      }
       cards.Add(card);
     }
-
+    
     foreach (var card in cards) {
       player.Deck.Add(card);
     }
     
     player.Deck.Shuffle();
     
-    player.Hand.DrawCards(cards.Count);
+    player.Hand.DrawCards(cards.Count, false);
         
     return true;
   }

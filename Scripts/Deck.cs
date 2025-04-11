@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Cardium.Scripts.Cards.Types;
+using Godot;
 
 namespace Cardium.Scripts;
 
@@ -8,8 +10,7 @@ public class Deck
 {
     private readonly List<Card> _cards = new();
     
-    public Deck(int capacity = 30)
-    {
+    public Deck(int capacity = 30) {
         Capacity = capacity;
     }
 
@@ -27,9 +28,12 @@ public class Deck
     /// <summary>Adds card to the bottom of the deck.</summary>
     /// <param name="card">The card to be added.</param>
     /// <returns>false if the deck is already full.</returns>
-    public bool Add(Card card)
-    {
-        if (_cards.Count >= Capacity) return false;
+    public bool Add(Card card) {
+        if (_cards.Count >= Capacity) {
+            GD.Print($"Couldn't add card to deck, its full");
+            return false;
+        }
+        GD.Print($"Added a card to the deck");
         _cards.Add(card);
         return true;
     }
@@ -37,25 +41,21 @@ public class Deck
     /// <summary>Removes card from the deck.</summary>
     /// <param name="card">The card to be removed.</param>
     /// <returns>false if the card was not in the deck.</returns>
-    public bool Remove(Card card)
-    {
+    public bool Remove(Card card) {
         return _cards.Remove(card);
     }
     
-    public Card? Draw()
-    {
-        if (_cards.Count == 0)
-        {
-            return null;
-        }
+    public Card? Draw() {
+        if (_cards.Count == 0) return null;
         
-        var card = _cards[0];
-        _cards.RemoveAt(0);
+        GD.Print($"Drawn a card from the deck");
+        
+        var card = _cards.First();
+        Remove(card);
         return card;
     }
     
-    public void Shuffle()
-    {
+    public void Shuffle() {
         Utils.FisherYatesShuffle(_cards);        
     }
 }
