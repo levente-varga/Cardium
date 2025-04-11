@@ -9,14 +9,6 @@ public partial class Card : Node2D
 		Combat,
 		Utility,
 	}
-	
-	public enum CardRarity
-	{
-		Common,
-		Rare,
-		Epic,
-		Legendary
-	}
 
 	public enum CardState
 	{
@@ -27,11 +19,10 @@ public partial class Card : Node2D
 		Played,
 	}
 	
-	public int Cost { get; protected set; }
 	public string DisplayName { get; protected set; } = "";
 	public string Description { get; protected set; } = "";
 	public CardType Type { get; protected set; }
-	public CardRarity Rarity { get; protected set; }
+	public int Level { get; protected set; } = 0;
 	public CardState State { get; protected set; }
 	public Texture2D Art { get; protected set; } = null!;
 	public bool InPlayArea { get; protected set; }
@@ -161,19 +152,19 @@ public partial class Card : Node2D
 		_hitbox.AddChild(_frame);
 		_hitbox.AddChild(_nameLabel);
 		
-		SetupCostMarker();
+		SetupLevelMarker();
 		
 		_base = new Node2D();
 		_base.AddChild(_body);
 		AddChild(_base);
 	}
 
-	private void SetupCostMarker()
+	private void SetupLevelMarker()
 	{
-		for (var i = 0; i < Cost; i++)
+		for (var i = 0; i < Level; i++)
 		{
 			var costMarker = new Sprite2D();
-			costMarker.Texture = GD.Load<Texture2D>(i == Cost - 1 ? "res://Assets/Sprites/Cards/EnergyEnd.png" : "res://Assets/Sprites/Cards/EnergyDot.png");
+			costMarker.Texture = GD.Load<Texture2D>(i == Level - 1 ? "res://Assets/Sprites/Cards/EnergyEnd.png" : "res://Assets/Sprites/Cards/EnergyDot.png");
 			costMarker.Centered = false;
 			costMarker.Scale = Vector2.One * Global.CardScale;
 			costMarker.Position = new Vector2(-16 + i * 2, -25) * Global.CardScale;

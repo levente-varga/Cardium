@@ -10,7 +10,6 @@ public partial class ShuffleCard : PlayerTargetingCard
   {
     DisplayName = "Shuffle";
     Description = "Puts cards from hand into deck, shuffles it, then draws the same amount of cards.";
-    Cost = 1;
     Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Shuffle.png");
     Type = CardType.Combat;
   }

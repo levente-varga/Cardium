@@ -10,7 +10,6 @@ public partial class HealCard : PlayerTargetingCard {
     {
         DisplayName = "Heal";
         Description = $"Heals for {HealAmount} missing health.";
-        Cost = 1;
         Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Heal.png");
         Type = CardType.Combat;
     }

@@ -12,7 +12,6 @@ public partial class HolyCard : LocationTargetingCard {
   {
     DisplayName = "Holy";
     Description = $"Deals a total of {TotalDamage} damage to all enemies in an area, distributed equally.";
-    Cost = 3;
     Range = 3;
     Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Holy.png");
     Type = CardType.Combat;

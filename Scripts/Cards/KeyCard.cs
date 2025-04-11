@@ -10,7 +10,6 @@ public partial class KeyCard : InteractableTargetingCard
     {
         DisplayName = "Key";
         Description = "Unlocks a door or chest.";
-        Cost = 1;
         Range = 1;
         Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Key.png");
         Type = CardType.Utility;

@@ -11,7 +11,6 @@ public partial class SmiteCard : EnemyTargetingCard
     {
         DisplayName = "Smite";
         Description = $"Deals {Damage} damage to a single target.";
-        Cost = 2;
         Range = 3;
         Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Smite.png");
         Type = CardType.Combat;
