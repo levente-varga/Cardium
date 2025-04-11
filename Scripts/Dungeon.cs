@@ -146,11 +146,11 @@ public class Dungeon {
           spawnRoomPicked = true;
         }
         else {
-          if (_random.Next((int)Mathf.Pow(exits * 1.5f, 2)) == 0) {
+          if (_random.Next((int)Mathf.Pow(exits * 2f, 2)) == 0) {
             exits++;
             type = RoomTypes.Exit;
           }
-          else if (_random.Next(bonfires) == 0) {
+          else if (_random.Next((int)Mathf.Pow(bonfires * 1.2f, 2)) == 0) {
             bonfires++;
             type = RoomTypes.Bonfire;
           }

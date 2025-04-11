@@ -7,8 +7,8 @@ namespace Cardium.Scripts;
 
 public class DungeonGenerator {
   public int NumRoomTries = 100;
-  public int ExtraConnectorChance => 10;
-  public int RoomExtraSize => 1;
+  public int ExtraConnectorChance => 5;
+  public int RoomExtraSize => 0;
   public int WindingPercent => 70;
   public int MinSmallRooms => 2;
   public Vector2I MinSize => new Vector2I(11, 11);
