@@ -3,12 +3,13 @@ using Godot;
 
 namespace Cardium.Scripts.Cards;
 
-public partial class HealCard : PlayerTargetingCard
-{
+public partial class HealCard : PlayerTargetingCard {
+    public int HealAmount = 3;
+    
     public HealCard()
     {
         DisplayName = "Heal";
-        Description = "Heals for 3 missing health.";
+        Description = $"Heals for {HealAmount} missing health.";
         Cost = 1;
         Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Heal.png");
         Type = CardType.Combat;
@@ -21,7 +22,7 @@ public partial class HealCard : PlayerTargetingCard
     
     public override bool OnPlay(Player player)
     {
-        player.Heal(3);
+        player.Heal(HealAmount);
         
         return true;
     }

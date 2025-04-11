@@ -20,7 +20,10 @@ public partial class Hand : Node2D
 	[Export] public float TiltAngle = 0f;
 	[Export] public Vector2 Origin = Vector2.Zero;
 
+	[Export] public Label DescriptionLabel = null!;
+
 	public Deck Deck = new();
+	private Card? _hoveredCard = null;
 	
 	public bool RightHanded = true;
 	public HandState State { get; private set; }
@@ -58,7 +61,7 @@ public partial class Hand : Node2D
 	}
 	
 	public override void _Process(double delta) {
-		
+		DescriptionLabel.Text = _hoveredCard is null ? "" : $"{_hoveredCard.DisplayName}: {_hoveredCard.Description}";
 	}
 
 	public void DrawCards(int count, bool positionHand = true) {
@@ -144,6 +147,8 @@ public partial class Hand : Node2D
 		
 		card.OnDragEndEvent += OnCardDragEnd;
 		card.OnDragEvent += OnCardDrag;
+		card.OnMouseEnteredEvent += OnCardMouseEntered;
+		card.OnMouseExitedEvent += OnCardMouseExited;
 	}
 
 	public Card? RemoveLast(bool positionHand = true) => _cards.Count > 0 ? Remove(_cards.Last(), positionHand) : null;
@@ -153,6 +158,8 @@ public partial class Hand : Node2D
 		_cardAngles.RemoveAt(_cards.IndexOf(card));
 		card.OnDragEndEvent -= OnCardDragEnd;
 		card.OnDragEvent -= OnCardDrag;
+		card.OnMouseEnteredEvent -= OnCardMouseEntered;
+		card.OnMouseExitedEvent -= OnCardMouseExited;
 		_cards.Remove(card);
 		RemoveChild(card);
 		if (positionHand) PositionCards();
@@ -178,6 +185,11 @@ public partial class Hand : Node2D
 
 		RemoveLast(false);
 		Add(card);
+	}
+
+	private void OnCardMouseEntered(Card card) => _hoveredCard = card;
+	private void OnCardMouseExited(Card card) {
+		if (_hoveredCard == card) _hoveredCard = null;
 	}
 
 	private void OnCardDrag(Card card, Vector2 mousePosition) {

@@ -1,23 +1,19 @@
 using System.Collections.Generic;
-using System.Linq;
 using Cardium.Scripts.Cards.Types;
 using Godot;
 
 namespace Cardium.Scripts.Cards;
 
-public partial class HolyCard : LocationTargetingCard
-{
-  public int Radius { get; protected set; }
-  public int TotalDamage { get; protected set; }
+public partial class HolyCard : LocationTargetingCard {
+  public int Radius { get; protected set; } = 2;
+  public int TotalDamage { get; protected set; } = 10;
 
   public HolyCard()
   {
     DisplayName = "Holy";
-    Description = "Deals 10 damage to all enemies in an area, distributed equally.";
+    Description = $"Deals a total of {TotalDamage} damage to all enemies in an area, distributed equally.";
     Cost = 3;
     Range = 3;
-    Radius = 2;
-    TotalDamage = 10;
     Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Holy.png");
     Type = CardType.Combat;
   }

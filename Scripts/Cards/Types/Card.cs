@@ -64,6 +64,12 @@ public partial class Card : Node2D
 	
 	public delegate void OnDragDelegate(Card card, Vector2 mousePosition);
 	public event OnDragDelegate? OnDragEvent;
+	
+	public delegate void OnMouseEnteredDelegate(Card card);
+	public event OnMouseEnteredDelegate? OnMouseEnteredEvent;
+	
+	public delegate void OnMouseExitedDelegate(Card card);
+	public event OnMouseExitedDelegate? OnMouseExitedEvent;
 
 	
 	private float _shakeIntensity = 5f; // Max shake offset
@@ -257,12 +263,14 @@ public partial class Card : Node2D
 	private void OnMouseEntered() {
 		if (!Enabled || _dragging) return;
 		State = CardState.Selected;
+		OnMouseEnteredEvent?.Invoke(this);
 		PlayHoverAnimation();
 	}
 
 	private void OnMouseExited() {
 		if (!Enabled || _dragging) return;
 		State = CardState.Idle;
+		OnMouseExitedEvent?.Invoke(this);
 		PlayUnhoverAnimation();
 	}
 	
