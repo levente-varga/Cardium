@@ -48,7 +48,7 @@ public partial class ChainCard : EnemyTargetingCard
             HitEnemies(bouncesLeft, next, candidates, hit);
         }
         
-        HitEnemies(Bounces, enemy, enemies, new());
+        HitEnemies(Bounces + 1, enemy, enemies, new());
 
         return true;
     }
