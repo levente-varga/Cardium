@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Cardium.Scripts.Cards;
 using Cardium.Scripts.Cards.Types;
 using Godot;

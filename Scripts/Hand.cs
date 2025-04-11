@@ -141,42 +141,52 @@ public partial class Hand : Node2D
 		card.OnDragEvent += OnCardDrag;
 	}
 
-	private void RemoveLast() => Remove(_cards.Last());
-	private void Remove(int index) => Remove(_cards[index]);
-	private void Remove(Card card) {
-		if (!_cards.Contains(card)) return;
+	public Card? RemoveLast() => Remove(_cards.Last());
+	public Card? Remove(int index) => Remove(_cards[index]);
+	public Card? Remove(Card card) {
+		if (!_cards.Contains(card)) return null;
 		_cardAngles.RemoveAt(_cards.IndexOf(card));
 		card.OnDragEndEvent -= OnCardDragEnd;
 		card.OnDragEvent -= OnCardDrag;
 		_cards.Remove(card);
-		card.QueueFree();
 		PositionCards();
+		return card;
 	}
 
 	public override void _Input(InputEvent @event) {
+		Card? card = null;
+		
 		switch (@event) {
 			case InputEventKey { Pressed: true, KeyLabel: Key.Key1 }:
-				Add(new HealCard());
+				card = new HealCard();
 				break;
 			case InputEventKey { Pressed: true, KeyLabel: Key.Key2 }:
-				Add(new SmiteCard());
+				card = new SmiteCard();
 				break;
 			case InputEventKey { Pressed: true, KeyLabel: Key.Key3 }:
-				Add(new HurlCard());
+				card = new HurlCard();
 				break;
 			case InputEventKey { Pressed: true, KeyLabel: Key.Key4 }:
-				Add(new PushCard());
+				card = new PushCard();
 				break;
 			case InputEventKey { Pressed: true, KeyLabel: Key.Key5 }: 
-				Add(new ChainCard());
+				card = new ChainCard();
 				break;
 			case InputEventKey { Pressed: true, KeyLabel: Key.Key6 }:
-				Add(new KeyCard());
+				card = new KeyCard();
 				break;
 			case InputEventKey { Pressed: true, KeyLabel: Key.Key7 }:
-				Add(new HolyCard());
+				card = new HolyCard();
+				break;
+			case InputEventKey { Pressed: true, KeyLabel: Key.Key8 }:
+				card = new ShuffleCard();
 				break;
 		}
+		
+		if (card == null) return;
+
+		RemoveLast();
+		Add(card);
 	}
 
 	private void OnCardDrag(Card card, Vector2 mousePosition) {
