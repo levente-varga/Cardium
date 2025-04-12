@@ -150,5 +150,6 @@ public partial class Player : Entity
 	{
 		Deck.Add(card);
 		SpawnFloatingLabel($"x1 {card.DisplayName} card", color: new Color("F4B41B"));
+		if (Hand.IsNotFull) Hand.DrawCards(1);
 	}
 }
