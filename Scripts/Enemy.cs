@@ -4,7 +4,7 @@ namespace Cardium.Scripts;
 
 public partial class Enemy : Entity
 {
-    protected Path Path = new Path();
+    protected Path Path = new ();
     
     public bool SeeingPlayer;
 
@@ -14,12 +14,18 @@ public partial class Enemy : Entity
     public delegate void OnDamaged(Enemy enemy);
     public event OnDamaged? OnDamagedEvent;
     
+    protected int BaseCombatVision = 3;
+    public int TempCombatVision { private get; set; }
+    public int CombatVision => BaseCombatVision + TempCombatVision;
+
+    
     public override void _Ready()
     {
         base._Ready();
         AddChild(Path);
         
         HealthBar.Visible = false;
+        BaseCombatVision = BaseVision + 3;
     }
     
     public override void _Process(double delta)
@@ -36,6 +42,12 @@ public partial class Enemy : Entity
             if (distance != -1 && distance <= Vision) {
                 SeeingPlayer = true;
                 HealthBar.Visible = true;
+            }
+        }
+        else {
+            if (distance != -1 && distance > CombatVision) {
+                SeeingPlayer = false;
+                HealthBar.Visible = false;
             }
         }
 
