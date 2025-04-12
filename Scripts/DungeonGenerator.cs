@@ -249,10 +249,13 @@ public class DungeonGenerator {
   }
 
   private void AddJunction(Vector2I tile) {
-    for (var x = tile.X - 1; x <= tile.X + 1; x++) {
-      for (var y = tile.Y - 1; y <= tile.Y + 1; y++) {
+    for (var x = -1; x <= 1; x++) {
+      for (var y = -1; y <= 1; y++) {
         if (Mathf.Abs(x + y) != 1) continue;
-        if (_tiles[x][y] == TileTypes.RoomPerimeter) SetTile(new Vector2I(x, y), TileTypes.Doorway);
+        if (_tiles[tile.X + x][tile.Y + y] == TileTypes.RoomPerimeter || 
+            _tiles[tile.X + x][tile.Y + y] == TileTypes.RoomCorner) {
+          SetTile(new Vector2I(tile.X + x, tile.Y + y), TileTypes.Doorway);
+        }
       }
     }
 
