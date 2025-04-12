@@ -59,6 +59,7 @@ public partial class Player : Entity
 	public override void _Input(InputEvent @event)
 	{
 		if (!@event.IsPressed()) return;
+		if (Hand.IsPlayingACard) return;
 		
 		if (InputMap.EventIsAction(@event, "Interact"))
 		{

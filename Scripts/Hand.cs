@@ -40,6 +40,7 @@ public partial class Hand : Node2D
 	public int Size => _cards.Count;
 	public bool IsFull => _cards.Count == Capacity;
 	public bool IsNotFull => _cards.Count < Capacity;
+	public bool IsPlayingACard => State != HandState.Idle;
 	private Rect2 _playArea;
 	
 	public delegate void OnCardPlayedDelegate(Card card);
