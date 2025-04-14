@@ -9,6 +9,7 @@ namespace Cardium.Scripts;
 public class Deck
 {
     private readonly List<Card> _cards = new();
+    public List<Card> Cards => new(_cards);
     
     public Deck(int capacity = 30) {
         Capacity = capacity;

@@ -22,6 +22,8 @@ public class Pile
     }
     
     public int Size => _cards.Count;
+    public int IsEmpty => _cards.Count;
+    public int IsNotEmpty => _cards.Count;
     
     public bool Contains(Cards.Types.Card card)
     {

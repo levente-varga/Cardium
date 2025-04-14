@@ -67,9 +67,6 @@ public partial class Card : Node2D
 	private float _shakeDecay = 5f; // How fast the shake fades
 	private Vector2 _originalPosition;
 	private float _shakeAmount = 5f;
-	
-	private static readonly Vector2I CardSize = new (38, 54);
-	
 
 	public override void _Ready()
 	{
@@ -79,9 +76,9 @@ public partial class Card : Node2D
 		_frame.Points = new []
 		{
 			new Vector2(0, 0) * Global.CardScale,
-			new Vector2(0, CardSize.Y) * Global.CardScale,
-			new Vector2(CardSize.X, CardSize.Y) * Global.CardScale,
-			new Vector2(CardSize.X, 0) * Global.CardScale,
+			new Vector2(0, Global.CardSize.Y) * Global.CardScale,
+			new Vector2(Global.CardSize.X, Global.CardSize.Y) * Global.CardScale,
+			new Vector2(Global.CardSize.X, 0) * Global.CardScale,
 			new Vector2(0, 0) * Global.CardScale,
 		};
 		_frame.DefaultColor = Colors.Aqua;
@@ -97,13 +94,13 @@ public partial class Card : Node2D
 		_art.Centered = true;
 		_art.Texture = Art;
 		_art.Scale = new Vector2(Global.CardScale, Global.CardScale);
-		_art.Position = new Vector2(CardSize.X / 2f, 15) * Global.CardScale;
+		_art.Position = new Vector2(Global.CardSize.X / 2f, 15) * Global.CardScale;
 		
 		_artBackground = new Sprite2D();
 		_artBackground.Centered = true;
 		_artBackground.Texture = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Art background.png");
 		_artBackground.Scale = new Vector2(Global.CardScale, Global.CardScale);
-		_artBackground.Position = new Vector2(CardSize.X / 2f, 15) * Global.CardScale;
+		_artBackground.Position = new Vector2(Global.CardSize.X / 2f, 15) * Global.CardScale;
 		
 		_hitbox = new Button();
 		_hitbox.Flat = true;
@@ -129,7 +126,7 @@ public partial class Card : Node2D
 		
 		_descriptionArea = new Control();
 		_descriptionArea.Position = new Vector2(3, 33) * Global.CardScale;
-		_descriptionArea.Size = new Vector2(CardSize.X - 3, 18) * Global.CardScale;
+		_descriptionArea.Size = new Vector2(Global.CardSize.X - 3, 18) * Global.CardScale;
 		_description.MouseFilter = Control.MouseFilterEnum.Ignore;
 		_descriptionArea.AddChild(_description);
 		
@@ -138,7 +135,7 @@ public partial class Card : Node2D
 		_nameLabel.HorizontalAlignment = HorizontalAlignment.Center;
 		_nameLabel.VerticalAlignment = VerticalAlignment.Center;
 		_nameLabel.Position = new Vector2(7, 28) * Global.CardScale;
-		_nameLabel.Size = new Vector2(CardSize.X - 14, 4) * Global.CardScale;
+		_nameLabel.Size = new Vector2(Global.CardSize.X - 14, 4) * Global.CardScale;
 		var font = GD.Load<FontFile>("res://Assets/Fonts/alagard.ttf");
 		_nameLabel.AddThemeFontOverride("font", font);
 		_nameLabel.AddThemeFontSizeOverride("font_size", 20);
