@@ -35,7 +35,7 @@ public partial class Player : Entity
 		Hand.Deck = Deck;
 		Hand.DrawCards(Hand.Capacity);
 		
-		SetStillFrame(GD.Load<Texture2D>("res://Assets/Sprites/player.png"));
+		SetAnimation("idle", GD.Load<Texture2D>("res://Assets/Animations/Player.png"), 8, 12);
 		
 		SetupActionListeners();
 	}
