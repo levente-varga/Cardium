@@ -103,7 +103,7 @@ public partial class Player : Entity
 	private void FillDeck() {
 		var r = new Random();
 		for (var i = 0; i < Deck.Capacity; i++) {
-			var type = r.Next(8);
+			var type = r.Next(9);
 			Card card = type switch {
 				0 => new HealCard(),
 				1 => new SmiteCard(),

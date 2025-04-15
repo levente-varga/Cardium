@@ -252,6 +252,7 @@ offset_bottom = 532.0
 color = Color(0, 0, 0, 0.588235)
 
 [node name="Panel" type="ColorRect" parent="Camera2D/CanvasLayer/Inventory"]
+clip_contents = true
 layout_mode = 0
 offset_left = -512.0
 offset_top = -380.0
@@ -260,6 +261,7 @@ offset_bottom = 388.0
 color = Color(0.0846899, 0.0846899, 0.0846899, 1)
 
 [node name="InventoryScrollContainer" type="ScrollContainer" parent="Camera2D/CanvasLayer/Inventory/Panel"]
+clip_contents = false
 layout_mode = 0
 offset_right = 512.0
 offset_bottom = 768.0
@@ -269,12 +271,12 @@ horizontal_scroll_mode = 0
 layout_mode = 2
 
 [node name="InventoryContainer" type="VBoxContainer" parent="Camera2D/CanvasLayer/Inventory/Panel/InventoryScrollContainer/MarginContainer"]
-clip_contents = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="DeckScrollContainer" type="ScrollContainer" parent="Camera2D/CanvasLayer/Inventory/Panel"]
+clip_contents = false
 layout_mode = 0
 offset_left = 512.0
 offset_right = 1024.0
@@ -285,7 +287,6 @@ horizontal_scroll_mode = 0
 layout_mode = 2
 
 [node name="DeckContainer" type="VBoxContainer" parent="Camera2D/CanvasLayer/Inventory/Panel/DeckScrollContainer/MarginContainer"]
-clip_contents = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
