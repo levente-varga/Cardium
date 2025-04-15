@@ -199,9 +199,12 @@ public class Dungeon {
       Enemy enemy ;
       
       if (_random.Next(20) == 0) {
+        enemy = new Voidling();
+      }
+      else if (_random.Next(15) == 0) {
         enemy = new Ranger();
       }
-      else if (_random.Next(8) == 0) {
+      else if (_random.Next(7) == 0) {
         enemy = new Spider();
       }
       else {
