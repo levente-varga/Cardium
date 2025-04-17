@@ -1,3 +1,4 @@
+using Cardium.Scripts.Cards.Types;
 using Godot;
 
 namespace Cardium.Scripts;
@@ -6,6 +7,8 @@ public partial class Inventory : Control {
 	[Export] public Player Player = null!;
 	[Export] public VBoxContainer DeckContainer = null!;
 	[Export] public VBoxContainer InventoryContainer = null!;
+	
+	[Export] private PackedScene _cardScene = ResourceLoader.Load<PackedScene>("res://Scenes/card.tscn");
 
 	private const int CardsPerRow = 2;
 	
@@ -27,8 +30,10 @@ public partial class Inventory : Control {
 
 			var container = new Container();
 			container.SetCustomMinimumSize(Global.GlobalCardSize);
-			card.Position = Global.GlobalCardSize / 2;
-			container.AddChild(card);
+			var view = _cardScene.Instantiate<CardView>();
+			view.Init(card);
+			view.Position = Global.GlobalCardSize / 2;
+			container.AddChild(view);
 			row.AddChild(container);
 
 			if (i != cardsInDeck.Count - 1 && rowNumber == (i + 1) / CardsPerRow) continue;

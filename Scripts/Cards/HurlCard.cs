@@ -4,42 +4,31 @@ using Godot;
 
 namespace Cardium.Scripts.Cards;
 
-public partial class HurlCard : LocationTargetingCard {
+public class HurlCard : LocationTargetingCard {
     public int Radius { get; protected set; } = 1;
     public int Damage = 3;
 
-    public HurlCard()
-    {
-        DisplayName = "Hurl";
+    public HurlCard() {
+        Name = "Hurl";
         Description = $"Deals {Damage} damage to all enemies in an area.";
         Range = 3;
         Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Hurl.png");
         Type = CardType.Combat;
     }
-    
-    public override void _Ready()
-    {
-        base._Ready();
-    }
 
-    public override List<Vector2I> GetHighlightedTiles(Player player, Vector2I selectedTile, World world)
-    {
+    public override List<Vector2I> GetHighlightedTiles(Player player, Vector2I selectedTile, World world) {
         return World.GetTilesInRange(selectedTile, Radius);
     }
 
-    public override bool OnPlay(Player player, Vector2I position, World world)
-    {
+    public override bool OnPlay(Player player, Vector2I position, World world) {
         List<Enemy> enemies = new ();
-        foreach (var location in World.GetTilesInRange(position, Radius))
-        {
+        foreach (var location in World.GetTilesInRange(position, Radius)) {
             var enemy = world.GetEnemyAt(location);
-            if (enemy is not null)
-            {
+            if (enemy is not null) {
                 enemies.Add(enemy);
             }
         }
-        foreach (var enemy in enemies)
-        {
+        foreach (var enemy in enemies) {
             enemy.ReceiveDamage(player, Damage);
         }
         

@@ -5,25 +5,22 @@ using Godot;
 
 namespace Cardium.Scripts.Cards;
 
-public partial class ChainCard : EnemyTargetingCard
-{
+public class ChainCard : EnemyTargetingCard {
     public int Damage { get; set; } = 2;
     public int BounceRange { get; set; } = 3;
     public int Bounces { get; set; } = 2;
 
     private Random _random = new();
     
-    public ChainCard()
-    {
-        DisplayName = "Chain";
+    public ChainCard() {
+        Name = "Chain";
         Description = $"Deals {Damage} damage to an enemy, bounces to up to {Bounces} other enemies in range {BounceRange}.";
         Range = 3;
         Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Chain.png");
-        Type = CardType.Combat;
+        Type = Card.CardType.Combat;
     }
 
-    public override bool OnPlay(Player player, Enemy enemy, World world)
-    {
+    public override bool OnPlay(Player player, Enemy enemy, World world) {
         var enemies = world.GetEnemiesInRange(BounceRange, enemy.Position);
         enemies.Remove(enemy);
 

@@ -51,7 +51,7 @@ public class Dungeon {
   public Player Player { get; private set; } = new();
   public List<Enemy> Enemies { get; private set; } = new();
   public List<Interactable> Interactables { get; private set; } = new();
-  public List<Card> Loot { get; private set; } = new();
+  public List<CardView> Loot { get; private set; } = new();
 
   // Data from the DungeonGenerator
   public List<List<TileTypes>> Tiles;

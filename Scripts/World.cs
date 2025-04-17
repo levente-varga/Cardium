@@ -276,7 +276,7 @@ public partial class World : Node2D {
 		enemy.QueueFree();
 		_grid.SetPointSolid(enemy.Position, false);
 
-		foreach (var loot in enemy.Inventory.Select(card => new CardLoot(card))) {
+		foreach (var loot in enemy.Inventory.Select(card => new CardLoot { Card = card })) {
 			loot.SetPosition(enemy.Position);
 			_loot.Add(loot);
 			AddChild(loot);

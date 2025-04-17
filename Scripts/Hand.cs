@@ -21,14 +21,17 @@ public partial class Hand : Node2D
 	[Export] public Vector2 Origin = Vector2.Zero;
 
 	[Export] public Label DescriptionLabel = null!;
+	
+	[Export] private PackedScene _cardScene = ResourceLoader.Load<PackedScene>("res://Scenes/card.tscn");
 
 	public Deck Deck = new();
-	private Card? _hoveredCard = null;
+	private CardView? _hovered;
 	
 	public bool RightHanded = true;
 	public HandState State { get; private set; }
 
 	private readonly List<Card> _cards = new();
+	private readonly List<CardView> _cardViews = new();
 	private List<float> _cardAngles = new();
 
 	private int _capacity = 4;
@@ -62,7 +65,7 @@ public partial class Hand : Node2D
 	}
 	
 	public override void _Process(double delta) {
-		DescriptionLabel.Text = _hoveredCard is null ? "" : $"{_hoveredCard.DisplayName}: {_hoveredCard.Description}";
+		DescriptionLabel.Text = _hovered is null ? "" : $"{_hovered.Card.Name}: {_hovered.Card.Description}";
 	}
 
 	public void DrawCards(int count, bool positionHand = true) {
@@ -99,8 +102,8 @@ public partial class Hand : Node2D
 		if (index >= _cards.Count || index < 0) return;
 		var cardPosition = GetPointOnCircle(Origin, HandRadius, angle);
 
-		_cards[index].Position = cardPosition;
-		_cards[index].Rotation = DegreeToRadian(angle + 90);
+		_cardViews[index].Position = cardPosition;
+		_cardViews[index].Rotation = DegreeToRadian(angle + 90);
 		//_cards[index].ZIndex = index;
 		_cardAngles[index] = angle;
 	}
@@ -142,14 +145,16 @@ public partial class Hand : Node2D
 		if (_cards.Count >= Capacity) return;
 		_cardAngles.Add(360);
 		_cards.Insert(index, card);
-		AddChild(card);
+		var view = _cardScene.Instantiate<CardView>();
+		view.Init(card);
+		view.OnDragEndEvent += OnCardDragEnd;
+		view.OnDragEvent += OnCardDrag;
+		view.OnMouseEnteredEvent += OnCardMouseEntered;
+		view.OnMouseExitedEvent += OnCardMouseExited;
+		_cardViews.Insert(index, view);
+		AddChild(view);
 		SetCardPosition(index, _cardAngles[index]);
 		if (positionHand) PositionCards();
-		
-		card.OnDragEndEvent += OnCardDragEnd;
-		card.OnDragEvent += OnCardDrag;
-		card.OnMouseEnteredEvent += OnCardMouseEntered;
-		card.OnMouseExitedEvent += OnCardMouseExited;
 	}
 
 	public Card? RemoveLast(bool positionHand = true) => _cards.Count > 0 ? Remove(_cards.Last(), positionHand) : null;
@@ -157,12 +162,16 @@ public partial class Hand : Node2D
 	public Card? Remove(Card card, bool positionHand = true) {
 		if (!_cards.Contains(card)) return null;
 		_cardAngles.RemoveAt(_cards.IndexOf(card));
-		card.OnDragEndEvent -= OnCardDragEnd;
-		card.OnDragEvent -= OnCardDrag;
-		card.OnMouseEnteredEvent -= OnCardMouseEntered;
-		card.OnMouseExitedEvent -= OnCardMouseExited;
 		_cards.Remove(card);
-		RemoveChild(card);
+		var view = _cardViews.FirstOrDefault(view => view.Card == card);
+		if (view != null) {
+			view.OnDragEndEvent -= OnCardDragEnd;
+			view.OnDragEvent -= OnCardDrag;
+			view.OnMouseEnteredEvent -= OnCardMouseEntered;
+			view.OnMouseExitedEvent -= OnCardMouseExited;
+			_cardViews.Remove(view);
+			RemoveChild(view);
+		}
 		if (positionHand) PositionCards();
 		return card;
 	}
@@ -189,27 +198,27 @@ public partial class Hand : Node2D
 		Add(card);
 	}
 
-	private void OnCardMouseEntered(Card card) => _hoveredCard = card;
-	private void OnCardMouseExited(Card card) {
-		if (_hoveredCard == card) _hoveredCard = null;
+	private void OnCardMouseEntered(CardView view) => _hovered = view;
+	private void OnCardMouseExited(CardView view) {
+		if (_hovered == view) _hovered = null;
 	}
 
-	private void OnCardDrag(Card card, Vector2 mousePosition) {
+	private void OnCardDrag(CardView view, Vector2 mousePosition) {
 		State = HandState.Dragging;
-		switch (card.InPlayArea) {
+		switch (view.InPlayArea) {
 			case false when _playArea.HasPoint(mousePosition):
-				card.OnEnterPlayArea();
-				Utils.SpawnFallingLabel(GetTree(), card.GlobalPosition, "Entered play area");
+				view.OnEnterPlayArea();
+				Utils.SpawnFallingLabel(GetTree(), view.GlobalPosition, "Entered play area");
 				break;
 			case true when !_playArea.HasPoint(mousePosition):
-				card.OnExitPlayArea();
-				Utils.SpawnFallingLabel(GetTree(), card.GlobalPosition, "Exited play area");
+				view.OnExitPlayArea();
+				Utils.SpawnFallingLabel(GetTree(), view.GlobalPosition, "Exited play area");
 				break;
 		}
 	}
 	
-	private void OnCardDragEnd(Card card, Vector2 mousePosition) {
-		if (card.InPlayArea) card.OnExitPlayArea();
+	private void OnCardDragEnd(CardView view, Vector2 mousePosition) {
+		if (view.InPlayArea) view.OnExitPlayArea();
 
 		State = HandState.Idle;
 		
@@ -217,22 +226,22 @@ public partial class Hand : Node2D
 		
 		State = HandState.Playing;
 		
-		card.OnEnterPlayArea();
-		_ = Play(card);
+		view.OnEnterPlayArea();
+		_ = Play(view);
 	}
 
-	private async Task Play(Card card) {
+	private async Task Play(CardView view) {
 		//Enabled = false;
-		var success = await Player.World.PlayCard(card);
+		var success = await Player.World.PlayCard(view.Card);
 		//Enabled = true;
 		
 		if (success) {
-			Remove(card);
+			Remove(view.Card);
 			PositionCards();
-			OnCardPlayedEvent?.Invoke(card);
+			OnCardPlayedEvent?.Invoke(view.Card);
 		}
 		else {
-			card.OnExitPlayArea();
+			view.OnExitPlayArea();
 			Utils.SpawnFloatingLabel(GetTree(), Player.GlobalPosition, "Cancelled");
 		}
 		
@@ -240,8 +249,8 @@ public partial class Hand : Node2D
 	}
 	
 	private void EnableCards(bool enable) {
-		foreach (var card in _cards) {
-			card.Enabled = enable;
+		foreach (var view in _cardViews) {
+			view.Enabled = enable;
 		}
 		
 		Utils.SpawnFallingLabel(GetTree(), Player.GlobalPosition, "Hand " + (enable ? "enabled" : "disabled"));

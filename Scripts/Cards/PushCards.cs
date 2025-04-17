@@ -3,23 +3,16 @@ using Godot;
 
 namespace Cardium.Scripts.Cards;
 
-public partial class PushCard : DirectionalCard
+public class PushCard : DirectionalCard
 {
-    public PushCard()
-    {
-        DisplayName = "Push";
+    public PushCard() {
+        Name = "Push";
         Description = "Pushes an enemy away 2 tiles. Deals 1 damage. Enemies in the path also take 1 damage.";
         Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Push.png");
         Type = CardType.Combat;
     }
     
-    public override void _Ready()
-    {
-        base._Ready();
-    }
-    
-    public override bool OnPlay(Player player, Direction direction, World world)
-    {
+    public override bool OnPlay(Player player, Direction direction, World world) {
         // TODO: Implement
         
         return true;

@@ -4,15 +4,13 @@ using Godot;
 
 namespace Cardium.Scripts.Cards;
 
-public partial class GoldenKeyCard : InteractableTargetingCard {
-    public override void _Ready() {
-        DisplayName = "Key";
+public class GoldenKeyCard : InteractableTargetingCard {
+    public GoldenKeyCard() {
+        Name = "Key";
         Description = "Unlocks a chest.";
         Range = 1;
         Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/GoldenKey.png");
         Type = CardType.Utility;
-        
-        base._Ready();
     }
 
     public override bool OnPlay(Player player, Interactable target, World world) {

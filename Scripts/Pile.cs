@@ -4,11 +4,11 @@ namespace Cardium.Scripts;
 
 public class Pile
 {
-    private readonly List<Cards.Types.Card> _cards = new();
+    private readonly List<Cards.Types.CardView> _cards = new();
 
-    public void Add(Cards.Types.Card card)
+    public void Add(Cards.Types.CardView cardView)
     {
-        _cards.Add(card);
+        _cards.Add(cardView);
     }
 
     public void Clear()
@@ -16,17 +16,17 @@ public class Pile
         _cards.Clear();
     }
     
-    public void Remove(Cards.Types.Card card)
+    public void Remove(Cards.Types.CardView cardView)
     {
-        _cards.Remove(card);
+        _cards.Remove(cardView);
     }
     
     public int Size => _cards.Count;
     public int IsEmpty => _cards.Count;
     public int IsNotEmpty => _cards.Count;
     
-    public bool Contains(Cards.Types.Card card)
+    public bool Contains(Cards.Types.CardView cardView)
     {
-        return _cards.Contains(card);
+        return _cards.Contains(cardView);
     }
 }
