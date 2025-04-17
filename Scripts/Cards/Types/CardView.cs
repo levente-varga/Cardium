@@ -146,8 +146,6 @@ public partial class CardView : Node2D {
 		_hoverTween.TweenProperty(_hoverBase, "position", new Vector2(0, -100), 0.4f)
 			.SetEase(Tween.EaseType.Out)
 			.SetTrans(Tween.TransitionType.Expo);
-		
-		Utils.SpawnFloatingLabel(GetTree(), GlobalPosition, "Hovered");
 	}
 	
 	private void PlayUnhoverAnimation() {
@@ -156,8 +154,6 @@ public partial class CardView : Node2D {
 		_hoverTween.TweenProperty(_hoverBase, "position", Vector2.Zero, 0.4f)
 			.SetEase(Tween.EaseType.Out)
 			.SetTrans(Tween.TransitionType.Expo);
-		
-		Utils.SpawnFloatingLabel(GetTree(), GlobalPosition, "Exited");
 	}
 	
 	private void OnMouseEntered() {
@@ -184,7 +180,7 @@ public partial class CardView : Node2D {
 		_mouseDownPosition = GetViewport().GetMousePosition();
 		_dragging = true;
 		State = CardState.Dragging;
-		ZIndex = 2;
+		ZIndex = 1;
 		PlayUnhoverAnimation();
 		OnDragStartEvent?.Invoke(this);
 	}
@@ -195,7 +191,7 @@ public partial class CardView : Node2D {
 		PlayUnhoverAnimation();
 		_dragging = false;
 		State = CardState.Idle;
-		ZIndex = 1;
+		ZIndex = 0;
 		OnDragEndEvent?.Invoke(this, GetViewport().GetMousePosition());
 	}
 }
