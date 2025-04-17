@@ -26,6 +26,10 @@ window/stretch/mode="viewport"
 
 project/assembly_name="Cardium"
 
+[gui]
+
+theme/default_font_multichannel_signed_distance_field=true
+
 [input]
 
 Up={

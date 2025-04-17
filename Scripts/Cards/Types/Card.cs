@@ -154,6 +154,7 @@ public partial class Card : Node2D
 		_base = new Node2D();
 		_base.AddChild(_body);
 		AddChild(_base);
+		
 	}
 
 	private void SetupLevelMarker()

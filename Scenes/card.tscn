@@ -1,22 +1,17 @@
-[gd_scene load_steps=7 format=3 uid="uid://c8tbfjcyg4o24"]
+[gd_scene load_steps=10 format=3 uid="uid://c8tbfjcyg4o24"]
 
 [ext_resource type="Texture2D" uid="uid://cbie0d833gc4b" path="res://Assets/Sprites/Cards/Holy.png" id="2_nquoe"]
 [ext_resource type="Texture2D" uid="uid://c780cg0mxpik5" path="res://Assets/Sprites/Cards/Combat card.png" id="2_whev3"]
+[ext_resource type="FontFile" uid="uid://2rxest3pjy34" path="res://Assets/Fonts/alagard.ttf" id="3_hvbn6"]
+[ext_resource type="FontFile" uid="uid://cgna0pm46rmdr" path="res://Assets/Fonts/Levi Windows.ttf" id="3_ufy2c"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_j8amx"]
+line_spacing = 0.0
+font = ExtResource("3_hvbn6")
+font_color = Color(0.8, 0.8, 0.8, 1)
 
 [sub_resource type="Animation" id="Animation_2okwy"]
 resource_name = "Deselect"
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Body:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 1),
-"transitions": PackedFloat32Array(0.025, 1),
-"update": 0,
-"values": [Vector2(0, -64), Vector2(0, 0)]
-}
 
 [sub_resource type="Animation" id="Animation_evann"]
 length = 0.001
@@ -60,49 +55,86 @@ layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = -1882.0
-offset_bottom = -1026.0
+offset_right = -1920.0
+offset_bottom = -1080.0
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(4, 4)
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-libraries = {
-"": SubResource("AnimationLibrary_epb5b")
-}
-
-[node name="Body" type="Control" parent="."]
-layout_mode = 2
-anchors_preset = 0
-
-[node name="Sprite" type="Sprite2D" parent="Body"]
-texture = ExtResource("2_whev3")
-
-[node name="Hitbox" type="Button" parent="Body"]
+[node name="Hitbox" type="Button" parent="."]
 layout_mode = 2
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -19.0
-offset_top = -27.0
-offset_right = 19.0
-offset_bottom = 27.0
+offset_left = -76.0
+offset_top = -108.0
+offset_right = 76.0
+offset_bottom = 108.0
 grow_horizontal = 2
 grow_vertical = 2
 flat = true
 
-[node name="Art" type="Sprite2D" parent="Body"]
-position = Vector2(0, -12)
-texture = ExtResource("2_nquoe")
-
-[node name="DescriptionArea" type="Control" parent="Body"]
+[node name="Body" type="Control" parent="."]
 layout_mode = 2
 anchors_preset = 0
-offset_left = -16.0
-offset_top = 6.0
-offset_right = 16.0
-offset_bottom = 24.0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_right = 38.0
+offset_bottom = 54.0
+scale = Vector2(4, 4)
 
-[connection signal="mouse_entered" from="Body/Hitbox" to="." method="OnMouseEntered"]
-[connection signal="mouse_exited" from="Body/Hitbox" to="." method="OnMouseExited"]
+[node name="Background" type="ColorRect" parent="Body"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 36.0
+offset_bottom = 52.0
+color = Color(0.0823529, 0.0823529, 0.0823529, 1)
+
+[node name="Frame" type="Sprite2D" parent="Body"]
+position = Vector2(19, 27)
+texture = ExtResource("2_whev3")
+
+[node name="Art" type="Sprite2D" parent="Body"]
+position = Vector2(19, 15)
+texture = ExtResource("2_nquoe")
+
+[node name="Title" type="Label" parent="Body"]
+layout_mode = 2
+offset_left = 7.0
+offset_top = 28.0
+offset_right = 127.0
+offset_bottom = 48.0
+scale = Vector2(0.2, 0.2)
+text = "Holy"
+label_settings = SubResource("LabelSettings_j8amx")
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="DescriptionArea" type="CenterContainer" parent="."]
+layout_mode = 0
+offset_left = -64.0
+offset_top = 24.0
+offset_right = 192.0
+offset_bottom = 168.0
+scale = Vector2(0.5, 0.5)
+
+[node name="Description" type="RichTextLabel" parent="DescriptionArea"]
+clip_contents = false
+custom_minimum_size = Vector2(240, 10)
+layout_mode = 2
+theme_override_colors/default_color = Color(0.466667, 0.466667, 0.466667, 1)
+theme_override_fonts/normal_font = ExtResource("3_ufy2c")
+theme_override_font_sizes/normal_font_size = 25
+bbcode_enabled = true
+text = "[center]Deals [color=#ffffff]10[/color] damage in an area, disrtibuted equally.
+[color=#ffffff]Unstable[/color][/center]"
+fit_content = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_epb5b")
+}
