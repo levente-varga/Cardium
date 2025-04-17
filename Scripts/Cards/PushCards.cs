@@ -3,11 +3,13 @@ using Godot;
 
 namespace Cardium.Scripts.Cards;
 
-public class PushCard : DirectionalCard
-{
+public class PushCard : DirectionalCard {
+    public int Distance = 2;
+    public int Damage = 1;
+    
     public PushCard() {
         Name = "Push";
-        Description = "Pushes an enemy away 2 tiles. Deals 1 damage. Enemies in the path also take 1 damage.";
+        Description = $"Pushes an enemy away {Highlight($"{Distance}")} tiles. Deals {Highlight($"{Damage}")} damage to it and enemies in the path.";
         Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Push.png");
         Type = CardType.Combat;
     }

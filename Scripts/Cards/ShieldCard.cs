@@ -3,11 +3,13 @@ using Godot;
 
 namespace Cardium.Scripts.Cards;
 
-public class ShieldCard : PlayerTargetingCard
-{
+public class ShieldCard : PlayerTargetingCard {
+    public int ExtraArmor = 2;
+    public int Duration = 3;
+    
     public ShieldCard() {
         Name = "Shield";
-        Description = "Raises Armor by 2 for 3 turns.";
+        Description = $"Raises Armor by {Highlight($"{ExtraArmor}")} for {Highlight($"{Duration}")} turns.";
         Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Shield.png");
         Type = CardType.Combat;
     }

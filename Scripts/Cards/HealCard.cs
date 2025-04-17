@@ -8,7 +8,7 @@ public class HealCard : PlayerTargetingCard {
     
     public HealCard() {
         Name = "Heal";
-        Description = $"Heals for {HealAmount} missing health.";
+        Description = $"Heals for {Highlight($"{HealAmount}")} missing health.";
         Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Heal.png");
         Type = CardType.Combat;
     }

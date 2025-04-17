@@ -14,7 +14,7 @@ public class ChainCard : EnemyTargetingCard {
     
     public ChainCard() {
         Name = "Chain";
-        Description = $"Deals {Damage} damage to an enemy, bounces to up to {Bounces} other enemies in range {BounceRange}.";
+        Description = $"Deals {Highlight($"{Damage}")} damage to an enemy, bounces to up to {Highlight($"{Bounces}")} other enemies in range {Highlight($"{BounceRange}")}.";
         Range = 3;
         Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Chain.png");
         Type = Card.CardType.Combat;

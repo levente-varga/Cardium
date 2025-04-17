@@ -10,7 +10,7 @@ public class HolyCard : LocationTargetingCard {
 
   public HolyCard() {
     Name = "Holy";
-    Description = $"Deals a total of {TotalDamage} damage to all enemies in an area, distributed equally.";
+    Description = $"Deals a total of {Highlight($"{TotalDamage}")} damage to all enemies in an area, distributed equally.";
     Range = 3;
     Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Holy.png");
     Type = CardType.Combat;
