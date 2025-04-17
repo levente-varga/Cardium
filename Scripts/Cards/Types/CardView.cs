@@ -11,15 +11,6 @@ public partial class CardView : Node2D {
 		Played,
 	}
 	
-	public bool Enabled = true;
-	
-	private bool _dragging;
-	private bool _shaking;
-	
-	private Tween? _hoverTween;
-
-	public Card Card { get; private set; } = null!;
-
 	[Export] private Node2D _hoverBase = null!;
 	[Export] private Node2D _base = null!;
 	[Export] private Sprite2D _art = null!;
@@ -27,6 +18,16 @@ public partial class CardView : Node2D {
 	[Export] private RichTextLabel _descriptionLabel = null!;
 	[Export] private Label _nameLabel = null!;
 	[Export] private Line2D _debugFrame = null!;
+	
+	public bool Enabled = true;
+	
+	private bool _dragging;
+	private bool _shaking;
+	private bool _hoverable;
+	
+	private Tween? _hoverTween;
+
+	public Card Card { get; private set; } = null!;
 	
 	public CardState State { get; protected set; }
 	public bool InPlayArea { get; protected set; }
@@ -54,8 +55,9 @@ public partial class CardView : Node2D {
 	private Vector2 _originalPosition;
 	private float _shakeAmount = 5f;
 
-	public void Init(Card card) {
+	public void Init(Card card, bool hoverable = true) {
 		Card = card;
+		_hoverable = hoverable;
 	}
 	
 	public override void _Ready() {
@@ -117,18 +119,13 @@ public partial class CardView : Node2D {
 		}
 	}
 
-	
-	public virtual void OnDiscard(Player player) {}
-	public virtual void OnDrawn(Player player) {}
-	public virtual void OnDestroy(Player player) {}
-
-	public virtual void OnEnterPlayArea() {
+	public void OnEnterPlayArea() {
 		_shaking = true;
 		State = CardState.Ready;
 		InPlayArea = true;
 	}
 	
-	public virtual void OnExitPlayArea() {
+	public void OnExitPlayArea() {
 		_shaking = false;
 		State = _dragging ? CardState.Dragging : CardState.Idle;
 		InPlayArea = false;
@@ -160,14 +157,14 @@ public partial class CardView : Node2D {
 		if (!Enabled || _dragging) return;
 		State = CardState.Selected;
 		OnMouseEnteredEvent?.Invoke(this);
-		PlayHoverAnimation();
+		if (_hoverable) PlayHoverAnimation();
 	}
 
 	private void OnMouseExited() {
 		if (!Enabled || _dragging) return;
 		State = CardState.Idle;
 		OnMouseExitedEvent?.Invoke(this);
-		PlayUnhoverAnimation();
+		if (_hoverable) PlayUnhoverAnimation();
 	}
 	
 	private void OnMousePressed() {

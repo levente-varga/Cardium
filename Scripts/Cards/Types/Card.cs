@@ -19,4 +19,8 @@ public class Card {
 	protected string Highlight(string text, Color color) {
 		return $"[color=#{color.ToHtml()}]{text}[/color]";
 	}
+	
+	public virtual void OnDiscard(Player player) {}
+	public virtual void OnDrawn(Player player) {}
+	public virtual void OnDestroy(Player player) {}
 }

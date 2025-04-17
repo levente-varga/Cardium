@@ -31,7 +31,7 @@ public partial class Inventory : Control {
 			var container = new Container();
 			container.SetCustomMinimumSize(Global.GlobalCardSize);
 			var view = _cardScene.Instantiate<CardView>();
-			view.Init(card);
+			view.Init(card, false);
 			view.Position = Global.GlobalCardSize / 2;
 			container.AddChild(view);
 			row.AddChild(container);
