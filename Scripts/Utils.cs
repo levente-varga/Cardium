@@ -22,10 +22,11 @@ public class Utils
         });
     }
     
-    public static void SpawnFloatingLabel(SceneTree tree, Vector2 position, string text, Color? color = null, int? fontSize = null, int? lifetimeMillis = 2000) {
+    public static void SpawnFloatingLabel(SceneTree tree, Vector2 position, string text, Color? color = null, int height = 120, int? fontSize = null, int? lifetimeMillis = 2000) {
         tree.Root.AddChild(new FloatingLabel {
             Text = text,
             Position = position,
+            Height = height,
             Color = color,
             FontSize = fontSize ?? 40,
             LifetimeMillis = lifetimeMillis,

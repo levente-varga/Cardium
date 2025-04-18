@@ -242,7 +242,7 @@ public partial class Hand : Node2D
 		}
 		else {
 			view.OnExitPlayingMode();
-			Utils.SpawnFloatingLabel(GetTree(), Player.GlobalPosition, "Cancelled");
+			Utils.SpawnFloatingLabel(GetTree(), Player.GlobalPosition + Global.GlobalTileSize / 2, "Cancelled", Global.Red);
 		}
 		
 		State = HandState.Idle;
@@ -272,7 +272,5 @@ public partial class Hand : Node2D
 		foreach (var view in _cardViews) {
 			view.Enabled = enable;
 		}
-		
-		Utils.SpawnFallingLabel(GetTree(), Player.GlobalPosition, "Hand " + (enable ? "enabled" : "disabled"));
 	}
 }

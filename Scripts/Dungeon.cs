@@ -242,10 +242,10 @@ public class Dungeon {
   private void SpawnChests() {
     var chests = 0;
     foreach (var room in Rooms.Where(room => room.Type == RoomTypes.Uncategorized)) {
-      if (_random.Next(chests) > 0) continue;
+      if (_random.Next(chests / 2) > 0) continue;
       var tileCandidates = GetRoomPerimeterTiles(room);
       Chest chest = new();
-      chest.Position = tileCandidates[_random.Next(tileCandidates.Count / 2)];
+      chest.Position = tileCandidates[_random.Next(tileCandidates.Count)];
       chest.Content.Add(new SmiteCard()); // TODO: randomize content
       Interactables.Add(chest);
       chests++;
