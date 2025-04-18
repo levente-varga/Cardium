@@ -6,7 +6,7 @@ namespace Cardium.Scripts.Cards;
 
 public class GoldenKeyCard : InteractableTargetingCard {
     public GoldenKeyCard() {
-        Name = "Key";
+        Name = "Golden Key";
         Description = $"Unlocks a chest. {Highlight("Unstable")}";
         Rarity = CardRarity.Rare;
         Unstable = true;

@@ -33,7 +33,7 @@ public class Card {
 
 	public Color RarityColor => Rarity switch {
 		CardRarity.Common => new Color("00CB9F"),
-		CardRarity.Rare => new Color("176AF8"),
+		CardRarity.Rare => new Color("2398FF"),
 		CardRarity.Epic => new Color("CB1EE9"),
 		CardRarity.Legendary => new Color("FF8325"),
 		_ => throw new ArgumentOutOfRangeException()
