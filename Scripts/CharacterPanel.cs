@@ -23,7 +23,7 @@ public partial class CharacterPanel : Control {
 		DefenseLabel.Text = $"{Player.Armor}";
 		VisionLabel.Text = $"{Player.Vision}";
 		HandLabel.Text = $"{Player.Hand.Size} / {Player.Hand.Capacity}";
-		DeckLabel.Text = $"{Player.Deck.Size} / {Player.Deck.Capacity}";
+		DeckLabel.Text = $"{Player.Hand.Deck.Deck.Size} / {Player.Hand.Deck.Deck.Capacity}";
 		InventoryLabel.Text = $"{Player.Inventory.Count}";
 	}
 

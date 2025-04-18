@@ -23,10 +23,10 @@ public partial class Hand : Node2D
 	[Export] public Control PlayArea = null!;
 	[Export] public Control DiscardArea = null!;
 	[Export] public PileView DiscardPile = null!;
+	[Export] public DeckView Deck = null!;
 	
 	[Export] private PackedScene _cardScene = ResourceLoader.Load<PackedScene>("res://Scenes/card.tscn");
 
-	public Deck Deck = new();
 	private CardView? _hovered;
 	
 	public HandState State { get; private set; }
@@ -62,7 +62,7 @@ public partial class Hand : Node2D
 
 	public void DrawCards(int count, bool positionHand = true) {
 		for (var i = 0; i < count; i++) {
-			var card = Deck.Draw();
+			var card = Deck.DrawCard();
 			if (card == null) break;
 			Add(card, false);
 			GD.Print($"Hand size: {Size}");

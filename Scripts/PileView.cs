@@ -6,6 +6,7 @@ namespace Cardium.Scripts;
 
 public partial class PileView : Node2D {
 	[Export] private PackedScene _cardBackScene = ResourceLoader.Load<PackedScene>("res://Scenes/card_back.tscn");
+	[Export] private Label SizeLabel = null!;
 	
 	public bool Enabled = true;
 	
@@ -17,6 +18,10 @@ public partial class PileView : Node2D {
 	
 	public override void _Ready() {
 		
+	}
+
+	public override void _Process(double delta) {
+		SizeLabel.Text = Pile.IsEmpty ? "" : $"{Pile.Size}";
 	}
 
 	public void Add(Card card) {

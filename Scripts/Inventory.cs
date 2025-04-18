@@ -14,7 +14,7 @@ public partial class Inventory : Control {
 	
 	public override void _Ready() {
 		Visible = false;
-		var cardsInDeck = Player.Deck.Cards;
+		var cardsInDeck = Player.Hand.Deck.Deck.Cards;
 		var row = new HBoxContainer();
 
 		if (DeckContainer.GetParent() is MarginContainer parent) {

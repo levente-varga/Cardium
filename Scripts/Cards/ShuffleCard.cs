@@ -25,10 +25,10 @@ public class ShuffleCard : PlayerTargetingCard
     }
     
     foreach (var card in cards) {
-      player.Deck.Add(card);
+      player.Hand.Deck.Add(card);
     }
     
-    player.Deck.Shuffle();
+    player.Hand.Deck.Deck.Shuffle();
     
     player.Hand.DrawCards(cards.Count, false);
         

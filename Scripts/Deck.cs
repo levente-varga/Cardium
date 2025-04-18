@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Godot;
 
 namespace Cardium.Scripts;
 
@@ -13,13 +14,16 @@ public class Deck : Pile {
     get => _capacity;
     private set => _capacity = Math.Max(value, 1);
   }
+  public bool IsFull => Size >= Capacity;
+  public bool IsNotFull => Size < Capacity;
 
   /// <summary>Adds card to the bottom of the deck.</summary>
   /// <param name="card">The card to be added.</param>
   /// <returns>false if the deck is already full.</returns>
   public override bool Add(Card card) {
-    if (_cards.Count >= Capacity) return false;
+    if (IsFull) return false;
     _cards.Add(card);
+    GD.Print("Card added to deck");
     return true;
   }
 

@@ -9,7 +9,6 @@ public partial class Player : Entity
 	[Export] public World World = null!;
 	[Export] public Label DebugLabel = null!;
 	[Export] public Hand Hand = null!;
-	public readonly Deck Deck = new();
 	
 	public delegate void OnActionDelegate();
 	public event OnActionDelegate? OnActionEvent;
@@ -29,8 +28,7 @@ public partial class Player : Entity
 
 		HealthBar.Visible = true;
 
-		FillDeck();
-		Hand.Deck = Deck;
+		Hand.Deck.FillWithRandom();
 		Hand.DrawCards(Hand.Capacity);
 		
 		SetAnimation("idle", GD.Load<Texture2D>("res://Assets/Animations/Player.png"), 8, 12);
@@ -48,7 +46,7 @@ public partial class Player : Entity
 		                  + $"Damage: {Damage}\n"
 		                  + $"Armor: {Armor}\n"
 		                  + $"\n"
-		                  + $"Deck: {Deck.Size}/{Deck.Capacity}"
+		                  + $"Deck: {Hand.Deck.Deck.Size}/{Hand.Deck.Deck.Capacity}"
 		                  + $"Hand: {Hand.Size}/{Hand.Capacity}";
 		
 		base._Process(delta);
@@ -98,26 +96,6 @@ public partial class Player : Entity
 		}
 	}
 
-	private void FillDeck() {
-		var r = new Random();
-		for (var i = 0; i < Deck.Capacity; i++) {
-			var type = r.Next(9);
-			Card card = type switch {
-				0 => new HealCard(),
-				1 => new SmiteCard(),
-				2 => new HurlCard(),
-				3 => new PushCard(),
-				4 => new ChainCard(),
-				5 => new GoldenKeyCard(),
-				6 => new WoodenKeyCard(),
-				7 => new HolyCard(),
-				_ => new ShuffleCard(),
-			};
-			Deck.Add(card);
-		}
-		Deck.Shuffle();
-	}
-
 	private void SetupActionListeners()
 	{
 		OnMoveEvent += OnMoveEventHandler;
@@ -146,7 +124,7 @@ public partial class Player : Entity
 	
 	public void PickUpCard(Card card)
 	{
-		Deck.Add(card);
+		Hand.Deck.Add(card);
 		SpawnFloatingLabel($"x1 {card.Name} card", color: new Color("F4B41B"));
 		if (Hand.IsNotFull) Hand.DrawCards(1);
 	}
