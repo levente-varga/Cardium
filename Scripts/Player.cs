@@ -159,8 +159,7 @@ public partial class Player : Entity {
   }
 
   public void PickUpCard(Card card) {
-    Hand.Deck.Add(card);
+    Inventory.Add(card);
     SpawnFloatingLabel($"x1 {card.Name} card", color: new Color("F4B41B"));
-    if (Hand.IsNotFull) Hand.DrawCards(1);
   }
 }
