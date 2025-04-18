@@ -130,7 +130,6 @@ public partial class Player : Entity
 	private void OnMoveEventHandler(Vector2I from, Vector2I to) => OnActionEvent?.Invoke();
 	private void OnNudgeEventHandler(Vector2I at) => OnActionEvent?.Invoke();
 	private void OnCardPlayedEventHandler(Card card) {
-		if (Hand.IsNotFull) Hand.DrawCards(1);
 		OnActionEvent?.Invoke();
 	}
 

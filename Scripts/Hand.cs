@@ -231,7 +231,6 @@ public partial class Hand : Node2D
 		
 		if (success) {
 			Discard(view);
-			PositionCards();
 			OnCardPlayedEvent?.Invoke(view.Card);
 		}
 		else {
@@ -245,6 +244,13 @@ public partial class Hand : Node2D
 	private void Discard(CardView view) {
 		Remove(view.Card);
 		DiscardPile.Add(view.Card);
+		
+		if (IsNotFull) {
+			DrawCards(1);
+		}
+		else {
+			PositionCards();
+		}
 	} 
 	
 	private void EnableCards(bool enable = true) {
