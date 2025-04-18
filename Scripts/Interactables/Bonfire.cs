@@ -18,17 +18,16 @@ public partial class Bonfire : Interactable {
   }
 
   public override void OnInteract(Player player, Camera camera) {
-    base.OnInteract(player, camera);
-
     if (State == BonfireState.Extinguished) return;
+    
+    base.OnInteract(player, camera);
     
     if (State == BonfireState.Lit) {
       SpawnFloatingLabel("Rested", color: Global.White);
-      if (player.Health == player.MaxHealth) return;
       var healAmount = player.MaxHealth - player.Health;
-      player.Heal(healAmount);
-      SetStillFrame(GD.Load<Texture2D>("res://Assets/Sprites/Bonfire.png"));
-      Modulate = new Color("333333FF");
+      if (healAmount > 0) player.Heal(healAmount);
+      SetStillFrame(GD.Load<Texture2D>("res://Assets/Sprites/ExtinguishedBonfire.png"));
+      State = BonfireState.Extinguished;
       return;
     }
     
