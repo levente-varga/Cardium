@@ -321,12 +321,14 @@ public partial class World : Node2D {
 	}
   
 	private void PickUpLoot() {
+		List<Card> cards = new ();
 		foreach (var loot in _loot.Where(loot => loot.Position == Player.Position).ToList()) {
 			_loot.Remove(loot);
 			RemoveChild(loot);
 			loot.QueueFree();
-			Player.PickUpCard(loot.Card);
+			cards.Add(loot.Card);
 		}
+		Player.PickUpCards(cards);
 	}
 	
 	public int GetDistanceBetween(Vector2I from, Vector2I to) {

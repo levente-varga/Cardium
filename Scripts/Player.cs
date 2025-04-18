@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Cardium.Scripts.Interactables;
 using Godot;
 
@@ -158,8 +159,12 @@ public partial class Player : Entity {
     if (Global.Debug) SpawnDebugFloatingLabel("Start of turn");
   }
 
-  public void PickUpCard(Card card) {
-    Inventory.Add(card);
-    SpawnFloatingLabel($"x1 {card.Name} card", card.RarityColor);
+  public void PickUpCard(Card card) => PickUpCards(new List<Card>{ card });
+  public void PickUpCards(List<Card> cards) {
+    for (var i = 0; i < cards.Count; i++) {
+      var card = cards[i];
+      Inventory.Add(card);
+      SpawnFloatingLabel($"x1 {card.Name} card", card.RarityColor);
+    }
   }
 }
