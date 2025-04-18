@@ -1,17 +1,18 @@
-[gd_scene load_steps=18 format=3 uid="uid://cw3o4f0nr0f2v"]
+[gd_scene load_steps=19 format=3 uid="uid://cw3o4f0nr0f2v"]
 
 [ext_resource type="Script" path="res://Scripts/Hand.cs" id="1_3ixgw"]
 [ext_resource type="Script" path="res://Scripts/Camera.cs" id="3_evct5"]
 [ext_resource type="Script" path="res://Scripts/Player.cs" id="3_q31ct"]
 [ext_resource type="Script" path="res://Scripts/World.cs" id="4_ayy7p"]
 [ext_resource type="Script" path="res://Scripts/CharacterPanel.cs" id="4_dv04k"]
-[ext_resource type="Texture2D" uid="uid://b88bagvmbo1kk" path="res://Assets/Inventory.png" id="4_eondi"]
 [ext_resource type="Script" path="res://Scripts/DeckView.cs" id="4_exrb1"]
 [ext_resource type="Script" path="res://Scripts/PileView.cs" id="4_kmy3g"]
 [ext_resource type="FontFile" uid="uid://2rxest3pjy34" path="res://Assets/Fonts/alagard.ttf" id="5_70pgm"]
 [ext_resource type="Theme" uid="uid://ckiq2eob4d0lc" path="res://Scenes/theme.tres" id="5_h5gro"]
 [ext_resource type="Script" path="res://Scripts/Overlay.cs" id="7_4aqu0"]
 [ext_resource type="Script" path="res://Scripts/Inventory.cs" id="7_d6lyv"]
+[ext_resource type="Texture2D" uid="uid://dh41xyg27nibb" path="res://Assets/Sprites/Inventory.png" id="10_xwuuf"]
+[ext_resource type="FontFile" uid="uid://cgna0pm46rmdr" path="res://Assets/Fonts/Levi Windows.ttf" id="12_aeksy"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_n205a"]
 
@@ -24,9 +25,13 @@ font = ExtResource("5_70pgm")
 font_size = 64
 
 [sub_resource type="LabelSettings" id="LabelSettings_f4q7g"]
+font = ExtResource("12_aeksy")
+font_size = 25
 font_color = Color(0.466667, 0.466667, 0.466667, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_khtd6"]
+font = ExtResource("12_aeksy")
+font_size = 25
 font_color = Color(0.866667, 0.866667, 0.866667, 1)
 
 [node name="Root" type="Node"]
@@ -133,155 +138,147 @@ offset_right = 1000.0
 offset_bottom = 23.0
 
 [node name="CharacterPanel" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("HealthLabel", "DefenseLabel", "VisionLabel", "HandLabel", "DeckLabel", "InventoryLabel", "Player")]
+visible = false
 z_index = 20
 layout_mode = 3
-anchors_preset = 0
-offset_left = -160.0
-offset_top = -240.0
-offset_right = 160.0
-offset_bottom = 240.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("4_dv04k")
-HealthLabel = NodePath("Values/HealthValue")
-DefenseLabel = NodePath("Values/DefenseValue")
-VisionLabel = NodePath("Values/VisionValue")
-HandLabel = NodePath("Values/HandSizeValue")
-DeckLabel = NodePath("Values/DeckSizeValue")
-InventoryLabel = NodePath("Values/InventoryValue")
+HealthLabel = NodePath("CenterContainer/Container/Values/HealthValue")
+DefenseLabel = NodePath("CenterContainer/Container/Values/DefenseValue")
+VisionLabel = NodePath("CenterContainer/Container/Values/VisionValue")
+HandLabel = NodePath("CenterContainer/Container/Values/HandSizeValue")
+DeckLabel = NodePath("CenterContainer/Container/Values/DeckSizeValue")
+InventoryLabel = NodePath("CenterContainer/Container/Values/InventoryValue")
 Player = NodePath("../../Player")
 
 [node name="ColorRect" type="ColorRect" parent="CanvasLayer/CharacterPanel"]
-layout_mode = 0
-offset_right = 1920.0
-offset_bottom = 1088.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 color = Color(0, 0, 0, 0.588235)
 
-[node name="Background" type="Sprite2D" parent="CanvasLayer/CharacterPanel"]
-position = Vector2(160, 240)
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/CharacterPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Control" type="Control" parent="CanvasLayer/CharacterPanel/CenterContainer"]
+layout_mode = 2
+
+[node name="Background" type="Sprite2D" parent="CanvasLayer/CharacterPanel/CenterContainer/Control"]
 scale = Vector2(4, 4)
-texture = ExtResource("4_eondi")
+texture = ExtResource("10_xwuuf")
 
-[node name="Labels" type="Control" parent="CanvasLayer/CharacterPanel"]
-anchors_preset = 0
-offset_left = 48.0
-offset_top = 48.0
-offset_right = 144.0
-offset_bottom = 432.0
+[node name="Container" type="HBoxContainer" parent="CanvasLayer/CharacterPanel/CenterContainer"]
+layout_mode = 2
+theme_override_constants/separation = 24
 
-[node name="HealthLabel" type="Label" parent="CanvasLayer/CharacterPanel/Labels"]
-layout_mode = 0
-offset_right = 96.0
-offset_bottom = 32.0
+[node name="Labels" type="VBoxContainer" parent="CanvasLayer/CharacterPanel/CenterContainer/Container"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="HealthLabel" type="Label" parent="CanvasLayer/CharacterPanel/CenterContainer/Container/Labels"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
 theme = ExtResource("5_h5gro")
 text = "Health:"
 label_settings = SubResource("LabelSettings_f4q7g")
 vertical_alignment = 1
 
-[node name="DefenseLabel" type="Label" parent="CanvasLayer/CharacterPanel/Labels"]
-layout_mode = 0
-offset_top = 32.0
-offset_right = 96.0
-offset_bottom = 64.0
+[node name="DefenseLabel" type="Label" parent="CanvasLayer/CharacterPanel/CenterContainer/Container/Labels"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
 theme = ExtResource("5_h5gro")
 text = "Defense:"
 label_settings = SubResource("LabelSettings_f4q7g")
 vertical_alignment = 1
 
-[node name="VisionLabel" type="Label" parent="CanvasLayer/CharacterPanel/Labels"]
-layout_mode = 0
-offset_top = 64.0
-offset_right = 96.0
-offset_bottom = 96.0
+[node name="VisionLabel" type="Label" parent="CanvasLayer/CharacterPanel/CenterContainer/Container/Labels"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
 theme = ExtResource("5_h5gro")
 text = "Vision"
 label_settings = SubResource("LabelSettings_f4q7g")
 vertical_alignment = 1
 
-[node name="HandSizeLabel" type="Label" parent="CanvasLayer/CharacterPanel/Labels"]
-layout_mode = 0
-offset_top = 96.0
-offset_right = 96.0
-offset_bottom = 128.0
+[node name="HandSizeLabel" type="Label" parent="CanvasLayer/CharacterPanel/CenterContainer/Container/Labels"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
 theme = ExtResource("5_h5gro")
 text = "Hand size:"
 label_settings = SubResource("LabelSettings_f4q7g")
 vertical_alignment = 1
 
-[node name="DeckSizeLabel" type="Label" parent="CanvasLayer/CharacterPanel/Labels"]
-layout_mode = 0
-offset_top = 128.0
-offset_right = 96.0
-offset_bottom = 160.0
+[node name="DeckSizeLabel" type="Label" parent="CanvasLayer/CharacterPanel/CenterContainer/Container/Labels"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
 theme = ExtResource("5_h5gro")
 text = "Deck size:"
 label_settings = SubResource("LabelSettings_f4q7g")
 vertical_alignment = 1
 
-[node name="InventoryLabel" type="Label" parent="CanvasLayer/CharacterPanel/Labels"]
-layout_mode = 0
-offset_top = 160.0
-offset_right = 96.0
-offset_bottom = 192.0
+[node name="InventoryLabel" type="Label" parent="CanvasLayer/CharacterPanel/CenterContainer/Container/Labels"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
 theme = ExtResource("5_h5gro")
 text = "Inventory:"
 label_settings = SubResource("LabelSettings_f4q7g")
 vertical_alignment = 1
 
-[node name="Values" type="Control" parent="CanvasLayer/CharacterPanel"]
-anchors_preset = 0
-offset_left = 176.0
-offset_top = 48.0
-offset_right = 272.0
-offset_bottom = 432.0
+[node name="Values" type="VBoxContainer" parent="CanvasLayer/CharacterPanel/CenterContainer/Container"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+theme_override_constants/separation = 4
 
-[node name="HealthValue" type="Label" parent="CanvasLayer/CharacterPanel/Values"]
-layout_mode = 0
-offset_right = 96.0
-offset_bottom = 32.0
+[node name="HealthValue" type="Label" parent="CanvasLayer/CharacterPanel/CenterContainer/Container/Values"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
 theme = ExtResource("5_h5gro")
 label_settings = SubResource("LabelSettings_khtd6")
 vertical_alignment = 1
 
-[node name="DefenseValue" type="Label" parent="CanvasLayer/CharacterPanel/Values"]
-layout_mode = 0
-offset_top = 32.0
-offset_right = 96.0
-offset_bottom = 64.0
+[node name="DefenseValue" type="Label" parent="CanvasLayer/CharacterPanel/CenterContainer/Container/Values"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
 theme = ExtResource("5_h5gro")
 label_settings = SubResource("LabelSettings_khtd6")
 vertical_alignment = 1
 
-[node name="VisionValue" type="Label" parent="CanvasLayer/CharacterPanel/Values"]
-layout_mode = 0
-offset_top = 64.0
-offset_right = 96.0
-offset_bottom = 96.0
+[node name="VisionValue" type="Label" parent="CanvasLayer/CharacterPanel/CenterContainer/Container/Values"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
 theme = ExtResource("5_h5gro")
 label_settings = SubResource("LabelSettings_khtd6")
 vertical_alignment = 1
 
-[node name="HandSizeValue" type="Label" parent="CanvasLayer/CharacterPanel/Values"]
-layout_mode = 0
-offset_top = 96.0
-offset_right = 96.0
-offset_bottom = 128.0
+[node name="HandSizeValue" type="Label" parent="CanvasLayer/CharacterPanel/CenterContainer/Container/Values"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
 theme = ExtResource("5_h5gro")
 label_settings = SubResource("LabelSettings_khtd6")
 vertical_alignment = 1
 
-[node name="DeckSizeValue" type="Label" parent="CanvasLayer/CharacterPanel/Values"]
-layout_mode = 0
-offset_top = 128.0
-offset_right = 96.0
-offset_bottom = 160.0
+[node name="DeckSizeValue" type="Label" parent="CanvasLayer/CharacterPanel/CenterContainer/Container/Values"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
 theme = ExtResource("5_h5gro")
 label_settings = SubResource("LabelSettings_khtd6")
 vertical_alignment = 1
 
-[node name="InventoryValue" type="Label" parent="CanvasLayer/CharacterPanel/Values"]
-layout_mode = 0
-offset_top = 160.0
-offset_right = 96.0
-offset_bottom = 192.0
+[node name="InventoryValue" type="Label" parent="CanvasLayer/CharacterPanel/CenterContainer/Container/Values"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
 theme = ExtResource("5_h5gro")
 label_settings = SubResource("LabelSettings_khtd6")
 vertical_alignment = 1
@@ -289,36 +286,73 @@ vertical_alignment = 1
 [node name="Inventory" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("Player", "DeckContainer", "InventoryContainer")]
 layout_mode = 3
 anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_right = 1920.0
+offset_bottom = 1080.0
 script = ExtResource("7_d6lyv")
 Player = NodePath("../../Player")
-DeckContainer = NodePath("Panel/DeckScrollContainer/MarginContainer/DeckContainer")
-InventoryContainer = NodePath("Panel/InventoryScrollContainer/MarginContainer/InventoryContainer")
+DeckContainer = NodePath("CenterContainer/Panel/HBoxContainer/DeckScrollContainer/MarginContainer/DeckContainer")
+InventoryContainer = NodePath("CenterContainer/Panel/HBoxContainer/InventoryScrollContainer/MarginContainer/InventoryContainer")
 
 [node name="Background" type="ColorRect" parent="CanvasLayer/Inventory"]
-layout_mode = 0
-offset_right = 1920.0
-offset_bottom = 1072.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 color = Color(0, 0, 0, 0.588235)
 
-[node name="Panel" type="ColorRect" parent="CanvasLayer/Inventory"]
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/Inventory"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="ColorRect" parent="CanvasLayer/Inventory/CenterContainer"]
 clip_contents = true
-layout_mode = 0
-offset_left = 448.0
-offset_top = 160.0
-offset_right = 1472.0
-offset_bottom = 928.0
+custom_minimum_size = Vector2(1000, 600)
+layout_mode = 2
 color = Color(0.0846899, 0.0846899, 0.0846899, 1)
 
-[node name="InventoryScrollContainer" type="ScrollContainer" parent="CanvasLayer/Inventory/Panel"]
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Inventory/CenterContainer/Panel"]
+custom_minimum_size = Vector2(1000, 600)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 36
+
+[node name="InventoryScrollContainer" type="ScrollContainer" parent="CanvasLayer/Inventory/CenterContainer/Panel/HBoxContainer"]
 clip_contents = false
-layout_mode = 0
-offset_right = 512.0
-offset_bottom = 768.0
+layout_mode = 2
+size_flags_horizontal = 3
 horizontal_scroll_mode = 0
 
-[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Inventory/Panel/InventoryScrollContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Inventory/CenterContainer/Panel/HBoxContainer/InventoryScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+
+[node name="InventoryContainer" type="VBoxContainer" parent="CanvasLayer/Inventory/CenterContainer/Panel/HBoxContainer/InventoryScrollContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 18
+
+[node name="DeckScrollContainer" type="ScrollContainer" parent="CanvasLayer/Inventory/CenterContainer/Panel/HBoxContainer"]
+clip_contents = false
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_scroll_mode = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Inventory/CenterContainer/Panel/HBoxContainer/DeckScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -327,32 +361,11 @@ theme_override_constants/margin_top = 24
 theme_override_constants/margin_right = 24
 theme_override_constants/margin_bottom = 24
 
-[node name="InventoryContainer" type="VBoxContainer" parent="CanvasLayer/Inventory/Panel/InventoryScrollContainer/MarginContainer"]
+[node name="DeckContainer" type="VBoxContainer" parent="CanvasLayer/Inventory/CenterContainer/Panel/HBoxContainer/DeckScrollContainer/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-
-[node name="DeckScrollContainer" type="ScrollContainer" parent="CanvasLayer/Inventory/Panel"]
-clip_contents = false
-layout_mode = 0
-offset_left = 512.0
-offset_right = 1024.0
-offset_bottom = 768.0
-horizontal_scroll_mode = 0
-
-[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Inventory/Panel/DeckScrollContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/margin_left = 24
-theme_override_constants/margin_top = 24
-theme_override_constants/margin_right = 24
-theme_override_constants/margin_bottom = 24
-
-[node name="DeckContainer" type="VBoxContainer" parent="CanvasLayer/Inventory/Panel/DeckScrollContainer/MarginContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
+theme_override_constants/separation = 18
 
 [node name="PlayArea" type="Control" parent="CanvasLayer"]
 layout_mode = 3
