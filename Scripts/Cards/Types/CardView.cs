@@ -27,6 +27,7 @@ public partial class CardView : Node2D {
 	private bool _hoverable;
 	
 	private Tween? _hoverTween;
+	private Tween? _scaleTween;
 
 	public Card Card { get; private set; } = null!;
 	
@@ -123,71 +124,59 @@ public partial class CardView : Node2D {
 	}
 
 	public void OnEnterPlayArea() {
-		//if (_state != CardState.Dragging) throw new Exception("Card was not in dragging state when it entered play area");
-		PlayJumpingAnimation();
+		PlayScaleAnimation(1.2f);
 		OverPlayArea = true;
-		
-		Utils.SpawnFloatingLabel(GetTree(), Position, "Entered Play");
 	}
 	
 	public void OnExitPlayArea() {
-		//if (_state != CardState.Dragging) throw new Exception("Card was not in dragging state when it left play area");
 		PlayResetAnimation();
 		_state = _dragging ? CardState.Dragging : CardState.Idle;
 		OverPlayArea = false;
 	}
 	
 	public void OnEnterDiscardArea() {
-		//if (_state != CardState.Dragging) throw new Exception("Card was not in dragging state when it entered discard area");
-		PlayJumpingAnimation();
+		PlayScaleAnimation(0.75f);
 		OverDiscardArea = true;
 	}
 	
 	public void OnExitDiscardArea() {
-		//if (_state != CardState.Dragging) throw new Exception("Card was not in dragging state when it left discard area");
 		PlayResetAnimation();
 		_state = _dragging ? CardState.Dragging : CardState.Idle;
 		OverDiscardArea = false;
 	}
 	
 	public void OnEnterPlayingMode() {
-		//if (_state != CardState.Dragging) throw new Exception($"Card was not in dragging state when it entered playing mode (state: {_state.ToString()})");
 		PlayMoveToPlayingPositionAnimation();
 		_state = CardState.Playing;
 		_dragging = false;
 	}
 	
 	public void OnExitPlayingMode() {
-		//if (_state != CardState.Playing) throw new Exception("Card was not in playing mode when it left it");
 		_state = CardState.Idle;
 		PlayResetAnimation();
 	}
 
-	private void ResetHoverTween() {
-		if (_hoverTween == null) return;
-		_hoverTween.Kill();
-		_hoverTween.Dispose();
+	private void ResetHoverTween() => ResetTween(_hoverTween);
+	private void ResetScaleTween() => ResetTween(_scaleTween);
+	private static void ResetTween(Tween? tween) {
+		if (tween == null) return;
+		tween.Kill();
+		tween.Dispose();
 	}
-
+	
+	private void PlayScaleAnimation(float scale) {
+		ResetScaleTween();
+		_scaleTween = CreateTween();
+		_scaleTween.TweenProperty(_base, "scale", new Vector2(scale, scale), 0.4f)
+			.SetEase(Tween.EaseType.Out)
+			.SetTrans(Tween.TransitionType.Expo);
+	}
+	
 	private void PlayHoverAnimation() {
 		ResetHoverTween();
 		_hoverTween = CreateTween();
 		_hoverTween.TweenProperty(_hoverBase, "position", new Vector2(0, -100), 0.4f)
 			.SetEase(Tween.EaseType.Out)
-			.SetTrans(Tween.TransitionType.Expo);
-	}
-	
-	private void PlayJumpingAnimation() {
-		ResetHoverTween();	
-		_hoverTween = CreateTween();
-		_hoverTween.SetLoops();
-
-		_hoverTween.TweenProperty(_hoverBase, "position", new Vector2(0, -100), 0.4f)
-			.SetEase(Tween.EaseType.Out)
-			.SetTrans(Tween.TransitionType.Expo);
-
-		_hoverTween.TweenProperty(_hoverBase, "position", new Vector2(0, -50), 0.4f)
-			.SetEase(Tween.EaseType.In)
 			.SetTrans(Tween.TransitionType.Expo);
 	}
 	
@@ -197,12 +186,18 @@ public partial class CardView : Node2D {
 		_hoverTween.TweenProperty(_hoverBase, "position", Vector2.Zero, 0.4f)
 			.SetEase(Tween.EaseType.Out)
 			.SetTrans(Tween.TransitionType.Expo);
+		ResetScaleTween();
+		_scaleTween = CreateTween();
+		_scaleTween.TweenProperty(_base, "scale", Vector2.One, 0.4f)
+			.SetEase(Tween.EaseType.Out)
+			.SetTrans(Tween.TransitionType.Expo);
 	}
 	
 	private void PlayMoveToPlayingPositionAnimation() {
 		ResetHoverTween();
 		var camera = GetViewport().GetCamera2D();
 		if (camera == null) return;
+		_hoverBase.Position = Vector2.Zero;
 		_hoverTween = CreateTween();
 		_hoverTween.TweenProperty(_base, "global_position", camera.GlobalPosition - new Vector2(800, 0), 0.4f)
 			.SetEase(Tween.EaseType.Out)

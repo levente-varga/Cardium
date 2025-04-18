@@ -20,7 +20,6 @@ public partial class Hand : Node2D
 	[Export] public float TiltAngle;
 	[Export] public Vector2 Origin = Vector2.Zero;
 
-	[Export] public Label DescriptionLabel = null!;
 	[Export] public Control PlayArea = null!;
 	[Export] public Control DiscardArea = null!;
 	
@@ -56,15 +55,6 @@ public partial class Hand : Node2D
 
 	public override void _Ready() {
 		PositionCards();
-	}
-	
-	public override void _Process(double delta) {
-		DescriptionLabel.Text = _hovered is null ? "" : $"{_hovered.Card.Name}: {_hovered.Card.Description}";
-		
-		var mouseOverPlayArea = PlayArea.GetRect().HasPoint(GetViewport().GetMousePosition());
-		var mouseOverDiscardArea = DiscardArea.GetRect().HasPoint(GetViewport().GetMousePosition());
-		(PlayArea.GetChild(0) as ColorRect).Color = mouseOverPlayArea ? new Color("FFCC5511") : new Color("33333322");
-		(DiscardArea.GetChild(0) as ColorRect).Color = mouseOverDiscardArea ? new Color("FF777711") : new Color("33333322");
 	}
 
 	public void DrawCards(int count, bool positionHand = true) {
