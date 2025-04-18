@@ -133,7 +133,6 @@ offset_right = 1000.0
 offset_bottom = 23.0
 
 [node name="CharacterPanel" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("HealthLabel", "DefenseLabel", "VisionLabel", "HandLabel", "DeckLabel", "InventoryLabel", "Player")]
-visible = false
 z_index = 20
 layout_mode = 3
 anchors_preset = 0
@@ -152,10 +151,8 @@ Player = NodePath("../../Player")
 
 [node name="ColorRect" type="ColorRect" parent="CanvasLayer/CharacterPanel"]
 layout_mode = 0
-offset_left = -800.0
-offset_top = -304.0
-offset_right = 1120.0
-offset_bottom = 784.0
+offset_right = 1920.0
+offset_bottom = 1088.0
 color = Color(0, 0, 0, 0.588235)
 
 [node name="Background" type="Sprite2D" parent="CanvasLayer/CharacterPanel"]
@@ -301,19 +298,17 @@ InventoryContainer = NodePath("Panel/InventoryScrollContainer/MarginContainer/In
 
 [node name="Background" type="ColorRect" parent="CanvasLayer/Inventory"]
 layout_mode = 0
-offset_left = -960.0
-offset_top = -540.0
-offset_right = 960.0
-offset_bottom = 532.0
+offset_right = 1920.0
+offset_bottom = 1072.0
 color = Color(0, 0, 0, 0.588235)
 
 [node name="Panel" type="ColorRect" parent="CanvasLayer/Inventory"]
 clip_contents = true
 layout_mode = 0
-offset_left = -512.0
-offset_top = -380.0
-offset_right = 512.0
-offset_bottom = 388.0
+offset_left = 448.0
+offset_top = 160.0
+offset_right = 1472.0
+offset_bottom = 928.0
 color = Color(0.0846899, 0.0846899, 0.0846899, 1)
 
 [node name="InventoryScrollContainer" type="ScrollContainer" parent="CanvasLayer/Inventory/Panel"]
@@ -325,6 +320,12 @@ horizontal_scroll_mode = 0
 
 [node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Inventory/Panel/InventoryScrollContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
 
 [node name="InventoryContainer" type="VBoxContainer" parent="CanvasLayer/Inventory/Panel/InventoryScrollContainer/MarginContainer"]
 layout_mode = 2
@@ -341,6 +342,12 @@ horizontal_scroll_mode = 0
 
 [node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Inventory/Panel/DeckScrollContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
 
 [node name="DeckContainer" type="VBoxContainer" parent="CanvasLayer/Inventory/Panel/DeckScrollContainer/MarginContainer"]
 layout_mode = 2
