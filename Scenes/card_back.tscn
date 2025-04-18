@@ -1,0 +1,69 @@
+[gd_scene load_steps=13 format=3 uid="uid://c3we3xcgxihjj"]
+
+[ext_resource type="Texture2D" uid="uid://gw58nrntdg8x" path="res://Assets/Sprites/Cards/Back.png" id="1_dv3ar"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_xfpmy"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_xrgc6"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_tj6bo"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_tvxpm"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_48ddt"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ptce7"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_l2snx"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ysopg"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_737jg"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_62db6"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_f8rtw"]
+
+[node name="CardBack" type="Node2D"]
+
+[node name="Base" type="Node2D" parent="."]
+
+[node name="HoverBase" type="Node2D" parent="Base"]
+
+[node name="Hitbox" type="Button" parent="Base/HoverBase"]
+z_index = 10
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -114.0
+offset_top = -162.0
+offset_right = 114.0
+offset_bottom = 162.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/focus = SubResource("StyleBoxEmpty_xfpmy")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxEmpty_xrgc6")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_tj6bo")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxEmpty_tvxpm")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_48ddt")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxEmpty_ptce7")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_l2snx")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxEmpty_ysopg")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_737jg")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxEmpty_62db6")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_f8rtw")
+flat = true
+
+[node name="Body" type="Node2D" parent="Base/HoverBase"]
+scale = Vector2(6, 6)
+
+[node name="Back" type="Sprite2D" parent="Base/HoverBase/Body"]
+texture = ExtResource("1_dv3ar")
+
+[node name="DebugFrame" type="Line2D" parent="Base/HoverBase"]
+visible = false
+points = PackedVector2Array(108, -156, -108, -156, -108, 156, 108, 156)
+closed = true
+width = 1.0

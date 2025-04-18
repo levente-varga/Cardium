@@ -22,13 +22,13 @@ public partial class Hand : Node2D
 
 	[Export] public Control PlayArea = null!;
 	[Export] public Control DiscardArea = null!;
+	[Export] public PileView DiscardPile = null!;
 	
 	[Export] private PackedScene _cardScene = ResourceLoader.Load<PackedScene>("res://Scenes/card.tscn");
 
 	public Deck Deck = new();
 	private CardView? _hovered;
 	
-	public bool RightHanded = true;
 	public HandState State { get; private set; }
 
 	private readonly List<Card> _cards = new();
@@ -219,8 +219,8 @@ public partial class Hand : Node2D
 			_ = Play(view);
 		}
 		else {
+			if (view.OverDiscardArea) Discard(view);
 			State = HandState.Idle;
-			
 		}
 	}
 
@@ -230,7 +230,7 @@ public partial class Hand : Node2D
 		EnableCards();
 		
 		if (success) {
-			Remove(view.Card);
+			Discard(view);
 			PositionCards();
 			OnCardPlayedEvent?.Invoke(view.Card);
 		}
@@ -241,6 +241,11 @@ public partial class Hand : Node2D
 		
 		State = HandState.Idle;
 	}
+
+	private void Discard(CardView view) {
+		Remove(view.Card);
+		DiscardPile.Add(view.Card);
+	} 
 	
 	private void EnableCards(bool enable = true) {
 		foreach (var view in _cardViews) {

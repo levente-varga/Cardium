@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://cw3o4f0nr0f2v"]
+[gd_scene load_steps=14 format=3 uid="uid://cw3o4f0nr0f2v"]
 
 [ext_resource type="Script" path="res://Scripts/Hand.cs" id="1_3ixgw"]
 [ext_resource type="Script" path="res://Scripts/Camera.cs" id="3_evct5"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://Scripts/World.cs" id="4_ayy7p"]
 [ext_resource type="Script" path="res://Scripts/CharacterPanel.cs" id="4_dv04k"]
 [ext_resource type="Texture2D" uid="uid://b88bagvmbo1kk" path="res://Assets/Inventory.png" id="4_eondi"]
+[ext_resource type="Script" path="res://Scripts/PileView.cs" id="4_kmy3g"]
 [ext_resource type="Theme" uid="uid://ckiq2eob4d0lc" path="res://Scenes/theme.tres" id="5_h5gro"]
 [ext_resource type="Script" path="res://Scripts/Overlay.cs" id="7_4aqu0"]
 [ext_resource type="Script" path="res://Scripts/Inventory.cs" id="7_d6lyv"]
@@ -34,12 +35,18 @@ Hand = NodePath("../Camera2D/Hand")
 script = ExtResource("3_evct5")
 Target = NodePath("../Player")
 
-[node name="Hand" type="Node2D" parent="Camera2D" node_paths=PackedStringArray("Player", "PlayArea", "DiscardArea")]
+[node name="DiscardPile" type="Node2D" parent="Camera2D"]
+z_index = 10
+position = Vector2(-800, 480)
+script = ExtResource("4_kmy3g")
+
+[node name="Hand" type="Node2D" parent="Camera2D" node_paths=PackedStringArray("Player", "PlayArea", "DiscardArea", "DiscardPile")]
 z_index = 10
 script = ExtResource("1_3ixgw")
 Player = NodePath("../../Player")
 PlayArea = NodePath("../../CanvasLayer/PlayArea")
 DiscardArea = NodePath("../../CanvasLayer/DiscardArea")
+DiscardPile = NodePath("../DiscardPile")
 
 [node name="World" type="Node2D" parent="." node_paths=PackedStringArray("Camera", "Player", "Hand", "DebugLabel1", "DebugLabel2", "DebugLabel3", "DebugLabel4", "Overlay")]
 z_index = -1
