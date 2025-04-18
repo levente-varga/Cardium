@@ -38,7 +38,7 @@ public partial class Entity : TileAlignedGameObject {
 
   public string Description = "";
 
-  public List<Card> Inventory = new();
+  public Pile Inventory = new();
   public List<Buff> Buffs = new();
 
   public HealthBar HealthBar = new();

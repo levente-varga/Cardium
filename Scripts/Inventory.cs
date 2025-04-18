@@ -14,15 +14,8 @@ public partial class Inventory : Control {
 	
 	public override void _Ready() {
 		Visible = false;
-		var cardsInDeck = Player.Hand.Deck.Deck.Cards;
+		var cardsInDeck = Player.Hand.Deck.Deck.GetCards();
 		var row = new HBoxContainer();
-
-		if (DeckContainer.GetParent() is MarginContainer parent) {
-			parent.AddThemeConstantOverride("margin_top", 24);
-			parent.AddThemeConstantOverride("margin_left", 24);
-			parent.AddThemeConstantOverride("margin_bottom", 24);
-			parent.AddThemeConstantOverride("margin_right", 24);	
-		}
 		
 		for (var i = 0; i < cardsInDeck.Count; i++) {
 			var card = cardsInDeck[i];

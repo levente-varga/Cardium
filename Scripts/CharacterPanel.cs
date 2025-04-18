@@ -24,7 +24,7 @@ public partial class CharacterPanel : Control {
 		VisionLabel.Text = $"{Player.Vision}";
 		HandLabel.Text = $"{Player.Hand.Size} / {Player.Hand.Capacity}";
 		DeckLabel.Text = $"{Player.Hand.Deck.Deck.Size} / {Player.Hand.Deck.Deck.Capacity}";
-		InventoryLabel.Text = $"{Player.Inventory.Count}";
+		InventoryLabel.Text = $"{Player.Inventory.Size}";
 	}
 
 	public override void _Input(InputEvent @event) {

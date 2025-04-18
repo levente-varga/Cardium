@@ -22,18 +22,18 @@ public class Deck : Pile {
   /// <returns>false if the deck is already full.</returns>
   public override bool Add(Card card) {
     if (IsFull) return false;
-    _cards.Add(card);
+    Cards.Add(card);
     GD.Print("Card added to deck");
     return true;
   }
 
   public Card? Draw() {
     if (IsEmpty) return null;
-    var card = _cards.First();
+    var card = Cards.First();
     return Remove(card) ? card : null;
   }
 
   public void Shuffle() {
-    Utils.FisherYatesShuffle(_cards);        
+    Utils.FisherYatesShuffle(Cards);        
   }
 }

@@ -1,6 +1,3 @@
-using System;
-using System.Linq;
-using Cardium.Scripts.Cards;
 using Cardium.Scripts.Interactables;
 using Godot;
 
