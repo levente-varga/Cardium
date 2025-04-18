@@ -99,9 +99,9 @@ public partial class World : Node2D {
 		    Overlay.Tiles = new List<Overlay.OverlayTile> { new () {Position = HoveredCell, Color = Colors.Red} };
 	    }
 	    else {
-		    Overlay.Tiles = _selectedTargetingCard.GetHighlightedTiles(Player, HoveredCell, this).Select(tile => 
-			    new Overlay.OverlayTile {Position = tile, Color = Colors.Red}).ToList();
-		    GD.Print("Selected card: " + _selectedTargetingCard + ", higlighted tiles: " + Overlay.Tiles.Count);
+		    Overlay.Tiles = _selectedTargetingCard.GetHighlightedTiles(Player, HoveredCell, this)
+			    .Select(tile => new Overlay.OverlayTile { Position = tile, Color = Colors.Red })
+			    .ToList();
 	    }
     }
     

@@ -1,3 +1,4 @@
+using System;
 using Godot;
 
 namespace Cardium.Scripts.Cards.Types;
@@ -7,8 +8,9 @@ public partial class CardView : Node2D {
 		Idle,
 		Selected,
 		Dragging,
-		Ready,
+		Playing,
 		Played,
+		Discarded,
 	}
 	
 	[Export] private Node2D _hoverBase = null!;
@@ -22,15 +24,15 @@ public partial class CardView : Node2D {
 	public bool Enabled = true;
 	
 	private bool _dragging;
-	private bool _shaking;
 	private bool _hoverable;
 	
 	private Tween? _hoverTween;
 
 	public Card Card { get; private set; } = null!;
 	
-	public CardState State { get; protected set; }
-	public bool InPlayArea { get; protected set; }
+	private CardState _state;
+	public bool OverPlayArea { get; private set; }
+	public bool OverDiscardArea { get; private set; }
 	
 	private Vector2 _mouseDownPosition;
 	
@@ -59,13 +61,24 @@ public partial class CardView : Node2D {
 		Card = card;
 		_hoverable = hoverable;
 	}
+
+	private Color GetStateColor() {
+		return _state switch {
+			CardState.Idle => new Color("CCCCCC"),
+			CardState.Selected => new Color("77FF77"),
+			CardState.Dragging => new Color("FFCC55"),
+			CardState.Playing => new Color("FF7777"),
+			CardState.Played => new Color("7777FF"),
+			CardState.Discarded => new Color("444444"),
+			_ => new Color("FF00FF"),
+		};
+	}
 	
 	public override void _Ready() {
 		_art.Texture = Card.Art;
 		
 		_hitbox.MouseEntered += OnMouseEntered;
 		_hitbox.MouseExited += OnMouseExited;
-		_hitbox.Pressed += OnMousePressed;
 		_hitbox.ButtonDown += OnMouseDown;
 		_hitbox.ButtonUp += OnMouseUp;
 
@@ -90,45 +103,64 @@ public partial class CardView : Node2D {
 	*/
 
 	public override void _Process(double delta) {
-		_debugFrame.DefaultColor = State switch {
-			CardState.Selected => Colors.Green,
-			CardState.Dragging => Colors.Yellow,
-			CardState.Ready => Colors.Orange,
-			CardState.Played => Colors.Purple,
-			_ => Colors.Gray
-		};
+		_debugFrame.DefaultColor = GetStateColor();
 		_debugFrame.Visible = Global.Debug;
-
-		if (_shaking) {
-			_base.GlobalPosition += new Vector2(
-				(float)GD.RandRange(-_shakeAmount, _shakeAmount),
-				(float)GD.RandRange(-_shakeAmount, _shakeAmount)
-			);
-
-			// Gradually reduce shake intensity
-			//_shakeAmount = Mathf.Max(0, _shakeAmount - (ShakeDecay * (float)delta));
-		}
+		
 		if (_dragging) {
 			_base.GlobalPosition = _base.GlobalPosition.Lerp(GetGlobalMousePosition(), Global.LerpWeight * (float)delta);
 			_base.GlobalRotation = Mathf.Lerp(_base.GlobalRotation, 0, (float)delta);
 			OnDragEvent?.Invoke(this, GetViewport().GetMousePosition());
 		}
 		else {
-			_base.Position = _base.Position.Lerp(Vector2.Zero, Global.LerpWeight * (float)delta);
-			_base.Rotation = Mathf.Lerp(_base.Rotation, 0, Global.LerpWeight * (float)delta);
+			if (_state == CardState.Playing) {
+				_base.GlobalRotation = Mathf.Lerp(_base.GlobalRotation, 0, (float)delta);
+			}
+			else {
+				_base.Position = _base.Position.Lerp(Vector2.Zero, Global.LerpWeight * (float)delta);
+				_base.Rotation = Mathf.Lerp(_base.Rotation, 0, Global.LerpWeight * (float)delta);
+			}
 		}
 	}
 
 	public void OnEnterPlayArea() {
-		_shaking = true;
-		State = CardState.Ready;
-		InPlayArea = true;
+		//if (_state != CardState.Dragging) throw new Exception("Card was not in dragging state when it entered play area");
+		PlayJumpingAnimation();
+		OverPlayArea = true;
+		
+		Utils.SpawnFloatingLabel(GetTree(), Position, "Entered Play");
 	}
 	
 	public void OnExitPlayArea() {
-		_shaking = false;
-		State = _dragging ? CardState.Dragging : CardState.Idle;
-		InPlayArea = false;
+		//if (_state != CardState.Dragging) throw new Exception("Card was not in dragging state when it left play area");
+		PlayResetAnimation();
+		_state = _dragging ? CardState.Dragging : CardState.Idle;
+		OverPlayArea = false;
+	}
+	
+	public void OnEnterDiscardArea() {
+		//if (_state != CardState.Dragging) throw new Exception("Card was not in dragging state when it entered discard area");
+		PlayJumpingAnimation();
+		OverDiscardArea = true;
+	}
+	
+	public void OnExitDiscardArea() {
+		//if (_state != CardState.Dragging) throw new Exception("Card was not in dragging state when it left discard area");
+		PlayResetAnimation();
+		_state = _dragging ? CardState.Dragging : CardState.Idle;
+		OverDiscardArea = false;
+	}
+	
+	public void OnEnterPlayingMode() {
+		//if (_state != CardState.Dragging) throw new Exception($"Card was not in dragging state when it entered playing mode (state: {_state.ToString()})");
+		PlayMoveToPlayingPositionAnimation();
+		_state = CardState.Playing;
+		_dragging = false;
+	}
+	
+	public void OnExitPlayingMode() {
+		//if (_state != CardState.Playing) throw new Exception("Card was not in playing mode when it left it");
+		_state = CardState.Idle;
+		PlayResetAnimation();
 	}
 
 	private void ResetHoverTween() {
@@ -138,14 +170,28 @@ public partial class CardView : Node2D {
 	}
 
 	private void PlayHoverAnimation() {
-		ResetHoverTween();	
+		ResetHoverTween();
 		_hoverTween = CreateTween();
 		_hoverTween.TweenProperty(_hoverBase, "position", new Vector2(0, -100), 0.4f)
 			.SetEase(Tween.EaseType.Out)
 			.SetTrans(Tween.TransitionType.Expo);
 	}
 	
-	private void PlayUnhoverAnimation() {
+	private void PlayJumpingAnimation() {
+		ResetHoverTween();	
+		_hoverTween = CreateTween();
+		_hoverTween.SetLoops();
+
+		_hoverTween.TweenProperty(_hoverBase, "position", new Vector2(0, -100), 0.4f)
+			.SetEase(Tween.EaseType.Out)
+			.SetTrans(Tween.TransitionType.Expo);
+
+		_hoverTween.TweenProperty(_hoverBase, "position", new Vector2(0, -50), 0.4f)
+			.SetEase(Tween.EaseType.In)
+			.SetTrans(Tween.TransitionType.Expo);
+	}
+	
+	private void PlayResetAnimation() {
 		ResetHoverTween();
 		_hoverTween = CreateTween();
 		_hoverTween.TweenProperty(_hoverBase, "position", Vector2.Zero, 0.4f)
@@ -153,22 +199,28 @@ public partial class CardView : Node2D {
 			.SetTrans(Tween.TransitionType.Expo);
 	}
 	
+	private void PlayMoveToPlayingPositionAnimation() {
+		ResetHoverTween();
+		var camera = GetViewport().GetCamera2D();
+		if (camera == null) return;
+		_hoverTween = CreateTween();
+		_hoverTween.TweenProperty(_base, "global_position", camera.GlobalPosition - new Vector2(800, 0), 0.4f)
+			.SetEase(Tween.EaseType.Out)
+			.SetTrans(Tween.TransitionType.Expo);
+	}
+	
 	private void OnMouseEntered() {
 		if (!Enabled || _dragging) return;
-		State = CardState.Selected;
+		_state = CardState.Selected;
 		OnMouseEnteredEvent?.Invoke(this);
 		if (_hoverable) PlayHoverAnimation();
 	}
 
 	private void OnMouseExited() {
 		if (!Enabled || _dragging) return;
-		State = CardState.Idle;
+		_state = CardState.Idle;
 		OnMouseExitedEvent?.Invoke(this);
-		if (_hoverable) PlayUnhoverAnimation();
-	}
-	
-	private void OnMousePressed() {
-		
+		if (_hoverable) PlayResetAnimation();
 	}
 	
 	private void OnMouseDown() {
@@ -176,18 +228,18 @@ public partial class CardView : Node2D {
 		
 		_mouseDownPosition = GetViewport().GetMousePosition();
 		_dragging = true;
-		State = CardState.Dragging;
+		_state = CardState.Dragging;
 		ZIndex = 1;
-		PlayUnhoverAnimation();
+		PlayResetAnimation();
 		OnDragStartEvent?.Invoke(this);
 	}
 	
 	private void OnMouseUp() {
 		if (!Enabled) return;
 		
-		PlayUnhoverAnimation();
+		PlayResetAnimation();
 		_dragging = false;
-		State = CardState.Idle;
+		_state = CardState.Idle;
 		ZIndex = 0;
 		OnDragEndEvent?.Invoke(this, GetViewport().GetMousePosition());
 	}

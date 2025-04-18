@@ -32,10 +32,17 @@ public partial class LabelWithShadow : Node2D
         _shadow.Position = new Vector2(4, 4);
         _shadow.ZIndex = _label.ZIndex - 1;
         AddChild(_shadow);
+        
+        font.Dispose();
     }
 
     public override void _Process(double delta)
     {
         
+    }
+
+    protected void QueueFreeLabels() {
+        _label.QueueFree();
+        _shadow.QueueFree();
     }
 }

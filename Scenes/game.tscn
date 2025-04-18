@@ -18,7 +18,7 @@ font_color = Color(0.466667, 0.466667, 0.466667, 1)
 [sub_resource type="LabelSettings" id="LabelSettings_khtd6"]
 font_color = Color(0.866667, 0.866667, 0.866667, 1)
 
-[node name="Root" type="Node2D"]
+[node name="Root" type="Node"]
 
 [node name="Player" type="AnimatedSprite2D" parent="." node_paths=PackedStringArray("World", "DebugLabel", "Hand")]
 z_index = 5
@@ -27,47 +27,71 @@ sprite_frames = SubResource("SpriteFrames_n205a")
 centered = false
 script = ExtResource("3_q31ct")
 World = NodePath("../World")
-DebugLabel = NodePath("../Camera2D/CanvasLayer/Label2")
+DebugLabel = NodePath("../CanvasLayer/Label2")
 Hand = NodePath("../Camera2D/Hand")
 
 [node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("Target")]
 script = ExtResource("3_evct5")
 Target = NodePath("../Player")
 
-[node name="Hand" type="Node2D" parent="Camera2D" node_paths=PackedStringArray("Player", "DescriptionLabel")]
+[node name="Hand" type="Node2D" parent="Camera2D" node_paths=PackedStringArray("Player", "DescriptionLabel", "PlayArea", "DiscardArea")]
 z_index = 10
 script = ExtResource("1_3ixgw")
 Player = NodePath("../../Player")
-DescriptionLabel = NodePath("../CanvasLayer/CardDescription")
+DescriptionLabel = NodePath("../../CanvasLayer/CardDescription")
+PlayArea = NodePath("../../CanvasLayer/PlayArea")
+DiscardArea = NodePath("../../CanvasLayer/DiscardArea")
 
-[node name="CanvasLayer" type="CanvasLayer" parent="Camera2D"]
-offset = Vector2(960, 540)
-transform = Transform2D(1, 0, 0, 1, 960, 540)
+[node name="PlayingCardPosition" type="Node2D" parent="Camera2D"]
+position = Vector2(-800, 0)
 
-[node name="Label1" type="Label" parent="Camera2D/CanvasLayer"]
+[node name="World" type="Node2D" parent="." node_paths=PackedStringArray("Camera", "Player", "Hand", "DebugLabel1", "DebugLabel2", "DebugLabel3", "DebugLabel4", "Overlay")]
+z_index = -1
+script = ExtResource("4_ayy7p")
+Camera = NodePath("../Camera2D")
+Player = NodePath("../Player")
+Hand = NodePath("../Camera2D/Hand")
+DebugLabel1 = NodePath("../CanvasLayer/Label1")
+DebugLabel2 = NodePath("../CanvasLayer/Label2")
+DebugLabel3 = NodePath("../CanvasLayer/Label3")
+DebugLabel4 = NodePath("../CanvasLayer/Label4")
+Overlay = NodePath("Overlay")
+
+[node name="Line2D" type="Line2D" parent="World"]
+z_index = 4
+width = 4.0
+default_color = Color(0.956863, 0.705882, 0.105882, 1)
+
+[node name="Overlay" type="Node2D" parent="World"]
+z_index = 10
+script = ExtResource("7_4aqu0")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Label1" type="Label" parent="CanvasLayer"]
 visible = false
 offset_right = 40.0
 offset_bottom = 23.0
 
-[node name="Label2" type="Label" parent="Camera2D/CanvasLayer"]
+[node name="Label2" type="Label" parent="CanvasLayer"]
 visible = false
 offset_left = 320.0
 offset_right = 360.0
 offset_bottom = 23.0
 
-[node name="Label3" type="Label" parent="Camera2D/CanvasLayer"]
+[node name="Label3" type="Label" parent="CanvasLayer"]
 visible = false
 offset_left = 640.0
 offset_right = 680.0
 offset_bottom = 23.0
 
-[node name="Label4" type="Label" parent="Camera2D/CanvasLayer"]
+[node name="Label4" type="Label" parent="CanvasLayer"]
 visible = false
 offset_left = 960.0
 offset_right = 1000.0
 offset_bottom = 23.0
 
-[node name="CardDescription" type="Label" parent="Camera2D/CanvasLayer"]
+[node name="CardDescription" type="Label" parent="CanvasLayer"]
 offset_left = 768.0
 offset_top = 720.0
 offset_right = 1152.0
@@ -76,7 +100,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
 
-[node name="CharacterPanel" type="Control" parent="Camera2D/CanvasLayer" node_paths=PackedStringArray("HealthLabel", "DefenseLabel", "VisionLabel", "HandLabel", "DeckLabel", "InventoryLabel", "Player")]
+[node name="CharacterPanel" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("HealthLabel", "DefenseLabel", "VisionLabel", "HandLabel", "DeckLabel", "InventoryLabel", "Player")]
 visible = false
 z_index = 20
 layout_mode = 3
@@ -92,9 +116,9 @@ VisionLabel = NodePath("Values/VisionValue")
 HandLabel = NodePath("Values/HandSizeValue")
 DeckLabel = NodePath("Values/DeckSizeValue")
 InventoryLabel = NodePath("Values/InventoryValue")
-Player = NodePath("../../../Player")
+Player = NodePath("../../Player")
 
-[node name="ColorRect" type="ColorRect" parent="Camera2D/CanvasLayer/CharacterPanel"]
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer/CharacterPanel"]
 layout_mode = 0
 offset_left = -800.0
 offset_top = -304.0
@@ -102,19 +126,19 @@ offset_right = 1120.0
 offset_bottom = 784.0
 color = Color(0, 0, 0, 0.588235)
 
-[node name="Background" type="Sprite2D" parent="Camera2D/CanvasLayer/CharacterPanel"]
+[node name="Background" type="Sprite2D" parent="CanvasLayer/CharacterPanel"]
 position = Vector2(160, 240)
 scale = Vector2(4, 4)
 texture = ExtResource("4_eondi")
 
-[node name="Labels" type="Control" parent="Camera2D/CanvasLayer/CharacterPanel"]
+[node name="Labels" type="Control" parent="CanvasLayer/CharacterPanel"]
 anchors_preset = 0
 offset_left = 48.0
 offset_top = 48.0
 offset_right = 144.0
 offset_bottom = 432.0
 
-[node name="HealthLabel" type="Label" parent="Camera2D/CanvasLayer/CharacterPanel/Labels"]
+[node name="HealthLabel" type="Label" parent="CanvasLayer/CharacterPanel/Labels"]
 layout_mode = 0
 offset_right = 96.0
 offset_bottom = 32.0
@@ -123,7 +147,7 @@ text = "Health:"
 label_settings = SubResource("LabelSettings_f4q7g")
 vertical_alignment = 1
 
-[node name="DefenseLabel" type="Label" parent="Camera2D/CanvasLayer/CharacterPanel/Labels"]
+[node name="DefenseLabel" type="Label" parent="CanvasLayer/CharacterPanel/Labels"]
 layout_mode = 0
 offset_top = 32.0
 offset_right = 96.0
@@ -133,7 +157,7 @@ text = "Defense:"
 label_settings = SubResource("LabelSettings_f4q7g")
 vertical_alignment = 1
 
-[node name="VisionLabel" type="Label" parent="Camera2D/CanvasLayer/CharacterPanel/Labels"]
+[node name="VisionLabel" type="Label" parent="CanvasLayer/CharacterPanel/Labels"]
 layout_mode = 0
 offset_top = 64.0
 offset_right = 96.0
@@ -143,7 +167,7 @@ text = "Vision"
 label_settings = SubResource("LabelSettings_f4q7g")
 vertical_alignment = 1
 
-[node name="HandSizeLabel" type="Label" parent="Camera2D/CanvasLayer/CharacterPanel/Labels"]
+[node name="HandSizeLabel" type="Label" parent="CanvasLayer/CharacterPanel/Labels"]
 layout_mode = 0
 offset_top = 96.0
 offset_right = 96.0
@@ -153,7 +177,7 @@ text = "Hand size:"
 label_settings = SubResource("LabelSettings_f4q7g")
 vertical_alignment = 1
 
-[node name="DeckSizeLabel" type="Label" parent="Camera2D/CanvasLayer/CharacterPanel/Labels"]
+[node name="DeckSizeLabel" type="Label" parent="CanvasLayer/CharacterPanel/Labels"]
 layout_mode = 0
 offset_top = 128.0
 offset_right = 96.0
@@ -163,7 +187,7 @@ text = "Deck size:"
 label_settings = SubResource("LabelSettings_f4q7g")
 vertical_alignment = 1
 
-[node name="InventoryLabel" type="Label" parent="Camera2D/CanvasLayer/CharacterPanel/Labels"]
+[node name="InventoryLabel" type="Label" parent="CanvasLayer/CharacterPanel/Labels"]
 layout_mode = 0
 offset_top = 160.0
 offset_right = 96.0
@@ -173,14 +197,14 @@ text = "Inventory:"
 label_settings = SubResource("LabelSettings_f4q7g")
 vertical_alignment = 1
 
-[node name="Values" type="Control" parent="Camera2D/CanvasLayer/CharacterPanel"]
+[node name="Values" type="Control" parent="CanvasLayer/CharacterPanel"]
 anchors_preset = 0
 offset_left = 176.0
 offset_top = 48.0
 offset_right = 272.0
 offset_bottom = 432.0
 
-[node name="HealthValue" type="Label" parent="Camera2D/CanvasLayer/CharacterPanel/Values"]
+[node name="HealthValue" type="Label" parent="CanvasLayer/CharacterPanel/Values"]
 layout_mode = 0
 offset_right = 96.0
 offset_bottom = 32.0
@@ -188,7 +212,7 @@ theme = ExtResource("5_h5gro")
 label_settings = SubResource("LabelSettings_khtd6")
 vertical_alignment = 1
 
-[node name="DefenseValue" type="Label" parent="Camera2D/CanvasLayer/CharacterPanel/Values"]
+[node name="DefenseValue" type="Label" parent="CanvasLayer/CharacterPanel/Values"]
 layout_mode = 0
 offset_top = 32.0
 offset_right = 96.0
@@ -197,7 +221,7 @@ theme = ExtResource("5_h5gro")
 label_settings = SubResource("LabelSettings_khtd6")
 vertical_alignment = 1
 
-[node name="VisionValue" type="Label" parent="Camera2D/CanvasLayer/CharacterPanel/Values"]
+[node name="VisionValue" type="Label" parent="CanvasLayer/CharacterPanel/Values"]
 layout_mode = 0
 offset_top = 64.0
 offset_right = 96.0
@@ -206,7 +230,7 @@ theme = ExtResource("5_h5gro")
 label_settings = SubResource("LabelSettings_khtd6")
 vertical_alignment = 1
 
-[node name="HandSizeValue" type="Label" parent="Camera2D/CanvasLayer/CharacterPanel/Values"]
+[node name="HandSizeValue" type="Label" parent="CanvasLayer/CharacterPanel/Values"]
 layout_mode = 0
 offset_top = 96.0
 offset_right = 96.0
@@ -215,7 +239,7 @@ theme = ExtResource("5_h5gro")
 label_settings = SubResource("LabelSettings_khtd6")
 vertical_alignment = 1
 
-[node name="DeckSizeValue" type="Label" parent="Camera2D/CanvasLayer/CharacterPanel/Values"]
+[node name="DeckSizeValue" type="Label" parent="CanvasLayer/CharacterPanel/Values"]
 layout_mode = 0
 offset_top = 128.0
 offset_right = 96.0
@@ -224,7 +248,7 @@ theme = ExtResource("5_h5gro")
 label_settings = SubResource("LabelSettings_khtd6")
 vertical_alignment = 1
 
-[node name="InventoryValue" type="Label" parent="Camera2D/CanvasLayer/CharacterPanel/Values"]
+[node name="InventoryValue" type="Label" parent="CanvasLayer/CharacterPanel/Values"]
 layout_mode = 0
 offset_top = 160.0
 offset_right = 96.0
@@ -233,17 +257,17 @@ theme = ExtResource("5_h5gro")
 label_settings = SubResource("LabelSettings_khtd6")
 vertical_alignment = 1
 
-[node name="Inventory" type="Control" parent="Camera2D/CanvasLayer" node_paths=PackedStringArray("Player", "DeckContainer", "InventoryContainer")]
+[node name="Inventory" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("Player", "DeckContainer", "InventoryContainer")]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 script = ExtResource("7_d6lyv")
-Player = NodePath("../../../Player")
+Player = NodePath("../../Player")
 DeckContainer = NodePath("Panel/DeckScrollContainer/MarginContainer/DeckContainer")
 InventoryContainer = NodePath("Panel/InventoryScrollContainer/MarginContainer/InventoryContainer")
 
-[node name="Background" type="ColorRect" parent="Camera2D/CanvasLayer/Inventory"]
+[node name="Background" type="ColorRect" parent="CanvasLayer/Inventory"]
 layout_mode = 0
 offset_left = -960.0
 offset_top = -540.0
@@ -251,7 +275,7 @@ offset_right = 960.0
 offset_bottom = 532.0
 color = Color(0, 0, 0, 0.588235)
 
-[node name="Panel" type="ColorRect" parent="Camera2D/CanvasLayer/Inventory"]
+[node name="Panel" type="ColorRect" parent="CanvasLayer/Inventory"]
 clip_contents = true
 layout_mode = 0
 offset_left = -512.0
@@ -260,22 +284,22 @@ offset_right = 512.0
 offset_bottom = 388.0
 color = Color(0.0846899, 0.0846899, 0.0846899, 1)
 
-[node name="InventoryScrollContainer" type="ScrollContainer" parent="Camera2D/CanvasLayer/Inventory/Panel"]
+[node name="InventoryScrollContainer" type="ScrollContainer" parent="CanvasLayer/Inventory/Panel"]
 clip_contents = false
 layout_mode = 0
 offset_right = 512.0
 offset_bottom = 768.0
 horizontal_scroll_mode = 0
 
-[node name="MarginContainer" type="MarginContainer" parent="Camera2D/CanvasLayer/Inventory/Panel/InventoryScrollContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Inventory/Panel/InventoryScrollContainer"]
 layout_mode = 2
 
-[node name="InventoryContainer" type="VBoxContainer" parent="Camera2D/CanvasLayer/Inventory/Panel/InventoryScrollContainer/MarginContainer"]
+[node name="InventoryContainer" type="VBoxContainer" parent="CanvasLayer/Inventory/Panel/InventoryScrollContainer/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="DeckScrollContainer" type="ScrollContainer" parent="Camera2D/CanvasLayer/Inventory/Panel"]
+[node name="DeckScrollContainer" type="ScrollContainer" parent="CanvasLayer/Inventory/Panel"]
 clip_contents = false
 layout_mode = 0
 offset_left = 512.0
@@ -283,31 +307,43 @@ offset_right = 1024.0
 offset_bottom = 768.0
 horizontal_scroll_mode = 0
 
-[node name="MarginContainer" type="MarginContainer" parent="Camera2D/CanvasLayer/Inventory/Panel/DeckScrollContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Inventory/Panel/DeckScrollContainer"]
 layout_mode = 2
 
-[node name="DeckContainer" type="VBoxContainer" parent="Camera2D/CanvasLayer/Inventory/Panel/DeckScrollContainer/MarginContainer"]
+[node name="DeckContainer" type="VBoxContainer" parent="CanvasLayer/Inventory/Panel/DeckScrollContainer/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="World" type="Node2D" parent="." node_paths=PackedStringArray("Camera", "Player", "Hand", "DebugLabel1", "DebugLabel2", "DebugLabel3", "DebugLabel4", "Overlay")]
-z_index = -1
-script = ExtResource("4_ayy7p")
-Camera = NodePath("../Camera2D")
-Player = NodePath("../Player")
-Hand = NodePath("../Camera2D/Hand")
-DebugLabel1 = NodePath("../Camera2D/CanvasLayer/Label1")
-DebugLabel2 = NodePath("../Camera2D/CanvasLayer/Label2")
-DebugLabel3 = NodePath("../Camera2D/CanvasLayer/Label3")
-DebugLabel4 = NodePath("../Camera2D/CanvasLayer/Label4")
-Overlay = NodePath("Overlay")
+[node name="PlayArea" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = -440.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="Line2D" type="Line2D" parent="World"]
-z_index = 4
-width = 4.0
-default_color = Color(0.956863, 0.705882, 0.105882, 1)
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer/PlayArea"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 1, 1, 0.392157)
 
-[node name="Overlay" type="Node2D" parent="World"]
-z_index = 10
-script = ExtResource("7_4aqu0")
+[node name="DiscardArea" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 0
+offset_top = 640.0
+offset_right = 384.0
+offset_bottom = 1080.0
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer/DiscardArea"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2

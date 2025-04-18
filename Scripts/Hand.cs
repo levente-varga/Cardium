@@ -17,10 +17,12 @@ public partial class Hand : Node2D
 	[Export] public float HandHeight = 64;
 	[Export] public float MaxHandEnclosedAngle = 30f;
 	[Export] public float DefaultCardAngle = 7f;
-	[Export] public float TiltAngle = 0f;
+	[Export] public float TiltAngle;
 	[Export] public Vector2 Origin = Vector2.Zero;
 
 	[Export] public Label DescriptionLabel = null!;
+	[Export] public Control PlayArea = null!;
+	[Export] public Control DiscardArea = null!;
 	
 	[Export] private PackedScene _cardScene = ResourceLoader.Load<PackedScene>("res://Scenes/card.tscn");
 
@@ -44,7 +46,6 @@ public partial class Hand : Node2D
 	public bool IsFull => _cards.Count == Capacity;
 	public bool IsNotFull => _cards.Count < Capacity;
 	public bool IsPlayingACard => State != HandState.Idle;
-	private Rect2 _playArea;
 	
 	public delegate void OnCardPlayedDelegate(Card card);
 	public event OnCardPlayedDelegate? OnCardPlayedEvent;
@@ -55,17 +56,15 @@ public partial class Hand : Node2D
 
 	public override void _Ready() {
 		PositionCards();
-		
-		_playArea = new Rect2(
-			0,
-			0,
-			GetViewport().GetVisibleRect().Size.X,
-			GetViewport().GetVisibleRect().Size.Y / (3f / 2f)
-		);
 	}
 	
 	public override void _Process(double delta) {
 		DescriptionLabel.Text = _hovered is null ? "" : $"{_hovered.Card.Name}: {_hovered.Card.Description}";
+		
+		var mouseOverPlayArea = PlayArea.GetRect().HasPoint(GetViewport().GetMousePosition());
+		var mouseOverDiscardArea = DiscardArea.GetRect().HasPoint(GetViewport().GetMousePosition());
+		(PlayArea.GetChild(0) as ColorRect).Color = mouseOverPlayArea ? new Color("FFCC5511") : new Color("33333322");
+		(DiscardArea.GetChild(0) as ColorRect).Color = mouseOverDiscardArea ? new Color("FF777711") : new Color("33333322");
 	}
 
 	public void DrawCards(int count, bool positionHand = true) {
@@ -104,7 +103,6 @@ public partial class Hand : Node2D
 
 		_cardViews[index].Position = cardPosition;
 		_cardViews[index].Rotation = DegreeToRadian(angle + 90);
-		//_cards[index].ZIndex = index;
 		_cardAngles[index] = angle;
 	}
 
@@ -205,35 +203,41 @@ public partial class Hand : Node2D
 
 	private void OnCardDrag(CardView view, Vector2 mousePosition) {
 		State = HandState.Dragging;
-		switch (view.InPlayArea) {
-			case false when _playArea.HasPoint(mousePosition):
-				view.OnEnterPlayArea();
-				Utils.SpawnFallingLabel(GetTree(), view.GlobalPosition, "Entered play area");
-				break;
-			case true when !_playArea.HasPoint(mousePosition):
-				view.OnExitPlayArea();
-				Utils.SpawnFallingLabel(GetTree(), view.GlobalPosition, "Exited play area");
-				break;
+
+		var mouseOverPlayArea = PlayArea.GetRect().HasPoint(mousePosition);
+		var mouseOverDiscardArea = DiscardArea.GetRect().HasPoint(mousePosition);
+
+		if (mouseOverPlayArea) {
+			if (!view.OverPlayArea) view.OnEnterPlayArea();
+		}
+		else {
+			if (view.OverPlayArea) view.OnExitPlayArea();
+		}
+		
+		if (mouseOverDiscardArea) {
+			if (!view.OverDiscardArea) view.OnEnterDiscardArea();
+		}
+		else {
+			if (view.OverDiscardArea) view.OnExitDiscardArea();
 		}
 	}
 	
 	private void OnCardDragEnd(CardView view, Vector2 mousePosition) {
-		if (view.InPlayArea) view.OnExitPlayArea();
-
-		State = HandState.Idle;
-		
-		if (!_playArea.HasPoint(mousePosition)) return;
-		
-		State = HandState.Playing;
-		
-		view.OnEnterPlayArea();
-		_ = Play(view);
+		if (view.OverPlayArea) {
+			view.OnEnterPlayingMode();
+			State = HandState.Playing;
+			_ = Play(view);
+		}
+		else {
+			State = HandState.Idle;
+			
+		}
 	}
 
 	private async Task Play(CardView view) {
-		//Enabled = false;
+		EnableCards(false);
 		var success = await Player.World.PlayCard(view.Card);
-		//Enabled = true;
+		EnableCards();
 		
 		if (success) {
 			Remove(view.Card);
@@ -241,14 +245,14 @@ public partial class Hand : Node2D
 			OnCardPlayedEvent?.Invoke(view.Card);
 		}
 		else {
-			view.OnExitPlayArea();
+			view.OnExitPlayingMode();
 			Utils.SpawnFloatingLabel(GetTree(), Player.GlobalPosition, "Cancelled");
 		}
 		
 		State = HandState.Idle;
 	}
 	
-	private void EnableCards(bool enable) {
+	private void EnableCards(bool enable = true) {
 		foreach (var view in _cardViews) {
 			view.Enabled = enable;
 		}
