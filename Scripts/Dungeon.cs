@@ -75,9 +75,9 @@ public class Dungeon {
       );
     Rect = new Rect2I(Vector2I.Zero, Size);
     
-    WallLayer.Scale = new Vector2(4, 4);
-    DecorLayer.Scale = new Vector2(4, 4);
-    FogLayer.Scale = new Vector2(4, 4);
+    WallLayer.Scale = Global.TileScaleVector;
+    DecorLayer.Scale = Global.TileScaleVector;
+    FogLayer.Scale = Global.TileScaleVector;
     
     WallLayer.TileSet = ResourceLoader.Load<TileSet>("res://Assets/TileSets/walls.tres");
     DecorLayer.TileSet = ResourceLoader.Load<TileSet>("res://Assets/TileSets/decor.tres");

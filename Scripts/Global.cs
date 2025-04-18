@@ -3,12 +3,14 @@ using Godot;
 namespace Cardium.Scripts;
 
 public static class Global {
-  public static Vector2I SpriteSize => new (16, 16);
-  public const int Scale = 4;
-  public const int CardScale = 6;
+  public static Vector2I TileSize => new (16, 16);
   public static Vector2I CardSize => new (38, 54);
+  public const int TileScale = 4;
+  public const int CardScale = 6;
+  public static Vector2I CardScaleVector => new (CardScale, CardScale);
+  public static Vector2I TileScaleVector => new (TileScale, TileScale);
   public static Vector2I GlobalCardSize => CardSize * CardScale;
-  public static Vector2I GlobalTileSize => SpriteSize * Scale;
+  public static Vector2I GlobalTileSize => TileSize * TileScale;
   public static Vector2 TileToWorld(Vector2I tile) => tile * GlobalTileSize;
   public const float LerpWeight = 15f;
 

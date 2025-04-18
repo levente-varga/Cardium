@@ -24,7 +24,7 @@ public partial class TileAlignedGameObject : AnimatedSprite2D
 
     public override void _Ready()
     {
-        Scale = new Vector2(Global.Scale, Global.Scale);
+        Scale = new Vector2(Global.TileScale, Global.TileScale);
         Centered = false;
     }
 
@@ -71,7 +71,7 @@ public partial class TileAlignedGameObject : AnimatedSprite2D
         spriteFrames.SetAnimationLoop(name, loop);
         spriteFrames.SetAnimationSpeed(name, fps);
 
-        var frameSize = Global.SpriteSize;
+        var frameSize = Global.TileSize;
 
         for (var i = 0; i < frames; i++)
         {
