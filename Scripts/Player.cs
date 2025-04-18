@@ -12,6 +12,13 @@ public partial class Player : Entity {
 
   public event OnActionDelegate? OnActionEvent;
 
+  private Direction? _moveDirection;
+  private ulong? _lastMoveMsec;
+  private const ulong BaseMoveDelayMsec = 375;
+  private const ulong MinMoveDelayMsec = 125;
+  private ulong _moveDelayMsec = BaseMoveDelayMsec;
+  private ulong _consecutiveMoves = 0;
+
   public override void _Ready() {
     base._Ready();
 
@@ -46,16 +53,64 @@ public partial class Player : Entity {
                       + $"Deck: {Hand.Deck.Deck.Size}/{Hand.Deck.Deck.Capacity}"
                       + $"Hand: {Hand.Size}/{Hand.Capacity}";
 
+    HandleMovement();
+    
     base._Process(delta);
+  }
+
+  private void HandleMovement() {
+    if (Hand.IsPlayingACard) return;
+
+    var lastMoveDirection = _moveDirection;
+    _moveDirection = null;
+    if (Input.IsActionPressed("Right")) {
+      if (_moveDirection == null || lastMoveDirection != Direction.Right && Input.IsActionJustPressed("Right")) {
+        _moveDirection = Direction.Right;
+      }
+    }
+    if (Input.IsActionPressed("Left")) {
+      if (_moveDirection == null || lastMoveDirection != Direction.Left && Input.IsActionJustPressed("Left")) {
+        _moveDirection = Direction.Left;
+      }
+    }
+    if (Input.IsActionPressed("Up")) {
+      if (_moveDirection == null || lastMoveDirection != Direction.Up && Input.IsActionJustPressed("Up")) {
+        _moveDirection = Direction.Up;
+      }
+    }
+    if (Input.IsActionPressed("Down")) {
+      if (_moveDirection == null || lastMoveDirection != Direction.Down && Input.IsActionJustPressed("Down")) {
+        _moveDirection = Direction.Down;
+      }
+    }
+
+    if (_moveDirection != null && _moveDirection != lastMoveDirection) {
+      _lastMoveMsec = null;
+    }
+    
+    var timeSinceLastMove = _lastMoveMsec == null ? ulong.MaxValue : Time.GetTicksMsec() - _lastMoveMsec;
+    if (timeSinceLastMove < _moveDelayMsec) return;
+
+    if (_moveDirection == null) {
+      _lastMoveMsec = null;
+      _consecutiveMoves = 0;
+      _moveDelayMsec = BaseMoveDelayMsec;
+      return;
+    }
+    
+    Move(_moveDirection!.Value, World);
+    _lastMoveMsec = Time.GetTicksMsec();
+    _moveDelayMsec = MinMoveDelayMsec + (BaseMoveDelayMsec - MinMoveDelayMsec) / ++_consecutiveMoves;
   }
 
   public override void _Input(InputEvent @event) {
     if (!@event.IsPressed()) return;
-    if (Hand.IsPlayingACard) return;
-
+    
     if (InputMap.EventIsAction(@event, "Interact")) {
+      
     }
     else if (InputMap.EventIsAction(@event, "Use")) {
+      
     }
     else if (InputMap.EventIsAction(@event, "Reset")) {
       GetTree().ReloadCurrentScene();
@@ -63,20 +118,8 @@ public partial class Player : Entity {
     else if (InputMap.EventIsAction(@event, "Back")) {
       GetTree().Quit();
     }
-
-    if (InputMap.EventIsAction(@event, "Right")) {
-      Move(Direction.Right, World);
-    }
-    else if (InputMap.EventIsAction(@event, "Left")) {
-      Move(Direction.Left, World);
-    }
-    else if (InputMap.EventIsAction(@event, "Up")) {
-      Move(Direction.Up, World);
-    }
-    else if (InputMap.EventIsAction(@event, "Down")) {
-      Move(Direction.Down, World);
-    }
     else if (InputMap.EventIsAction(@event, "Skip")) {
+      
     }
   }
 
