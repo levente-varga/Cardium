@@ -1,6 +1,5 @@
 using System;
 using Cardium.Scripts.Cards;
-using Cardium.Scripts.Cards.Types;
 using Godot;
 
 namespace Cardium.Scripts;
@@ -11,7 +10,6 @@ public partial class Player : Entity
 	[Export] public Label DebugLabel = null!;
 	[Export] public Hand Hand = null!;
 	public readonly Deck Deck = new();
-	private Pile _discardPile = new();
 	
 	public delegate void OnActionDelegate();
 	public event OnActionDelegate? OnActionEvent;
@@ -125,13 +123,13 @@ public partial class Player : Entity
 		OnMoveEvent += OnMoveEventHandler;
 		OnNudgeEvent += OnNudgeEventHandler;
 		Hand.OnCardPlayedEvent += OnCardPlayedEventHandler;
+		Hand.OnCardDiscardedEvent += OnCardDiscardedEventHandler;
 	}
 	
 	private void OnMoveEventHandler(Vector2I from, Vector2I to) => OnActionEvent?.Invoke();
 	private void OnNudgeEventHandler(Vector2I at) => OnActionEvent?.Invoke();
-	private void OnCardPlayedEventHandler(Card card) {
-		OnActionEvent?.Invoke();
-	}
+	private void OnCardPlayedEventHandler(Card card) => OnActionEvent?.Invoke();
+	private void OnCardDiscardedEventHandler(Card card) => OnActionEvent?.Invoke();
 
 	public void Interact()
 	{

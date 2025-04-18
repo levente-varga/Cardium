@@ -48,6 +48,9 @@ public partial class Hand : Node2D
 	
 	public delegate void OnCardPlayedDelegate(Card card);
 	public event OnCardPlayedDelegate? OnCardPlayedEvent;
+	
+	public delegate void OnCardDiscardedDelegate(Card card);
+	public event OnCardDiscardedDelegate? OnCardDiscardedEvent;
 
 	public override void _EnterTree() {
 		Origin = new (0, GetViewport().GetVisibleRect().Size.Y - HandHeight + HandRadius / 2);
@@ -219,7 +222,10 @@ public partial class Hand : Node2D
 			_ = Play(view);
 		}
 		else {
-			if (view.OverDiscardArea) Discard(view);
+			if (view.OverDiscardArea) {
+				Discard(view);
+				OnCardDiscardedEvent?.Invoke(view.Card);
+			}
 			State = HandState.Idle;
 		}
 	}
