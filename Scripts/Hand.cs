@@ -236,7 +236,8 @@ public partial class Hand : Node2D
 		EnableCards();
 		
 		if (success) {
-			Discard(view);
+			if (view.Card.Unstable) Redraw(view);
+			else Discard(view);
 			OnCardPlayedEvent?.Invoke(view.Card);
 		}
 		else {
@@ -247,16 +248,24 @@ public partial class Hand : Node2D
 		State = HandState.Idle;
 	}
 
-	private void Discard(CardView view) {
+	/// <summary>
+	/// Removes a card from hand and draws a new card.
+	/// Removed card is lost forever.
+	/// </summary>
+	/// <param name="view"></param>
+	private void Redraw(CardView view) {
 		Remove(view.Card);
+		if (IsNotFull) DrawCards(1);
+		else PositionCards();
+	}
+	
+	/// <summary>
+	///	Removes a card from hand and puts it onto the discard pile, then draws a new card.
+	/// </summary>
+	/// <param name="view"></param>
+	private void Discard(CardView view) {
+		Redraw(view);
 		DiscardPile.Add(view.Card);
-		
-		if (IsNotFull) {
-			DrawCards(1);
-		}
-		else {
-			PositionCards();
-		}
 	} 
 	
 	private void EnableCards(bool enable = true) {

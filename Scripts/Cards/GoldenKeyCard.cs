@@ -7,7 +7,8 @@ namespace Cardium.Scripts.Cards;
 public class GoldenKeyCard : InteractableTargetingCard {
     public GoldenKeyCard() {
         Name = "Key";
-        Description = "Unlocks a chest.";
+        Description = $"Unlocks a chest. {Highlight("Unstable")}";
+        Unstable = true;
         Range = 1;
         Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/GoldenKey.png");
         Type = CardType.Utility;
