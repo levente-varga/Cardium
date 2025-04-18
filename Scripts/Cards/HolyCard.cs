@@ -11,6 +11,7 @@ public class HolyCard : LocationTargetingCard {
   public HolyCard() {
     Name = "Holy";
     Description = $"Deals a total of {Highlight($"{TotalDamage}")} damage to all enemies in an area, distributed equally.";
+    Rarity = CardRarity.Epic;
     Range = 3;
     Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Holy.png");
     Type = CardType.Combat;

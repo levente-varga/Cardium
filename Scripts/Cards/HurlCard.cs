@@ -11,6 +11,7 @@ public class HurlCard : LocationTargetingCard {
     public HurlCard() {
         Name = "Hurl";
         Description = $"Deals {Highlight($"{Damage}")} damage to all enemies in a {Highlight($"{Radius}")} radius.";
+        Rarity = CardRarity.Common;
         Range = 3;
         Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Hurl.png");
         Type = CardType.Combat;

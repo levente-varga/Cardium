@@ -9,6 +9,7 @@ public class SmiteCard : EnemyTargetingCard {
     public SmiteCard() {
         Name = "Smite";
         Description = $"Deals {Highlight($"{Damage}")} damage to a single target.";
+        Rarity = CardRarity.Rare;
         Range = 3;
         Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Smite.png");
         Type = CardType.Combat;
