@@ -224,7 +224,7 @@ public partial class CardView : Node2D {
 		_mouseDownPosition = GetViewport().GetMousePosition();
 		_dragging = true;
 		_state = CardState.Dragging;
-		ZIndex = 1;
+		ZIndex = 11;
 		PlayResetAnimation();
 		OnDragStartEvent?.Invoke(this);
 	}
