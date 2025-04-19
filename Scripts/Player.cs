@@ -34,7 +34,7 @@ public partial class Player : Entity {
 
     HealthBar.Visible = true;
 
-    Hand.Deck.FillWithRandom();
+    Hand.Deck.FillWithInitial();
     Hand.DrawCards(Hand.Capacity);
 
     SetAnimation("idle", GD.Load<Texture2D>("res://Assets/Animations/Player.png"), 8, 12);
@@ -134,6 +134,8 @@ public partial class Player : Entity {
       Hand.DiscardPile.Remove(card);
       Hand.Deck.Add(card);
     }
+
+    Hand.DrawUntilFull();
     OnActionEvent?.Invoke();
   }
 

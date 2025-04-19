@@ -47,6 +47,16 @@ public partial class DeckView : Node2D {
     _cardBackViews.RemoveAt(0);
     PositionCardBackViews();
   }
+
+  public void FillWithInitial() {
+    Deck.Clear();
+    Add(new HealCard());
+    Add(new HurlCard());
+    Add(new SmiteCard());
+    Add(new WoodenKeyCard());
+    Add(new ShuffleCard());
+    Deck.Shuffle();
+  }
   
   public void FillWithRandom() {
     var r = new Random();

@@ -60,6 +60,7 @@ public partial class Hand : Node2D
 		PositionCards();
 	}
 
+	public void DrawUntilFull() => DrawCards(Capacity - Size);
 	public void DrawCards(int count, bool positionHand = true) {
 		for (var i = 0; i < count; i++) {
 			var card = Deck.DrawCard();
