@@ -32,9 +32,9 @@ public partial class PileView : Node2D {
 		AddChild(view);
 	}
 
-	public bool Remove(Card card) {
-		var index = Pile.IndexOf(card);
-		if (!Pile.Remove(card)) return false;
+	public bool Remove(Card card) => RemoveAt(Pile.IndexOf(card));
+	public bool RemoveAt(int index) {
+		if (!Pile.RemoveAt(index)) return false;
 		_cardBackViews[index].QueueFree();
 		_cardBackViews.RemoveAt(index);
 		return true;

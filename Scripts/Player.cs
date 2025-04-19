@@ -122,6 +122,19 @@ public partial class Player : Entity {
     else if (InputMap.EventIsAction(@event, "Skip")) {
       
     }
+    else if (InputMap.EventIsAction(@event, "Reload")) {
+      ReloadDeck();
+    }
+  }
+
+  private void ReloadDeck() {
+    var cards = Hand.DiscardPile.Pile.GetCards();
+    foreach (var card in cards) {
+      if (Hand.Deck.Deck.IsFull) return;
+      Hand.DiscardPile.Remove(card);
+      Hand.Deck.Add(card);
+    }
+    OnActionEvent?.Invoke();
   }
 
   private void SetupActionListeners() {

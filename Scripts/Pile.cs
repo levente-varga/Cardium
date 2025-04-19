@@ -14,7 +14,12 @@ public class Pile {
     Cards.Add(card);
     return true;
   }
-  public bool Remove(Card card) => Cards.Remove(card);
+  public bool Remove(Card card) => RemoveAt(Cards.IndexOf(card));
+  public bool RemoveAt(int index) {
+    if (index < 0 || index >= Cards.Count) return false;
+    Cards.RemoveAt(index);
+    return true;
+  }
   public void Clear() => Cards.Clear();
   public bool Contains(Card card) => Cards.Contains(card);
   public int IndexOf(Card card) => Cards.IndexOf(card);
