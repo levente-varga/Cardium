@@ -38,7 +38,7 @@ public partial class Player : Entity {
 
     Position = Vector2I.One;
 
-    HealthBar.Visible = true;
+    HealthBar.Visible = Data.ShowHealth;
 
     Hand.Deck.FillWithInitial();
     Hand.DrawCards(Hand.Capacity);

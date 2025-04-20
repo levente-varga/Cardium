@@ -19,6 +19,7 @@ public partial class Stash : Interactable {
     base.OnNudge(player, camera);
     
     camera.Shake(10);
+    Stop();
     Play("open");
   }
 }

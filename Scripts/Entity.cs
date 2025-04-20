@@ -60,7 +60,7 @@ public partial class Entity : TileAlignedGameObject {
     AddChild(HealthBar);
     HealthBar.MaxHealth = MaxHealth;
     HealthBar.Health = Health;
-    HealthBar.Visible = true;
+    HealthBar.Visible = Data.ShowHealth;
   }
 
   protected virtual void TakeTurn(Player player, World world) {

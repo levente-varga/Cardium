@@ -8,14 +8,17 @@ public enum Level {
 public class Data {
   public static Level Level;
   public static bool Fog;
+  public static bool ShowHealth;
 
   public static void LoadLobbyData() {
     Level = Level.Lobby;
     Fog = false;
+    ShowHealth = false;
   }
 
   public static void LoadDungeonData() {
     Level = Level.One;
     Fog = true;
+    ShowHealth = true;
   }
 }

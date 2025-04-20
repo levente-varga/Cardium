@@ -43,7 +43,7 @@ public partial class Enemy : Entity
         if (!SeeingPlayer) {
             if (distance != -1 && distance <= Vision) {
                 SeeingPlayer = true;
-                HealthBar.Visible = true;
+                HealthBar.Visible = Data.ShowHealth;
             }
         }
         else {
