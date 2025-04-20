@@ -415,7 +415,7 @@ public partial class Dungeon {
               exits++;
               room.Type = RoomTypes.Exit;
             }
-            else if (_random.Next((int)Mathf.Pow(bonfires * 1.2f, 2)) == 0) {
+            else if (_random.Next((int)Mathf.Pow(bonfires, 1.2f)) == 0) {
               bonfires++;
               room.Type = RoomTypes.Bonfire;
             }
