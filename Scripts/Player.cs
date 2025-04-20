@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Cardium.Scripts.Interactables;
 using Godot;
 
 namespace Cardium.Scripts;
@@ -18,11 +17,18 @@ public partial class Player : Entity {
   private const ulong BaseMoveDelayMsec = 375;
   private const ulong MinMoveDelayMsec = 125;
   private ulong _moveDelayMsec = BaseMoveDelayMsec;
-  private ulong _consecutiveMoves = 0;
+  private ulong _consecutiveMoves;
+  
+  private readonly HashSet<string> _blockedActions = new() { "Right", "Left", "Up", "Down" };
 
   public override void _Ready() {
     base._Ready();
 
+    foreach (var action in _blockedActions) {
+      if (!Input.IsActionPressed(action))
+        _blockedActions.Remove(action);
+    }
+    
     BaseVision = 3;
     BaseRange = 2;
     Name = "Player";
@@ -59,27 +65,36 @@ public partial class Player : Entity {
     base._Process(delta);
   }
 
+  private bool IsActionAllowed(string action) {
+    if (_blockedActions.Count == 0 || !_blockedActions.Contains(action)) {
+      return Input.IsActionPressed(action);
+    }
+    if (!Input.IsActionPressed(action))
+      _blockedActions.Remove(action);
+    return false;
+  }
+  
   private void HandleMovement() {
     if (Hand.IsPlayingACard) return;
 
     var lastMoveDirection = _moveDirection;
     _moveDirection = null;
-    if (Input.IsActionPressed("Right")) {
+    if (IsActionAllowed("Right")) {
       if (_moveDirection == null || lastMoveDirection != Direction.Right && Input.IsActionJustPressed("Right")) {
         _moveDirection = Direction.Right;
       }
     }
-    if (Input.IsActionPressed("Left")) {
+    if (IsActionAllowed("Left")) {
       if (_moveDirection == null || lastMoveDirection != Direction.Left && Input.IsActionJustPressed("Left")) {
         _moveDirection = Direction.Left;
       }
     }
-    if (Input.IsActionPressed("Up")) {
+    if (IsActionAllowed("Up")) {
       if (_moveDirection == null || lastMoveDirection != Direction.Up && Input.IsActionJustPressed("Up")) {
         _moveDirection = Direction.Up;
       }
     }
-    if (Input.IsActionPressed("Down")) {
+    if (IsActionAllowed("Down")) {
       if (_moveDirection == null || lastMoveDirection != Direction.Down && Input.IsActionJustPressed("Down")) {
         _moveDirection = Direction.Down;
       }
