@@ -28,7 +28,7 @@ public partial class Entity : TileAlignedGameObject {
   public int TempVision { private get; set; }
   public float TempLuck { private get; set; }
 
-  public int TurnsLived { get; private set; }
+  public int TurnsLived { get; protected set; }
 
   public int Armor => BaseArmor + TempArmor;
   public int Damage => BaseDamage + TempDamage;

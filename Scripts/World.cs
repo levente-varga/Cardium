@@ -64,8 +64,8 @@ public partial class World : Node2D {
     AddChild(_dungeon.GroundLayer);
     AddChild(_dungeon.FogLayer);
 
-    _dungeon.Interactables.FirstOrDefault(i => i is Door)!.OnNudgedEvent += () => {
-			Utils.SpawnFloatingLabel(GetTree(), Player.GlobalPosition, "Exited");
+    _dungeon.Interactables.FirstOrDefault(i => i is Entrance)!.OnNudgedEvent += () => {
+	    GetTree().ReloadCurrentScene();
     };
     
     _dungeon.FogLayer.ZIndex = 10;

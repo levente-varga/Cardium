@@ -136,7 +136,7 @@ public partial class Player : Entity {
     }
 
     Hand.DrawUntilFull();
-    OnActionEvent?.Invoke();
+    TakeTurn();
   }
 
   private void SetupActionListeners() {
@@ -146,11 +146,16 @@ public partial class Player : Entity {
     Hand.OnCardDiscardedEvent += OnCardDiscardedEventHandler;
   }
 
-  private void OnMoveEventHandler(Vector2I from, Vector2I to) => OnActionEvent?.Invoke();
-  private void OnNudgeEventHandler(Vector2I at) => OnActionEvent?.Invoke();
-  private void OnCardPlayedEventHandler(Card card) => OnActionEvent?.Invoke();
-  private void OnCardDiscardedEventHandler(Card card) => OnActionEvent?.Invoke();
+  private void OnMoveEventHandler(Vector2I from, Vector2I to) => TakeTurn();
+  private void OnNudgeEventHandler(Vector2I at) => TakeTurn();
+  private void OnCardPlayedEventHandler(Card card) => TakeTurn();
+  private void OnCardDiscardedEventHandler(Card card) => TakeTurn();
 
+  private void TakeTurn() {
+    TurnsLived++;
+    OnActionEvent?.Invoke();
+  }
+  
   protected override void Nudge(Direction direction) {
     var i = World.GetInteractableAt(Position + DirectionToVector(direction));
     i?.OnNudge(this, World.Camera);
