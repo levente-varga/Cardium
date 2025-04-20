@@ -63,6 +63,20 @@ public partial class World : Node2D {
     SetupPath();
     UpdatePath();
 
+    Hand.Visible = Data.Hand;
+    Hand.Deck.Visible = Data.Hand;
+    Hand.DiscardPile.Visible = Data.Hand;
+    
+    if (Data.CameraOnPlayer) {
+	    Camera.Target = Player;
+    }
+    else {
+	    var target = new Node2D();
+	    target.Position = Global.TileToWorld(_dungeon.Rect.GetCenter()) + 3 * Global.GlobalTileSize * Vector2I.Up;
+	    AddChild(target);
+	    Camera.Target = target;
+    }
+
     AddChild(_dungeon.WallLayer);
     AddChild(_dungeon.DecorLayer);
     AddChild(_dungeon.GroundLayer);

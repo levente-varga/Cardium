@@ -102,7 +102,7 @@ public partial class Dungeon {
       _dungeon.Interactables.Add(new Exit { Position = new Vector2I(2, 3) });
       _dungeon.Interactables.Add(new Stash { Position = new Vector2I(6, 1) });
       _dungeon.Interactables.Add(new Workbench { Position = new Vector2I(8, 1) });
-      _dungeon.Player.Position = new Vector2I(6, 3);
+      _dungeon.Player.Position = new Vector2I(5, 3);
       
       DecorateGround();
       

@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://cw3o4f0nr0f2v"]
+[gd_scene load_steps=21 format=3 uid="uid://cw3o4f0nr0f2v"]
 
 [ext_resource type="Script" path="res://Scripts/Hand.cs" id="1_3ixgw"]
 [ext_resource type="Script" path="res://Scripts/Camera.cs" id="3_evct5"]
@@ -24,6 +24,14 @@ font_size = 64
 font = ExtResource("5_70pgm")
 font_size = 64
 
+[sub_resource type="LabelSettings" id="LabelSettings_emlrv"]
+font_size = 144
+font_color = Color(0.8, 0.8, 0.8, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_7y8e8"]
+font_size = 32
+font_color = Color(0.462745, 0.462745, 0.462745, 1)
+
 [sub_resource type="LabelSettings" id="LabelSettings_f4q7g"]
 font = ExtResource("12_aeksy")
 font_size = 25
@@ -46,9 +54,10 @@ World = NodePath("../World")
 DebugLabel = NodePath("../CanvasLayer/Label2")
 Hand = NodePath("../Camera2D/Hand")
 
-[node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("Target")]
+[node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("Target", "Canvas")]
 script = ExtResource("3_evct5")
 Target = NodePath("../Player")
+Canvas = NodePath("CanvasLayer")
 
 [node name="DiscardPile" type="Node2D" parent="Camera2D" node_paths=PackedStringArray("SizeLabel")]
 z_index = 10
@@ -90,6 +99,38 @@ PlayArea = NodePath("../../CanvasLayer/PlayArea")
 DiscardArea = NodePath("../../CanvasLayer/DiscardArea")
 DiscardPile = NodePath("../DiscardPile")
 Deck = NodePath("../Deck")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="Camera2D"]
+
+[node name="Title" type="Label" parent="Camera2D/CanvasLayer"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -279.0
+offset_top = 160.0
+offset_right = 279.0
+offset_bottom = 295.0
+grow_horizontal = 2
+theme = ExtResource("5_h5gro")
+text = "Cardium"
+label_settings = SubResource("LabelSettings_emlrv")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Subtitle" type="Label" parent="Camera2D/CanvasLayer"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -279.0
+offset_top = 280.0
+offset_right = 279.0
+offset_bottom = 415.0
+grow_horizontal = 2
+theme = ExtResource("5_h5gro")
+text = "An extraction deckbuilder"
+label_settings = SubResource("LabelSettings_7y8e8")
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="World" type="Node2D" parent="." node_paths=PackedStringArray("Camera", "Player", "Hand", "DebugLabel1", "DebugLabel2", "DebugLabel3", "DebugLabel4", "Overlay")]
 z_index = -1
