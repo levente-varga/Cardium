@@ -51,6 +51,8 @@ public partial class World : Node2D {
 		  Level.One => Dungeon.Generate(99, 99, 300),
 		  _ => throw new ArgumentOutOfRangeException()
 	  };
+
+	  Input.MouseMode = Data.Level == Level.Lobby ? Input.MouseModeEnum.Hidden : Input.MouseModeEnum.Visible;
   }
 
   public Vector2I HoveredCell => GetTilePosition(GetGlobalMousePosition());
@@ -58,7 +60,6 @@ public partial class World : Node2D {
   public override void _Ready() {
     _combatManager = new CombatManager(Player, this, DebugLabel1);
     
-    //Input.MouseMode = Input.MouseModeEnum.Hidden;
     if (Data.Fog) SetupFogOfWar();
     SetupPath();
     UpdatePath();
