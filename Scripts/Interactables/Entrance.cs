@@ -16,6 +16,9 @@ public partial class Entrance : Interactable {
   public override void OnNudge(Player player, Camera camera) {
     base.OnNudge(player, camera);
     
+    Data.Level = Level.One;
+    GetTree().ReloadCurrentScene();
+    
     camera.Shake(10);
     Play("open");
   }

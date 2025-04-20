@@ -45,8 +45,13 @@ public partial class World : Node2D {
   private CombatManager _combatManager = null!;
 
   public World() {
-    //_dungeon = Dungeon.Generate(99, 99, 299);
-    _dungeon = Dungeon.GenerateLobby();
+	  _dungeon = Dungeon.GenerateLobby();
+
+	  _dungeon = Data.Level switch {
+		  Level.Lobby => Dungeon.GenerateLobby(),
+		  Level.One => Dungeon.Generate(99, 99, 300),
+		  _ => throw new ArgumentOutOfRangeException()
+	  };
   }
 
   public Vector2I HoveredCell => GetTilePosition(GetGlobalMousePosition());
@@ -55,7 +60,7 @@ public partial class World : Node2D {
     _combatManager = new CombatManager(Player, this, DebugLabel1);
     
     //Input.MouseMode = Input.MouseModeEnum.Hidden;
-    //SetupFogOfWar();
+    if (Data.Level != Level.Lobby) SetupFogOfWar();
     SetupPath();
     UpdatePath();
 
@@ -63,10 +68,6 @@ public partial class World : Node2D {
     AddChild(_dungeon.DecorLayer);
     AddChild(_dungeon.GroundLayer);
     AddChild(_dungeon.FogLayer);
-
-    _dungeon.Interactables.FirstOrDefault(i => i is Entrance)!.OnNudgedEvent += () => {
-	    GetTree().ReloadCurrentScene();
-    };
     
     _dungeon.FogLayer.ZIndex = 10;
 
