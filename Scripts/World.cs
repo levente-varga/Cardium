@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Cardium.Scripts.Cards.Types;
+using Cardium.Scripts.Interactables;
 using Godot;
 
 namespace Cardium.Scripts;
@@ -62,6 +63,11 @@ public partial class World : Node2D {
     AddChild(_dungeon.DecorLayer);
     AddChild(_dungeon.GroundLayer);
     AddChild(_dungeon.FogLayer);
+
+    _dungeon.Interactables.FirstOrDefault(i => i is Door)!.OnNudgedEvent += () => {
+			Utils.SpawnFloatingLabel(GetTree(), Player.GlobalPosition, "Exited");
+    };
+    
     _dungeon.FogLayer.ZIndex = 10;
 
     SpawnPlayer(Player, _dungeon.Player.Position);

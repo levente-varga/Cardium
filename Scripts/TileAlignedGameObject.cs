@@ -19,8 +19,10 @@ public partial class TileAlignedGameObject : AnimatedSprite2D {
   public event OnMoveDelegate? OnMoveEvent;
 
   public delegate void OnNudgeDelegate(Vector2I at);
-
   public event OnNudgeDelegate? OnNudgeEvent;
+  
+  public delegate void OnNudgedDelegate();
+  public event OnNudgedDelegate? OnNudgedEvent;
 
   public override void _Ready() {
     Scale = new Vector2(Global.TileScale, Global.TileScale);
@@ -102,6 +104,10 @@ public partial class TileAlignedGameObject : AnimatedSprite2D {
   protected virtual void Nudge(Direction direction) {
     base.Position += DirectionToVector(direction) * Global.GlobalTileSize / 8;
     OnNudgeEvent?.Invoke(Position + DirectionToVector(direction));
+  }
+
+  public virtual void OnNudge(Player player, Camera camera) {
+    OnNudgedEvent?.Invoke();
   }
 
   public void Blink() {

@@ -153,12 +153,7 @@ public partial class Player : Entity {
 
   protected override void Nudge(Direction direction) {
     var i = World.GetInteractableAt(Position + DirectionToVector(direction));
-    if (i is Bonfire) {
-      i.OnInteract(this, World.Camera);
-    }
-    else {
-      // TODO: Could implement door and chest nudge
-    }
+    i?.OnNudge(this, World.Camera);
 
     base.Nudge(direction);
   }

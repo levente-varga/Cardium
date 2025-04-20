@@ -17,6 +17,11 @@ public partial class Bonfire : Interactable {
     SetStillFrame(GD.Load<Texture2D>("res://Assets/Sprites/Bonfire.png"));
   }
 
+  public override void OnNudge(Player player, Camera camera) {
+    OnInteract(player, camera);
+    base.OnNudge(player, camera);
+  }
+
   public override void OnInteract(Player player, Camera camera) {
     if (State == BonfireState.Extinguished) return;
     
