@@ -49,10 +49,20 @@ public partial class Dungeon {
   
   public Dungeon() {
     FillBitmaskDictionary();
+    
+    WallLayer.Scale = Global.TileScaleVector;
+    DecorLayer.Scale = Global.TileScaleVector;
+    FogLayer.Scale = Global.TileScaleVector;
+    
+    WallLayer.TileSet = ResourceLoader.Load<TileSet>("res://Assets/TileSets/walls.tres");
+    DecorLayer.TileSet = ResourceLoader.Load<TileSet>("res://Assets/TileSets/decor.tres");
+    FogLayer.TileSet = ResourceLoader.Load<TileSet>("res://Assets/TileSets/fog.tres");
   }
 
   public static Dungeon Generate(int width, int height, int roomTries) => Generate(new Vector2I(width, height), roomTries);
-  public static Dungeon Generate(Vector2I size, int roomTries) => new Generator().Generate(size, roomTries);
+  public static Dungeon Generate(Vector2I size, int roomTries) => new Generator().GenerateDungeon(size, roomTries);
+  
+  public static Dungeon GenerateLobby() => new Generator().GenerateLobbyDungeon();
 
   /// <summary>
   /// Adds key-value pairs to the [_bitmaskToWallAtlasCoord] dictionary.
@@ -70,22 +80,29 @@ public partial class Dungeon {
       throw new ArgumentException("Pattern must have exactly 8 elements.");
 
     pattern.Reverse();
-    
-    void Generate(int index, byte bitmask) {
-      if (index == 8) {
-        if (_bitmaskToWallAtlasCoord.Keys.Contains(bitmask))
-          throw new Exception($"Dictionary already contains generated key: {bitmask}");
-        _bitmaskToWallAtlasCoord[bitmask] = value;
-        return;
-      }
 
-      if (pattern[index] == null || pattern[index] == true)
-        Generate(index + 1, (byte)(bitmask | (1 << index)));
-      if (pattern[index] == null || pattern[index] == false)
-        Generate(index + 1, bitmask);
+    void GenerateBitmasks(int index, byte bitmask) {
+      while (true) {
+        if (index == 8) {
+          if (!_bitmaskToWallAtlasCoord.TryAdd(bitmask, value)) {
+            throw new Exception($"Dictionary already contains generated key: {bitmask}");
+          }
+          return;
+        }
+
+        if (pattern[index] == null || pattern[index] == true) {
+          GenerateBitmasks(index + 1, (byte)(bitmask | (1 << index)));
+        }
+        if (pattern[index] == null || pattern[index] == false) {
+          index = index + 1;
+          continue;
+        }
+
+        break;
+      }
     }
 
-    Generate(0, 0);
+    GenerateBitmasks(0, 0);
   }
   
   private bool IsWall(Vector2I cell) => !Rect.HasPoint(cell) || Tiles[cell.X][cell.Y] == TileTypes.Wall;

@@ -44,7 +44,8 @@ public partial class World : Node2D {
   private CombatManager _combatManager = null!;
 
   public World() {
-    _dungeon = Dungeon.Generate(99, 99, 299);
+    //_dungeon = Dungeon.Generate(99, 99, 299);
+    _dungeon = Dungeon.GenerateLobby();
   }
 
   public Vector2I HoveredCell => GetTilePosition(GetGlobalMousePosition());
@@ -53,7 +54,7 @@ public partial class World : Node2D {
     _combatManager = new CombatManager(Player, this, DebugLabel1);
     
     //Input.MouseMode = Input.MouseModeEnum.Hidden;
-    SetupFogOfWar();
+    //SetupFogOfWar();
     SetupPath();
     UpdatePath();
 

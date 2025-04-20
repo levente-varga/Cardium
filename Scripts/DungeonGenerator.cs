@@ -30,12 +30,12 @@ public partial class Dungeon {
     /// The index of the current region being carved.
     private int _currentRegion = -1;
 
-    private readonly Dungeon _dungeon = new();
+    private Dungeon _dungeon = new();
 
-    public Dungeon Generate(int width, int height, int roomTries = 100) =>
-      Generate(new Vector2I(width, height), roomTries);
+    public Dungeon GenerateDungeon(int width, int height, int roomTries = 100) =>
+      GenerateDungeon(new Vector2I(width, height), roomTries);
 
-    public Dungeon Generate(Vector2I size, int roomTries = 100) {
+    public Dungeon GenerateDungeon(Vector2I size, int roomTries = 100) {
       GD.Print($"Started generating a {size.X}x{size.Y} dungeon");
 
       if (size.X % 2 == 0 || size.Y % 2 == 0) {
@@ -45,18 +45,19 @@ public partial class Dungeon {
       if (size.X <= MinSize.X || size.Y <= MinSize.Y) {
         throw new Exception($"The dungeon must be at least {MinSize.X}x{MinSize.Y} to ensure everything fits inside.");
       }
-      
-      _dungeon.Rect = new Rect2I(Vector2I.Zero, size);
+
+      _dungeon = new Dungeon {
+        Rect = new Rect2I(Vector2I.Zero, size)
+      };
       NumRoomTries = roomTries;
 
-      InitArea(_dungeon.Rect.Size);
+      InitArea();
       GenerateRooms();
       GenerateMaze();
       ConnectRegions();
       RemoveDeadEnds();
       
       CategorizeRooms();
-      InitTileLayers();
       PlaceWalls();
       PlaceExits();
       PlaceBonfires();
@@ -79,6 +80,28 @@ public partial class Dungeon {
                $"    {_dungeon.Interactables.Where(i => i is Bonfire).ToList().Count} bonfires\n" +
                $"    {_dungeon.Interactables.Where(i => i is Chest).ToList().Count} chests\n" +
                $"    {_dungeon.Interactables.Where(i => i is Door).ToList().Count} doors\n");
+      
+      return _dungeon;
+    }
+
+    public Dungeon GenerateLobbyDungeon() {
+      _dungeon = new Dungeon {
+        Rect = new Rect2I(0, 0, 11, 7),
+      };
+      InitArea();
+      
+      CarveRect(new Rect2I(1, 2, 4, 3), TileTypes.RoomInterior);
+      CarveRect(new Rect2I(5, 1, 5, 5), TileTypes.RoomInterior);
+      Carve(10, 3, TileTypes.Doorway);
+      
+      PlaceWalls();
+      DecorateGround();
+      
+      _dungeon.Interactables.Add(new Door { Position = new Vector2I(10, 3) });
+      _dungeon.Interactables.Add(new Bonfire { Position = new Vector2I(7, 3) });
+      _dungeon.Interactables.Add(new Ladder { Position = new Vector2I(2, 3) });
+      _dungeon.Interactables.Add(new Chest { Position = new Vector2I(7, 1) });
+      _dungeon.Player.Position = new Vector2I(6, 3);
       
       return _dungeon;
     }
@@ -231,7 +254,9 @@ public partial class Dungeon {
 
       // Keep connecting regions until we're down to one.
       while (openRegions.Count > 1) {
-        var connector = connectors[_random.Next(0, connectors.Count)];
+        var index = _random.Next(0, connectors.Count);
+        GD.Print($"Picked {index} out of {connectors.Count}");
+        var connector = connectors[index];
 
         // Carve the connection.
         AddJunction(connector);
@@ -327,20 +352,43 @@ public partial class Dungeon {
     private void StartRegion() {
       _currentRegion++;
     }
+    
+    private void CarveRect(Rect2I rect, TileTypes type = TileTypes.Corridor) {
+      for (var x = rect.Position.X; x < rect.End.X; x++) {
+        for (var y = rect.Position.Y; y < rect.End.Y; y++) {
+          Carve(new Vector2I(x, y), type);
+        }
+      }
+    }
+    
+    private void CarveRoom(Room room) {
+      for (var x = room.Rect.Position.X; x < room.Rect.End.X; x++) {
+        var perimeterX = x == room.Rect.Position.X || x == room.Rect.End.X - 1;
+        for (var y = room.Rect.Position.Y; y < room.Rect.End.Y; y++) {
+          var perimeterY = y == room.Rect.Position.Y || y == room.Rect.End.Y - 1;
+          var type = TileTypes.RoomInterior;
+          if (perimeterX && perimeterY) type = TileTypes.RoomCorner;
+          else if (perimeterX || perimeterY) type = TileTypes.RoomPerimeter;
+          Carve(new Vector2I(x, y), type);
+        }
+      }
+    }
 
+    private void Carve(int x, int y, TileTypes type = TileTypes.Corridor) => Carve(new Vector2I(x, y), type);
     private void Carve(Vector2I tile, TileTypes type = TileTypes.Corridor) {
       SetTile(tile, type);
       _regions[tile.X][tile.Y] = _currentRegion;
     }
 
     private bool IsWall(Vector2I tile) => _dungeon.Tiles[tile.X][tile.Y] == TileTypes.Wall;
-    private void SetTile(Vector2I tile, TileTypes value = TileTypes.Wall) => _dungeon.Tiles[tile.X][tile.Y] = value;
+    private void SetTile(Vector2I tile, TileTypes value = TileTypes.Wall) => SetTile(tile.X, tile.Y, value);
+    private void SetTile(int x, int y, TileTypes value = TileTypes.Wall) => _dungeon.Tiles[x][y] = value;
 
-    private void InitArea(Vector2I size) {
-      for (var x = 0; x < size.X; x++) {
+    private void InitArea() {
+      for (var x = 0; x < _dungeon.Rect.Size.X; x++) {
         _dungeon.Tiles.Add(new List<TileTypes>());
         _regions.Add(new List<int>());
-        for (var y = 0; y < size.Y; y++) {
+        for (var y = 0; y < _dungeon.Rect.Size.Y; y++) {
           _dungeon.Tiles[x].Add(TileTypes.Wall);
           _regions[x].Add(-1);
         }
@@ -369,24 +417,6 @@ public partial class Dungeon {
               bonfires++;
               room.Type = RoomTypes.Bonfire;
             }
-          }
-        }
-      }
-    }
-
-    private void InitTileLayers() {
-      _dungeon.WallLayer.Scale = Global.TileScaleVector;
-      _dungeon.DecorLayer.Scale = Global.TileScaleVector;
-      _dungeon.FogLayer.Scale = Global.TileScaleVector;
-    
-      _dungeon.WallLayer.TileSet = ResourceLoader.Load<TileSet>("res://Assets/TileSets/walls.tres");
-      _dungeon.DecorLayer.TileSet = ResourceLoader.Load<TileSet>("res://Assets/TileSets/decor.tres");
-      _dungeon.FogLayer.TileSet = ResourceLoader.Load<TileSet>("res://Assets/TileSets/fog.tres");
-    
-      for (var x = 0; x < _dungeon.Rect.Size.X; x++) {
-        for (var y = 0; y < _dungeon.Rect.Size.Y; y++) {
-          if (_dungeon.Tiles[x][y] == TileTypes.Wall) {
-            _dungeon.WallLayer.SetCell(new Vector2I(x, y), 0, new Vector2I(4, 0));
           }
         }
       }
