@@ -13,7 +13,7 @@ public partial class Entrance : Interactable {
 
   public override void OnNudge(Player player, Camera camera) {
     base.OnNudge(player, camera);
-
+    
     if (Interacted) {
       Data.LoadDungeonData();
       GetTree().ReloadCurrentScene();
@@ -21,6 +21,8 @@ public partial class Entrance : Interactable {
       Interacted = false;
       return;
     }
+    
+    Blink();
 
     Interacted = true;
 

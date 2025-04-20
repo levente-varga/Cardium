@@ -13,7 +13,7 @@ public partial class Ladder : Interactable {
 
   public override void OnNudge(Player player, Camera camera) {
     base.OnNudge(player, camera);
-
+    
     if (player.TurnsLived - _lastPlayerTurnsLived == 1) {
       Data.LoadLobbyData();
       
@@ -22,6 +22,8 @@ public partial class Ladder : Interactable {
       GetTree().ReloadCurrentScene();
       return;
     }
+    
+    Blink();
     
     _lastPlayerTurnsLived = player.TurnsLived;
     

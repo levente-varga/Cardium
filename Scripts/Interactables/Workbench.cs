@@ -11,6 +11,8 @@ public partial class Workbench : Interactable {
   public override void OnNudge(Player player, Camera camera) {
     base.OnNudge(player, camera);
     
+    Blink();
+    
     camera.Shake(10);
   }
 }

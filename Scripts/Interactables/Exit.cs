@@ -13,15 +13,17 @@ public partial class Exit : Interactable {
 
   public override void OnNudge(Player player, Camera camera) {
     base.OnNudge(player, camera);
-
+    
     if (player.TurnsLived - _lastPlayerTurnsLived == 1) {
       GetTree().Quit();
       return;
     }
     
+    Blink();
+    
     _lastPlayerTurnsLived = player.TurnsLived;
     
     camera.Shake(10);
-    SpawnFloatingLabel("Are you sure?");
+    SpawnFloatingLabel("Quit game?");
   }
 }

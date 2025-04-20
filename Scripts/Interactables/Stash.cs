@@ -18,6 +18,8 @@ public partial class Stash : Interactable {
   public override void OnNudge(Player player, Camera camera) {
     base.OnNudge(player, camera);
     
+    Blink();
+    
     camera.Shake(10);
     Stop();
     Play("open");
