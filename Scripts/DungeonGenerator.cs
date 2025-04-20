@@ -95,13 +95,14 @@ public partial class Dungeon {
       Carve(10, 3, TileTypes.Doorway);
       
       PlaceWalls();
-      DecorateGround();
       
       _dungeon.Interactables.Add(new Entrance { Position = new Vector2I(10, 3) });
       _dungeon.Interactables.Add(new Bonfire { Position = new Vector2I(7, 3), Extinguishable = false });
       _dungeon.Interactables.Add(new Exit { Position = new Vector2I(2, 3) });
       _dungeon.Interactables.Add(new Stash { Position = new Vector2I(7, 1) });
       _dungeon.Player.Position = new Vector2I(6, 3);
+      
+      DecorateGround();
       
       return _dungeon;
     }
@@ -439,25 +440,29 @@ public partial class Dungeon {
     }
 
     private void DecorateGround() {
+      var occupiedTiles = new HashSet<Vector2I>();
+      _dungeon.Interactables.ForEach(e => occupiedTiles.Add(e.Position));
+      _dungeon.Enemies.ForEach(e => occupiedTiles.Add(e.Position));
       for (var x = 0; x < _dungeon.Rect.Size.X; x++) {
         for (var y = 0; y < _dungeon.Rect.Size.Y; y++) {
-          if (LayerIsEmptyAt(_dungeon.WallLayer, new Vector2I(x, y))) {
-            var factor = _dungeon.Tiles[x][y] switch {
-              TileTypes.RoomCorner => 0.4f,
-              TileTypes.RoomPerimeter => 0.8f,
-              TileTypes.RoomInterior => 1.2f,
-              _ => 1
-            };
+          if (!LayerIsEmptyAt(_dungeon.WallLayer, new Vector2I(x, y))) continue;
+          if (occupiedTiles.Contains(new Vector2I(x, y))) continue;
+          
+          var factor = _dungeon.Tiles[x][y] switch {
+            TileTypes.RoomCorner => 0.4f,
+            TileTypes.RoomPerimeter => 0.8f,
+            TileTypes.RoomInterior => 1.2f,
+            _ => 1
+          };
 
-            var random = _random.Next(100);
-            random = (int)(random * factor);
-            
-            switch (random) {
-              case 0: _dungeon.DecorLayer.SetCell(new Vector2I(x, y), 0, new Vector2I(8, 0)); break;
-              case <= 2: _dungeon.DecorLayer.SetCell(new Vector2I(x, y), 0, new Vector2I(5, 0)); break;
-              case <= 6: _dungeon.DecorLayer.SetCell(new Vector2I(x, y), 0, new Vector2I(2, 0)); break;
-              case <= 18: _dungeon.DecorLayer.SetCell(new Vector2I(x, y), 0, new Vector2I(1, 0)); break;
-            }
+          var random = _random.Next(100);
+          random = (int)(random * factor);
+          
+          switch (random) {
+            case 0: _dungeon.DecorLayer.SetCell(new Vector2I(x, y), 0, new Vector2I(8, 0)); break;
+            case <= 2: _dungeon.DecorLayer.SetCell(new Vector2I(x, y), 0, new Vector2I(5, 0)); break;
+            case <= 6: _dungeon.DecorLayer.SetCell(new Vector2I(x, y), 0, new Vector2I(2, 0)); break;
+            case <= 18: _dungeon.DecorLayer.SetCell(new Vector2I(x, y), 0, new Vector2I(1, 0)); break;
           }
         }
       }
