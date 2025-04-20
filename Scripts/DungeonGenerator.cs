@@ -70,6 +70,7 @@ public partial class Dungeon {
       GD.Print($"" +
                $"Generated a {_dungeon.Rect.Size.X}x{_dungeon.Rect.Size.Y} dungeon with\n" +
                $"  {_dungeon.Rooms.Count} rooms\n" +
+               $"    {_dungeon.Rooms.Where(RoomIsSmall).ToList().Count} small\n" +
                $"  {_dungeon.Enemies.Count} enemies\n" +
                $"    {_dungeon.Enemies.Where(e => e is Slime).ToList().Count} slimes\n" +
                $"    {_dungeon.Enemies.Where(e => e is Spider).ToList().Count} spiders\n" +
@@ -257,7 +258,6 @@ public partial class Dungeon {
       // Keep connecting regions until we're down to one.
       while (openRegions.Count > 1) {
         var index = _random.Next(0, connectors.Count);
-        GD.Print($"Picked {index} out of {connectors.Count}");
         var connector = connectors[index];
 
         // Carve the connection.

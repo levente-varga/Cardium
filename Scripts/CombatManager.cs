@@ -38,26 +38,9 @@ public class CombatManager
                            + "Current turn: " + Turn + "\n"
                            + "Enemy count: " + Enemies.Count;
     }
-
-    private void StartCombat()
-    {
-        GD.Print("\n>>>>>>>>>>>>>>>>>>> Combat started! >>>>>>>>>>>>>>>>>>>\n");
-        
-        Turn = 0;
-        
-        UpdateDebugLabel();
-    }
-
-    private void EndCombat()
-    {
-        GD.Print("\n<<<<<<<<<<<<<<<<<<<< Combat ended! <<<<<<<<<<<<<<<<<<<<\n");
-        
-        UpdateDebugLabel();
-    }
     
     public void AddEnemy(Enemy enemy)
     {
-        GD.Print("[CM] Added enemy: " + enemy.Name);
         Enemies.Add(enemy);
         enemy.OnDeathEvent += OnEnemyDeath;
         enemy.OnNudgeEvent += OnNudge;
