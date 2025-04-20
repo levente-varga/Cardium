@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Cardium.Scripts.Cards.Types;
-using Cardium.Scripts.Interactables;
 using Godot;
 
 namespace Cardium.Scripts;
@@ -60,7 +59,7 @@ public partial class World : Node2D {
     _combatManager = new CombatManager(Player, this, DebugLabel1);
     
     //Input.MouseMode = Input.MouseModeEnum.Hidden;
-    if (Data.Level != Level.Lobby) SetupFogOfWar();
+    if (Data.Fog) SetupFogOfWar();
     SetupPath();
     UpdatePath();
 
@@ -183,7 +182,7 @@ public partial class World : Node2D {
     	}
     }
 
-    UpdateFogOfWar();
+    if (Data.Fog) UpdateFogOfWar();
     
     base._Draw();
   }

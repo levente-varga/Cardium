@@ -15,7 +15,7 @@ public partial class Ladder : Interactable {
     base.OnNudge(player, camera);
 
     if (player.TurnsLived - _lastPlayerTurnsLived == 1) {
-      Data.Level = Level.Lobby;
+      Data.LoadLobbyData();
       
       // TODO: Save cards
       
