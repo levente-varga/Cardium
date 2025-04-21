@@ -12,6 +12,12 @@ public partial class CardView : Node2D {
 		Played,
 		Discarded,
 	}
+
+	public enum HoverAnimationType {
+		None,
+		Grow,
+		Slide,
+	}
 	
 	[Export] private Node2D _hoverBase = null!;
 	[Export] private Node2D _base = null!;
@@ -24,10 +30,12 @@ public partial class CardView : Node2D {
 	public bool Enabled = true;
 	
 	private bool _dragging;
-	private bool _hoverable;
+	public HoverAnimationType HoverAnimation = HoverAnimationType.Slide;
+	
 	
 	private Tween? _hoverTween;
 	private Tween? _scaleTween;
+	private Tween? _rotationTween;
 
 	public Card Card { get; private set; } = null!;
 	
@@ -58,9 +66,8 @@ public partial class CardView : Node2D {
 	private Vector2 _originalPosition;
 	private float _shakeAmount = 5f;
 
-	public void Init(Card card, bool hoverable = true) {
+	public void Init(Card card) {
 		Card = card;
-		_hoverable = hoverable;
 	}
 
 	private Color GetStateColor() {
@@ -158,6 +165,7 @@ public partial class CardView : Node2D {
 
 	private void ResetHoverTween() => ResetTween(_hoverTween);
 	private void ResetScaleTween() => ResetTween(_scaleTween);
+	private void ResetRotationTween() => ResetTween(_rotationTween);
 	private static void ResetTween(Tween? tween) {
 		if (tween == null) return;
 		tween.Kill();
@@ -167,17 +175,37 @@ public partial class CardView : Node2D {
 	private void PlayScaleAnimation(float scale) {
 		ResetScaleTween();
 		_scaleTween = CreateTween();
-		_scaleTween.TweenProperty(_base, "scale", new Vector2(scale, scale), 0.4f)
+		_scaleTween.TweenProperty(_hoverBase, "scale", new Vector2(scale, scale), 0.4f)
+			.SetEase(Tween.EaseType.Out)
+			.SetTrans(Tween.TransitionType.Expo);
+	}
+	
+	private void PlayRotationAnimation(float rotation) {
+		ResetRotationTween();
+		_rotationTween = CreateTween();
+		_rotationTween.TweenProperty(_hoverBase,"rotation_degrees", rotation, 0.4f)
 			.SetEase(Tween.EaseType.Out)
 			.SetTrans(Tween.TransitionType.Expo);
 	}
 	
 	private void PlayHoverAnimation() {
-		ResetHoverTween();
-		_hoverTween = CreateTween();
-		_hoverTween.TweenProperty(_hoverBase, "position", new Vector2(0, -100), 0.4f)
-			.SetEase(Tween.EaseType.Out)
-			.SetTrans(Tween.TransitionType.Expo);
+		switch (HoverAnimation) {
+			case HoverAnimationType.None:
+				return;
+			case HoverAnimationType.Grow:
+				PlayScaleAnimation(1.1f);
+				PlayRotationAnimation(new Random().Next(-5, 5));
+				break;
+			case HoverAnimationType.Slide:
+				ResetHoverTween();
+				_hoverTween = CreateTween();
+				_hoverTween.TweenProperty(_hoverBase, "position", new Vector2(0, -100), 0.4f)
+					.SetEase(Tween.EaseType.Out)
+					.SetTrans(Tween.TransitionType.Expo);
+				break;
+			default:
+				throw new ArgumentOutOfRangeException();
+		}
 	}
 	
 	private void PlayResetAnimation() {
@@ -186,11 +214,8 @@ public partial class CardView : Node2D {
 		_hoverTween.TweenProperty(_hoverBase, "position", Vector2.Zero, 0.4f)
 			.SetEase(Tween.EaseType.Out)
 			.SetTrans(Tween.TransitionType.Expo);
-		ResetScaleTween();
-		_scaleTween = CreateTween();
-		_scaleTween.TweenProperty(_base, "scale", Vector2.One, 0.4f)
-			.SetEase(Tween.EaseType.Out)
-			.SetTrans(Tween.TransitionType.Expo);
+		PlayScaleAnimation(1);
+		PlayRotationAnimation(0);
 	}
 	
 	private void PlayMoveToPlayingPositionAnimation() {
@@ -208,14 +233,14 @@ public partial class CardView : Node2D {
 		if (!Enabled || _dragging) return;
 		_state = CardState.Selected;
 		OnMouseEnteredEvent?.Invoke(this);
-		if (_hoverable) PlayHoverAnimation();
+		PlayHoverAnimation();
 	}
 
 	private void OnMouseExited() {
 		if (!Enabled || _dragging) return;
 		_state = CardState.Idle;
 		OnMouseExitedEvent?.Invoke(this);
-		if (_hoverable) PlayResetAnimation();
+		PlayResetAnimation();
 	}
 	
 	private void OnMouseDown() {

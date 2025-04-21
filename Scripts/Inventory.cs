@@ -50,7 +50,8 @@ public partial class Inventory : Control {
 			var cardContainer = new Container();
 			cardContainer.SetCustomMinimumSize(Global.GlobalCardSize);
 			var view = _cardScene.Instantiate<CardView>();
-			view.Init(card, false);
+			view.Init(card);
+			view.HoverAnimation = CardView.HoverAnimationType.Grow;
 			view.Position = Global.GlobalCardSize / 2;
 			cardContainer.AddChild(view);
 			row.AddChild(cardContainer);
