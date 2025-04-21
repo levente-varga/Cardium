@@ -17,8 +17,6 @@ public partial class Entrance : Interactable {
     if (Interacted) {
       Data.LoadDungeonData();
       GetTree().ReloadCurrentScene();
-      PlayBackwards("open");
-      Interacted = false;
       return;
     }
     
