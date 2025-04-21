@@ -131,9 +131,6 @@ public partial class Player : Entity {
     else if (InputMap.EventIsAction(@event, "Reset")) {
       GetTree().ReloadCurrentScene();
     }
-    else if (InputMap.EventIsAction(@event, "Back")) {
-      GetTree().Quit();
-    }
     else if (InputMap.EventIsAction(@event, "Skip")) {
       
     }

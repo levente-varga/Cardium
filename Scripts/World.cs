@@ -138,6 +138,10 @@ public partial class World : Node2D {
     else if (InputMap.EventIsAction(@event, "Select") && @event.IsPressed()) {
 	    
     }
+    else if (InputMap.EventIsAction(@event, "Back") && @event.IsPressed()) {
+	    Data.LoadLobbyData();
+	    GetTree().ReloadCurrentScene();
+    }
     else if (@event is InputEventMouseButton { Pressed: true, ButtonIndex: MouseButton.Left }) {
 	    if (_selectionMode == SelectionMode.None) return;
 
