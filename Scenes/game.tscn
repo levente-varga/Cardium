@@ -341,15 +341,14 @@ label_settings = SubResource("LabelSettings_khtd6")
 vertical_alignment = 1
 
 [node name="Inventory" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("Player", "DeckContainer", "InventoryContainer")]
-visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_right = 1920.0
 offset_bottom = 1080.0
 script = ExtResource("7_d6lyv")
 Player = NodePath("../../Player")
-DeckContainer = NodePath("CenterContainer/Panel/HBoxContainer/DeckScrollContainer/MarginContainer/DeckContainer")
-InventoryContainer = NodePath("CenterContainer/Panel/HBoxContainer/InventoryScrollContainer/MarginContainer/InventoryContainer")
+DeckContainer = NodePath("CenterContainer/Panel/HBoxContainer/DeckScrollContainer/CenterContainer/MarginContainer/DeckContainer")
+InventoryContainer = NodePath("CenterContainer/Panel/HBoxContainer/InventoryScrollContainer/CenterContainer/MarginContainer/InventoryContainer")
 
 [node name="Background" type="ColorRect" parent="CanvasLayer/Inventory"]
 layout_mode = 1
@@ -370,7 +369,7 @@ grow_vertical = 2
 
 [node name="Panel" type="ColorRect" parent="CanvasLayer/Inventory/CenterContainer"]
 clip_contents = true
-custom_minimum_size = Vector2(1000, 600)
+custom_minimum_size = Vector2(1116, 760)
 layout_mode = 2
 color = Color(0.0846899, 0.0846899, 0.0846899, 1)
 
@@ -386,11 +385,18 @@ theme_override_constants/separation = 36
 
 [node name="InventoryScrollContainer" type="ScrollContainer" parent="CanvasLayer/Inventory/CenterContainer/Panel/HBoxContainer"]
 clip_contents = false
+custom_minimum_size = Vector2(1, 1)
 layout_mode = 2
 size_flags_horizontal = 3
 horizontal_scroll_mode = 0
+vertical_scroll_mode = 3
 
-[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Inventory/CenterContainer/Panel/HBoxContainer/InventoryScrollContainer"]
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/Inventory/CenterContainer/Panel/HBoxContainer/InventoryScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Inventory/CenterContainer/Panel/HBoxContainer/InventoryScrollContainer/CenterContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -399,7 +405,7 @@ theme_override_constants/margin_top = 24
 theme_override_constants/margin_right = 24
 theme_override_constants/margin_bottom = 24
 
-[node name="InventoryContainer" type="VBoxContainer" parent="CanvasLayer/Inventory/CenterContainer/Panel/HBoxContainer/InventoryScrollContainer/MarginContainer"]
+[node name="InventoryContainer" type="VBoxContainer" parent="CanvasLayer/Inventory/CenterContainer/Panel/HBoxContainer/InventoryScrollContainer/CenterContainer/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -407,11 +413,18 @@ theme_override_constants/separation = 18
 
 [node name="DeckScrollContainer" type="ScrollContainer" parent="CanvasLayer/Inventory/CenterContainer/Panel/HBoxContainer"]
 clip_contents = false
+custom_minimum_size = Vector2(1, 1)
 layout_mode = 2
 size_flags_horizontal = 3
 horizontal_scroll_mode = 0
+vertical_scroll_mode = 3
 
-[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Inventory/CenterContainer/Panel/HBoxContainer/DeckScrollContainer"]
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/Inventory/CenterContainer/Panel/HBoxContainer/DeckScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Inventory/CenterContainer/Panel/HBoxContainer/DeckScrollContainer/CenterContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -420,7 +433,7 @@ theme_override_constants/margin_top = 24
 theme_override_constants/margin_right = 24
 theme_override_constants/margin_bottom = 24
 
-[node name="DeckContainer" type="VBoxContainer" parent="CanvasLayer/Inventory/CenterContainer/Panel/HBoxContainer/DeckScrollContainer/MarginContainer"]
+[node name="DeckContainer" type="VBoxContainer" parent="CanvasLayer/Inventory/CenterContainer/Panel/HBoxContainer/DeckScrollContainer/CenterContainer/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3

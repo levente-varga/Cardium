@@ -13,31 +13,52 @@ public partial class Inventory : Control {
 	[Export] private PackedScene _cardScene = ResourceLoader.Load<PackedScene>("res://Scenes/card.tscn");
 
 	private const int CardsPerRow = 2;
+
+	public new bool Visible {
+		get => base.Visible;
+		set {
+			base.Visible = value;
+			if (value) FillContainersWithCardViews();
+		}
+	}
 	
 	public override void _Ready() {
 		Visible = false;
-		var row = new HBoxContainer();
+	}
 
+	private void FillContainersWithCardViews() {
 		List<Card> cardsInUse = new(Player.Hand.Deck.Deck.GetCards()
 			.Union(Player.Hand.DiscardPile.Pile.GetCards()
 				.Union(Player.Hand.GetCards())));
 		
-		for (var i = 0; i < cardsInUse.Count; i++) {
-			var card = cardsInUse[i];
-			var rowNumber = i / CardsPerRow;
+		FillContainerWithCardViews(DeckContainer, cardsInUse);
+		FillContainerWithCardViews(InventoryContainer, Player.Inventory.GetCards());
+	}
 
-			var container = new Container();
-			container.SetCustomMinimumSize(Global.GlobalCardSize);
+	private void FillContainerWithCardViews(Container container, List<Card> cards) {
+		foreach (var child in container.GetChildren()) child?.QueueFree();
+		HBoxContainer row = null!;
+		for (var i = 0; i < cards.Count; i++) {
+			var rowNumber = i / CardsPerRow;
+			var card = cards[i];
+
+			if (i % CardsPerRow == 0) {
+				row = new HBoxContainer();
+				row.AddThemeConstantOverride("separation", 18);
+			}
+			
+			var cardContainer = new Container();
+			cardContainer.SetCustomMinimumSize(Global.GlobalCardSize);
 			var view = _cardScene.Instantiate<CardView>();
 			view.Init(card, false);
 			view.Position = Global.GlobalCardSize / 2;
-			container.AddChild(view);
-			row.AddChild(container);
+			cardContainer.AddChild(view);
+			row.AddChild(cardContainer);
 
-			if (i != cardsInUse.Count - 1 && rowNumber == (i + 1) / CardsPerRow) continue;
+			if (i != cards.Count - 1 && rowNumber == (i + 1) / CardsPerRow) continue;
 			row.SetCustomMinimumSize(new Vector2(Global.CardSize.X * CardsPerRow, Global.CardSize.Y));
-			DeckContainer.AddChild(row);
-			row = new();
+			container.AddChild(row);
+			row = new HBoxContainer();
 		}
 	}
 
