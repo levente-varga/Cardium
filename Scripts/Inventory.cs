@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using Cardium.Scripts.Cards.Types;
 using Godot;
 
@@ -14,11 +16,14 @@ public partial class Inventory : Control {
 	
 	public override void _Ready() {
 		Visible = false;
-		var cardsInDeck = Player.Hand.Deck.Deck.GetCards();
 		var row = new HBoxContainer();
+
+		List<Card> cardsInUse = new(Player.Hand.Deck.Deck.GetCards()
+			.Union(Player.Hand.DiscardPile.Pile.GetCards()
+				.Union(Player.Hand.GetCards())));
 		
-		for (var i = 0; i < cardsInDeck.Count; i++) {
-			var card = cardsInDeck[i];
+		for (var i = 0; i < cardsInUse.Count; i++) {
+			var card = cardsInUse[i];
 			var rowNumber = i / CardsPerRow;
 
 			var container = new Container();
@@ -29,7 +34,7 @@ public partial class Inventory : Control {
 			container.AddChild(view);
 			row.AddChild(container);
 
-			if (i != cardsInDeck.Count - 1 && rowNumber == (i + 1) / CardsPerRow) continue;
+			if (i != cardsInUse.Count - 1 && rowNumber == (i + 1) / CardsPerRow) continue;
 			row.SetCustomMinimumSize(new Vector2(Global.CardSize.X * CardsPerRow, Global.CardSize.Y));
 			DeckContainer.AddChild(row);
 			row = new();
