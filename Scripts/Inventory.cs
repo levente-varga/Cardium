@@ -9,9 +9,14 @@ public partial class Inventory : Control {
 	[Export] public Player Player = null!;
 	[Export] public VBoxContainer DeckContainer = null!;
 	[Export] public VBoxContainer InventoryContainer = null!;
+	[Export] public Container DeckArea = null!;
+	[Export] public Container InventoryArea = null!;
 	
 	[Export] private PackedScene _cardScene = ResourceLoader.Load<PackedScene>("res://Scenes/card.tscn");
 
+	private List<CardView> _cardsInInventory = new();
+	private List<CardView> _cardsInDeck = new();
+	
 	private const int CardsPerRow = 2;
 
 	public new bool Visible {
@@ -53,6 +58,7 @@ public partial class Inventory : Control {
 			view.Init(card);
 			view.HoverAnimation = CardView.HoverAnimationType.Grow;
 			view.Position = Global.GlobalCardSize / 2;
+			view.OnDragEndEvent += OnCardDragEndEventHandler;
 			cardContainer.AddChild(view);
 			row.AddChild(cardContainer);
 
@@ -72,6 +78,15 @@ public partial class Inventory : Control {
 
 		if (InputMap.EventIsAction(@event, "ToggleInventoryMenu")) {
 			Visible = !Visible;
+		}
+	}
+
+	private void OnCardDragEndEventHandler(CardView view, Vector2 mousePosition) {
+		if (_cardsInInventory.Contains(view) && DeckArea.GetRect().HasPoint(mousePosition)) {
+			// TODO: Move dragged card to deck
+		}
+		else if (_cardsInDeck.Contains(view) && InventoryArea.GetRect().HasPoint(mousePosition)) {
+			// TODO: Move dragged card to inventory
 		}
 	}
 }

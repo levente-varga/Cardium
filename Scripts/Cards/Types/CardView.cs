@@ -6,11 +6,9 @@ namespace Cardium.Scripts.Cards.Types;
 public partial class CardView : Node2D {
 	public enum CardState {
 		Idle,
-		Selected,
+		Hovered,
 		Dragging,
 		Playing,
-		Played,
-		Discarded,
 	}
 
 	public enum HoverAnimationType {
@@ -73,11 +71,9 @@ public partial class CardView : Node2D {
 	private Color GetStateColor() {
 		return _state switch {
 			CardState.Idle => new Color("CCCCCC"),
-			CardState.Selected => new Color("77FF77"),
+			CardState.Hovered => new Color("77FF77"),
 			CardState.Dragging => new Color("FFCC55"),
 			CardState.Playing => new Color("FF7777"),
-			CardState.Played => new Color("7777FF"),
-			CardState.Discarded => new Color("444444"),
 			_ => new Color("FF00FF"),
 		};
 	}
@@ -231,7 +227,7 @@ public partial class CardView : Node2D {
 	
 	private void OnMouseEntered() {
 		if (!Enabled || _dragging) return;
-		_state = CardState.Selected;
+		_state = CardState.Hovered;
 		OnMouseEnteredEvent?.Invoke(this);
 		PlayHoverAnimation();
 	}
