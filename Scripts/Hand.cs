@@ -203,27 +203,31 @@ public partial class Hand : Node2D
 
 		var mouseOverPlayArea = PlayArea.GetRect().HasPoint(mousePosition);
 		var mouseOverDiscardArea = DiscardArea.GetRect().HasPoint(mousePosition);
-
+		
 		if (mouseOverPlayArea) {
-			if (_cardStates[view] == CardInHandState.OverPlayArea) return;
-			_cardStates[view] = CardInHandState.OverPlayArea;
-			view.PlayScaleAnimation(1.2f);
+			if (_cardStates[view] != CardInHandState.OverPlayArea) {
+				_cardStates[view] = CardInHandState.OverPlayArea;
+				view.PlayScaleAnimation(1.2f);
+			}
 		}
 		else {
-			if (_cardStates[view] != CardInHandState.OverPlayArea) return;
-			_cardStates[view] = CardInHandState.None;
-			view.PlayResetAnimation();
+			if (_cardStates[view] == CardInHandState.OverPlayArea) {
+				_cardStates[view] = CardInHandState.None;
+				view.PlayResetAnimation();
+			}
 		}
 		
 		if (mouseOverDiscardArea) {
-			if (_cardStates[view] == CardInHandState.OverDiscardArea) return;
-			_cardStates[view] = CardInHandState.OverPlayArea;
-			view.PlayScaleAnimation(0.75f);
+			if (_cardStates[view] != CardInHandState.OverDiscardArea) {
+				_cardStates[view] = CardInHandState.OverDiscardArea;
+				view.PlayScaleAnimation(0.75f);
+			}
 		}
 		else {
-			if (_cardStates[view] != CardInHandState.OverDiscardArea) return;
-			_cardStates[view] = CardInHandState.None;
-			view.PlayResetAnimation();
+			if (_cardStates[view] == CardInHandState.OverDiscardArea) {
+				_cardStates[view] = CardInHandState.None;
+				view.PlayResetAnimation();
+			}
 		}
 	}
 	

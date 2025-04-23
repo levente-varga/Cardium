@@ -137,6 +137,9 @@ label_settings = SubResource("LabelSettings_7y8e8")
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="PlayingCardPosition" type="Node2D" parent="Camera2D"]
+position = Vector2(-800, 0)
+
 [node name="World" type="Node2D" parent="." node_paths=PackedStringArray("Camera", "Player", "Hand", "DebugLabel1", "DebugLabel2", "DebugLabel3", "DebugLabel4", "Overlay")]
 z_index = -1
 script = ExtResource("4_ayy7p")
@@ -195,7 +198,7 @@ grow_vertical = 2
 [node name="DiscardArea" type="Control" parent="CanvasLayer"]
 layout_mode = 3
 anchors_preset = 0
-offset_top = 768.0
+offset_top = 800.0
 offset_right = 512.0
 offset_bottom = 1080.0
 
@@ -346,6 +349,7 @@ label_settings = SubResource("LabelSettings_khtd6")
 vertical_alignment = 1
 
 [node name="Inventory" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("Player", "DeckContainer", "InventoryContainer", "DeckArea", "InventoryArea")]
+visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_right = 1920.0
