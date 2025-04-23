@@ -32,10 +32,9 @@ public partial class Hand : Node2D
 	
 	public HandState State { get; private set; }
 
-	private readonly List<Card> _cards = new();
 	private readonly List<CardView> _cardViews = new();
-	private List<float> _cardAngles = new();
-	private Dictionary<CardView, CardInHandState> _cardStates = new();
+	private Dictionary<CardView, float> _cardAngles = new();
+	private readonly Dictionary<CardView, CardInHandState> _cardStates = new();
 
 	private int _capacity = 4;
 	public int Capacity {
@@ -43,9 +42,9 @@ public partial class Hand : Node2D
 		private set => _capacity = Math.Max(value, 1);
 	}
 	
-	public int Size => _cards.Count;
-	public bool IsFull => _cards.Count == Capacity;
-	public bool IsNotFull => _cards.Count < Capacity;
+	public int Size => _cardViews.Count;
+	public bool IsFull => _cardViews.Count == Capacity;
+	public bool IsNotFull => _cardViews.Count < Capacity;
 	public bool IsPlayingACard => State != HandState.None;
 	
 	public delegate void OnCardPlayedDelegate(Card card);
@@ -75,16 +74,17 @@ public partial class Hand : Node2D
 
 	private void PositionCards() {
 		GD.Print($"Positioning hand ({Size})");
-		var oldCardAngles = new List<float>(_cardAngles);
+		var oldCardAngles = new Dictionary<CardView, float>(_cardAngles);
 		_cardAngles = GetCardAngles();
 
-		for (var i = 0; i < _cards.Count; i++) {
+		for (var i = 0; i < _cardViews.Count; i++) {
 			var tween = CreateTween();
 			var index = i;
+			var view = _cardViews[i];
 			
 			tween.TweenMethod(Callable.From<float>(value => SetCardPosition(index, value)), 
-					oldCardAngles[index],
-					_cardAngles[i], 
+					oldCardAngles[view],
+					_cardAngles[view], 
 					0.4f)
 				.SetEase(Tween.EaseType.Out)
 				.SetTrans(Tween.TransitionType.Expo)
@@ -94,18 +94,19 @@ public partial class Hand : Node2D
 	}
 	
 	private void SetCardPosition(int index, float angle) {
-		if (index >= _cards.Count || index < 0) return;
+		if (index >= Size || index < 0) return;
 		var cardPosition = GetPointOnCircle(Origin, HandRadius, angle);
 
-		_cardViews[index].Position = cardPosition;
-		_cardViews[index].Rotation = DegreeToRadian(angle + 90);
-		_cardAngles[index] = angle;
+		var view = _cardViews[index];
+		view.Position = cardPosition;
+		view.RotationDegrees = angle + 90;
+		_cardAngles[view] = angle;
 	}
 
 
-	private List<float> GetCardAngles() => GetCardAngles(_cards.Count);
-	private List<float> GetCardAngles(int cardCount) {
-		var angles = new List<float>();
+	private Dictionary<CardView, float> GetCardAngles() => GetCardAngles(Size);
+	private Dictionary<CardView, float> GetCardAngles(int cardCount) {
+		var angles = new Dictionary<CardView, float>();
 
 		var handEnclosedAngle = MathF.Min(MaxHandEnclosedAngle, (cardCount - 1) * DefaultCardAngle);
 		var handStartAngle = 270 - handEnclosedAngle / 2;
@@ -114,7 +115,7 @@ public partial class Hand : Node2D
 
 		for (var i = 0; i < cardCount; i++) {
 			var angle = handStartAngle + cardAngle * i;
-			angles.Add(angle);
+			angles.Add(_cardViews[i], angle);
 		}
 
 		return angles;
@@ -134,11 +135,9 @@ public partial class Hand : Node2D
 		return origin + GetPointOnCircle(radius, angle);
 	}
 	
-	public void Add(Card card, bool positionHand = true) => Add(card, _cards.Count, positionHand);
+	public void Add(Card card, bool positionHand = true) => Add(card, Size, positionHand);
 	public void Add(Card card, int index, bool positionHand = true) {
-		if (_cards.Count >= Capacity) return;
-		_cardAngles.Add(360);
-		_cards.Insert(index, card);
+		if (Size >= Capacity) return;
 		var view = _cardScene.Instantiate<CardView>();
 		view.Card = card;
 		view.OnDragEndEvent += OnCardDragEnd;
@@ -146,33 +145,33 @@ public partial class Hand : Node2D
 		view.OnMouseEnteredEvent += OnCardMouseEntered;
 		view.OnMouseExitedEvent += OnCardMouseExited;
 		_cardStates.Add(view, CardInHandState.None);
+		_cardAngles.Add(view, 360);
 		_cardViews.Insert(index, view);
 		AddChild(view);
-		SetCardPosition(index, _cardAngles[index]);
+		SetCardPosition(index, _cardAngles[view]);
 		if (positionHand) PositionCards();
 	}
 
-	public Card? RemoveLast(bool positionHand = true) => _cards.Count > 0 ? Remove(_cards.Last(), positionHand) : null;
-	public Card? Remove(int index, bool positionHand = true) => _cards.Count > index ? Remove(_cards[index], positionHand) : null;
-	public Card? Remove(Card card, bool positionHand = true) {
-		if (!_cards.Contains(card)) return null;
-		_cardAngles.RemoveAt(_cards.IndexOf(card));
-		_cardStates.Remove(_cardViews.FirstOrDefault(view => view.Card == card)!);
-		_cards.Remove(card);
+	public bool RemoveLast(bool positionHand = true) => Size > 0 && Remove(Size - 1, positionHand);
+	public bool Remove(int index, bool positionHand = true) => Size > index && index > 0 && Remove(_cardViews[index].Card, positionHand);
+	public bool Remove(Card card, bool positionHand = true) {
 		var view = _cardViews.FirstOrDefault(view => view.Card == card);
-		if (view != null) {
-			view.OnDragEndEvent -= OnCardDragEnd;
-			view.OnDragEvent -= OnCardDrag;
-			view.OnMouseEnteredEvent -= OnCardMouseEntered;
-			view.OnMouseExitedEvent -= OnCardMouseExited;
-			_cardViews.Remove(view);
-			RemoveChild(view);
-		}
+		if (view == null) return false;
+		
+		view.OnDragEndEvent -= OnCardDragEnd;
+		view.OnDragEvent -= OnCardDrag;
+		view.OnMouseEnteredEvent -= OnCardMouseEntered;
+		view.OnMouseExitedEvent -= OnCardMouseExited;
+		_cardAngles.Remove(view);
+		_cardStates.Remove(view);
+		_cardViews.Remove(view);
+		RemoveChild(view);
+		
 		if (positionHand) PositionCards();
-		return card;
+		return true;
 	}
 
-	public List<Card> GetCards() => new(_cards);
+	public List<Card> GetCards() => _cardViews.Select(view => view.Card).ToList();
 
 	public override void _Input(InputEvent @event) {
 		Card? card = @event switch {
