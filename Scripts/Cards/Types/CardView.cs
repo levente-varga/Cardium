@@ -23,23 +23,17 @@ public partial class CardView : Node2D {
 	[Export] private Button _hitbox = null!;
 	[Export] private RichTextLabel _descriptionLabel = null!;
 	[Export] private Label _nameLabel = null!;
-	[Export] private Line2D _debugFrame = null!;
+	public Card Card = null!;
 	
 	public bool Enabled = true;
 	
-	private bool _dragging;
 	public HoverAnimationType HoverAnimation = HoverAnimationType.Slide;
-	
+	private CardState _state;
+	private bool _dragging;
 	
 	private Tween? _hoverTween;
 	private Tween? _scaleTween;
 	private Tween? _rotationTween;
-
-	public Card Card { get; private set; } = null!;
-	
-	private CardState _state;
-	public bool OverPlayArea { get; private set; }
-	public bool OverDiscardArea { get; private set; }
 	
 	private Vector2 _mouseDownPosition;
 	
@@ -57,26 +51,6 @@ public partial class CardView : Node2D {
 	
 	public delegate void OnMouseExitedDelegate(CardView cardView);
 	public event OnMouseExitedDelegate? OnMouseExitedEvent;
-
-	
-	private float _shakeIntensity = 5f; // Max shake offset
-	private float _shakeDecay = 5f; // How fast the shake fades
-	private Vector2 _originalPosition;
-	private float _shakeAmount = 5f;
-
-	public void Init(Card card) {
-		Card = card;
-	}
-
-	private Color GetStateColor() {
-		return _state switch {
-			CardState.Idle => new Color("CCCCCC"),
-			CardState.Hovered => new Color("77FF77"),
-			CardState.Dragging => new Color("FFCC55"),
-			CardState.Playing => new Color("FF7777"),
-			_ => new Color("FF00FF"),
-		};
-	}
 	
 	public override void _Ready() {
 		_art.Texture = Card.Art;
@@ -107,9 +81,6 @@ public partial class CardView : Node2D {
 	*/
 
 	public override void _Process(double delta) {
-		_debugFrame.DefaultColor = GetStateColor();
-		_debugFrame.Visible = Global.Debug;
-		
 		if (_dragging) {
 			_base.GlobalPosition = _base.GlobalPosition.Lerp(GetGlobalMousePosition(), Global.LerpWeight * (float)delta);
 			_base.GlobalRotation = Mathf.Lerp(_base.GlobalRotation, 0, (float)delta);
@@ -124,28 +95,6 @@ public partial class CardView : Node2D {
 				_base.Rotation = Mathf.Lerp(_base.Rotation, 0, Global.LerpWeight * (float)delta);
 			}
 		}
-	}
-
-	public void OnEnterPlayArea() {
-		PlayScaleAnimation(1.2f);
-		OverPlayArea = true;
-	}
-	
-	public void OnExitPlayArea() {
-		PlayResetAnimation();
-		_state = _dragging ? CardState.Dragging : CardState.Idle;
-		OverPlayArea = false;
-	}
-	
-	public void OnEnterDiscardArea() {
-		PlayScaleAnimation(0.75f);
-		OverDiscardArea = true;
-	}
-	
-	public void OnExitDiscardArea() {
-		PlayResetAnimation();
-		_state = _dragging ? CardState.Dragging : CardState.Idle;
-		OverDiscardArea = false;
 	}
 	
 	public void OnEnterPlayingMode() {
@@ -168,7 +117,7 @@ public partial class CardView : Node2D {
 		tween.Dispose();
 	}
 	
-	private void PlayScaleAnimation(float scale) {
+	public void PlayScaleAnimation(float scale) {
 		ResetScaleTween();
 		_scaleTween = CreateTween();
 		_scaleTween.TweenProperty(_hoverBase, "scale", new Vector2(scale, scale), 0.4f)
@@ -176,7 +125,7 @@ public partial class CardView : Node2D {
 			.SetTrans(Tween.TransitionType.Expo);
 	}
 	
-	private void PlayRotationAnimation(float rotation) {
+	public void PlayRotationAnimation(float rotation) {
 		ResetRotationTween();
 		_rotationTween = CreateTween();
 		_rotationTween.TweenProperty(_hoverBase,"rotation_degrees", rotation, 0.4f)
@@ -184,7 +133,7 @@ public partial class CardView : Node2D {
 			.SetTrans(Tween.TransitionType.Expo);
 	}
 	
-	private void PlayHoverAnimation() {
+	public void PlayHoverAnimation() {
 		switch (HoverAnimation) {
 			case HoverAnimationType.None:
 				return;
@@ -204,7 +153,7 @@ public partial class CardView : Node2D {
 		}
 	}
 	
-	private void PlayResetAnimation() {
+	public void PlayResetAnimation() {
 		ResetHoverTween();
 		_hoverTween = CreateTween();
 		_hoverTween.TweenProperty(_hoverBase, "position", Vector2.Zero, 0.4f)
@@ -214,7 +163,7 @@ public partial class CardView : Node2D {
 		PlayRotationAnimation(0);
 	}
 	
-	private void PlayMoveToPlayingPositionAnimation() {
+	public void PlayMoveToPlayingPositionAnimation() {
 		ResetHoverTween();
 		var camera = GetViewport().GetCamera2D();
 		if (camera == null) return;

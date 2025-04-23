@@ -41,7 +41,7 @@ _art = NodePath("Base/HoverBase/Body/Art")
 _hitbox = NodePath("Base/HoverBase/Hitbox")
 _descriptionLabel = NodePath("Base/HoverBase/DescriptionArea/Description")
 _nameLabel = NodePath("Base/HoverBase/Body/Name")
-_debugFrame = NodePath("Base/HoverBase/DebugFrame")
+_debugFrame = NodePath("")
 
 [node name="Base" type="Node2D" parent="."]
 
@@ -137,9 +137,3 @@ bbcode_enabled = true
 text = "[center]Deals [color=#cccccc]10[/color] damage in an area, disrtibuted equally.
 [color=#cccccc]Unstable[/color][/center]"
 fit_content = true
-
-[node name="DebugFrame" type="Line2D" parent="Base/HoverBase"]
-visible = false
-points = PackedVector2Array(108, -156, -108, -156, -108, 156, 108, 156)
-closed = true
-width = 1.0
