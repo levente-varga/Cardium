@@ -12,12 +12,14 @@ public partial class Inventory : Control {
 	[Export] public VBoxContainer StashContainer = null!;
 	[Export] public VBoxContainer InventoryContainer = null!;
 	[Export] public VBoxContainer DeckContainer = null!;
-	[Export] public Control StashArea = null!;
-	[Export] public Control InventoryArea = null!;
-	[Export] public Control DeckArea = null!;
+	[Export] public ColorRect StashArea = null!;
+	[Export] public ColorRect InventoryArea = null!;
+	[Export] public ColorRect DeckArea = null!;
 	[Export] public Button OkButton = null!;
 	
 	[Export] private PackedScene _cardScene = ResourceLoader.Load<PackedScene>("res://Scenes/card.tscn");
+
+	private bool _stashEnabled;
 	
 	private DraggedCardState _draggedCardState;
 	
@@ -37,15 +39,19 @@ public partial class Inventory : Control {
 		if (!Visible) return;
 	}
 	
-	public void Open() {
+	public void Open(bool enableStash = false) {
 		Visible = true;
+		_stashEnabled = enableStash;
 		Player.PutCardsInUseIntoDeck();
 		FillContainersWithCardViews();
+		if (!_stashEnabled) StashArea.Color = new Color("16161688");
 	}
 
-	public void OkButtonPressed() {
+	private void OkButtonPressed() {
 		Player.Hand.DrawUntilFull();
 		Visible = false;
+		_stashEnabled = false;
+		StashArea.Color = new Color("16161600");
 	}
 
 	private void FillContainersWithCardViews() {
@@ -72,8 +78,8 @@ public partial class Inventory : Control {
 			cardContainer.SetCustomMinimumSize(Global.GlobalCardSize);
 			var view = _cardScene.Instantiate<CardView>();
 			view.Card = card;
-			view.Enabled = true;
-			view.Draggable = true;
+			view.Enabled = container != StashContainer || _stashEnabled;
+			view.Draggable = container != StashContainer || _stashEnabled;
 			view.HoverAnimation = CardView.HoverAnimationType.Grow;
 			view.Position = Global.GlobalCardSize / 2;
 			view.OnDragStartEvent += OnCardDragStartEventHandler;
@@ -120,7 +126,7 @@ public partial class Inventory : Control {
 				view.PlayScaleAnimation(0.75f);
 			}
 		}
-		else if (mouseOverStashArea && _draggedCardOrigin != CardOrigin.Stash) {
+		else if (_stashEnabled && mouseOverStashArea && _draggedCardOrigin != CardOrigin.Stash) {
 			if (_draggedCardState != DraggedCardState.OverStashArea) {
 				_draggedCardState = DraggedCardState.OverStashArea;
 				view.PlayScaleAnimation(0.75f);
@@ -167,7 +173,7 @@ public partial class Inventory : Control {
 			Player.Inventory.Add(view.Card);
 			FillContainersWithCardViews();
 		}
-		else if (mouseOverStashArea && _draggedCardOrigin != CardOrigin.Stash) {
+		else if (_stashEnabled && mouseOverStashArea && _draggedCardOrigin != CardOrigin.Stash) {
 			RemoveDraggedCardFromItsOrigin(view.Card);
 			Data.Stash.Add(view.Card);
 			FillContainersWithCardViews();

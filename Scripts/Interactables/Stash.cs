@@ -19,9 +19,10 @@ public partial class Stash : Interactable {
     base.OnNudge(player, camera);
     
     Blink();
+    player.InventoryView.Open(true);
 
     Interacted = true;
-
+    
     player.OnMoveEvent += OnPlayerMove;
     _player = player;
     
