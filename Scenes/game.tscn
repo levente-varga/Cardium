@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://cw3o4f0nr0f2v"]
+[gd_scene load_steps=23 format=3 uid="uid://cw3o4f0nr0f2v"]
 
 [ext_resource type="Script" path="res://Scripts/Hand.cs" id="1_3ixgw"]
 [ext_resource type="Script" path="res://Scripts/Camera.cs" id="3_evct5"]
@@ -46,6 +46,12 @@ font_color = Color(0.866667, 0.866667, 0.866667, 1)
 font = ExtResource("5_70pgm")
 font_size = 32
 font_color = Color(0.8, 0.8, 0.8, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_m4nry"]
+line_spacing = 0.0
+font = ExtResource("12_aeksy")
+font_size = 25
+font_color = Color(0.466667, 0.466667, 0.466667, 1)
 
 [node name="Root" type="Node"]
 
@@ -393,6 +399,7 @@ color = Color(0.0846899, 0.0846899, 0.0846899, 1)
 [node name="InventoryPanel" type="VBoxContainer" parent="CanvasLayer/Inventory/CenterContainer"]
 custom_minimum_size = Vector2(1696, 920)
 layout_mode = 2
+theme_override_constants/separation = 0
 
 [node name="LabelRow" type="HBoxContainer" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel"]
 layout_mode = 2
@@ -426,12 +433,47 @@ label_settings = SubResource("LabelSettings_r4kvp")
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="DescriptionRow" type="HBoxContainer" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel"]
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="StashLabel" type="Label" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/DescriptionRow"]
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Cards stored securely. 
+Can be accessed from Home.
+"
+label_settings = SubResource("LabelSettings_m4nry")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="InventoryLabel" type="Label" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/DescriptionRow"]
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Cards collected during runs.
+Will be lost upon death."
+label_settings = SubResource("LabelSettings_m4nry")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DeckLabel" type="Label" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/DescriptionRow"]
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Cards currently in use.
+Will be lost upon death."
+label_settings = SubResource("LabelSettings_m4nry")
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="ContentRow" type="HBoxContainer" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel"]
 clip_contents = true
 custom_minimum_size = Vector2(1000, 600)
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_constants/separation = 32
+theme_override_constants/separation = 15
 
 [node name="StashPage" type="VBoxContainer" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/ContentRow"]
 layout_mode = 2
@@ -465,6 +507,11 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 18
 
+[node name="Divider" type="ColorRect" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/ContentRow"]
+custom_minimum_size = Vector2(2, 0)
+layout_mode = 2
+color = Color(0.2, 0.2, 0.2, 1)
+
 [node name="InventoryPage" type="VBoxContainer" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/ContentRow"]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -497,6 +544,11 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 18
+
+[node name="Divider2" type="ColorRect" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/ContentRow"]
+custom_minimum_size = Vector2(2, 0)
+layout_mode = 2
+color = Color(0.2, 0.2, 0.2, 1)
 
 [node name="DeckPage" type="VBoxContainer" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/ContentRow"]
 layout_mode = 2
@@ -545,7 +597,7 @@ text = "Ok"
 [node name="StashArea" type="ColorRect" parent="CanvasLayer/Inventory"]
 layout_mode = 0
 offset_left = 112.0
-offset_top = 144.0
+offset_top = 240.0
 offset_right = 656.0
 offset_bottom = 928.0
 mouse_filter = 2
@@ -554,7 +606,7 @@ color = Color(1, 1, 1, 0)
 [node name="InventoryArea" type="ColorRect" parent="CanvasLayer/Inventory"]
 layout_mode = 0
 offset_left = 688.0
-offset_top = 144.0
+offset_top = 240.0
 offset_right = 1232.0
 offset_bottom = 928.0
 mouse_filter = 2
@@ -563,7 +615,7 @@ color = Color(1, 1, 1, 0)
 [node name="DeckArea" type="ColorRect" parent="CanvasLayer/Inventory"]
 layout_mode = 0
 offset_left = 1264.0
-offset_top = 144.0
+offset_top = 240.0
 offset_right = 1808.0
 offset_bottom = 928.0
 mouse_filter = 2
