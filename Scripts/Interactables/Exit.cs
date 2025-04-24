@@ -24,6 +24,6 @@ public partial class Exit : Interactable {
     _lastPlayerTurnsLived = player.TurnsLived;
     
     camera.Shake(10);
-    SpawnFloatingLabel("Quit game?");
+    SpawnFloatingLabel("Quit game?", height: Global.GlobalTileSize.Y * 3);
   }
 }
