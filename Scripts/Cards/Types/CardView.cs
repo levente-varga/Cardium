@@ -26,6 +26,7 @@ public partial class CardView : Node2D {
 	public Card Card = null!;
 	
 	public bool Enabled = true;
+	public bool Draggable = true;
 	
 	public HoverAnimationType HoverAnimation = HoverAnimationType.Slide;
 	private CardState _state;
@@ -46,6 +47,9 @@ public partial class CardView : Node2D {
 	public delegate void OnDragDelegate(CardView cardView, Vector2 mousePosition);
 	public event OnDragDelegate? OnDragEvent;
 	
+	public delegate void OnPressedDelegate(CardView view);
+	public event OnPressedDelegate? OnPressedEvent;
+	
 	public delegate void OnMouseEnteredDelegate(CardView cardView);
 	public event OnMouseEnteredDelegate? OnMouseEnteredEvent;
 	
@@ -59,6 +63,7 @@ public partial class CardView : Node2D {
 		_hitbox.MouseExited += OnMouseExited;
 		_hitbox.ButtonDown += OnMouseDown;
 		_hitbox.ButtonUp += OnMouseUp;
+		_hitbox.Pressed += OnPressed;
 
 		_descriptionLabel.Text = $"[center]{Card.Description}[/center]";
 		
@@ -176,6 +181,7 @@ public partial class CardView : Node2D {
 	
 	private void OnMouseEntered() {
 		if (!Enabled || _dragging) return;
+		
 		_state = CardState.Hovered;
 		OnMouseEnteredEvent?.Invoke(this);
 		PlayHoverAnimation();
@@ -183,29 +189,35 @@ public partial class CardView : Node2D {
 
 	private void OnMouseExited() {
 		if (!Enabled || _dragging) return;
+		
 		_state = CardState.Idle;
 		OnMouseExitedEvent?.Invoke(this);
 		PlayResetAnimation();
 	}
 	
 	private void OnMouseDown() {
-		if (!Enabled) return;
+		if (!Enabled || !Draggable) return;
 		
 		_mouseDownPosition = GetViewport().GetMousePosition();
 		_dragging = true;
 		_state = CardState.Dragging;
 		ZIndex = 11;
-		PlayResetAnimation();
 		OnDragStartEvent?.Invoke(this);
 	}
 	
 	private void OnMouseUp() {
-		if (!Enabled) return;
+		if (!Enabled || !Draggable) return;
 		
 		PlayResetAnimation();
 		_dragging = false;
 		_state = CardState.Idle;
 		ZIndex = 0;
 		OnDragEndEvent?.Invoke(this, GetViewport().GetMousePosition());
+	}
+
+	private void OnPressed() {
+		if (!Enabled) return;
+		
+		OnPressedEvent?.Invoke(this);
 	}
 }

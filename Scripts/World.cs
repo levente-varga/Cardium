@@ -52,7 +52,7 @@ public partial class World : Node2D {
 		  _ => throw new ArgumentOutOfRangeException()
 	  };
 
-	  Input.MouseMode = Data.Level == Level.Lobby ? Input.MouseModeEnum.Hidden : Input.MouseModeEnum.Visible;
+	  //Input.MouseMode = Data.Level == Level.Lobby ? Input.MouseModeEnum.Hidden : Input.MouseModeEnum.Visible;
   }
 
   public Vector2I HoveredCell => GetTilePosition(GetGlobalMousePosition());

@@ -26,6 +26,12 @@ public partial class DeckView : Node2D {
     return true;
   }
 
+  public bool Remove(Card card) {
+    if (!Deck.Remove(card)) return false;
+    RemoveCardView();
+    return true;
+  }
+
   private void PositionCardBackViews() {
     for (var i = 0; i < _cardBackViews.Count; i++) {
       var index = _cardBackViews.Count - i - 1;

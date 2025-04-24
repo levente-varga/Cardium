@@ -349,17 +349,18 @@ label_settings = SubResource("LabelSettings_khtd6")
 vertical_alignment = 1
 
 [node name="Inventory" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("Player", "DeckContainer", "InventoryContainer", "DeckArea", "InventoryArea")]
-visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_right = 1920.0
 offset_bottom = 1080.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 script = ExtResource("7_d6lyv")
 Player = NodePath("../../Player")
 DeckContainer = NodePath("CenterContainer/Panel/HBoxContainer/VBoxContainer/DeckScrollContainer/CenterContainer/MarginContainer/DeckContainer")
 InventoryContainer = NodePath("CenterContainer/Panel/HBoxContainer/VBoxContainer2/InventoryScrollContainer/CenterContainer/MarginContainer/InventoryContainer")
-DeckArea = NodePath("CenterContainer/Panel/HBoxContainer/VBoxContainer/DeckScrollContainer")
-InventoryArea = NodePath("CenterContainer/Panel/HBoxContainer/VBoxContainer2/InventoryScrollContainer")
+DeckArea = NodePath("CenterContainer/Panel/HBoxContainer/VBoxContainer")
+InventoryArea = NodePath("CenterContainer/Panel/HBoxContainer/VBoxContainer2")
 
 [node name="Background" type="ColorRect" parent="CanvasLayer/Inventory"]
 layout_mode = 1
@@ -407,7 +408,6 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="InventoryScrollContainer" type="ScrollContainer" parent="CanvasLayer/Inventory/CenterContainer/Panel/HBoxContainer/VBoxContainer2"]
-custom_minimum_size = Vector2(1, 1)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
