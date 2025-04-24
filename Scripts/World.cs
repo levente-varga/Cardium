@@ -292,7 +292,9 @@ public partial class World : Node2D {
 		AddChild(enemy);
 		enemy.SetPosition(enemy.Position);
 		_combatManager.AddEnemy(enemy);
-		_grid.SetPointSolid(enemy.Position);
+		if (_dungeon.Rect.HasPoint(enemy.Position)) {
+			_grid.SetPointSolid(enemy.Position);
+		}
 	}
 	
 	public void KillEnemy(Enemy enemy) {
@@ -311,14 +313,18 @@ public partial class World : Node2D {
     AddChild(interactable);
     interactable.SetPosition(interactable.Position);
     interactable.OnSolidityChangeEvent += OnInteractableSolidityChange;
-    _grid.SetPointSolid(interactable.Position, interactable.Solid);
+    if (_dungeon.Rect.HasPoint(interactable.Position)) {
+	    _grid.SetPointSolid(interactable.Position, interactable.Solid);
+    }
   }
   
   private void SpawnPlayer(Player player, Vector2I position) {
 	  //AddChild(player);
 	  player.SetPosition(position);
 	  player.OnMoveEvent += OnPlayerMove;
-	  _grid.SetPointSolid(player.Position);
+	  if (_dungeon.Rect.HasPoint(player.Position)) {
+		  _grid.SetPointSolid(player.Position);
+	  }
   }
   
   private void SpawnLoot(CardLoot loot, Vector2I position) {
