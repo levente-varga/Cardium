@@ -11,6 +11,7 @@ public class Data {
   public static bool Hand;
   public static bool ShowHealth;
   public static bool CameraOnPlayer;
+  public static bool MenuOpen;
 
   public static void LoadLobbyData() {
     Level = Level.Lobby;

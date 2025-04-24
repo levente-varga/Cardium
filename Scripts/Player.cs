@@ -7,6 +7,9 @@ public partial class Player : Entity {
   [Export] public World World = null!;
   [Export] public Label DebugLabel = null!;
   [Export] public Hand Hand = null!;
+  [Export] public PileView DiscardPile = null!;
+  [Export] public DeckView Deck = null!;
+  [Export] public Inventory InventoryView = null!;
 
   public delegate void OnActionDelegate();
 
@@ -40,7 +43,7 @@ public partial class Player : Entity {
 
     HealthBar.Visible = Data.ShowHealth;
 
-    Hand.Deck.FillWithInitial();
+    Deck.FillWithInitial();
     Hand.DrawCards(Hand.Capacity);
 
     SetAnimation("idle", GD.Load<Texture2D>("res://Assets/Animations/Player.png"), 8, 12);
@@ -57,7 +60,7 @@ public partial class Player : Entity {
                       + $"Damage: {Damage}\n"
                       + $"Armor: {Armor}\n"
                       + $"\n"
-                      + $"Deck: {Hand.Deck.Deck.Size}/{Hand.Deck.Deck.Capacity}"
+                      + $"Deck: {Deck.Deck.Size}/{Deck.Deck.Capacity}"
                       + $"Hand: {Hand.Size}/{Hand.Capacity}";
 
     HandleMovement();
@@ -140,11 +143,11 @@ public partial class Player : Entity {
   }
 
   private void ReloadDeck() {
-    var cards = Hand.DiscardPile.Pile.GetCards();
+    var cards = DiscardPile.Pile.GetCards();
     foreach (var card in cards) {
-      if (Hand.Deck.Deck.IsFull) return;
-      Hand.DiscardPile.Remove(card);
-      Hand.Deck.Add(card);
+      if (Deck.Deck.IsFull) return;
+      DiscardPile.Remove(card);
+      Deck.Add(card);
     }
 
     Hand.DrawUntilFull();
@@ -182,6 +185,18 @@ public partial class Player : Entity {
     World.Interact(interactablePositions[0]);
   }
 
+  public void PutCardsInUseIntoDeck() {
+    foreach (var card in Hand.GetCards()) {
+      Deck.Add(card);
+      Hand.Remove(card);
+    }
+
+    foreach (var card in DiscardPile.GetCards()) {
+      Deck.Add(card);
+      DiscardPile.Remove(card);
+    }
+  }
+  
   protected override void TakeTurn(Player player, World world) {
     if (Global.Debug) SpawnDebugFloatingLabel("Start of turn");
   }

@@ -17,7 +17,6 @@ internal enum SelectionMode {
 public partial class World : Node2D {
 	[Export] public Camera Camera = null!;
 	[Export] public Player Player = null!;
-	[Export] public Hand Hand = null!;
 	[Export] public Label DebugLabel1 = null!;
 	[Export] public Label DebugLabel2 = null!;
 	[Export] public Label DebugLabel3 = null!;
@@ -64,9 +63,9 @@ public partial class World : Node2D {
     SetupPath();
     UpdatePath();
 
-    Hand.Visible = Data.Hand;
-    Hand.Deck.Visible = Data.Hand;
-    Hand.DiscardPile.Visible = Data.Hand;
+    Player.Hand.Visible = Data.Hand;
+    Player.Deck.Visible = Data.Hand;
+    Player.DiscardPile.Visible = Data.Hand;
     
     if (Data.CameraOnPlayer) {
 	    Camera.Target = Player;

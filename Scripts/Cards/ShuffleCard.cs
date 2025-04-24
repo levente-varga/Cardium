@@ -19,17 +19,17 @@ public class ShuffleCard : PlayerTargetingCard
     
     foreach (var card in player.Hand.GetCards()) {
       if (card == this) continue;
-      if (player.Hand.Remove(card, false) == null) {
+      if (!player.Hand.Remove(card, false)) {
         continue;
       }
       cards.Add(card);
     }
     
     foreach (var card in cards) {
-      player.Hand.Deck.Add(card);
+      player.Deck.Add(card);
     }
     
-    player.Hand.Deck.Deck.Shuffle();
+    player.Deck.Deck.Shuffle();
     
     player.Hand.DrawCards(cards.Count, false);
         

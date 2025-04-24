@@ -10,6 +10,7 @@ public partial class Inventory : Control {
 	[Export] public VBoxContainer InventoryContainer = null!;
 	[Export] public Control DeckArea = null!;
 	[Export] public Control InventoryArea = null!;
+	[Export] public Button OkButton = null!;
 	
 	[Export] private PackedScene _cardScene = ResourceLoader.Load<PackedScene>("res://Scenes/card.tscn");
 
@@ -17,25 +18,33 @@ public partial class Inventory : Control {
 	private readonly List<CardView> _cardsInDeck = new();
 	
 	private const int CardsPerRow = 2;
-
-	public new bool Visible {
-		get => base.Visible;
-		set {
-			base.Visible = value;
-			if (value) FillContainersWithCardViews();
-		}
-	}
 	
 	public override void _Ready() {
 		Visible = false;
+		OkButton.Pressed += OkButtonPressed;
 	}
 	
 	public override void _Process(double delta) {
 		
 	}
+	
+	public override void _Input(InputEvent @event) {
+		if (!Visible) return;
+	}
+	
+	public void Open() {
+		Visible = true;
+		Player.PutCardsInUseIntoDeck();
+		FillContainersWithCardViews();
+	}
+
+	public void OkButtonPressed() {
+		Player.Hand.DrawUntilFull();
+		Visible = false;
+	}
 
 	private void FillContainersWithCardViews() {
-		List<Card> cardsInUse = new(Player.Hand.Deck.Deck.GetCards());
+		List<Card> cardsInUse = new(Player.Deck.Deck.GetCards());
 		
 		FillContainerWithCardViews(DeckContainer, cardsInUse, _cardsInDeck);
 		FillContainerWithCardViews(InventoryContainer, Player.Inventory.GetCards(), _cardsInInventory);
@@ -77,14 +86,6 @@ public partial class Inventory : Control {
 		}
 	}
 
-	public override void _Input(InputEvent @event) {
-		if (!@event.IsPressed()) return;
-
-		if (InputMap.EventIsAction(@event, "ToggleInventoryMenu")) {
-			Visible = !Visible;
-		}
-	}
-
 	private void OnCardDragStartEventHandler(CardView view) {
 		
 	}
@@ -93,13 +94,13 @@ public partial class Inventory : Control {
 		if (_cardsInInventory.Contains(view)) {
 			// TODO: Move dragged card to deck
 			Player.Inventory.Remove(view.Card);
-			Player.Hand.Deck.Add(view.Card);
+			Player.Deck.Add(view.Card);
 			FillContainersWithCardViews();
 			GD.Print($"Moved {view.Card.Name}: Inventory -> Deck");
 		}
 		else if (_cardsInDeck.Contains(view)) {
 			// TODO: Move dragged card to inventory
-			Player.Hand.Deck.Remove(view.Card);
+			Player.Deck.Remove(view.Card);
 			Player.Inventory.Add(view.Card);
 			FillContainersWithCardViews();
 			GD.Print($"Moved {view.Card.Name}: Deck -> Inventory");
@@ -115,12 +116,12 @@ public partial class Inventory : Control {
 		if (_cardsInInventory.Contains(view) && DeckArea.GetRect().HasPoint(mousePosition)) {
 			// TODO: Move dragged card to deck
 			Player.Inventory.Remove(view.Card);
-			Player.Hand.Deck.Add(view.Card);
+			Player.Deck.Add(view.Card);
 			FillContainersWithCardViews();
 		}
 		else if (_cardsInDeck.Contains(view) && InventoryArea.GetRect().HasPoint(mousePosition)) {
 			// TODO: Move dragged card to inventory
-			Player.Hand.Deck.Remove(view.Card);
+			Player.Deck.Remove(view.Card);
 			Player.Inventory.Add(view.Card);
 			FillContainersWithCardViews();
 		}

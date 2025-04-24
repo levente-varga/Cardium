@@ -49,7 +49,7 @@ font_color = Color(0.8, 0.8, 0.8, 1)
 
 [node name="Root" type="Node"]
 
-[node name="Player" type="AnimatedSprite2D" parent="." node_paths=PackedStringArray("World", "DebugLabel", "Hand")]
+[node name="Player" type="AnimatedSprite2D" parent="." node_paths=PackedStringArray("World", "DebugLabel", "Hand", "DiscardPile", "Deck", "InventoryView")]
 z_index = 5
 scale = Vector2(4, 4)
 sprite_frames = SubResource("SpriteFrames_n205a")
@@ -58,6 +58,9 @@ script = ExtResource("3_q31ct")
 World = NodePath("../World")
 DebugLabel = NodePath("../CanvasLayer/Label2")
 Hand = NodePath("../Camera2D/Hand")
+DiscardPile = NodePath("../Camera2D/DiscardPile")
+Deck = NodePath("../Camera2D/Deck")
+InventoryView = NodePath("../CanvasLayer/Inventory")
 
 [node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("Target", "Canvas")]
 script = ExtResource("3_evct5")
@@ -96,14 +99,12 @@ label_settings = SubResource("LabelSettings_m54we")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Hand" type="Node2D" parent="Camera2D" node_paths=PackedStringArray("Player", "PlayArea", "DiscardArea", "DiscardPile", "Deck")]
+[node name="Hand" type="Node2D" parent="Camera2D" node_paths=PackedStringArray("Player", "PlayArea", "DiscardArea")]
 z_index = 10
 script = ExtResource("1_3ixgw")
 Player = NodePath("../../Player")
 PlayArea = NodePath("../../CanvasLayer/PlayArea")
 DiscardArea = NodePath("../../CanvasLayer/DiscardArea")
-DiscardPile = NodePath("../DiscardPile")
-Deck = NodePath("../Deck")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="Camera2D"]
 
@@ -140,12 +141,11 @@ vertical_alignment = 1
 [node name="PlayingCardPosition" type="Node2D" parent="Camera2D"]
 position = Vector2(-800, 0)
 
-[node name="World" type="Node2D" parent="." node_paths=PackedStringArray("Camera", "Player", "Hand", "DebugLabel1", "DebugLabel2", "DebugLabel3", "DebugLabel4", "Overlay")]
+[node name="World" type="Node2D" parent="." node_paths=PackedStringArray("Camera", "Player", "DebugLabel1", "DebugLabel2", "DebugLabel3", "DebugLabel4", "Overlay")]
 z_index = -1
 script = ExtResource("4_ayy7p")
 Camera = NodePath("../Camera2D")
 Player = NodePath("../Player")
-Hand = NodePath("../Camera2D/Hand")
 DebugLabel1 = NodePath("../CanvasLayer/Label1")
 DebugLabel2 = NodePath("../CanvasLayer/Label2")
 DebugLabel3 = NodePath("../CanvasLayer/Label3")
@@ -348,7 +348,7 @@ theme = ExtResource("5_h5gro")
 label_settings = SubResource("LabelSettings_khtd6")
 vertical_alignment = 1
 
-[node name="Inventory" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("Player", "DeckContainer", "InventoryContainer", "DeckArea", "InventoryArea")]
+[node name="Inventory" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("Player", "DeckContainer", "InventoryContainer", "DeckArea", "InventoryArea", "OkButton")]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 1920.0
@@ -357,10 +357,11 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("7_d6lyv")
 Player = NodePath("../../Player")
-DeckContainer = NodePath("CenterContainer/Panel/HBoxContainer/VBoxContainer/DeckScrollContainer/CenterContainer/MarginContainer/DeckContainer")
-InventoryContainer = NodePath("CenterContainer/Panel/HBoxContainer/VBoxContainer2/InventoryScrollContainer/CenterContainer/MarginContainer/InventoryContainer")
-DeckArea = NodePath("CenterContainer/Panel/HBoxContainer/VBoxContainer")
-InventoryArea = NodePath("CenterContainer/Panel/HBoxContainer/VBoxContainer2")
+DeckContainer = NodePath("CenterContainer/VBoxContainer/HBoxContainer/VBoxContainer/DeckScrollContainer/CenterContainer/MarginContainer/DeckContainer")
+InventoryContainer = NodePath("CenterContainer/VBoxContainer/HBoxContainer/VBoxContainer2/InventoryScrollContainer/CenterContainer/MarginContainer/InventoryContainer")
+DeckArea = NodePath("CenterContainer/VBoxContainer/HBoxContainer/VBoxContainer")
+InventoryArea = NodePath("CenterContainer/VBoxContainer/HBoxContainer/VBoxContainer2")
+OkButton = NodePath("CenterContainer/VBoxContainer/HBoxContainer2/OkButton")
 
 [node name="Background" type="ColorRect" parent="CanvasLayer/Inventory"]
 layout_mode = 1
@@ -385,21 +386,21 @@ custom_minimum_size = Vector2(1116, 760)
 layout_mode = 2
 color = Color(0.0846899, 0.0846899, 0.0846899, 1)
 
-[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Inventory/CenterContainer/Panel"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Inventory/CenterContainer"]
+custom_minimum_size = Vector2(1116, 760)
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Inventory/CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(1000, 600)
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 2
+size_flags_vertical = 3
 theme_override_constants/separation = 36
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="CanvasLayer/Inventory/CenterContainer/Panel/HBoxContainer"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="CanvasLayer/Inventory/CenterContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label2" type="Label" parent="CanvasLayer/Inventory/CenterContainer/Panel/HBoxContainer/VBoxContainer2"]
+[node name="Label2" type="Label" parent="CanvasLayer/Inventory/CenterContainer/VBoxContainer/HBoxContainer/VBoxContainer2"]
 custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 text = "Inventory"
@@ -407,19 +408,19 @@ label_settings = SubResource("LabelSettings_r4kvp")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="InventoryScrollContainer" type="ScrollContainer" parent="CanvasLayer/Inventory/CenterContainer/Panel/HBoxContainer/VBoxContainer2"]
+[node name="InventoryScrollContainer" type="ScrollContainer" parent="CanvasLayer/Inventory/CenterContainer/VBoxContainer/HBoxContainer/VBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 vertical_scroll_mode = 3
 
-[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/Inventory/CenterContainer/Panel/HBoxContainer/VBoxContainer2/InventoryScrollContainer"]
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/Inventory/CenterContainer/VBoxContainer/HBoxContainer/VBoxContainer2/InventoryScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Inventory/CenterContainer/Panel/HBoxContainer/VBoxContainer2/InventoryScrollContainer/CenterContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Inventory/CenterContainer/VBoxContainer/HBoxContainer/VBoxContainer2/InventoryScrollContainer/CenterContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -428,17 +429,17 @@ theme_override_constants/margin_top = 24
 theme_override_constants/margin_right = 24
 theme_override_constants/margin_bottom = 24
 
-[node name="InventoryContainer" type="VBoxContainer" parent="CanvasLayer/Inventory/CenterContainer/Panel/HBoxContainer/VBoxContainer2/InventoryScrollContainer/CenterContainer/MarginContainer"]
+[node name="InventoryContainer" type="VBoxContainer" parent="CanvasLayer/Inventory/CenterContainer/VBoxContainer/HBoxContainer/VBoxContainer2/InventoryScrollContainer/CenterContainer/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 18
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Inventory/CenterContainer/Panel/HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Inventory/CenterContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="CanvasLayer/Inventory/CenterContainer/Panel/HBoxContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="CanvasLayer/Inventory/CenterContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 text = "Deck"
@@ -446,7 +447,7 @@ label_settings = SubResource("LabelSettings_r4kvp")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="DeckScrollContainer" type="ScrollContainer" parent="CanvasLayer/Inventory/CenterContainer/Panel/HBoxContainer/VBoxContainer"]
+[node name="DeckScrollContainer" type="ScrollContainer" parent="CanvasLayer/Inventory/CenterContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
 custom_minimum_size = Vector2(1, 1)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -454,12 +455,12 @@ size_flags_vertical = 3
 horizontal_scroll_mode = 0
 vertical_scroll_mode = 3
 
-[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/Inventory/CenterContainer/Panel/HBoxContainer/VBoxContainer/DeckScrollContainer"]
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/Inventory/CenterContainer/VBoxContainer/HBoxContainer/VBoxContainer/DeckScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Inventory/CenterContainer/Panel/HBoxContainer/VBoxContainer/DeckScrollContainer/CenterContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Inventory/CenterContainer/VBoxContainer/HBoxContainer/VBoxContainer/DeckScrollContainer/CenterContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -468,8 +469,19 @@ theme_override_constants/margin_top = 24
 theme_override_constants/margin_right = 24
 theme_override_constants/margin_bottom = 24
 
-[node name="DeckContainer" type="VBoxContainer" parent="CanvasLayer/Inventory/CenterContainer/Panel/HBoxContainer/VBoxContainer/DeckScrollContainer/CenterContainer/MarginContainer"]
+[node name="DeckContainer" type="VBoxContainer" parent="CanvasLayer/Inventory/CenterContainer/VBoxContainer/HBoxContainer/VBoxContainer/DeckScrollContainer/CenterContainer/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 18
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/Inventory/CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+alignment = 1
+
+[node name="OkButton" type="Button" parent="CanvasLayer/Inventory/CenterContainer/VBoxContainer/HBoxContainer2"]
+custom_minimum_size = Vector2(200, 64)
+layout_mode = 2
+theme = ExtResource("5_h5gro")
+text = "Ok"

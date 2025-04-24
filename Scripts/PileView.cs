@@ -23,6 +23,8 @@ public partial class PileView : Node2D {
 	public override void _Process(double delta) {
 		SizeLabel.Text = Pile.IsEmpty ? "" : $"{Pile.Size}";
 	}
+	
+	public List<Card> GetCards() => Pile.GetCards();
 
 	public void Add(Card card) {
 		Pile.Add(card);

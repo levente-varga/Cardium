@@ -23,8 +23,6 @@ public partial class Hand : Node2D
 
 	[Export] public Control PlayArea = null!;
 	[Export] public Control DiscardArea = null!;
-	[Export] public PileView DiscardPile = null!;
-	[Export] public DeckView Deck = null!;
 	
 	[Export] private PackedScene _cardScene = ResourceLoader.Load<PackedScene>("res://Scenes/card.tscn");
 
@@ -64,7 +62,7 @@ public partial class Hand : Node2D
 	public void DrawUntilFull() => DrawCards(Capacity - Size);
 	public void DrawCards(int count, bool positionHand = true) {
 		for (var i = 0; i < count; i++) {
-			var card = Deck.DrawCard();
+			var card = Player.Deck.DrawCard();
 			if (card == null) break;
 			Add(card, false);
 			GD.Print($"Hand size: {Size}");
@@ -281,7 +279,7 @@ public partial class Hand : Node2D
 	/// <param name="view"></param>
 	private void Discard(CardView view) {
 		Redraw(view);
-		DiscardPile.Add(view.Card);
+		Player.DiscardPile.Add(view.Card);
 	} 
 	
 	private void EnableCards(bool enable = true) {
