@@ -26,277 +26,50 @@ public enum RoomTypes {
   Bonfire,
 }
 
-public struct Room {
+public class Room {
   public Rect2I Rect;
   public RoomTypes Type;
-
-  public Room(Rect2I rect, RoomTypes type) {
-    Rect = rect;
-    Type = type;
-  }
 }
 
-public class Dungeon {
-  private AStarGrid2D _grid = new();
-
-  public TileMapLayer GroundLayer { get; private set; } = new();
-  public TileMapLayer DecorLayer { get; private set; } = new();
-  public TileMapLayer WallLayer { get; private set; } = new();
-  public TileMapLayer FogLayer { get; private set; } = new();
-  public Overlay Overlay { get; private set; } = new();
+public partial class Dungeon {
+  public readonly TileMapLayer GroundLayer = new();
+  public readonly TileMapLayer DecorLayer = new();
+  public readonly TileMapLayer WallLayer = new();
+  public readonly TileMapLayer FogLayer = new();
   
-  public Vector2I Size { get; private set; }
   public Rect2I Rect { get; private set; }
 
-  public Player Player { get; private set; } = new();
-  public List<Enemy> Enemies { get; private set; } = new();
-  public List<Interactable> Interactables { get; private set; } = new();
-  public List<Card> Loot { get; private set; } = new();
-
-  // Data from the DungeonGenerator
-  public List<List<TileTypes>> Tiles;
-  public List<Room> Rooms;
+  public readonly Player Player = new();
+  public readonly List<Enemy> Enemies = new();
+  public readonly List<Interactable> Interactables = new();
+  public readonly List<List<TileTypes>> Tiles = new ();
+  public readonly List<Room> Rooms = new();
 
   private readonly Dictionary<int, Vector2I> _bitmaskToWallAtlasCoord = new();
-
-  private Random _random = new ();
-
-  public Dungeon(List<List<TileTypes>> tiles, List<Rect2I> rooms) {
-    Tiles = new List<List<TileTypes>>();
-    foreach (var row in tiles) {
-      Tiles.Add(new List<TileTypes>(row));
-    }
-    CategorizeRooms(rooms);
+  
+  public Dungeon() {
+    FillBitmaskDictionary();
     
-    // Assuming the received list of lists (tiles) has uniform length
-    Size = new Vector2I(
-      Tiles.Count,
-      Tiles.Count > 0 ? Tiles[0].Count : 0
-      );
-    Rect = new Rect2I(Vector2I.Zero, Size);
-    
-    WallLayer.Scale = new Vector2(4, 4);
-    DecorLayer.Scale = new Vector2(4, 4);
-    FogLayer.Scale = new Vector2(4, 4);
+    WallLayer.Scale = Global.TileScaleVector;
+    DecorLayer.Scale = Global.TileScaleVector;
+    FogLayer.Scale = Global.TileScaleVector;
     
     WallLayer.TileSet = ResourceLoader.Load<TileSet>("res://Assets/TileSets/walls.tres");
     DecorLayer.TileSet = ResourceLoader.Load<TileSet>("res://Assets/TileSets/decor.tres");
     FogLayer.TileSet = ResourceLoader.Load<TileSet>("res://Assets/TileSets/fog.tres");
-    
-    for (var x = 0; x < Size.X; x++) {
-      for (var y = 0; y < Size.Y; y++) {
-        //dungeon._grid.SetPointSolid(new Vector2I(x, y), walls[x][y]);
-        if (Tiles[x][y] == TileTypes.Wall) WallLayer.SetCell(new Vector2I(x, y), 0, new Vector2I(4, 0));
-      }
-    }
-    
-    FillBitmaskDictionary();
-    PrettyWalls();
-    Decorate();
-    SpawnExits();
-    SpawnBonfires();
-    SpawnChests();
-    SpawnDoors();
-    SpawnEnemies();
-    SpawnPlayer();
-    
-    GD.Print($"Generated a {Size.X}x{Size.Y} dungeon with\n" +
-             $"  {Rooms.Count} rooms\n" +
-             $"  {Enemies.Count} enemies\n" +
-             $"    {Enemies.Where(e => e is Slime).ToList().Count} slimes\n" +
-             $"    {Enemies.Where(e => e is Spider).ToList().Count} spiders\n" +
-             $"    {Enemies.Where(e => e is Ranger).ToList().Count} rangers\n" +
-             $"  {Interactables.Count} interactables\n" +
-             $"    {Interactables.Where(i => i is Ladder).ToList().Count} exits\n" +
-             $"    {Interactables.Where(i => i is Bonfire).ToList().Count} bonfires\n" +
-             $"    {Interactables.Where(i => i is Chest).ToList().Count} chests\n" +
-             $"    {Interactables.Where(i => i is Door).ToList().Count} doors\n" +
-             $"  {Loot.Count} loot");
-
   }
 
-  /// <summary>
-  /// Sets wall sprites according to their surrounding cells
-  /// </summary>
-  private void PrettyWalls() {
-    for (var x = 0; x < Size.X; x++) {
-      for (var y = 0; y < Size.Y; y++) {
-        var cell = new Vector2I(x, y);
-        if (LayerIsEmptyAt(WallLayer, cell)) continue;
-        var atlasCoords = WallLayer.GetCellAtlasCoords(cell);
-        int bitmask = GetWallBitmask(x, y);
-        if (_bitmaskToWallAtlasCoord.Keys.Contains(bitmask)) {
-          atlasCoords = _bitmaskToWallAtlasCoord[bitmask];
-        }
-        WallLayer.SetCell(cell, 0, atlasCoords);
-      }
-    }
-  }
-
-  private void CategorizeRooms(List<Rect2I> rooms) {
-    Rooms = new List<Room>();
-    var spawnRoomPicked = false;
-    var bonfires = 0;
-    var exits = 0;
-    foreach (var room in rooms) {
-      var type = RoomTypes.Uncategorized;
-      if (room.Size == new Vector2I(3, 3) || room.Size == new Vector2I(5, 3) || room.Size == new Vector2I(3, 5)) {
-        if (!spawnRoomPicked) {
-          type = RoomTypes.Spawn;
-          spawnRoomPicked = true;
-        }
-        else {
-          if (_random.Next((int)Mathf.Pow(exits * 2f, 2)) == 0) {
-            exits++;
-            type = RoomTypes.Exit;
-          }
-          else if (_random.Next((int)Mathf.Pow(bonfires * 1.2f, 2)) == 0) {
-            bonfires++;
-            type = RoomTypes.Bonfire;
-          }
-        }
-      }
-      Rooms.Add(new Room(room, type));
-    }
-  }
-
-  private void Decorate() {
-    for (var x = 0; x < Size.X; x++) {
-      for (var y = 0; y < Size.Y; y++) {
-        if (LayerIsEmptyAt(WallLayer, new Vector2I(x, y))) {
-          float factor = 1;
-          if (Tiles[x][y] == TileTypes.RoomCorner) factor = 0.4f;
-          else if (Tiles[x][y] == TileTypes.RoomPerimeter) factor = 0.8f;
-          else if (Tiles[x][y] == TileTypes.RoomInterior) factor = 1.2f;
-          
-          var random = _random.Next(100);
-          random = (int)(random * factor);
-          
-          if (random == 0) {
-            DecorLayer.SetCell(new Vector2I(x, y), 0, new Vector2I(8, 0));
-          }
-          else if (random <= 2) {
-            DecorLayer.SetCell(new Vector2I(x, y), 0, new Vector2I(5, 0));
-          }
-          else if (random <= 6) {
-            DecorLayer.SetCell(new Vector2I(x, y), 0, new Vector2I(2, 0));
-          }
-          else if (random <= 18) {
-            DecorLayer.SetCell(new Vector2I(x, y), 0, new Vector2I(1, 0));
-          }
-        }
-      }
-    }
-  }
+  public static Dungeon Generate(int width, int height, int roomTries) => Generate(new Vector2I(width, height), roomTries);
+  public static Dungeon Generate(Vector2I size, int roomTries) => new Generator().GenerateDungeon(size, roomTries);
   
-  private void SpawnEnemies() {
-    foreach (var room in Rooms.Where(room => room.Type == RoomTypes.Uncategorized)) {
-      Vector2I tile = new(
-        _random.Next(room.Rect.Position.X + 1, room.Rect.End.X - 2),
-        _random.Next(room.Rect.Position.Y + 1, room.Rect.End.Y - 2)
-        );
-
-      Enemy enemy ;
-      
-      if (_random.Next(20) == 0) {
-        enemy = new Ranger();
-      }
-      else if (_random.Next(8) == 0) {
-        enemy = new Spider();
-      }
-      else {
-        enemy = new Slime();
-      }
-      
-      enemy.Position = tile;
-      Enemies.Add(enemy);
-    }
-  }
-
-  private void SpawnDoors() {
-    var doors = 0;
-    for (var x = 0; x < Size.X; x++) {
-      for (var y = 0; y < Size.Y; y++) {
-        if (Tiles[x][y] != TileTypes.Entrance) continue;
-        if (_random.Next(doors + 2) > 0) continue;
-        Door door = new() { Position = new Vector2I(x, y) };
-        Interactables.Add(door);
-        doors++;
-      }
-    }
-  }
-
-  private void SpawnBonfires() {
-    foreach (var room in Rooms.Where(room => room.Type == RoomTypes.Bonfire)) {
-      var tileCandidates = GetRoomInteriorTiles(room);
-      
-      Bonfire bonfire = new();
-      bonfire.Position = tileCandidates[_random.Next(tileCandidates.Count)];
-      Interactables.Add(bonfire);
-    }
-  }
-
-  private void SpawnChests() {
-    var chests = 0;
-    foreach (var room in Rooms.Where(room => room.Type == RoomTypes.Uncategorized)) {
-      if (_random.Next(chests) > 0) continue;
-      var tileCandidates = GetRoomPerimeterTiles(room);
-      Chest chest = new();
-      chest.Position = tileCandidates[_random.Next(tileCandidates.Count / 2)];
-      chest.Content.Add(new SmiteCard()); // TODO: randomize content
-      Interactables.Add(chest);
-      chests++;
-    }
-  }
-
-  private void SpawnExits() {
-    foreach (var room in Rooms.Where(room => room.Type == RoomTypes.Exit)) {
-      var tileCandidates = GetRoomInteriorTiles(room);
-      
-      Ladder ladder = new();
-      ladder.Position = tileCandidates[_random.Next(tileCandidates.Count)];
-      Interactables.Add(ladder);
-    }
-  }
-  
-  private void SpawnPlayer() {
-    if (Rooms.Where(room => room.Type == RoomTypes.Spawn).ToList().Count == 0) {
-      GD.Print("[ERROR] No spawn room was generated");
-      return;
-    }
-    
-    var room = Rooms.FirstOrDefault(room => room.Type == RoomTypes.Spawn);
-    var tileCandidates = GetRoomInteriorTiles(room);
-    
-    Player.Position = tileCandidates[_random.Next(tileCandidates.Count)];
-  }
-
-  private List<Vector2I> GetRoomInteriorTiles(Room room) {
-    List<Vector2I> tiles = new();
-    for (var x = room.Rect.Position.X; x < room.Rect.End.X; x++) {
-      for (var y = room.Rect.Position.Y; y < room.Rect.End.Y; y++) {
-        if (Tiles[x][y] == TileTypes.RoomInterior) tiles.Add(new Vector2I(x, y));
-      }
-    }
-    return tiles;
-  }
-  
-  private List<Vector2I> GetRoomPerimeterTiles(Room room) {
-    List<Vector2I> tiles = new();
-    for (var x = room.Rect.Position.X; x < room.Rect.End.X; x++) {
-      for (var y = room.Rect.Position.Y; y < room.Rect.End.Y; y++) {
-        if (Tiles[x][y] == TileTypes.RoomPerimeter) tiles.Add(new Vector2I(x, y));
-      }
-    }
-    return tiles;
-  }
+  public static Dungeon GenerateLobby() => new Generator().GenerateLobbyDungeon();
 
   /// <summary>
   /// Adds key-value pairs to the [_bitmaskToWallAtlasCoord] dictionary.
   /// </summary>
   /// <param name="pattern">
   /// Defines the rules for the generated bitmasks. Each list item corresponds to
-  /// one bit in the bitmask (first item is the largest bit). If a value is true, its bit
+  /// one bit in the bitmask (the first item is the largest bit). If a value is true, its bit
   /// must be 1, if false, 0. If null that bit is a variable. All bitmask that fit to this
   /// pattern will be generated. The list's length must be 8.
   /// </param>
@@ -307,27 +80,32 @@ public class Dungeon {
       throw new ArgumentException("Pattern must have exactly 8 elements.");
 
     pattern.Reverse();
-    
-    void Generate(int index, byte bitmask) {
-      if (index == 8) {
-        if (_bitmaskToWallAtlasCoord.Keys.Contains(bitmask))
-          throw new Exception($"Dictionary already contains generated key: {bitmask}");
-        _bitmaskToWallAtlasCoord[bitmask] = value;
-        return;
-      }
 
-      if (pattern[index] == null || pattern[index] == true)
-        Generate(index + 1, (byte)(bitmask | (1 << index)));
-      if (pattern[index] == null || pattern[index] == false)
-        Generate(index + 1, bitmask);
+    void GenerateBitmasks(int index, byte bitmask) {
+      while (true) {
+        if (index == 8) {
+          if (!_bitmaskToWallAtlasCoord.TryAdd(bitmask, value)) {
+            throw new Exception($"Dictionary already contains generated key: {bitmask}");
+          }
+          return;
+        }
+
+        if (pattern[index] == null || pattern[index] == true) {
+          GenerateBitmasks(index + 1, (byte)(bitmask | (1 << index)));
+        }
+        if (pattern[index] == null || pattern[index] == false) {
+          index = index + 1;
+          continue;
+        }
+
+        break;
+      }
     }
 
-    Generate(0, 0);
+    GenerateBitmasks(0, 0);
   }
-
-  private static bool LayerIsEmptyAt(TileMapLayer layer, Vector2I tile) => layer.GetCellSourceId(tile) == -1;
   
-  private bool IsWall(Vector2I cell) => WallLayer.GetCellSourceId(cell) != -1 || !Rect.HasPoint(cell);
+  private bool IsWall(Vector2I cell) => !Rect.HasPoint(cell) || Tiles[cell.X][cell.Y] == TileTypes.Wall;
   
   private int GetWallBitmask(int x, int y) {
     var mask = 0;

@@ -36,12 +36,14 @@ public partial class Enemy : Entity
 
     protected override void TakeTurn(Player player, World world)
     {
+        if (!SeeingPlayer && Utils.ManhattanDistanceBetween(player.Position, Position) > Vision) return;
+        
         var distance = world.GetDistanceBetween(Position, player.Position);
         
         if (!SeeingPlayer) {
             if (distance != -1 && distance <= Vision) {
                 SeeingPlayer = true;
-                HealthBar.Visible = true;
+                HealthBar.Visible = Data.ShowHealth;
             }
         }
         else {

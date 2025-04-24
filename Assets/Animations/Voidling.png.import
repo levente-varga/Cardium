@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b88bagvmbo1kk"
-path="res://.godot/imported/Inventory.png-86dd891e43363eb650a3bff122784827.ctex"
+uid="uid://5h1l4y8tybp7"
+path="res://.godot/imported/Voidling.png-ba82098a89a7a27ef93862f3b13df2a3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Inventory.png"
-dest_files=["res://.godot/imported/Inventory.png-86dd891e43363eb650a3bff122784827.ctex"]
+source_file="res://Assets/Animations/Voidling.png"
+dest_files=["res://.godot/imported/Voidling.png-ba82098a89a7a27ef93862f3b13df2a3.ctex"]
 
 [params]
 

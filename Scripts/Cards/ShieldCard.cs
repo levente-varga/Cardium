@@ -3,23 +3,19 @@ using Godot;
 
 namespace Cardium.Scripts.Cards;
 
-public partial class ShieldCard : PlayerTargetingCard
-{
-    public ShieldCard()
-    {
-        DisplayName = "Shield";
-        Description = "Raises Armor by 2 for 3 turns.";
+public class ShieldCard : PlayerTargetingCard {
+    public int ExtraArmor = 2;
+    public int Duration = 3;
+    
+    public ShieldCard() {
+        Name = "Shield";
+        Description = $"Raises Armor by {Highlight($"{ExtraArmor}")} for {Highlight($"{Duration}")} turns.";
+        Rarity = CardRarity.Common;
         Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Shield.png");
         Type = CardType.Combat;
     }
     
-    public override void _Ready()
-    {
-        base._Ready();
-    }
-    
-    public override bool OnPlay(Player player)
-    {
+    public override bool OnPlay(Player player) {
         // TODO: Implement
         
         return true;

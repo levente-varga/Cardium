@@ -86,7 +86,7 @@ public partial class HealthBar : Polygon2D
 		Labels.FallingLabel label = new()
 		{
 			Text = text,
-			Position = new Vector2(GlobalPosition.X + (HorizontalMargin + ActualWidth) * Global.Scale, GlobalPosition.Y),
+			Position = new Vector2(GlobalPosition.X + (HorizontalMargin + ActualWidth) * Global.TileScale, GlobalPosition.Y),
 			Color = Global.Red,
 		};
 		GetTree().Root.AddChild(label);

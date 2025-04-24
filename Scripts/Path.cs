@@ -7,7 +7,7 @@ public partial class Path : Line2D
     public override void _Ready()
     {
         DefaultColor = Global.Yellow;
-        Scale = new Vector2(Global.Scale, Global.Scale).Inverse();
+        Scale = new Vector2(Global.TileScale, Global.TileScale).Inverse();
         Width = 4;
         ZIndex = 1;
         base._Ready();

@@ -3,12 +3,12 @@ using Godot;
 
 namespace Cardium.Scripts;
 
-public partial class Camera : Camera2D
-{
+public partial class Camera : Camera2D {
 	[Export] public Node2D Target = null!;
+	[Export] public CanvasLayer Canvas = null!;
 
 	private float _shake;
-	private readonly Random _random = new Random();
+	private readonly Random _random = new ();
 	
 	private Vector2 TargetCenter => Target.GlobalPosition + Global.GlobalTileSize / 2;
 
@@ -16,17 +16,14 @@ public partial class Camera : Camera2D
 	public bool Focus
 	{
 		get => _focus;
-		set
-		{
+		set {
 			_focus = value;
 			//SetFocus(_focus);
 		}
 	}
 
-	public Rect2 ViewRect
-	{
-		get
-		{
+	public Rect2 ViewRect {
+		get {
 			var viewportSize = GetViewportRect().Size;
 			var worldViewSize = viewportSize * Zoom;
 			var topLeft = GlobalPosition - (worldViewSize / 2);
@@ -34,37 +31,40 @@ public partial class Camera : Camera2D
 		}
 	}
 	
-	public override void _Ready()
-	{
-		
+	public override void _Ready() {
+		Canvas.Visible = Data.Level == Level.Lobby;
 	}
 
-	public override void _Process(double delta)
-	{
+	public override void _Process(double delta) {
 		Zoom = Zoom.Lerp(_focus ? Vector2.One / 0.7f : Vector2.One, Global.LerpWeight * (float) delta);
 		Scale = Zoom.Inverse();
-		Position = GlobalPosition.Lerp(TargetCenter, Global.LerpWeight * (float) delta);
 		
-		if (_shake > 0)
-		{
-			// Apply random offsets to the camera's position for the shake effect
-			var offset = new Vector2(
-				(float)(_random.NextDouble() * 2 - 1),
-				(float)(_random.NextDouble() * 2 - 1)
-			);
-			if (offset == Vector2.Zero) offset = Vector2.One;
-			offset = offset.Normalized() * _shake;
-
-			// Apply the offset to the camera's position
-			Position += offset;
-
-			// Gradually reduce the shake intensity (smooth shake reduction)
-			_shake = Mathf.Lerp(_shake, 0f, Global.LerpWeight * (float)delta); // You can adjust the reduction speed
-		}
+		if (_shake > 0) Shake(delta);
+		
+		FollowTarget(delta);
 	}
 
-	private void SetFocus(bool focus)
-	{
+	private void FollowTarget(double delta) {
+		var offset = Position - TargetCenter;
+		Position = GlobalPosition.Lerp(TargetCenter, Global.LerpWeight * (float) delta);
+		
+		Canvas.Offset = -offset;
+	}
+
+	private void Shake(double delta) {
+		var offset = new Vector2(
+			(float)(_random.NextDouble() * 2 - 1),
+			(float)(_random.NextDouble() * 2 - 1)
+		);
+		if (offset == Vector2.Zero) offset = Vector2.One;
+		offset = offset.Normalized() * _shake;
+
+		Position += offset;
+
+		_shake = Mathf.Lerp(_shake, 0f, Global.LerpWeight * (float)delta);
+	}
+
+	private void SetFocus(bool focus) {
 		var tween = CreateTween();
 		
 		tween.TweenProperty(this, "zoom", focus ? new Vector2(1.5f, 1.5f) : new Vector2(1f, 1f), 0.5f);
@@ -72,13 +72,11 @@ public partial class Camera : Camera2D
 		tween.Play();
 	}
 	
-	public void Shake(float amount)
-	{
+	public void Shake(float amount) {
 		_shake = amount;
 	}
 	
-	public void JumpToTarget()
-	{
+	public void JumpToTarget() {
 		Position = TargetCenter;
 	}
 }

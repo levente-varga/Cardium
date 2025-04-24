@@ -4,15 +4,14 @@ using Godot;
 
 namespace Cardium.Scripts.Cards;
 
-public partial class WoodenKeyCard : InteractableTargetingCard {
-    public override void _Ready() {
-        DisplayName = "Wooden Key";
+public class WoodenKeyCard : InteractableTargetingCard {
+    public WoodenKeyCard() {
+        Name = "Wooden Key";
         Description = "Unlocks a door.";
+        Rarity = CardRarity.Common;
         Range = 1;
         Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/WoodenKey.png");
         Type = CardType.Utility;
-        
-        base._Ready();
     }
 
     public override bool OnPlay(Player player, Interactable target, World world) {

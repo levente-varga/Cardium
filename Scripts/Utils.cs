@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Cardium.Scripts.Labels;
 using Godot;
 
 namespace Cardium.Scripts;
@@ -11,30 +12,25 @@ public class Utils
         return Mathf.Abs(a.X - b.X) + Mathf.Abs(a.Y - b.Y);
     }
     
-    public static void SpawnFallingLabel(SceneTree tree, Vector2 position, string text, Color? color = null, int? fontSize = null, int? lifetimeMillis = null)
-    {
-        Labels.FallingLabel label = new()
-        {
+    public static void SpawnFallingLabel(SceneTree tree, Vector2 position, string text, Color? color = null, int? fontSize = null, int? lifetimeMillis = null) {
+        tree.Root.AddChild(new FallingLabel {
             Text = text,
             Position = position,
             Color = color,
             FontSize = fontSize,
             LifetimeMillis = lifetimeMillis,
-        };
-        tree.Root.AddChild(label);
+        });
     }
     
-    public static void SpawnFloatingLabel(SceneTree tree, Vector2 position, string text, Color? color = null, int? fontSize = null, int? lifetimeMillis = 2000)
-    {
-        Labels.FloatingLabel label = new()
-        {
+    public static void SpawnFloatingLabel(SceneTree tree, Vector2 position, string text, Color? color = null, int height = 120, int? fontSize = null, int? lifetimeMillis = 2000) {
+        tree.Root.AddChild(new FloatingLabel {
             Text = text,
             Position = position,
+            Height = height,
             Color = color,
             FontSize = fontSize ?? 40,
             LifetimeMillis = lifetimeMillis,
-        };
-        tree.Root.AddChild(label);
+        });
     }
     
     public static void FisherYatesShuffle<T>(List<T> list)

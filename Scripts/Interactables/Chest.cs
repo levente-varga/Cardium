@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using Cardium.Scripts.Cards;
-using Cardium.Scripts.Cards.Types;
 using Godot;
 
 namespace Cardium.Scripts.Interactables;
@@ -12,9 +10,6 @@ public partial class Chest : Interactable
     public override void _Ready()
     {
         base._Ready();
-
-        Content.Add(new HurlCard());
-
         SetAnimation("open", ResourceLoader.Load<Texture2D>("res://Assets/Animations/Chest.png"), 6, 12, false, false);
     }
 
@@ -34,6 +29,6 @@ public partial class Chest : Interactable
         Play("open");
         SpawnFallingLabel("Opened!");
         
-        foreach (var card in Content) player.PickUpCard(card); 
+        player.PickUpCards(Content); 
     }
 }

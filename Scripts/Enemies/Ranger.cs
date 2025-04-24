@@ -8,6 +8,7 @@ public partial class Ranger : Enemy
     {
         base._Ready();
 
+        SetAnimation("idle", GD.Load<Texture2D>("res://Assets/Animations/Ranger.png"), 8, 12);
         Name = "Ranger";
         Description = "Stays just in range.";
         MaxHealth = 1;
@@ -16,8 +17,6 @@ public partial class Ranger : Enemy
         BaseArmor = 0;
         BaseDamage = 1;
         BaseRange = 4;
-        
-        SetStillFrame(GD.Load<Texture2D>("res://Assets/Sprites/player.png"));
     }
 
     protected override void TakeTurn(Player player, World world)

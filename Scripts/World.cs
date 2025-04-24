@@ -17,7 +17,6 @@ internal enum SelectionMode {
 public partial class World : Node2D {
 	[Export] public Camera Camera = null!;
 	[Export] public Player Player = null!;
-	[Export] public Hand Hand = null!;
 	[Export] public Label DebugLabel1 = null!;
 	[Export] public Label DebugLabel2 = null!;
 	[Export] public Label DebugLabel3 = null!;
@@ -44,8 +43,15 @@ public partial class World : Node2D {
   private CombatManager _combatManager = null!;
 
   public World() {
-    DungeonGenerator generator = new();
-    _dungeon = generator.Generate(99, 99, 299);
+	  _dungeon = Dungeon.GenerateLobby();
+
+	  _dungeon = Data.Level switch {
+		  Level.Lobby => Dungeon.GenerateLobby(),
+		  Level.One => Dungeon.Generate(99, 99, 300),
+		  _ => throw new ArgumentOutOfRangeException()
+	  };
+
+	  //Input.MouseMode = Data.Level == Level.Lobby ? Input.MouseModeEnum.Hidden : Input.MouseModeEnum.Visible;
   }
 
   public Vector2I HoveredCell => GetTilePosition(GetGlobalMousePosition());
@@ -53,15 +59,29 @@ public partial class World : Node2D {
   public override void _Ready() {
     _combatManager = new CombatManager(Player, this, DebugLabel1);
     
-    //Input.MouseMode = Input.MouseModeEnum.Hidden;
-    SetupFogOfWar();
+    if (Data.Fog) SetupFogOfWar();
     SetupPath();
     UpdatePath();
+
+    Player.Hand.Visible = Data.Hand;
+    Player.Deck.Visible = Data.Hand;
+    Player.DiscardPile.Visible = Data.Hand;
+    
+    if (Data.CameraOnPlayer) {
+	    Camera.Target = Player;
+    }
+    else {
+	    var target = new Node2D();
+	    target.Position = Global.TileToWorld(_dungeon.Rect.GetCenter()) + 3 * Global.GlobalTileSize * Vector2I.Up;
+	    AddChild(target);
+	    Camera.Target = target;
+    }
 
     AddChild(_dungeon.WallLayer);
     AddChild(_dungeon.DecorLayer);
     AddChild(_dungeon.GroundLayer);
     AddChild(_dungeon.FogLayer);
+    
     _dungeon.FogLayer.ZIndex = 10;
 
     SpawnPlayer(Player, _dungeon.Player.Position);
@@ -99,9 +119,9 @@ public partial class World : Node2D {
 		    Overlay.Tiles = new List<Overlay.OverlayTile> { new () {Position = HoveredCell, Color = Colors.Red} };
 	    }
 	    else {
-		    Overlay.Tiles = _selectedTargetingCard.GetHighlightedTiles(Player, HoveredCell, this).Select(tile => 
-			    new Overlay.OverlayTile {Position = tile, Color = Colors.Red}).ToList();
-		    GD.Print("Selected card: " + _selectedTargetingCard + ", higlighted tiles: " + Overlay.Tiles.Count);
+		    Overlay.Tiles = _selectedTargetingCard.GetHighlightedTiles(Player, HoveredCell, this)
+			    .Select(tile => new Overlay.OverlayTile { Position = tile, Color = Colors.Red })
+			    .ToList();
 	    }
     }
     
@@ -116,6 +136,10 @@ public partial class World : Node2D {
     }
     else if (InputMap.EventIsAction(@event, "Select") && @event.IsPressed()) {
 	    
+    }
+    else if (InputMap.EventIsAction(@event, "Back") && @event.IsPressed()) {
+	    Data.LoadLobbyData();
+	    GetTree().ReloadCurrentScene();
     }
     else if (@event is InputEventMouseButton { Pressed: true, ButtonIndex: MouseButton.Left }) {
 	    if (_selectionMode == SelectionMode.None) return;
@@ -176,7 +200,7 @@ public partial class World : Node2D {
     	}
     }
 
-    UpdateFogOfWar();
+    if (Data.Fog) UpdateFogOfWar();
     
     base._Draw();
   }
@@ -276,7 +300,7 @@ public partial class World : Node2D {
 		enemy.QueueFree();
 		_grid.SetPointSolid(enemy.Position, false);
 
-		foreach (var loot in enemy.Inventory.Select(card => new CardLoot(card))) {
+		foreach (var loot in enemy.Inventory.GetCards().Select(card => new CardLoot { Card = card })) {
 			loot.SetPosition(enemy.Position);
 			_loot.Add(loot);
 			AddChild(loot);
@@ -321,12 +345,14 @@ public partial class World : Node2D {
 	}
   
 	private void PickUpLoot() {
+		List<Card> cards = new ();
 		foreach (var loot in _loot.Where(loot => loot.Position == Player.Position).ToList()) {
 			_loot.Remove(loot);
 			RemoveChild(loot);
 			loot.QueueFree();
-			Player.PickUpCard(loot.Card);
+			cards.Add(loot.Card);
 		}
+		Player.PickUpCards(cards);
 	}
 	
 	public int GetDistanceBetween(Vector2I from, Vector2I to) {

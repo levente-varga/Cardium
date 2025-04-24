@@ -1,123 +1,139 @@
-[gd_scene load_steps=7 format=3 uid="uid://c8tbfjcyg4o24"]
+[gd_scene load_steps=18 format=3 uid="uid://c8tbfjcyg4o24"]
 
+[ext_resource type="Script" path="res://Scripts/Cards/Types/CardView.cs" id="1_imc88"]
+[ext_resource type="Texture2D" uid="uid://cbie0d833gc4b" path="res://Assets/Sprites/Cards/Holy.png" id="2_nquoe"]
 [ext_resource type="Texture2D" uid="uid://c780cg0mxpik5" path="res://Assets/Sprites/Cards/Combat card.png" id="2_whev3"]
+[ext_resource type="FontFile" uid="uid://2rxest3pjy34" path="res://Assets/Fonts/alagard.ttf" id="3_hvbn6"]
+[ext_resource type="FontFile" uid="uid://cgna0pm46rmdr" path="res://Assets/Fonts/Levi Windows.ttf" id="3_ufy2c"]
 
-[sub_resource type="Animation" id="Animation_2okwy"]
-resource_name = "Deselect"
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Body:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 1),
-"transitions": PackedFloat32Array(0.025, 1),
-"update": 0,
-"values": [Vector2(0, -64), Vector2(0, 0)]
-}
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mih11"]
 
-[sub_resource type="Animation" id="Animation_evann"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Body:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0, 0)]
-}
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bcfew"]
 
-[sub_resource type="Animation" id="Animation_k0cb6"]
-resource_name = "Select"
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Body:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 1),
-"transitions": PackedFloat32Array(0.025, 1),
-"update": 0,
-"values": [Vector2(0, 0), Vector2(0, -64)]
-}
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mxlak"]
 
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_epb5b"]
-_data = {
-"Deselect": SubResource("Animation_2okwy"),
-"RESET": SubResource("Animation_evann"),
-"Select": SubResource("Animation_k0cb6")
-}
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_cqxog"]
 
-[sub_resource type="Theme" id="Theme_cp7fn"]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_a34tx"]
 
-[node name="Card" type="Node2D"]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_awegs"]
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-libraries = {
-"": SubResource("AnimationLibrary_epb5b")
-}
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7hclv"]
 
-[node name="Body" type="Node2D" parent="."]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_uhakq"]
 
-[node name="Sprite" type="Sprite2D" parent="Body"]
-texture = ExtResource("2_whev3")
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5a2ji"]
 
-[node name="Hitbox" type="Button" parent="Body"]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_b64ww"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_o4dhi"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_j8amx"]
+line_spacing = 0.0
+font = ExtResource("3_hvbn6")
+font_color = Color(0.8, 0.8, 0.8, 1)
+
+[node name="Card" type="Node2D" node_paths=PackedStringArray("_hoverBase", "_base", "_art", "_hitbox", "_descriptionLabel", "_nameLabel", "_debugFrame")]
+script = ExtResource("1_imc88")
+_hoverBase = NodePath("Base/HoverBase")
+_base = NodePath("Base")
+_art = NodePath("Base/HoverBase/Body/Art")
+_hitbox = NodePath("Base/HoverBase/Hitbox")
+_descriptionLabel = NodePath("Base/HoverBase/DescriptionArea/Description")
+_nameLabel = NodePath("Base/HoverBase/Body/Name")
+_debugFrame = NodePath("")
+
+[node name="Base" type="Node2D" parent="."]
+
+[node name="HoverBase" type="Node2D" parent="Base"]
+
+[node name="Hitbox" type="Button" parent="Base/HoverBase"]
+z_index = 10
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -19.0
-offset_top = -27.0
-offset_right = 19.0
-offset_bottom = 27.0
+offset_left = -114.0
+offset_top = -162.0
+offset_right = 114.0
+offset_bottom = 162.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/focus = SubResource("StyleBoxEmpty_mih11")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxEmpty_bcfew")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_mxlak")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxEmpty_cqxog")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_a34tx")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxEmpty_awegs")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_7hclv")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxEmpty_uhakq")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_5a2ji")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxEmpty_b64ww")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_o4dhi")
 flat = true
 
-[node name="Art" type="Sprite2D" parent="Body"]
-position = Vector2(3, 3)
+[node name="Body" type="Node2D" parent="Base/HoverBase"]
+scale = Vector2(6, 6)
 
-[node name="Control" type="Control" parent="Body"]
-layout_mode = 3
-anchors_preset = 0
-offset_left = 3.0
-offset_top = 30.0
-offset_right = 35.0
-offset_bottom = 51.0
-
-[node name="Description" type="RichTextLabel" parent="Body/Control"]
-layout_mode = 1
+[node name="Background" type="ColorRect" parent="Base/HoverBase/Body"]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -96.0
-offset_top = -16.0
-offset_right = 96.0
-offset_bottom = 16.0
+offset_left = -17.0
+offset_top = -25.0
+offset_right = 17.0
+offset_bottom = 25.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = SubResource("Theme_cp7fn")
+mouse_filter = 2
+color = Color(0.0823529, 0.0823529, 0.0823529, 1)
+
+[node name="Frame" type="Sprite2D" parent="Base/HoverBase/Body"]
+texture = ExtResource("2_whev3")
+
+[node name="Art" type="Sprite2D" parent="Base/HoverBase/Body"]
+position = Vector2(0, -12)
+texture = ExtResource("2_nquoe")
+
+[node name="Name" type="Label" parent="Base/HoverBase/Body"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -13.0
+offset_top = 1.0
+offset_right = 120.0
+offset_bottom = 21.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.2, 0.2)
+text = "Holy"
+label_settings = SubResource("LabelSettings_j8amx")
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="DescriptionArea" type="CenterContainer" parent="Base/HoverBase"]
+offset_left = -96.0
+offset_top = 36.0
+offset_right = 160.0
+offset_bottom = 180.0
+scale = Vector2(0.75, 0.75)
+mouse_filter = 2
+
+[node name="Description" type="RichTextLabel" parent="Base/HoverBase/DescriptionArea"]
+clip_contents = false
+custom_minimum_size = Vector2(240, 10)
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.466667, 0.466667, 0.466667, 1)
+theme_override_fonts/normal_font = ExtResource("3_ufy2c")
+theme_override_font_sizes/normal_font_size = 25
 bbcode_enabled = true
-text = "[center]Test text[/center]"
+text = "[center]Deals [color=#cccccc]10[/color] damage in an area, disrtibuted equally.
+[color=#cccccc]Unstable[/color][/center]"
 fit_content = true
-
-[node name="Art2" type="Control" parent="Body"]
-layout_mode = 3
-anchors_preset = 0
-offset_left = -16.0
-offset_top = 6.0
-offset_right = 16.0
-offset_bottom = 24.0
-
-[connection signal="mouse_entered" from="Body/Hitbox" to="." method="OnMouseEntered"]
-[connection signal="mouse_exited" from="Body/Hitbox" to="." method="OnMouseExited"]

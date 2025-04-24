@@ -4,19 +4,14 @@ using Godot;
 
 namespace Cardium.Scripts.Cards;
 
-public partial class ShuffleCard : PlayerTargetingCard
+public class ShuffleCard : PlayerTargetingCard
 {
-  public ShuffleCard()
-  {
-    DisplayName = "Shuffle";
+  public ShuffleCard() {
+    Name = "Shuffle";
     Description = "Puts cards from hand into deck, shuffles it, then draws the same amount of cards.";
+    Rarity = CardRarity.Common;
     Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Shuffle.png");
     Type = CardType.Combat;
-  }
-    
-  public override void _Ready()
-  {
-    base._Ready();
   }
     
   public override bool OnPlay(Player player) {
@@ -24,7 +19,7 @@ public partial class ShuffleCard : PlayerTargetingCard
     
     foreach (var card in player.Hand.GetCards()) {
       if (card == this) continue;
-      if (player.Hand.Remove(card, false) == null) {
+      if (!player.Hand.Remove(card, false)) {
         continue;
       }
       cards.Add(card);
@@ -34,7 +29,7 @@ public partial class ShuffleCard : PlayerTargetingCard
       player.Deck.Add(card);
     }
     
-    player.Deck.Shuffle();
+    player.Deck.Deck.Shuffle();
     
     player.Hand.DrawCards(cards.Count, false);
         
