@@ -12,6 +12,7 @@ public class Data {
   public static bool ShowHealth;
   public static bool CameraOnPlayer;
   public static bool MenuOpen;
+  public static Pile Stash = new Pile();
 
   public static void LoadLobbyData() {
     Level = Level.Lobby;

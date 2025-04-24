@@ -1,8 +1,12 @@
+using System;
 using System.Collections.Generic;
 using Cardium.Scripts.Cards.Types;
 using Godot;
 
 namespace Cardium.Scripts;
+
+public enum CardOrigin { None, Deck, Stash, Inventory, }
+public enum DraggedCardState { None, OverDeckArea, OverInventoryArea, OverStashArea }
 
 public partial class Inventory : Control {
 	[Export] public Player Player = null!;
@@ -17,7 +21,10 @@ public partial class Inventory : Control {
 	private readonly List<CardView> _cardsInInventory = new();
 	private readonly List<CardView> _cardsInDeck = new();
 	
+	private DraggedCardState _draggedCardState;
+	
 	private const int CardsPerRow = 2;
+	private CardOrigin _draggedCardOrigin;
 	
 	public override void _Ready() {
 		Visible = false;
@@ -67,13 +74,13 @@ public partial class Inventory : Control {
 			var view = _cardScene.Instantiate<CardView>();
 			view.Card = card;
 			view.Enabled = true;
-			view.Draggable = false;
+			view.Draggable = true;
 			view.HoverAnimation = CardView.HoverAnimationType.Grow;
 			view.Position = Global.GlobalCardSize / 2;
 			view.OnDragStartEvent += OnCardDragStartEventHandler;
-			//view.OnDragEndEvent += OnCardDragEndEventHandler;
+			view.OnDragEndEvent += OnCardDragEndEventHandler;
 			view.OnDragEvent += OnCardDragEventHandler;
-			view.OnPressedEvent += OnCardPressedEventHandler;
+			//view.OnPressedEvent += OnCardPressedEventHandler;
 			cardContainer.AddChild(view);
 			row.AddChild(cardContainer);
 			
@@ -84,10 +91,6 @@ public partial class Inventory : Control {
 			container.AddChild(row);
 			row = new HBoxContainer();
 		}
-	}
-
-	private void OnCardDragStartEventHandler(CardView view) {
-		
 	}
 
 	private void OnCardPressedEventHandler(CardView view) {
@@ -108,22 +111,90 @@ public partial class Inventory : Control {
 		}
 	}
 	
+	private void OnCardDragStartEventHandler(CardView view) {
+		_draggedCardOrigin = CardOrigin.None;
+		if (Player.Inventory.Contains(view.Card)) {
+			_draggedCardOrigin = CardOrigin.Inventory;
+		}
+		else if (Player.Deck.Deck.Contains(view.Card)) {
+			_draggedCardOrigin = CardOrigin.Deck;
+		}
+		else if (Data.Stash.Contains(view.Card)) {
+			_draggedCardOrigin = CardOrigin.Stash;
+		}
+		GD.Print($"Started dragging a card from {_draggedCardOrigin}");
+	}
+	
 	private void OnCardDragEventHandler(CardView view, Vector2 mousePosition) {
+		var mouseOverDeckArea = DeckArea.GetRect().HasPoint(mousePosition);
+		var mouseOverInventoryArea = InventoryArea.GetRect().HasPoint(mousePosition);
+		var mouseOverStashArea = false;
 		
+		if (mouseOverDeckArea && _draggedCardOrigin != CardOrigin.Deck) {
+			if (_draggedCardState != DraggedCardState.OverDeckArea) {
+				_draggedCardState = DraggedCardState.OverDeckArea;
+				view.PlayScaleAnimation(0.75f);
+			}
+		}
+		else if (mouseOverInventoryArea && _draggedCardOrigin != CardOrigin.Inventory) {
+			if (_draggedCardState != DraggedCardState.OverInventoryArea) {
+				_draggedCardState = DraggedCardState.OverInventoryArea;
+				view.PlayScaleAnimation(0.75f);
+			}
+		}
+		else if (mouseOverStashArea && _draggedCardOrigin != CardOrigin.Stash) {
+			if (_draggedCardState != DraggedCardState.OverStashArea) {
+				_draggedCardState = DraggedCardState.OverStashArea;
+				view.PlayScaleAnimation(0.75f);
+			}
+		}
+		else {
+			if (_draggedCardState != DraggedCardState.None) {
+				_draggedCardState = DraggedCardState.None;
+				view.PlayResetAnimation();
+			}
+		}
+	}
+
+	private void RemoveDraggedCardFromItsOrigin(Card card) {
+		GD.Print($"Removing card originating from {_draggedCardOrigin}");
+		switch (_draggedCardOrigin) {
+			case CardOrigin.Deck:
+				Player.Deck.Remove(card);
+				break;
+			case CardOrigin.Inventory:
+				Player.Inventory.Remove(card);
+				break;
+			case CardOrigin.Stash:
+				Data.Stash.Remove(card);
+				break;
+			case CardOrigin.None:
+			default:
+				break;
+		}
 	}
 
 	private void OnCardDragEndEventHandler(CardView view, Vector2 mousePosition) {
-		if (_cardsInInventory.Contains(view) && DeckArea.GetRect().HasPoint(mousePosition)) {
-			// TODO: Move dragged card to deck
-			Player.Inventory.Remove(view.Card);
+		var mouseOverDeckArea = DeckArea.GetRect().HasPoint(mousePosition);
+		var mouseOverInventoryArea = InventoryArea.GetRect().HasPoint(mousePosition);
+		var mouseOverStashArea = false;
+		
+		if (mouseOverDeckArea && _draggedCardOrigin != CardOrigin.Deck) {
+			RemoveDraggedCardFromItsOrigin(view.Card);
 			Player.Deck.Add(view.Card);
 			FillContainersWithCardViews();
 		}
-		else if (_cardsInDeck.Contains(view) && InventoryArea.GetRect().HasPoint(mousePosition)) {
-			// TODO: Move dragged card to inventory
-			Player.Deck.Remove(view.Card);
+		else if (mouseOverInventoryArea && _draggedCardOrigin != CardOrigin.Inventory) {
+			RemoveDraggedCardFromItsOrigin(view.Card);
 			Player.Inventory.Add(view.Card);
 			FillContainersWithCardViews();
 		}
+		else if (mouseOverStashArea && _draggedCardOrigin != CardOrigin.Stash) {
+			RemoveDraggedCardFromItsOrigin(view.Card);
+			Data.Stash.Add(view.Card);
+			FillContainersWithCardViews();
+		}
+		
+		_draggedCardOrigin = CardOrigin.None;
 	}
 }

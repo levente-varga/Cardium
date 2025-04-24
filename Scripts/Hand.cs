@@ -11,7 +11,7 @@ namespace Cardium.Scripts;
 public partial class Hand : Node2D
 {
 	public enum HandState { None, Dragging, Playing }
-	public enum CardInHandState { None, OverPlayArea, OverDiscardArea }
+	private enum DraggedCardState { None, OverPlayArea, OverDiscardArea }
 	
 	[Export] public Player Player = null!;
 	[Export] public float HandRadius = 1000f;
@@ -32,7 +32,7 @@ public partial class Hand : Node2D
 
 	private readonly List<CardView> _cardViews = new();
 	private Dictionary<CardView, float> _cardAngles = new();
-	private readonly Dictionary<CardView, CardInHandState> _cardStates = new();
+	private DraggedCardState _draggedCardState;
 
 	private int _capacity = 4;
 	public int Capacity {
@@ -142,7 +142,6 @@ public partial class Hand : Node2D
 		view.OnDragEvent += OnCardDrag;
 		view.OnMouseEnteredEvent += OnCardMouseEntered;
 		view.OnMouseExitedEvent += OnCardMouseExited;
-		_cardStates.Add(view, CardInHandState.None);
 		_cardAngles.Add(view, 360);
 		_cardViews.Insert(index, view);
 		AddChild(view);
@@ -161,7 +160,6 @@ public partial class Hand : Node2D
 		view.OnMouseEnteredEvent -= OnCardMouseEntered;
 		view.OnMouseExitedEvent -= OnCardMouseExited;
 		_cardAngles.Remove(view);
-		_cardStates.Remove(view);
 		_cardViews.Remove(view);
 		RemoveChild(view);
 		
@@ -196,6 +194,10 @@ public partial class Hand : Node2D
 		if (_hovered == view) _hovered = null;
 	}
 
+	private void OnCardDragStart(CardView view) {
+		_draggedCardState = DraggedCardState.None;
+	}
+
 	private void OnCardDrag(CardView view, Vector2 mousePosition) {
 		State = HandState.Dragging;
 
@@ -203,40 +205,33 @@ public partial class Hand : Node2D
 		var mouseOverDiscardArea = DiscardArea.GetRect().HasPoint(mousePosition);
 		
 		if (mouseOverPlayArea) {
-			if (_cardStates[view] != CardInHandState.OverPlayArea) {
-				_cardStates[view] = CardInHandState.OverPlayArea;
+			if (_draggedCardState != DraggedCardState.OverPlayArea) {
+				_draggedCardState = DraggedCardState.OverPlayArea;
 				view.PlayScaleAnimation(1.2f);
 			}
 		}
-		else {
-			if (_cardStates[view] == CardInHandState.OverPlayArea) {
-				_cardStates[view] = CardInHandState.None;
-				view.PlayResetAnimation();
-			}
-		}
-		
-		if (mouseOverDiscardArea) {
-			if (_cardStates[view] != CardInHandState.OverDiscardArea) {
-				_cardStates[view] = CardInHandState.OverDiscardArea;
+		else if (mouseOverDiscardArea) {
+			if (_draggedCardState != DraggedCardState.OverDiscardArea) {
+				_draggedCardState = DraggedCardState.OverDiscardArea;
 				view.PlayScaleAnimation(0.75f);
 			}
 		}
 		else {
-			if (_cardStates[view] == CardInHandState.OverDiscardArea) {
-				_cardStates[view] = CardInHandState.None;
+			if (_draggedCardState != DraggedCardState.None) {
+				_draggedCardState = DraggedCardState.None;
 				view.PlayResetAnimation();
 			}
 		}
 	}
 	
 	private void OnCardDragEnd(CardView view, Vector2 mousePosition) {
-		if (_cardStates[view] == CardInHandState.OverPlayArea) {
+		if (_draggedCardState == DraggedCardState.OverPlayArea) {
 			view.OnEnterPlayingMode();
 			State = HandState.Playing;
 			_ = Play(view);
 		}
 		else {
-			if (_cardStates[view] == CardInHandState.OverDiscardArea) {
+			if (_draggedCardState == DraggedCardState.OverDiscardArea) {
 				Discard(view);
 				OnCardDiscardedEvent?.Invoke(view.Card);
 			}
