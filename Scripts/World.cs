@@ -57,6 +57,11 @@ public partial class World : Node2D {
   public Vector2I HoveredCell => GetTilePosition(GetGlobalMousePosition());
   
   public override void _Ready() {
+	  if (Data.InitialStart) {
+		  Data.InitialStart = false;
+		  Player.Deck.FillWithInitial();
+	  }
+	  
     _combatManager = new CombatManager(Player, this, DebugLabel1);
     
     if (Data.Fog) SetupFogOfWar();
@@ -139,6 +144,7 @@ public partial class World : Node2D {
     }
     else if (InputMap.EventIsAction(@event, "Back") && @event.IsPressed()) {
 	    Data.LoadLobbyData();
+	    Player.SaveCards();
 	    GetTree().ReloadCurrentScene();
     }
     else if (@event is InputEventMouseButton { Pressed: true, ButtonIndex: MouseButton.Left }) {

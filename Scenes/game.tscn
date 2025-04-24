@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://cw3o4f0nr0f2v"]
+[gd_scene load_steps=24 format=3 uid="uid://cw3o4f0nr0f2v"]
 
 [ext_resource type="Script" path="res://Scripts/Hand.cs" id="1_3ixgw"]
 [ext_resource type="Script" path="res://Scripts/Camera.cs" id="3_evct5"]
@@ -46,6 +46,12 @@ font_color = Color(0.866667, 0.866667, 0.866667, 1)
 font = ExtResource("5_70pgm")
 font_size = 32
 font_color = Color(0.8, 0.8, 0.8, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_qiep8"]
+line_spacing = 0.0
+font = ExtResource("12_aeksy")
+font_size = 25
+font_color = Color(0.533333, 0.533333, 0.533333, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_m4nry"]
 line_spacing = 0.0
@@ -356,7 +362,7 @@ theme = ExtResource("5_h5gro")
 label_settings = SubResource("LabelSettings_khtd6")
 vertical_alignment = 1
 
-[node name="Inventory" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("Player", "StashContainer", "InventoryContainer", "DeckContainer", "StashArea", "InventoryArea", "DeckArea", "OkButton")]
+[node name="Inventory" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("Player", "StashContainer", "InventoryContainer", "DeckContainer", "StashArea", "InventoryArea", "DeckArea", "StashSizeLabel", "InventorySizeLabel", "DeckSizeLabel", "OkButton")]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 1920.0
@@ -371,6 +377,9 @@ DeckContainer = NodePath("CenterContainer/InventoryPanel/ContentRow/DeckPage/Dec
 StashArea = NodePath("StashArea")
 InventoryArea = NodePath("InventoryArea")
 DeckArea = NodePath("DeckArea")
+StashSizeLabel = NodePath("CenterContainer/InventoryPanel/NumbersRow/StashSizeLabel")
+InventorySizeLabel = NodePath("CenterContainer/InventoryPanel/NumbersRow/InventorySizeLabel")
+DeckSizeLabel = NodePath("CenterContainer/InventoryPanel/NumbersRow/DeckSizeLabel")
 OkButton = NodePath("CenterContainer/InventoryPanel/ButtonRow/OkButton")
 
 [node name="Background" type="ColorRect" parent="CanvasLayer/Inventory"]
@@ -433,11 +442,42 @@ label_settings = SubResource("LabelSettings_r4kvp")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="DescriptionRow" type="HBoxContainer" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel"]
+[node name="NumbersRow" type="HBoxContainer" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel"]
 layout_mode = 2
 theme_override_constants/separation = 32
 
-[node name="StashLabel" type="Label" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/DescriptionRow"]
+[node name="StashSizeLabel" type="Label" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/NumbersRow"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "(0)"
+label_settings = SubResource("LabelSettings_qiep8")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="InventorySizeLabel" type="Label" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/NumbersRow"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "(0)"
+label_settings = SubResource("LabelSettings_qiep8")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DeckSizeLabel" type="Label" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/NumbersRow"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "(0)"
+label_settings = SubResource("LabelSettings_qiep8")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DescriptionRow2" type="HBoxContainer" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel"]
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="StashLabel" type="Label" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/DescriptionRow2"]
 custom_minimum_size = Vector2(0, 96)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -448,7 +488,7 @@ label_settings = SubResource("LabelSettings_m4nry")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="InventoryLabel" type="Label" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/DescriptionRow"]
+[node name="InventoryLabel" type="Label" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/DescriptionRow2"]
 custom_minimum_size = Vector2(0, 96)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -458,7 +498,7 @@ label_settings = SubResource("LabelSettings_m4nry")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="DeckLabel" type="Label" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/DescriptionRow"]
+[node name="DeckLabel" type="Label" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/DescriptionRow2"]
 custom_minimum_size = Vector2(0, 96)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -597,7 +637,7 @@ text = "Ok"
 [node name="StashArea" type="ColorRect" parent="CanvasLayer/Inventory"]
 layout_mode = 0
 offset_left = 112.0
-offset_top = 240.0
+offset_top = 272.0
 offset_right = 656.0
 offset_bottom = 928.0
 mouse_filter = 2
@@ -606,7 +646,7 @@ color = Color(1, 1, 1, 0)
 [node name="InventoryArea" type="ColorRect" parent="CanvasLayer/Inventory"]
 layout_mode = 0
 offset_left = 688.0
-offset_top = 240.0
+offset_top = 272.0
 offset_right = 1232.0
 offset_bottom = 928.0
 mouse_filter = 2
@@ -615,7 +655,7 @@ color = Color(1, 1, 1, 0)
 [node name="DeckArea" type="ColorRect" parent="CanvasLayer/Inventory"]
 layout_mode = 0
 offset_left = 1264.0
-offset_top = 240.0
+offset_top = 272.0
 offset_right = 1808.0
 offset_bottom = 928.0
 mouse_filter = 2

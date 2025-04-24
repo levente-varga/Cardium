@@ -43,8 +43,8 @@ public partial class Player : Entity {
 
     HealthBar.Visible = Data.ShowHealth;
 
-    Deck.FillWithInitial();
-    Hand.DrawCards(Hand.Capacity);
+    LoadCards();
+    Hand.DrawUntilFull();
 
     SetAnimation("idle", GD.Load<Texture2D>("res://Assets/Animations/Player.png"), 8, 12);
 
@@ -208,5 +208,19 @@ public partial class Player : Entity {
       Inventory.Add(card);
       SpawnFloatingLabel($"x1 {card.Name} card", card.RarityColor, 120 + i * 40);
     }
+  }
+
+  public void SaveCards() {
+    Data.Deck.Clear();
+    Data.Inventory.Clear();
+    foreach (var card in Deck.Deck.GetCards()) Data.Deck.Add(card);
+    foreach (var card in DiscardPile.GetCards()) Data.Deck.Add(card);
+    foreach (var card in Hand.GetCards()) Data.Deck.Add(card);
+    foreach (var card in Inventory.GetCards()) Data.Inventory.Add(card);
+  }
+
+  public void LoadCards() {
+    foreach (var card in Data.Deck.GetCards()) Deck.Add(card);
+    foreach (var card in Data.Inventory.GetCards()) Inventory.Add(card);
   }
 }

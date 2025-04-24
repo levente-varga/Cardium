@@ -1,3 +1,5 @@
+using Cardium.Scripts.Cards;
+
 namespace Cardium.Scripts;
 
 public enum Level {
@@ -7,14 +9,17 @@ public enum Level {
 
 public class Data {
   public static Level Level;
+  public static bool InitialStart = true;
   public static bool Fog;
   public static bool Hand;
   public static bool ShowHealth;
   public static bool CameraOnPlayer;
   public static bool MenuOpen;
-  public static Pile Stash = new Pile();
+  public static readonly Pile Stash = new Pile();
+  public static readonly Pile Inventory = new Pile();
+  public static readonly Pile Deck = new Pile();
 
-  public static void LoadLobbyData() {
+public static void LoadLobbyData() {
     Level = Level.Lobby;
     Fog = false;
     Hand = false;

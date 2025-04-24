@@ -15,6 +15,9 @@ public partial class Inventory : Control {
 	[Export] public ColorRect StashArea = null!;
 	[Export] public ColorRect InventoryArea = null!;
 	[Export] public ColorRect DeckArea = null!;
+	[Export] public Label StashSizeLabel = null!;
+	[Export] public Label InventorySizeLabel = null!;
+	[Export] public Label DeckSizeLabel = null!;
 	[Export] public Button OkButton = null!;
 	
 	[Export] private PackedScene _cardScene = ResourceLoader.Load<PackedScene>("res://Scenes/card.tscn");
@@ -44,6 +47,7 @@ public partial class Inventory : Control {
 		_stashEnabled = enableStash;
 		Player.PutCardsInUseIntoDeck();
 		FillContainersWithCardViews();
+		UpdateLabels();
 		if (!_stashEnabled) StashArea.Color = new Color("16161688");
 	}
 
@@ -55,11 +59,9 @@ public partial class Inventory : Control {
 	}
 
 	private void FillContainersWithCardViews() {
-		List<Card> cardsInUse = new(Player.Deck.Deck.GetCards());
-		
 		FillContainerWithCardViews(StashContainer, Data.Stash.GetCards());
 		FillContainerWithCardViews(InventoryContainer, Player.Inventory.GetCards());
-		FillContainerWithCardViews(DeckContainer, cardsInUse);
+		FillContainerWithCardViews(DeckContainer, Player.Deck.Deck.GetCards());
 	}
 
 	private void FillContainerWithCardViews(Container container, List<Card> cards) {
@@ -93,6 +95,12 @@ public partial class Inventory : Control {
 			container.AddChild(row);
 			row = new HBoxContainer();
 		}
+	}
+
+	public void UpdateLabels() {
+		StashSizeLabel.Text = $"({Data.Stash.Size})";
+		InventorySizeLabel.Text = $"({Player.Inventory.Size})";
+		DeckSizeLabel.Text = $"({Player.Deck.Deck.Size} / {Player.Deck.Deck.Capacity})";
 	}
 	
 	private void OnCardDragStartEventHandler(CardView view) {
@@ -179,6 +187,7 @@ public partial class Inventory : Control {
 			FillContainersWithCardViews();
 		}
 		
+		UpdateLabels();
 		_draggedCardOrigin = CardOrigin.None;
 	}
 }

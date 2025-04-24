@@ -16,6 +16,7 @@ public partial class Ladder : Interactable {
     
     if (player.TurnsLived - _lastPlayerTurnsLived == 1) {
       Data.LoadLobbyData();
+      player.SaveCards();
       
       // TODO: Save cards
       

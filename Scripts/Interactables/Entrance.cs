@@ -16,6 +16,7 @@ public partial class Entrance : Interactable {
     
     if (Interacted) {
       Data.LoadDungeonData();
+      player.SaveCards();
       GetTree().ReloadCurrentScene();
       return;
     }
