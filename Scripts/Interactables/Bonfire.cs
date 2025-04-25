@@ -32,7 +32,7 @@ public partial class Bonfire : Interactable {
       SpawnFloatingLabel("Rested", color: Global.White);
       var healAmount = player.MaxHealth - player.Health;
       if (healAmount > 0) player.Heal(healAmount);
-      player.InventoryView.Open();
+      player.InventoryMenu.Open();
       if (!Extinguishable) return;
       SetStillFrame(GD.Load<Texture2D>("res://Assets/Sprites/ExtinguishedBonfire.png"));
       State = BonfireState.Extinguished;

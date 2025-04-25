@@ -9,7 +9,8 @@ public partial class Player : Entity {
   [Export] public Hand Hand = null!;
   [Export] public PileView DiscardPile = null!;
   [Export] public DeckView Deck = null!;
-  [Export] public Inventory InventoryView = null!;
+  [Export] public InventoryMenu InventoryMenu = null!;
+  [Export] public WorkbenchMenu WorkbenchMenu = null!;
 
   public delegate void OnActionDelegate();
 

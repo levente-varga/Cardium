@@ -6,8 +6,6 @@ namespace Cardium.Scripts.Interactables;
 public partial class Stash : Interactable {
   private Player? _player;
   
-  public readonly List<Card> Content = new();
-
   public override void _Ready() {
     base._Ready();
     SetAnimation("open", ResourceLoader.Load<Texture2D>("res://Assets/Animations/Chest.png"), 6, 12, false, false);
@@ -19,7 +17,7 @@ public partial class Stash : Interactable {
     base.OnNudge(player, camera);
     
     Blink();
-    player.InventoryView.Open(true);
+    player.InventoryMenu.Open(true);
 
     Interacted = true;
     

@@ -4,10 +4,10 @@ using Godot;
 
 namespace Cardium.Scripts;
 
-public enum CardOrigin { None, Deck, Stash, Inventory, }
-public enum DraggedCardState { None, OverDeckArea, OverInventoryArea, OverStashArea }
-
-public partial class Inventory : Control {
+public partial class InventoryMenu : Control {
+	private enum CardOrigin { None, Deck, Stash, Inventory, }
+	private enum DraggedCardState { None, OverDeckArea, OverInventoryArea, OverStashArea }
+	
 	[Export] public Player Player = null!;
 	[Export] public VBoxContainer StashContainer = null!;
 	[Export] public VBoxContainer InventoryContainer = null!;
