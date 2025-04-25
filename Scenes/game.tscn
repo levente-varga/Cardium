@@ -683,7 +683,7 @@ Slot2Area = NodePath("Slot2Area")
 Slot3Area = NodePath("Slot3Area")
 StashSizeLabel = NodePath("CenterContainer/WorkbenchPanel/NumbersRow/StashSizeLabel")
 SlotSizeLabel = NodePath("CenterContainer/WorkbenchPanel/NumbersRow/WorkbenchSizeLabel")
-UpgradeButton = NodePath("CenterContainer/WorkbenchPanel/ButtonRow/UpgradeButton")
+UpgradeButton = NodePath("CenterContainer/WorkbenchPanel/ButtonRow/CancelButton")
 
 [node name="Background" type="ColorRect" parent="CanvasLayer/Workbench"]
 layout_mode = 1
@@ -849,12 +849,17 @@ custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 alignment = 1
 
+[node name="CancelButton" type="Button" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel/ButtonRow"]
+custom_minimum_size = Vector2(200, 64)
+layout_mode = 2
+theme = ExtResource("5_h5gro")
+text = "Calncel"
+
 [node name="UpgradeButton" type="Button" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel/ButtonRow"]
 custom_minimum_size = Vector2(200, 64)
 layout_mode = 2
 theme = ExtResource("5_h5gro")
-text = "Upgrade
-"
+text = "Upgrade"
 
 [node name="StashArea" type="ColorRect" parent="CanvasLayer/Workbench"]
 layout_mode = 0

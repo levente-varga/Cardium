@@ -19,6 +19,7 @@ public partial class WorkbenchMenu : Control {
 	[Export] public ColorRect Slot3Area = null!;
 	[Export] public Label StashSizeLabel = null!;
 	[Export] public Label SlotSizeLabel = null!;
+	[Export] public Button CancelButton = null!;
 	[Export] public Button UpgradeButton = null!;
 	
 	[Export] private PackedScene _cardScene = ResourceLoader.Load<PackedScene>("res://Scenes/card.tscn");
@@ -35,6 +36,7 @@ public partial class WorkbenchMenu : Control {
 	public override void _Ready() {
 		Visible = false;
 		UpgradeButton.Pressed += UpgradeButtonPressed;
+		UpgradeButton.Pressed += Close;
 	}
 	
 	public override void _Process(double delta) {
@@ -52,9 +54,25 @@ public partial class WorkbenchMenu : Control {
 		UpdateLabels();
 	}
 
-	private void UpgradeButtonPressed() {
+	public void Close() {
 		Player.Hand.DrawUntilFull();
 		Visible = false;
+		if (_slot1 != null) {
+			Data.Stash.Add(_slot1);
+			_slot1 = null;
+		}
+		if (_slot2 != null) {
+			Data.Stash.Add(_slot2);
+			_slot2 = null;
+		}
+		if (_slot3 != null) {
+			Data.Stash.Add(_slot3);
+			_slot3 = null;
+		}
+	}
+
+	private void UpgradeButtonPressed() {
+		
 	}
 
 	private void FillContainersWithCardViews() {
