@@ -11,9 +11,6 @@ public partial class Enemy : Entity
     public delegate void OnDeathDelegate(Enemy enemy);
     public event OnDeathDelegate? OnDeathEvent;
     
-    public delegate void OnDamaged(Enemy enemy);
-    public event OnDamaged? OnDamagedEvent;
-    
     protected int BaseCombatVision = 3;
     public int TempCombatVision { private get; set; }
     public int CombatVision => BaseCombatVision + TempCombatVision;
@@ -82,15 +79,6 @@ public partial class Enemy : Entity
         }
         
         base.TakeTurn(player, world);
-    }
-
-    public override void ReceiveDamage(Entity source, int damage)
-    {
-        GD.Print(Name + " received " + damage + " damage from " + source.Name + ". Current health: " + Health + "/" + MaxHealth);
-        
-        OnDamagedEvent?.Invoke(this);
-        
-        base.ReceiveDamage(source, damage);
     }
     
     protected override void OnDeath(Entity source)

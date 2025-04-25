@@ -489,7 +489,7 @@ public partial class Dungeon {
           enemy = new Spider();
         }
         else {
-          enemy = new Slime();
+          enemy = new Voidling();
         }
         
         enemy.Position = tile;
