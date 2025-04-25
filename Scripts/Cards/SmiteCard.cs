@@ -9,12 +9,16 @@ public class SmiteCard : EnemyTargetingCard {
     
     public SmiteCard() {
         Name = "Smite";
-        Description = $"Deals {Highlight($"{Damage}")} damage to a single target.";
         Rarity = CardRarity.Rare;
         Range = 3;
         MaxLevel = 4;
         Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Smite.png");
         Type = CardType.Combat;
+        UpdateDescription();
+    }
+    
+    protected sealed override void UpdateDescription() {
+        Description = $"Deals {Highlight($"{Damage}")} damage to a single target.";
     }
     
     public override bool OnPlay(Player player, Enemy target, World world) {

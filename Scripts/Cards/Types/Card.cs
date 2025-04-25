@@ -32,9 +32,12 @@ public class Card {
 	public virtual void OnDrawn(Player player) {}
 	public virtual void OnDestroy(Player player) {}
 
+	protected virtual void UpdateDescription() {}
+
 	public bool Upgrade() {
 		if (Level >= MaxLevel) return false;
 		Level++;
+		UpdateDescription();
 		return true;
 	}
 

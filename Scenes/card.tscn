@@ -1,12 +1,10 @@
-[gd_scene load_steps=20 format=3 uid="uid://c8tbfjcyg4o24"]
+[gd_scene load_steps=18 format=3 uid="uid://c8tbfjcyg4o24"]
 
 [ext_resource type="Script" path="res://Scripts/Cards/Types/CardView.cs" id="1_imc88"]
 [ext_resource type="Texture2D" uid="uid://cbie0d833gc4b" path="res://Assets/Sprites/Cards/Holy.png" id="2_nquoe"]
 [ext_resource type="Texture2D" uid="uid://c780cg0mxpik5" path="res://Assets/Sprites/Cards/Combat card.png" id="2_whev3"]
-[ext_resource type="Texture2D" uid="uid://b48ilg8gl8ca1" path="res://Assets/Sprites/Cards/EnergyDot.png" id="3_cxh0a"]
 [ext_resource type="FontFile" uid="uid://2rxest3pjy34" path="res://Assets/Fonts/alagard.ttf" id="3_hvbn6"]
 [ext_resource type="FontFile" uid="uid://cgna0pm46rmdr" path="res://Assets/Fonts/Levi Windows.ttf" id="3_ufy2c"]
-[ext_resource type="Texture2D" uid="uid://55iqga86dll8" path="res://Assets/Sprites/Cards/EnergyEnd.png" id="4_ddqkw"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mih11"]
 
@@ -35,7 +33,7 @@ line_spacing = 0.0
 font = ExtResource("3_hvbn6")
 font_color = Color(0.8, 0.8, 0.8, 1)
 
-[node name="Card" type="Node2D" node_paths=PackedStringArray("_hoverBase", "_base", "_art", "_hitbox", "_descriptionLabel", "_nameLabel")]
+[node name="Card" type="Node2D" node_paths=PackedStringArray("_hoverBase", "_base", "_art", "_hitbox", "_descriptionLabel", "_nameLabel", "_frame")]
 script = ExtResource("1_imc88")
 _hoverBase = NodePath("Base/HoverBase")
 _base = NodePath("Base")
@@ -43,6 +41,7 @@ _art = NodePath("Base/HoverBase/Body/Art")
 _hitbox = NodePath("Base/HoverBase/Hitbox")
 _descriptionLabel = NodePath("Base/HoverBase/DescriptionArea/Description")
 _nameLabel = NodePath("Base/HoverBase/Body/Name")
+_frame = NodePath("Base/HoverBase/Body/Frame")
 
 [node name="Base" type="Node2D" parent="."]
 
@@ -94,18 +93,6 @@ color = Color(0.0823529, 0.0823529, 0.0823529, 1)
 
 [node name="Frame" type="Sprite2D" parent="Base/HoverBase/Body"]
 texture = ExtResource("2_whev3")
-
-[node name="Sprite2D" type="Sprite2D" parent="Base/HoverBase/Body/Frame"]
-visible = false
-position = Vector2(-16, -25)
-texture = ExtResource("3_cxh0a")
-centered = false
-
-[node name="Sprite2D2" type="Sprite2D" parent="Base/HoverBase/Body/Frame"]
-visible = false
-position = Vector2(-14, -25)
-texture = ExtResource("4_ddqkw")
-centered = false
 
 [node name="Art" type="Sprite2D" parent="Base/HoverBase/Body"]
 position = Vector2(0, -12)

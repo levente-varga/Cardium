@@ -7,12 +7,16 @@ namespace Cardium.Scripts.Cards;
 public class GoldenKeyCard : InteractableTargetingCard {
     public GoldenKeyCard() {
         Name = "Golden Key";
-        Description = $"Unlocks a chest. {Highlight("Unstable")}";
         Rarity = CardRarity.Rare;
         Unstable = true;
         Range = 1;
         Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/GoldenKey.png");
         Type = CardType.Utility;
+        UpdateDescription();
+    }
+    
+    protected sealed override void UpdateDescription() {
+        Description = $"Unlocks a chest. {Highlight("Unstable")}";
     }
 
     public override bool OnPlay(Player player, Interactable target, World world) {

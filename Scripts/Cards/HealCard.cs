@@ -9,11 +9,15 @@ public class HealCard : PlayerTargetingCard {
     
     public HealCard() {
         Name = "Heal";
-        Description = $"Heals for {Highlight($"{HealAmount}")} missing health.";
         Rarity = CardRarity.Common;
         MaxLevel = 4;
         Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Heal.png");
         Type = CardType.Combat;
+        UpdateDescription();
+    }
+    
+    protected sealed override void UpdateDescription() {
+        Description = $"Heals for {Highlight($"{HealAmount}")} missing health.";
     }
     
     public override bool OnPlay(Player player)

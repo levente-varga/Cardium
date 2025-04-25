@@ -9,10 +9,14 @@ public class ShieldCard : PlayerTargetingCard {
     
     public ShieldCard() {
         Name = "Shield";
-        Description = $"Raises Armor by {Highlight($"{ExtraArmor}")} for {Highlight($"{Duration}")} turns.";
         Rarity = CardRarity.Common;
         Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Shield.png");
         Type = CardType.Combat;
+        UpdateDescription();
+    }
+    
+    protected sealed override void UpdateDescription() {
+        Description = $"Raises Armor by {Highlight($"{ExtraArmor}")} for {Highlight($"{Duration}")} turns.";
     }
     
     public override bool OnPlay(Player player) {

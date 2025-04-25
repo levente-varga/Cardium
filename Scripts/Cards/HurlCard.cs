@@ -11,12 +11,16 @@ public class HurlCard : LocationTargetingCard {
 
     public HurlCard() {
         Name = "Hurl";
-        Description = $"Deals {Highlight($"{Damage}")} damage to all enemies in a {Highlight($"{Radius}")} radius.";
         Rarity = CardRarity.Common;
         Range = 3;
         MaxLevel = 4;
         Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Hurl.png");
         Type = CardType.Combat;
+        UpdateDescription();
+    }
+    
+    protected sealed override void UpdateDescription() {
+        Description = $"Deals {Highlight($"{Damage}")} damage to all enemies in a {Highlight($"{Radius}")} radius.";
     }
 
     public override List<Vector2I> GetHighlightedTiles(Player player, Vector2I selectedTile, World world) {
