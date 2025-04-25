@@ -44,6 +44,7 @@ public partial class InventoryMenu : Control {
 	
 	public void Open(bool enableStash = false) {
 		Visible = true;
+		Data.MenuOpen = true;
 		_stashEnabled = enableStash;
 		Player.PutCardsInUseIntoDeck();
 		FillContainersWithCardViews();
@@ -52,8 +53,13 @@ public partial class InventoryMenu : Control {
 	}
 
 	private void OkButtonPressed() {
+		Close();
+	}
+
+	private void Close() {
 		Player.Hand.DrawUntilFull();
 		Visible = false;
+		Data.MenuOpen = false;
 		_stashEnabled = false;
 		StashArea.Color = new Color("16161600");
 	}
@@ -114,7 +120,6 @@ public partial class InventoryMenu : Control {
 		else if (Data.Stash.Contains(view.Card)) {
 			_draggedCardOrigin = CardOrigin.Stash;
 		}
-		GD.Print($"Started dragging a card from {_draggedCardOrigin}");
 	}
 	
 	private void OnCardDragEventHandler(CardView view, Vector2 mousePosition) {
@@ -149,7 +154,6 @@ public partial class InventoryMenu : Control {
 	}
 
 	private void RemoveDraggedCardFromItsOrigin(Card card) {
-		GD.Print($"Removing card originating from {_draggedCardOrigin}");
 		switch (_draggedCardOrigin) {
 			case CardOrigin.Deck:
 				Player.Deck.Remove(card);

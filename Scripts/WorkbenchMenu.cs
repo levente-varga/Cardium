@@ -49,6 +49,7 @@ public partial class WorkbenchMenu : Control {
 	
 	public void Open() {
 		Visible = true;
+		Data.MenuOpen = true;
 		UpgradeButton.Disabled = true;
 		Player.PutCardsInUseIntoDeck();
 		FillContainersWithCardViews();
@@ -58,6 +59,7 @@ public partial class WorkbenchMenu : Control {
 	public void Close() {
 		Player.Hand.DrawUntilFull();
 		Visible = false;
+		Data.MenuOpen = false;
 		EmptySlots();
 	}
 
@@ -160,7 +162,6 @@ public partial class WorkbenchMenu : Control {
 		else if (Data.Stash.Contains(view.Card)) {
 			_draggedCardOrigin = CardOrigin.Stash;
 		}
-		GD.Print($"Started dragging a card from {_draggedCardOrigin}");
 	}
 	
 	private void OnCardDragEventHandler(CardView view, Vector2 mousePosition) {
@@ -202,7 +203,6 @@ public partial class WorkbenchMenu : Control {
 	}
 
 	private void RemoveDraggedCardFromItsOrigin(Card card) {
-		GD.Print($"Removing card originating from {_draggedCardOrigin}");
 		switch (_draggedCardOrigin) {
 			case CardOrigin.Slot1:
 				_slot1 = null;
