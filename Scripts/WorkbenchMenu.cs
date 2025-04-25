@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Cardium.Scripts.Cards.Types;
+using Cardium.Scripts.Interactables;
 using Godot;
 
 namespace Cardium.Scripts;
@@ -65,27 +66,29 @@ public partial class WorkbenchMenu : Control {
 
 	private void UpgradeButtonPressed() {
 		if (!CardsAreValid) return;
+
+		if (!_slot1!.Upgrade()) {
+			Utils.SpawnFloatingLabel(Slot2Area, Slot2Area.Size / 2 - new Vector2(0, 100), "Already at maximum level!", color: Global.Red, height: 160);
+			return;
+		}
 		
-		// TODO: Add an upgraded version to stash
-		
+		Data.Stash.Add(_slot1);
 		EmptySlots(false);
+		FillContainersWithCardViews();
 	}
 
 	private void EmptySlots(bool returnToStash = true) {
 		if (_slot1 != null) {
 			if (returnToStash) Data.Stash.Add(_slot1);
 			_slot1 = null;
-			FillSlotWithCardView(Slot1Container, null);
 		}
 		if (_slot2 != null) {
 			if (returnToStash) Data.Stash.Add(_slot2);
 			_slot2 = null;
-			FillSlotWithCardView(Slot2Container, null);
 		}
 		if (_slot3 != null) {
 			if (returnToStash) Data.Stash.Add(_slot3);
 			_slot3 = null;
-			FillSlotWithCardView(Slot3Container, null);
 		}
 		UpdateUpgradeButton();
 	}
@@ -259,10 +262,12 @@ public partial class WorkbenchMenu : Control {
 		UpgradeButton.Disabled = !CardsAreValid;
 	}
 
-	private bool CardsAreValid => 
-		_slot1 != null && 
-		_slot2 != null && 
+	private bool CardsAreValid =>
+		_slot1 != null &&
+		_slot2 != null &&
 		_slot3 != null &&
-	  _slot1.GetType() == _slot2.GetType() && 
-	  _slot2.GetType() == _slot3.GetType();
+		_slot1.GetType() == _slot2.GetType() &&
+		_slot2.GetType() == _slot3.GetType() &&
+		_slot1.Level == _slot2.Level &&
+		_slot2.Level == _slot3.Level;
 }

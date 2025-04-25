@@ -251,7 +251,7 @@ public partial class Hand : Node2D
 		}
 		else {
 			view.OnExitPlayingMode();
-			Utils.SpawnFloatingLabel(GetTree(), Player.GlobalPosition + Global.GlobalTileSize / 2, "Cancelled", Global.Red);
+			Utils.SpawnFloatingLabel(GetTree().Root, Player.GlobalPosition + Global.GlobalTileSize / 2, "Cancelled", Global.Red);
 		}
 		
 		State = HandState.None;

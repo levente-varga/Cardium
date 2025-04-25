@@ -172,18 +172,18 @@ public partial class World : Node2D {
 	    }
 
 	    if (Utils.ManhattanDistanceBetween(_selectionOrigin, _selectedCell) > _selectionRange) {
-		    Utils.SpawnFloatingLabel(GetTree(), Player.GlobalPosition, "Out of range!", color: Global.Red);
+		    Utils.SpawnFloatingLabel(GetTree().Root, Player.GlobalPosition, "Out of range!", color: Global.Red);
 		    return;
 	    }
 	    
 	    switch (_selectionMode) {
 		    case SelectionMode.Enemy:
 			    if (IsEnemy(_selectedCell)) _selectionConfirmed = true;
-			    else Utils.SpawnFloatingLabel(GetTree(), Player.GlobalPosition, "Select an enemy!", color: Global.Red);
+			    else Utils.SpawnFloatingLabel(GetTree().Root, Player.GlobalPosition, "Select an enemy!", color: Global.Red);
 			    break;
 		    case SelectionMode.Interactable:
 			    if (IsInteractable(_selectedCell)) _selectionConfirmed = true;
-			    else Utils.SpawnFloatingLabel(GetTree(), Player.GlobalPosition, "Select an object!", color: Global.Red);
+			    else Utils.SpawnFloatingLabel(GetTree().Root, Player.GlobalPosition, "Select an object!", color: Global.Red);
 			    break;
 		    case SelectionMode.Location:
 			    _selectionConfirmed = true;

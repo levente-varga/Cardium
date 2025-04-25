@@ -20,6 +20,7 @@ public class Card {
 	public string Description { get; protected set; } = "";
 	public Texture2D Art { get; protected set; } = null!;
 	public int Level { get; protected set; }
+	public int MaxLevel { get; protected set; }
 	public CardType Type { get; protected set; }
 	public CardRarity Rarity { get; protected set; }
 	public bool Unstable { get; protected set; } = false;
@@ -30,6 +31,12 @@ public class Card {
 	public virtual void OnDiscard(Player player) {}
 	public virtual void OnDrawn(Player player) {}
 	public virtual void OnDestroy(Player player) {}
+
+	public bool Upgrade() {
+		if (Level >= MaxLevel) return false;
+		Level++;
+		return true;
+	}
 
 	public Color RarityColor => Rarity switch {
 		CardRarity.Common => new Color("00CB9F"),
