@@ -36,7 +36,7 @@ public partial class WorkbenchMenu : Control {
 	public override void _Ready() {
 		Visible = false;
 		UpgradeButton.Pressed += UpgradeButtonPressed;
-		UpgradeButton.Pressed += Close;
+		CancelButton.Pressed += Close;
 	}
 	
 	public override void _Process(double delta) {
@@ -49,6 +49,7 @@ public partial class WorkbenchMenu : Control {
 	
 	public void Open() {
 		Visible = true;
+		UpgradeButton.Disabled = true;
 		Player.PutCardsInUseIntoDeck();
 		FillContainersWithCardViews();
 		UpdateLabels();
@@ -57,22 +58,34 @@ public partial class WorkbenchMenu : Control {
 	public void Close() {
 		Player.Hand.DrawUntilFull();
 		Visible = false;
-		if (_slot1 != null) {
-			Data.Stash.Add(_slot1);
-			_slot1 = null;
-		}
-		if (_slot2 != null) {
-			Data.Stash.Add(_slot2);
-			_slot2 = null;
-		}
-		if (_slot3 != null) {
-			Data.Stash.Add(_slot3);
-			_slot3 = null;
-		}
+		EmptySlots();
 	}
 
 	private void UpgradeButtonPressed() {
+		if (!CardsAreValid) return;
 		
+		// TODO: Add an upgraded version to stash
+		
+		EmptySlots(false);
+	}
+
+	private void EmptySlots(bool returnToStash = true) {
+		if (_slot1 != null) {
+			if (returnToStash) Data.Stash.Add(_slot1);
+			_slot1 = null;
+			FillSlotWithCardView(Slot1Container, null);
+		}
+		if (_slot2 != null) {
+			if (returnToStash) Data.Stash.Add(_slot2);
+			_slot2 = null;
+			FillSlotWithCardView(Slot2Container, null);
+		}
+		if (_slot3 != null) {
+			if (returnToStash) Data.Stash.Add(_slot3);
+			_slot3 = null;
+			FillSlotWithCardView(Slot3Container, null);
+		}
+		UpdateUpgradeButton();
 	}
 
 	private void FillContainersWithCardViews() {
@@ -238,5 +251,18 @@ public partial class WorkbenchMenu : Control {
 		
 		UpdateLabels();
 		_draggedCardOrigin = CardOrigin.None;
+
+		UpdateUpgradeButton();
 	}
+
+	private void UpdateUpgradeButton() {
+		UpgradeButton.Disabled = !CardsAreValid;
+	}
+
+	private bool CardsAreValid => 
+		_slot1 != null && 
+		_slot2 != null && 
+		_slot3 != null &&
+	  _slot1.GetType() == _slot2.GetType() && 
+	  _slot2.GetType() == _slot3.GetType();
 }

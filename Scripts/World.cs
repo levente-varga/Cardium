@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Cardium.Scripts.Cards;
 using Cardium.Scripts.Cards.Types;
 using Godot;
 
@@ -59,6 +60,22 @@ public partial class World : Node2D {
   public override void _Ready() {
 	  if (Data.InitialStart) {
 		  Data.InitialStart = false;
+		  var r = new Random();
+		  for (var i = 0; i < 30; i++) {
+			  var type = r.Next(9);
+			  Card card = type switch {
+				  0 => new HealCard(),
+				  1 => new SmiteCard(),
+				  2 => new HurlCard(),
+				  3 => new PushCard(),
+				  4 => new ChainCard(),
+				  5 => new GoldenKeyCard(),
+				  6 => new WoodenKeyCard(),
+				  7 => new HolyCard(),
+				  _ => new ShuffleCard(),
+			  };
+			  Data.Stash.Add(card);
+		  }
 		  Player.Deck.FillWithInitial();
 	  }
 	  

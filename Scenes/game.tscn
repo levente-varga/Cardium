@@ -664,7 +664,7 @@ offset_bottom = 928.0
 mouse_filter = 2
 color = Color(1, 1, 1, 0)
 
-[node name="Workbench" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("Player", "StashContainer", "Slot1Container", "Slot2Container", "Slot3Container", "StashArea", "Slot1Area", "Slot2Area", "Slot3Area", "StashSizeLabel", "SlotSizeLabel", "UpgradeButton")]
+[node name="Workbench" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("Player", "StashContainer", "Slot1Container", "Slot2Container", "Slot3Container", "StashArea", "Slot1Area", "Slot2Area", "Slot3Area", "StashSizeLabel", "SlotSizeLabel", "CancelButton", "UpgradeButton")]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 1920.0
@@ -683,7 +683,8 @@ Slot2Area = NodePath("Slot2Area")
 Slot3Area = NodePath("Slot3Area")
 StashSizeLabel = NodePath("CenterContainer/WorkbenchPanel/NumbersRow/StashSizeLabel")
 SlotSizeLabel = NodePath("CenterContainer/WorkbenchPanel/NumbersRow/WorkbenchSizeLabel")
-UpgradeButton = NodePath("CenterContainer/WorkbenchPanel/ButtonRow/CancelButton")
+CancelButton = NodePath("CenterContainer/WorkbenchPanel/ButtonRow/CancelButton")
+UpgradeButton = NodePath("CenterContainer/WorkbenchPanel/ButtonRow/UpgradeButton")
 
 [node name="Background" type="ColorRect" parent="CanvasLayer/Workbench"]
 layout_mode = 1
@@ -853,7 +854,7 @@ alignment = 1
 custom_minimum_size = Vector2(200, 64)
 layout_mode = 2
 theme = ExtResource("5_h5gro")
-text = "Calncel"
+text = "Cancel"
 
 [node name="UpgradeButton" type="Button" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel/ButtonRow"]
 custom_minimum_size = Vector2(200, 64)
