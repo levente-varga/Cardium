@@ -147,8 +147,11 @@ public partial class WorkbenchMenu : Control {
 		}
 	}
 
+	private int GetOccupiedSlotsCount() => (_slot1 == null ? 0 : 1) + (_slot2 == null ? 0 : 1) + (_slot3 == null ? 0 : 1);
+	
 	private void UpdateLabels() {
 		StashSizeLabel.Text = $"({Data.Stash.Size})";
+		SlotSizeLabel.Text = $"({GetOccupiedSlotsCount()} / 3)";
 	}
 	
 	private void OnCardDragStartEventHandler(CardView view) {
@@ -252,9 +255,9 @@ public partial class WorkbenchMenu : Control {
 			FillContainersWithCardViews();
 		}
 		
-		UpdateLabels();
 		_draggedCardOrigin = CardOrigin.None;
 
+		UpdateLabels();
 		UpdateUpgradeButton();
 	}
 
