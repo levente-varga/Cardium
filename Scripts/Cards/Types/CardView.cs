@@ -23,6 +23,7 @@ public partial class CardView : Node2D {
 	[Export] private Button _hitbox = null!;
 	[Export] private RichTextLabel _descriptionLabel = null!;
 	[Export] private Label _nameLabel = null!;
+	[Export] private Sprite2D _frame = null!;
 	public Card Card = null!;
 	
 	public bool Enabled = true;
@@ -69,21 +70,18 @@ public partial class CardView : Node2D {
 		
 		_nameLabel.Text = Card.Name;
 		
-		//SetupLevelMarker();
+		SetupLevelMarker();
 	}
-
-	/*
+	
 	private void SetupLevelMarker() {
 		for (var i = 0; i < Card.Level; i++) {
-			var costMarker = new Sprite2D();
-			costMarker.Texture = GD.Load<Texture2D>(i == Card.Level - 1 ? "res://Assets/Sprites/Cards/EnergyEnd.png" : "res://Assets/Sprites/Cards/EnergyDot.png");
-			costMarker.Centered = false;
-			costMarker.Scale = Vector2.One * Global.CardScale;
-			costMarker.Position = new Vector2(-16 + i * 2, -25) * Global.CardScale;
-			_body.AddChild(costMarker);
+			var levelMarker = new Sprite2D();
+			levelMarker.Texture = GD.Load<Texture2D>(i == Card.Level - 1 ? "res://Assets/Sprites/Cards/EnergyEnd.png" : "res://Assets/Sprites/Cards/EnergyDot.png");
+			levelMarker.Centered = false;
+			levelMarker.Position = new Vector2(-16 + i * 2, -25);
+			_frame.AddChild(levelMarker);
 		}
 	}
-	*/
 
 	public override void _Process(double delta) {
 		if (_dragging) {

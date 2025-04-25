@@ -25,6 +25,7 @@ public static void LoadLobbyData() {
     Hand = false;
     ShowHealth = false;
     CameraOnPlayer = false;
+    MenuOpen = false;
   }
 
   public static void LoadDungeonData() {
@@ -33,5 +34,6 @@ public static void LoadLobbyData() {
     Hand = true;
     ShowHealth = true;
     CameraOnPlayer = true;
+    MenuOpen = false;
   }
 }
