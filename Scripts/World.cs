@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Cardium.Scripts.Cards;
 using Cardium.Scripts.Cards.Types;
 using Godot;
 
@@ -59,6 +60,22 @@ public partial class World : Node2D {
   public override void _Ready() {
 	  if (Data.InitialStart) {
 		  Data.InitialStart = false;
+		  var r = new Random();
+		  for (var i = 0; i < 30; i++) {
+			  var type = r.Next(9);
+			  Card card = type switch {
+				  0 => new HealCard(),
+				  1 => new SmiteCard(),
+				  2 => new HurlCard(),
+				  3 => new PushCard(),
+				  4 => new ChainCard(),
+				  5 => new GoldenKeyCard(),
+				  6 => new WoodenKeyCard(),
+				  7 => new HolyCard(),
+				  _ => new ShuffleCard(),
+			  };
+			  Data.Stash.Add(card);
+		  }
 		  Player.Deck.FillWithInitial();
 	  }
 	  
@@ -155,18 +172,18 @@ public partial class World : Node2D {
 	    }
 
 	    if (Utils.ManhattanDistanceBetween(_selectionOrigin, _selectedCell) > _selectionRange) {
-		    Utils.SpawnFloatingLabel(GetTree(), Player.GlobalPosition, "Out of range!", color: Global.Red);
+		    Utils.SpawnFloatingLabel(GetTree().Root, Player.GlobalPosition, "Out of range!", color: Global.Red);
 		    return;
 	    }
 	    
 	    switch (_selectionMode) {
 		    case SelectionMode.Enemy:
 			    if (IsEnemy(_selectedCell)) _selectionConfirmed = true;
-			    else Utils.SpawnFloatingLabel(GetTree(), Player.GlobalPosition, "Select an enemy!", color: Global.Red);
+			    else Utils.SpawnFloatingLabel(GetTree().Root, Player.GlobalPosition, "Select an enemy!", color: Global.Red);
 			    break;
 		    case SelectionMode.Interactable:
 			    if (IsInteractable(_selectedCell)) _selectionConfirmed = true;
-			    else Utils.SpawnFloatingLabel(GetTree(), Player.GlobalPosition, "Select an object!", color: Global.Red);
+			    else Utils.SpawnFloatingLabel(GetTree().Root, Player.GlobalPosition, "Select an object!", color: Global.Red);
 			    break;
 		    case SelectionMode.Location:
 			    _selectionConfirmed = true;

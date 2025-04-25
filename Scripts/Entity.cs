@@ -36,6 +36,8 @@ public partial class Entity : TileAlignedGameObject {
   public int Vision => BaseVision + TempVision;
   public float Luck => BaseLuck + TempLuck;
 
+  protected bool Invincible = false;
+
   public string Description = "";
 
   public Pile Inventory = new();
@@ -76,7 +78,7 @@ public partial class Entity : TileAlignedGameObject {
   }
 
   public virtual void ReceiveDamage(Entity source, int damage) {
-    if (damage < 1) return;
+    if (Invincible || damage < 1) return;
 
     Blink();
 

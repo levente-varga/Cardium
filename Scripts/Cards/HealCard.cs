@@ -1,17 +1,23 @@
+using System.Collections.Generic;
 using Cardium.Scripts.Cards.Types;
 using Godot;
 
 namespace Cardium.Scripts.Cards;
 
 public class HealCard : PlayerTargetingCard {
-    public int HealAmount = 3;
+    private int HealAmount => new List<int>{2, 4, 7, 12, 20}[Level];
     
     public HealCard() {
         Name = "Heal";
-        Description = $"Heals for {Highlight($"{HealAmount}")} missing health.";
         Rarity = CardRarity.Common;
+        MaxLevel = 4;
         Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Heal.png");
         Type = CardType.Combat;
+        UpdateDescription();
+    }
+    
+    protected sealed override void UpdateDescription() {
+        Description = $"Heals for {Highlight($"{HealAmount}")} missing health.";
     }
     
     public override bool OnPlay(Player player)

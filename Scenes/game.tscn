@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://cw3o4f0nr0f2v"]
+[gd_scene load_steps=25 format=3 uid="uid://cw3o4f0nr0f2v"]
 
 [ext_resource type="Script" path="res://Scripts/Hand.cs" id="1_3ixgw"]
 [ext_resource type="Script" path="res://Scripts/Camera.cs" id="3_evct5"]
@@ -10,9 +10,10 @@
 [ext_resource type="FontFile" uid="uid://2rxest3pjy34" path="res://Assets/Fonts/alagard.ttf" id="5_70pgm"]
 [ext_resource type="Theme" uid="uid://ckiq2eob4d0lc" path="res://Scenes/theme.tres" id="5_h5gro"]
 [ext_resource type="Script" path="res://Scripts/Overlay.cs" id="7_4aqu0"]
-[ext_resource type="Script" path="res://Scripts/Inventory.cs" id="7_d6lyv"]
 [ext_resource type="Texture2D" uid="uid://dh41xyg27nibb" path="res://Assets/Sprites/Inventory.png" id="10_xwuuf"]
 [ext_resource type="FontFile" uid="uid://cgna0pm46rmdr" path="res://Assets/Fonts/Levi Windows.ttf" id="12_aeksy"]
+[ext_resource type="Script" path="res://Scripts/InventoryMenu.cs" id="13_gdisq"]
+[ext_resource type="Script" path="res://Scripts/WorkbenchMenu.cs" id="14_nw0sm"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_n205a"]
 
@@ -61,7 +62,7 @@ font_color = Color(0.466667, 0.466667, 0.466667, 1)
 
 [node name="Root" type="Node"]
 
-[node name="Player" type="AnimatedSprite2D" parent="." node_paths=PackedStringArray("World", "DebugLabel", "Hand", "DiscardPile", "Deck", "InventoryView")]
+[node name="Player" type="AnimatedSprite2D" parent="." node_paths=PackedStringArray("World", "DebugLabel", "Hand", "DiscardPile", "Deck", "InventoryMenu", "WorkbenchMenu")]
 z_index = 5
 scale = Vector2(4, 4)
 sprite_frames = SubResource("SpriteFrames_n205a")
@@ -72,7 +73,8 @@ DebugLabel = NodePath("../CanvasLayer/Label2")
 Hand = NodePath("../Camera2D/Hand")
 DiscardPile = NodePath("../Camera2D/DiscardPile")
 Deck = NodePath("../Camera2D/Deck")
-InventoryView = NodePath("../CanvasLayer/Inventory")
+InventoryMenu = NodePath("../CanvasLayer/Inventory")
+WorkbenchMenu = NodePath("../CanvasLayer/Workbench")
 
 [node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("Target", "Canvas")]
 script = ExtResource("3_evct5")
@@ -363,13 +365,14 @@ label_settings = SubResource("LabelSettings_khtd6")
 vertical_alignment = 1
 
 [node name="Inventory" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("Player", "StashContainer", "InventoryContainer", "DeckContainer", "StashArea", "InventoryArea", "DeckArea", "StashSizeLabel", "InventorySizeLabel", "DeckSizeLabel", "OkButton")]
+visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_right = 1920.0
 offset_bottom = 1080.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-script = ExtResource("7_d6lyv")
+script = ExtResource("13_gdisq")
 Player = NodePath("../../Player")
 StashContainer = NodePath("CenterContainer/InventoryPanel/ContentRow/StashPage/StashScrollContainer/CenterContainer/MarginContainer/StashContainer")
 InventoryContainer = NodePath("CenterContainer/InventoryPanel/ContentRow/InventoryPage/InventoryScrollContainer/CenterContainer/MarginContainer/InventoryContainer")
@@ -657,6 +660,240 @@ layout_mode = 0
 offset_left = 1264.0
 offset_top = 272.0
 offset_right = 1808.0
+offset_bottom = 928.0
+mouse_filter = 2
+color = Color(1, 1, 1, 0)
+
+[node name="Workbench" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("Player", "StashContainer", "Slot1Container", "Slot2Container", "Slot3Container", "StashArea", "Slot1Area", "Slot2Area", "Slot3Area", "StashSizeLabel", "SlotSizeLabel", "CancelButton", "UpgradeButton")]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("14_nw0sm")
+Player = NodePath("../../Player")
+StashContainer = NodePath("CenterContainer/WorkbenchPanel/ContentRow/StashScrollContainer/CenterContainer/MarginContainer/StashContainer")
+Slot1Container = NodePath("CenterContainer/WorkbenchPanel/ContentRow/WorkbenchPage/Slot1Container")
+Slot2Container = NodePath("CenterContainer/WorkbenchPanel/ContentRow/WorkbenchPage/Slot2Container")
+Slot3Container = NodePath("CenterContainer/WorkbenchPanel/ContentRow/WorkbenchPage/Slot3Container")
+StashArea = NodePath("StashArea")
+Slot1Area = NodePath("Slot1Area")
+Slot2Area = NodePath("Slot2Area")
+Slot3Area = NodePath("Slot3Area")
+StashSizeLabel = NodePath("CenterContainer/WorkbenchPanel/NumbersRow/StashSizeLabel")
+SlotSizeLabel = NodePath("CenterContainer/WorkbenchPanel/NumbersRow/WorkbenchSizeLabel")
+CancelButton = NodePath("CenterContainer/WorkbenchPanel/ButtonRow/CancelButton")
+UpgradeButton = NodePath("CenterContainer/WorkbenchPanel/ButtonRow/UpgradeButton")
+
+[node name="Background" type="ColorRect" parent="CanvasLayer/Workbench"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.588235)
+
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/Workbench"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelBackground" type="ColorRect" parent="CanvasLayer/Workbench/CenterContainer"]
+clip_contents = true
+custom_minimum_size = Vector2(1696, 920)
+layout_mode = 2
+color = Color(0.0846899, 0.0846899, 0.0846899, 1)
+
+[node name="WorkbenchPanel" type="VBoxContainer" parent="CanvasLayer/Workbench/CenterContainer"]
+custom_minimum_size = Vector2(1696, 920)
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="LabelRow" type="HBoxContainer" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel"]
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="StashLabel" type="Label" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel/LabelRow"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Stash
+"
+label_settings = SubResource("LabelSettings_r4kvp")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="WorkbenchLabel" type="Label" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel/LabelRow"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+text = "Workbench"
+label_settings = SubResource("LabelSettings_r4kvp")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="NumbersRow" type="HBoxContainer" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel"]
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="StashSizeLabel" type="Label" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel/NumbersRow"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "(0)"
+label_settings = SubResource("LabelSettings_qiep8")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="WorkbenchSizeLabel" type="Label" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel/NumbersRow"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+text = "(0)"
+label_settings = SubResource("LabelSettings_qiep8")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DescriptionRow2" type="HBoxContainer" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel"]
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="StashLabel" type="Label" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel/DescriptionRow2"]
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Only cards stored in the Stash can be used at the Workbench."
+label_settings = SubResource("LabelSettings_m4nry")
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="WorkbenchLabel" type="Label" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel/DescriptionRow2"]
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+text = "Place 3 cards of the same type and level here to upgrade them into a more powerful card."
+label_settings = SubResource("LabelSettings_m4nry")
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="ContentRow" type="HBoxContainer" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel"]
+clip_contents = true
+custom_minimum_size = Vector2(1000, 600)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 15
+
+[node name="StashScrollContainer" type="ScrollContainer" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel/ContentRow"]
+clip_contents = false
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 3
+
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel/ContentRow/StashScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel/ContentRow/StashScrollContainer/CenterContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+
+[node name="StashContainer" type="VBoxContainer" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel/ContentRow/StashScrollContainer/CenterContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 18
+
+[node name="Divider" type="ColorRect" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel/ContentRow"]
+custom_minimum_size = Vector2(2, 0)
+layout_mode = 2
+color = Color(0.2, 0.2, 0.2, 1)
+
+[node name="WorkbenchPage" type="HBoxContainer" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel/ContentRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+theme_override_constants/separation = 0
+alignment = 1
+
+[node name="Slot1Container" type="CenterContainer" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel/ContentRow/WorkbenchPage"]
+custom_minimum_size = Vector2(320, 0)
+layout_mode = 2
+
+[node name="Slot2Container" type="CenterContainer" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel/ContentRow/WorkbenchPage"]
+custom_minimum_size = Vector2(320, 0)
+layout_mode = 2
+
+[node name="Slot3Container" type="CenterContainer" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel/ContentRow/WorkbenchPage"]
+custom_minimum_size = Vector2(320, 0)
+layout_mode = 2
+
+[node name="ButtonRow" type="HBoxContainer" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+alignment = 1
+
+[node name="CancelButton" type="Button" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel/ButtonRow"]
+custom_minimum_size = Vector2(200, 64)
+layout_mode = 2
+theme = ExtResource("5_h5gro")
+text = "Cancel"
+
+[node name="UpgradeButton" type="Button" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel/ButtonRow"]
+custom_minimum_size = Vector2(200, 64)
+layout_mode = 2
+theme = ExtResource("5_h5gro")
+text = "Upgrade"
+
+[node name="StashArea" type="ColorRect" parent="CanvasLayer/Workbench"]
+layout_mode = 0
+offset_left = 112.0
+offset_top = 272.0
+offset_right = 656.0
+offset_bottom = 928.0
+mouse_filter = 2
+color = Color(1, 1, 1, 0)
+
+[node name="Slot1Area" type="ColorRect" parent="CanvasLayer/Workbench"]
+layout_mode = 0
+offset_left = 773.0
+offset_top = 272.0
+offset_right = 1093.0
+offset_bottom = 928.0
+mouse_filter = 2
+color = Color(1, 1, 1, 0)
+
+[node name="Slot2Area" type="ColorRect" parent="CanvasLayer/Workbench"]
+layout_mode = 0
+offset_left = 1093.0
+offset_top = 272.0
+offset_right = 1413.0
+offset_bottom = 928.0
+mouse_filter = 2
+color = Color(1, 1, 1, 0)
+
+[node name="Slot3Area" type="ColorRect" parent="CanvasLayer/Workbench"]
+layout_mode = 0
+offset_left = 1413.0
+offset_top = 272.0
+offset_right = 1733.0
 offset_bottom = 928.0
 mouse_filter = 2
 color = Color(1, 1, 1, 0)

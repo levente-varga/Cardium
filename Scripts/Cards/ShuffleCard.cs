@@ -8,12 +8,16 @@ public class ShuffleCard : PlayerTargetingCard
 {
   public ShuffleCard() {
     Name = "Shuffle";
-    Description = "Puts cards from hand into deck, shuffles it, then draws the same amount of cards.";
     Rarity = CardRarity.Common;
     Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Shuffle.png");
     Type = CardType.Combat;
+    UpdateDescription();
   }
-    
+  
+  protected sealed override void UpdateDescription() {
+    Description = $"Puts cards from hand into deck, shuffles it, then draws the same amount of cards.";
+  }
+  
   public override bool OnPlay(Player player) {
     List<Card> cards = new();
     

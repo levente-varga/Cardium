@@ -33,7 +33,7 @@ line_spacing = 0.0
 font = ExtResource("3_hvbn6")
 font_color = Color(0.8, 0.8, 0.8, 1)
 
-[node name="Card" type="Node2D" node_paths=PackedStringArray("_hoverBase", "_base", "_art", "_hitbox", "_descriptionLabel", "_nameLabel", "_debugFrame")]
+[node name="Card" type="Node2D" node_paths=PackedStringArray("_hoverBase", "_base", "_art", "_hitbox", "_descriptionLabel", "_nameLabel", "_frame")]
 script = ExtResource("1_imc88")
 _hoverBase = NodePath("Base/HoverBase")
 _base = NodePath("Base")
@@ -41,7 +41,7 @@ _art = NodePath("Base/HoverBase/Body/Art")
 _hitbox = NodePath("Base/HoverBase/Hitbox")
 _descriptionLabel = NodePath("Base/HoverBase/DescriptionArea/Description")
 _nameLabel = NodePath("Base/HoverBase/Body/Name")
-_debugFrame = NodePath("")
+_frame = NodePath("Base/HoverBase/Body/Frame")
 
 [node name="Base" type="Node2D" parent="."]
 

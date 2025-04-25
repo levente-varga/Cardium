@@ -63,24 +63,4 @@ public partial class DeckView : Node2D {
     Add(new ShuffleCard());
     Deck.Shuffle();
   }
-  
-  public void FillWithRandom() {
-    var r = new Random();
-    for (var i = 0; i < Deck.Capacity; i++) {
-      var type = r.Next(9);
-      Card card = type switch {
-        0 => new HealCard(),
-        1 => new SmiteCard(),
-        2 => new HurlCard(),
-        3 => new PushCard(),
-        4 => new ChainCard(),
-        5 => new GoldenKeyCard(),
-        6 => new WoodenKeyCard(),
-        7 => new HolyCard(),
-        _ => new ShuffleCard(),
-      };
-      Add(card);
-    }
-    Deck.Shuffle();
-  }
 }

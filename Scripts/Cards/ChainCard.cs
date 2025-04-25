@@ -6,19 +6,24 @@ using Godot;
 namespace Cardium.Scripts.Cards;
 
 public class ChainCard : EnemyTargetingCard {
-    public int Damage { get; set; } = 2;
-    public int BounceRange { get; set; } = 3;
-    public int Bounces { get; set; } = 2;
+    private int Damage =>       new List<int>{2, 3, 4, 5, 6}[Level];
+    private int BounceRange =>  new List<int>{2, 2, 3, 3, 4}[Level];
+    private int Bounces =>      new List<int>{1, 2, 2, 3, 4}[Level];
 
-    private Random _random = new();
+    private readonly Random _random = new();
     
     public ChainCard() {
         Name = "Chain";
-        Description = $"Deals {Highlight($"{Damage}")} damage to an enemy, bounces to up to {Highlight($"{Bounces}")} other enemies in range {Highlight($"{BounceRange}")}.";
         Rarity = CardRarity.Rare;
+        MaxLevel = 4;
         Range = 3;
         Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Chain.png");
-        Type = Card.CardType.Combat;
+        Type = CardType.Combat;
+        UpdateDescription();
+    }
+    
+    protected sealed override void UpdateDescription() {
+        Description = $"Deals {Highlight($"{Damage}")} damage to an enemy, bounces to up to {Highlight($"{Bounces}")} other enemies in range {Highlight($"{BounceRange}")}.";
     }
 
     public override bool OnPlay(Player player, Enemy enemy, World world) {

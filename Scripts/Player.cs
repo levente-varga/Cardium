@@ -9,7 +9,8 @@ public partial class Player : Entity {
   [Export] public Hand Hand = null!;
   [Export] public PileView DiscardPile = null!;
   [Export] public DeckView Deck = null!;
-  [Export] public Inventory InventoryView = null!;
+  [Export] public InventoryMenu InventoryMenu = null!;
+  [Export] public WorkbenchMenu WorkbenchMenu = null!;
 
   public delegate void OnActionDelegate();
 
@@ -78,7 +79,7 @@ public partial class Player : Entity {
   }
   
   private void HandleMovement() {
-    if (Hand.IsPlayingACard) return;
+    if (Data.MenuOpen || Hand.IsPlayingACard) return;
 
     var lastMoveDirection = _moveDirection;
     _moveDirection = null;
@@ -123,6 +124,8 @@ public partial class Player : Entity {
   }
 
   public override void _Input(InputEvent @event) {
+    if (Data.MenuOpen || Hand.IsPlayingACard) return;
+    
     if (!@event.IsPressed()) return;
     
     if (InputMap.EventIsAction(@event, "Interact")) {

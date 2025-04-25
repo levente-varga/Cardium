@@ -2,7 +2,7 @@ using Godot;
 
 namespace Cardium.Scripts.Labels;
 
-public partial class LabelWithShadow : Node2D
+public partial class LabelWithShadow : Control
 {
     private Label _label = new ();
     private Label _shadow = new ();
@@ -20,7 +20,7 @@ public partial class LabelWithShadow : Node2D
         _label = new Label();
         _label.Text = Text;
         _label.HorizontalAlignment = HorizontalAlignment.Center;
-        _label.CustomMinimumSize = new Vector2(320, 40);
+        _label.CustomMinimumSize = new Vector2(640, 40);
         _label.Position = -_label.GetCustomMinimumSize() / 2;
         _label.AddThemeFontOverride("font", font);
         _label.AddThemeFontSizeOverride("font_size", FontSize ?? 40);
@@ -29,7 +29,7 @@ public partial class LabelWithShadow : Node2D
         AddChild(_label);
         
         _shadow.Text = Text;
-        _shadow.CustomMinimumSize = new Vector2(320, 40);
+        _shadow.CustomMinimumSize = new Vector2(640, 40);
         _shadow.HorizontalAlignment = HorizontalAlignment.Center;
         _shadow.AddThemeFontOverride("font", font);
         _shadow.AddThemeFontSizeOverride("font_size", FontSize ?? 40);
