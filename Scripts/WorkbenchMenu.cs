@@ -138,19 +138,19 @@ public partial class WorkbenchMenu : Control {
 		var mouseOverSlot3Area = Slot3Area.GetRect().HasPoint(mousePosition);
 		var mouseOverStashArea = StashArea.GetRect().HasPoint(mousePosition);
 		
-		if (mouseOverSlot1Area && _draggedCardOrigin != CardOrigin.Slot1) {
+		if (mouseOverSlot1Area && _draggedCardOrigin != CardOrigin.Slot1 && _slot1 == null) {
 			if (_draggedCardState != DraggedCardState.OverSlot1) {
 				_draggedCardState = DraggedCardState.OverSlot1;
 				view.PlayScaleAnimation(0.75f);
 			}
 		}
-		else if (mouseOverSlot2Area && _draggedCardOrigin != CardOrigin.Slot2) {
+		else if (mouseOverSlot2Area && _draggedCardOrigin != CardOrigin.Slot2 && _slot2 == null) {
 			if (_draggedCardState != DraggedCardState.OverSlot2) {
 				_draggedCardState = DraggedCardState.OverSlot2;
 				view.PlayScaleAnimation(0.75f);
 			}
 		}
-		else if (mouseOverSlot3Area && _draggedCardOrigin != CardOrigin.Slot3) {
+		else if (mouseOverSlot3Area && _draggedCardOrigin != CardOrigin.Slot3 && _slot3 == null) {
 			if (_draggedCardState != DraggedCardState.OverSlot3) {
 				_draggedCardState = DraggedCardState.OverSlot3;
 				view.PlayScaleAnimation(0.75f);
@@ -197,17 +197,17 @@ public partial class WorkbenchMenu : Control {
 		var mouseOverSlot3Area = Slot3Area.GetRect().HasPoint(mousePosition);
 		var mouseOverStashArea = StashArea.GetRect().HasPoint(mousePosition);
 		
-		if (mouseOverSlot1Area && _draggedCardOrigin != CardOrigin.Slot1) {
+		if (mouseOverSlot1Area && _draggedCardOrigin != CardOrigin.Slot1 && _slot1 == null) {
 			RemoveDraggedCardFromItsOrigin(view.Card);
 			_slot1 = view.Card;
 			FillContainersWithCardViews();
 		}
-		else if (mouseOverSlot2Area && _draggedCardOrigin != CardOrigin.Slot2) {
+		else if (mouseOverSlot2Area && _draggedCardOrigin != CardOrigin.Slot2 && _slot2 == null) {
 			RemoveDraggedCardFromItsOrigin(view.Card);
 			_slot2 = view.Card;
 			FillContainersWithCardViews();
 		}
-		else if (mouseOverSlot3Area && _draggedCardOrigin != CardOrigin.Slot3) {
+		else if (mouseOverSlot3Area && _draggedCardOrigin != CardOrigin.Slot3 && _slot3 == null) {
 			RemoveDraggedCardFromItsOrigin(view.Card);
 			_slot3 = view.Card;
 			FillContainersWithCardViews();
