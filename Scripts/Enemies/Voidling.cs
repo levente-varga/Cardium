@@ -1,8 +1,12 @@
+using System.Collections.Generic;
 using Godot;
 
 namespace Cardium.Scripts.Enemies;
 
 public partial class Voidling : Enemy {
+  protected override int MaxLevel => 2;
+  
+  
   private bool Stealth { set; get; } = true;
 
   public override void _Ready() {
@@ -12,12 +16,12 @@ public partial class Voidling : Enemy {
 
     Name = "Voidling";
     Description = "Untargetable until it attacks.";
-    MaxHealth = 4;
+    MaxHealth = new List<int> { 5, 8, 11, }[Level];;
     Health = MaxHealth;
     BaseVision = 5;
     BaseCombatVision = 7;
     BaseArmor = 0;
-    BaseDamage = 4;
+    BaseDamage = new List<int> { 3, 7, 12, }[Level];;
     BaseRange = 1;
 
     SetModulate();

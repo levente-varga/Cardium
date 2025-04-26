@@ -5,19 +5,21 @@ using Godot;
 namespace Cardium.Scripts.Enemies;
 
 public partial class Ranger : Enemy {
+  protected override int MaxLevel => 2;
+
   public override void _Ready() {
     base._Ready();
 
     SetAnimation("idle", GD.Load<Texture2D>("res://Assets/Animations/Ranger.png"), 8, 12);
     Name = "Ranger";
     Description = "Stays just in range.";
-    MaxHealth = 5;
+    MaxHealth = new List<int> { 5, 7, 12, }[Level];
     Health = MaxHealth;
     BaseVision = 5;
     BaseCombatVision = 7;
-    BaseArmor = 0;
-    BaseDamage = 1;
-    BaseRange = 3;
+    BaseArmor = new List<int> { 0, 1, 2, }[Level];;
+    BaseDamage = new List<int> { 2, 3, 5, }[Level];
+    BaseRange = new List<int> { 2, 3, 4, }[Level];;
   }
 
   protected override void TakeTurn(Player player, World world) {

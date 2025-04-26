@@ -1,10 +1,16 @@
+using Godot;
+
 namespace Cardium.Scripts;
 
 public partial class Enemy : Entity {
   protected Path Path = new();
 
-  public int Level;
-  protected int MaxLevel;
+  private int _level;
+  public int Level {
+    get => _level;
+    init => _level = Mathf.Clamp(value, 0, MaxLevel);
+  }
+  protected virtual int MaxLevel => 0;
 
   protected bool PlayerInVision;
   protected int LastSeenPlayerDistance;

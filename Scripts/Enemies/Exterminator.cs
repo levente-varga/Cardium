@@ -24,7 +24,7 @@ public partial class Exterminator : Enemy {
     BaseVision = 3;
     BaseCombatVision = 5;
     BaseArmor = 5;
-    BaseDamage = 5;
+    BaseDamage = 10;
     BaseRange = 1;
     BaseLuck = 10;
     
@@ -42,7 +42,7 @@ public partial class Exterminator : Enemy {
   protected override void TakeTurn(Player player, World world) {
     UpdateValue(player, world);
     ResetTemporaryStats();
-    Heal(1);
+    Heal(_state == ExterminatorState.Defensive ? 3 : 1);
 
     if (!PlayerInVision) return;
 
@@ -70,7 +70,6 @@ public partial class Exterminator : Enemy {
 
     if (_state == ExterminatorState.Defensive) {
       TempArmor = BaseArmor;
-      Heal(1);
       if (_turnsInCurrentState >= 4) {
         _state = ExterminatorState.Aggressive;
         _turnsInCurrentState = 0;
