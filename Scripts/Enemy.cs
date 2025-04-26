@@ -1,90 +1,84 @@
-using Godot;
-
 namespace Cardium.Scripts;
 
-public partial class Enemy : Entity
-{
-    protected Path Path = new ();
-    
-    public bool SeeingPlayer;
+public partial class Enemy : Entity {
+  protected Path Path = new();
 
-    public delegate void OnDeathDelegate(Enemy enemy);
-    public event OnDeathDelegate? OnDeathEvent;
-    
-    protected int BaseCombatVision = 3;
-    public int TempCombatVision { private get; set; }
-    public int CombatVision => BaseCombatVision + TempCombatVision;
+  protected bool PlayerInVision;
+  protected int LastSeenPlayerDistance;
 
-    
-    public override void _Ready()
-    {
-        base._Ready();
-        AddChild(Path);
-        
+  public delegate void OnDeathDelegate(Enemy enemy);
+
+  public event OnDeathDelegate? OnDeathEvent;
+
+  protected int BaseCombatVision = 3;
+  public int TempCombatVision { private get; set; }
+  public int CombatVision => BaseCombatVision + TempCombatVision;
+
+
+  public override void _Ready() {
+    base._Ready();
+    AddChild(Path);
+
+    HealthBar.Visible = false;
+    BaseCombatVision = BaseVision + 3;
+  }
+
+  public override void _Process(double delta) {
+    Path.Visible = true;
+    base._Process(delta);
+  }
+
+  protected void UpdateValue(Player player, World world) {
+    if (!PlayerInVision && Utils.ManhattanDistanceBetween(player.Position, Position) > Vision) return;
+
+    LastSeenPlayerDistance = world.GetDistanceBetween(Position, player.Position);
+
+    if (!PlayerInVision) {
+      if (LastSeenPlayerDistance != -1 && LastSeenPlayerDistance <= Vision) {
+        PlayerInVision = true;
+        HealthBar.Visible = Data.ShowHealth;
+      }
+    }
+    else {
+      if (LastSeenPlayerDistance != -1 && LastSeenPlayerDistance > CombatVision) {
+        PlayerInVision = false;
         HealthBar.Visible = false;
-        BaseCombatVision = BaseVision + 3;
+      }
     }
-    
-    public override void _Process(double delta)
-    {
-        Path.Visible = true;
-        base._Process(delta);
+  }
+
+  protected override void TakeTurn(Player player, World world) {
+    UpdateValue(player, world);
+    if (!PlayerInVision) return;
+
+    if (TurnsLived % 2 == 0) return;
+
+    Path.SetPath(world.GetPointPathBetween(Position, player.Position));
+
+    if (LastSeenPlayerDistance == -1) {
+      // Unreachable, but might still be able to get closer
+      if (Global.Debug) SpawnFloatingLabel("[Debug] Unreachable", color: Global.Magenta, fontSize: 20);
+    }
+    else if (LastSeenPlayerDistance <= BaseRange) {
+      Nudge(VectorToDirection(player.Position - Position));
+      player.ReceiveDamage(this, BaseDamage);
+      return;
     }
 
-    protected override void TakeTurn(Player player, World world)
-    {
-        if (!SeeingPlayer && Utils.ManhattanDistanceBetween(player.Position, Position) > Vision) return;
-        
-        var distance = world.GetDistanceBetween(Position, player.Position);
-        
-        if (!SeeingPlayer) {
-            if (distance != -1 && distance <= Vision) {
-                SeeingPlayer = true;
-                HealthBar.Visible = Data.ShowHealth;
-            }
-        }
-        else {
-            if (distance != -1 && distance > CombatVision) {
-                SeeingPlayer = false;
-                HealthBar.Visible = false;
-            }
-        }
+    var path = world.GetPathBetween(Position, player.Position);
+    if (path is { Count: > 1 }) {
+      Move(path[0], world);
+    }
+    else {
+      if (Global.Debug) SpawnFloatingLabel("[Debug] Unable to move", color: Global.Magenta, fontSize: 20);
+    }
 
-        if (!SeeingPlayer) return;
-        
-        if (TurnsLived % 2 == 0) return;
-        
-        Path.SetPath(world.GetPointPathBetween(Position, player.Position));
-        
-        if (distance == -1)
-        {
-            // Unreachable, but might still be able to get closer
-            if (Global.Debug) SpawnFloatingLabel("[Debug] Unreachable", color: Global.Magenta, fontSize: 20);
-        }
-        else if (distance <= BaseRange)
-        {
-            Nudge(VectorToDirection(player.Position - Position));
-            player.ReceiveDamage(this, BaseDamage);
-            return;
-        }
-        
-        var path = world.GetPathBetween(Position, player.Position);
-        if (path is { Count: > 1 })
-        {
-            Move(path[0], world);
-        }
-        else
-        {
-            if (Global.Debug) SpawnFloatingLabel("[Debug] Unable to move", color: Global.Magenta, fontSize: 20);
-        }
-        
-        base.TakeTurn(player, world);
-    }
-    
-    protected override void OnDeath(Entity source)
-    {
-        base.OnDeath(source);
-        
-        OnDeathEvent?.Invoke(this);
-    }
+    base.TakeTurn(player, world);
+  }
+
+  protected override void OnDeath(Entity source) {
+    base.OnDeath(source);
+
+    OnDeathEvent?.Invoke(this);
+  }
 }
