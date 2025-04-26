@@ -472,28 +472,37 @@ public partial class Dungeon {
     
     private void PlaceEnemies() {
       foreach (var room in _dungeon.Rooms.Where(room => room.Type == RoomTypes.Uncategorized)) {
-        Vector2I tile = new(
-          _random.Next(room.Rect.Position.X + 1, room.Rect.End.X - 2),
-          _random.Next(room.Rect.Position.Y + 1, room.Rect.End.Y - 2)
-          );
+        var enemyCount = _random.Next(room.Rect.Grow(-1).Area / 4) + 1;
+        var usedTiles = new List<Vector2I>();
 
-        Enemy enemy ;
+        for (var i = 0; i < enemyCount; i++) {
+          Vector2I tile;
+          do {
+            tile = new Vector2I(
+              _random.Next(room.Rect.Position.X + 1, room.Rect.End.X - 2),
+              _random.Next(room.Rect.Position.Y + 1, room.Rect.End.Y - 2)
+            );
+          } while(usedTiles.Contains(tile));
+          
+          Enemy enemy;
         
-        if (_random.Next(12) == 0) {
-          enemy = new Voidling();
-        }
-        else if (_random.Next(9) == 0) {
-          enemy = new Ranger();
-        }
-        else if (_random.Next(5) == 0) {
-          enemy = new Spider();
-        }
-        else {
-          enemy = new Slime();
-        }
+          if (_random.Next(12) == 0) {
+            enemy = new Voidling();
+          }
+          else if (_random.Next(9) == 0) {
+            enemy = new Ranger();
+          }
+          else if (_random.Next(5) == 0) {
+            enemy = new Spider();
+          }
+          else {
+            enemy = new Slime();
+          }
         
-        enemy.Position = tile;
-        _dungeon.Enemies.Add(enemy);
+          enemy.Position = tile;
+          _dungeon.Enemies.Add(enemy);
+          usedTiles.Add(tile);
+        }
       }
     }
 

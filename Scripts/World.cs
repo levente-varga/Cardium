@@ -48,7 +48,7 @@ public partial class World : Node2D {
 
 	  _dungeon = Data.Level switch {
 		  Level.Lobby => Dungeon.GenerateLobby(),
-		  Level.One => Dungeon.Generate(99, 99, 300),
+		  Level.One => Dungeon.Generate(99, 99, 1000),
 		  _ => throw new ArgumentOutOfRangeException()
 	  };
 
