@@ -502,17 +502,13 @@ public partial class Dungeon {
             enemy = new Exterminator();
             bossPlaced = true;
           }
-          else if (_random.Next(12) == 0) {
-            enemy = new Voidling { Level = level };
-          }
-          else if (_random.Next(9) == 0) {
-            enemy = new Ranger { Level = level };
-          }
-          else if (_random.Next(5) == 0) {
-            enemy = new Spider { Level = level };
-          }
           else {
-            enemy = new Slime { Level = level };
+            enemy = _random.Next(25) switch {
+              < 9 => new Slime { Level = level },
+              < 17 => new Spider { Level = level },
+              < 22 => new Ranger { Level = level },
+              _ => new Voidling { Level = level },
+            };
           }
 
           enemy.Position = tile;
