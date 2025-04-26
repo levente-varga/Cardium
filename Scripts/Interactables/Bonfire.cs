@@ -25,9 +25,9 @@ public partial class Bonfire : Interactable {
 
   public override void OnInteract(Player player, Camera camera) {
     if (State == BonfireState.Extinguished) return;
-    
+
     base.OnInteract(player, camera);
-    
+
     if (State == BonfireState.Lit) {
       SpawnFloatingLabel("Rested", color: Global.White);
       var healAmount = player.MaxHealth - player.Health;
@@ -38,7 +38,7 @@ public partial class Bonfire : Interactable {
       State = BonfireState.Extinguished;
       return;
     }
-    
+
     State = BonfireState.Lit;
     Interacted = true;
 

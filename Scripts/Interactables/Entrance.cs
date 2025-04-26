@@ -4,7 +4,7 @@ namespace Cardium.Scripts.Interactables;
 
 public partial class Entrance : Interactable {
   private Player? _player;
-  
+
   public override void _Ready() {
     base._Ready();
 
@@ -13,31 +13,31 @@ public partial class Entrance : Interactable {
 
   public override void OnNudge(Player player, Camera camera) {
     base.OnNudge(player, camera);
-    
+
     if (Interacted) {
       Data.LoadDungeonData();
       player.SaveCards();
       GetTree().ReloadCurrentScene();
       return;
     }
-    
+
     Blink();
 
     Interacted = true;
 
     player.OnMoveEvent += OnPlayerMove;
     _player = player;
-    
+
     camera.Shake(10);
     Play("open");
   }
 
   private void OnPlayerMove(Vector2I from, Vector2I to) {
     if (_player is null) return;
-    
+
     _player.OnMoveEvent -= OnPlayerMove;
     _player = null;
-    
+
     PlayBackwards("open");
     Interacted = false;
   }

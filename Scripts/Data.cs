@@ -17,7 +17,7 @@ public static class Data {
   public static readonly Pile Inventory = new Pile();
   public static readonly Pile Deck = new Pile();
 
-public static void LoadLobbyData() {
+  public static void LoadLobbyData() {
     Level = Level.Lobby;
     Fog = false;
     Hand = false;

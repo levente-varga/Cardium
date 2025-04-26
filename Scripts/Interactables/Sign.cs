@@ -4,7 +4,7 @@ namespace Cardium.Scripts.Interactables;
 
 public partial class Sign : Interactable {
   public string Text = "";
-  
+
   public override void _Ready() {
     base._Ready();
 
@@ -13,7 +13,7 @@ public partial class Sign : Interactable {
 
   public override void OnNudge(Player player, Camera camera) {
     base.OnNudge(player, camera);
-    
+
     camera.Shake(10);
     if (Text != "") SpawnFloatingLabel(Text);
   }

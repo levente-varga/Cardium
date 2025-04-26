@@ -19,21 +19,21 @@ public partial class Voidling : Enemy {
     BaseArmor = 0;
     BaseDamage = 4;
     BaseRange = 1;
-    
+
     SetModulate();
   }
 
   protected override void TakeTurn(Player player, World world) {
     Stealth = Utils.ManhattanDistanceBetween(player.Position, Position) > 1;
     Invincible = Stealth;
-    
+
     SetModulate();
-    
+
     base.TakeTurn(player, world);
-    
+
     Stealth = Utils.ManhattanDistanceBetween(player.Position, Position) > 1;
     Invincible = Stealth;
-    
+
     SetModulate();
   }
 

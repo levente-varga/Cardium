@@ -4,7 +4,7 @@ namespace Cardium.Scripts.Interactables;
 
 public partial class Ladder : Interactable {
   private int _lastPlayerTurnsLived = -2;
-  
+
   public override void _Ready() {
     base._Ready();
 
@@ -13,21 +13,21 @@ public partial class Ladder : Interactable {
 
   public override void OnNudge(Player player, Camera camera) {
     base.OnNudge(player, camera);
-    
+
     if (player.TurnsLived - _lastPlayerTurnsLived == 1) {
       Data.LoadLobbyData();
       player.SaveCards();
-      
+
       // TODO: Save cards
-      
+
       GetTree().ReloadCurrentScene();
       return;
     }
-    
+
     Blink();
-    
+
     _lastPlayerTurnsLived = player.TurnsLived;
-    
+
     camera.Shake(10);
     SpawnFloatingLabel("Leave dungeon?");
   }

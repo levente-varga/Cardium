@@ -4,24 +4,24 @@ using Godot;
 namespace Cardium.Scripts.Cards;
 
 public class ShieldCard : PlayerTargetingCard {
-    public int ExtraArmor = 2;
-    public int Duration = 3;
-    
-    public ShieldCard() {
-        Name = "Shield";
-        Rarity = CardRarity.Common;
-        Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Shield.png");
-        Type = CardType.Combat;
-        UpdateDescription();
-    }
-    
-    protected sealed override void UpdateDescription() {
-        Description = $"Raises Armor by {Highlight($"{ExtraArmor}")} for {Highlight($"{Duration}")} turns.";
-    }
-    
-    public override bool OnPlay(Player player) {
-        // TODO: Implement
-        
-        return true;
-    }
+  public int ExtraArmor = 2;
+  public int Duration = 3;
+
+  public ShieldCard() {
+    Name = "Shield";
+    Rarity = CardRarity.Common;
+    Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Shield.png");
+    Type = CardType.Combat;
+    UpdateDescription();
+  }
+
+  protected sealed override void UpdateDescription() {
+    Description = $"Raises Armor by {Highlight($"{ExtraArmor}")} for {Highlight($"{Duration}")} turns.";
+  }
+
+  public override bool OnPlay(Player player) {
+    // TODO: Implement
+
+    return true;
+  }
 }

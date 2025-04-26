@@ -3,36 +3,29 @@ using Godot;
 
 namespace Cardium.Scripts;
 
-public partial class Overlay : Node2D
-{
-	public struct OverlayTile
-	{
-		public Vector2I Position;
-		public Color Color;
-	}
-	
-	private List<OverlayTile> _tiles = new();
+public partial class Overlay : Node2D {
+  public struct OverlayTile {
+    public Vector2I Position;
+    public Color Color;
+  }
 
-	public List<OverlayTile> Tiles
-	{
-		get => _tiles;
-		set
-		{
-			_tiles = new List<OverlayTile>(value);
-			QueueRedraw();
-		}
-	}
+  private List<OverlayTile> _tiles = new();
 
-	public override void _Ready()
-	{
-		Modulate = new Color(1, 1, 1, 0.3f);
-	}
+  public List<OverlayTile> Tiles {
+    get => _tiles;
+    set {
+      _tiles = new List<OverlayTile>(value);
+      QueueRedraw();
+    }
+  }
 
-	public override void _Draw()
-	{
-		foreach (var tile in _tiles)
-		{
-			DrawRect(new Rect2(Global.TileToWorld(tile.Position), Global.GlobalTileSize), tile.Color);
-		}
-	}
+  public override void _Ready() {
+    Modulate = new Color(1, 1, 1, 0.3f);
+  }
+
+  public override void _Draw() {
+    foreach (var tile in _tiles) {
+      DrawRect(new Rect2(Global.TileToWorld(tile.Position), Global.GlobalTileSize), tile.Color);
+    }
+  }
 }
