@@ -490,7 +490,13 @@ public partial class Dungeon {
           } while (usedTiles.Contains(tile));
 
           Enemy enemy;
-          var level = (int)Mathf.Pow(_random.Next(9), -2);
+          var level = _random.Next(25) switch {
+            < 9 => 0,
+            < 16 => 1,
+            < 21 => 2,
+            < 24 => 3,
+            _ => 4
+          };
 
           if (!bossPlaced) {
             enemy = new Exterminator();

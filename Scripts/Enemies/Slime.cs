@@ -5,18 +5,18 @@ using Godot;
 namespace Cardium.Scripts.Enemies;
 
 public partial class Slime : Enemy {
-  protected override int MaxLevel => 2;
+  protected override int MaxLevel => 4;
   
   public override void _Ready() {
     base._Ready();
 
     SetAnimation("idle", GD.Load<Texture2D>("res://Assets/Animations/Slime.png"), 8, 12);
     Name = "Slime";
-    MaxHealth = new List<int> { 5, 9, 15, }[Level];;
+    MaxHealth = new List<int> { 5, 7, 9, 12, 15 }[Level];
     Health = MaxHealth;
     BaseVision = 2;
-    BaseArmor = new List<int> { 0, 2, 4, }[Level];;
-    BaseDamage = new List<int> { 1, 3, 5, }[Level];;
+    BaseArmor = new List<int> { 0, 1, 2, 3, 4 }[Level];
+    BaseDamage = new List<int> { 1, 2, 3, 4, 5 }[Level];
     BaseLuck = 0f;
     BaseRange = 1;
     Description = "A slime enemy.";

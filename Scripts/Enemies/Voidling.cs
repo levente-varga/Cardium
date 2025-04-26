@@ -16,12 +16,12 @@ public partial class Voidling : Enemy {
 
     Name = "Voidling";
     Description = "Untargetable until it attacks.";
-    MaxHealth = new List<int> { 5, 8, 11, }[Level];;
+    MaxHealth = new List<int> { 5, 7, 9, 11, 13 }[Level];
     Health = MaxHealth;
     BaseVision = 5;
     BaseCombatVision = 7;
     BaseArmor = 0;
-    BaseDamage = new List<int> { 3, 7, 12, }[Level];;
+    BaseDamage = new List<int> { 3, 5, 7, 9, 11 }[Level];
     BaseRange = 1;
 
     SetModulate();
