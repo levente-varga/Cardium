@@ -1,5 +1,3 @@
-using Cardium.Scripts.Cards;
-
 namespace Cardium.Scripts;
 
 public enum Level {
@@ -7,7 +5,7 @@ public enum Level {
   One,
 }
 
-public class Data {
+public static class Data {
   public static Level Level;
   public static bool InitialStart = true;
   public static bool Fog;

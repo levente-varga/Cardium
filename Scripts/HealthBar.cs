@@ -3,39 +3,33 @@ using Godot;
 
 namespace Cardium.Scripts;
 
-public partial class HealthBar : Polygon2D
-{
+public partial class HealthBar : Polygon2D {
+	private Label Label = null!;
+	
 	private float _smoothHealth;
 	
 	private float _health = 1;
-	public int Health
-	{
+	public int Health {
 		get => (int)_health;
-		set
-		{
+		set {
 			var previousHealth = Health;
 			var totalChange = value - previousHealth;
 			_health = Math.Max(0, value);
-			if (Health > MaxHealth)
-			{
+			if (Health > MaxHealth) {
 				_health = MaxHealth;
 			}
-			if (totalChange < 0)
-			{
+			if (totalChange < 0) {
 				SpawnFloatingLabel(Mathf.Abs(totalChange).ToString());
 			}
 		}
 	}
 	
 	private float _maxHealth = 1;
-	public int MaxHealth
-	{
+	public int MaxHealth {
 		get => (int)_maxHealth;
-		set
-		{
+		set {
 			_maxHealth = Math.Max(1, value);
-			if (Health > MaxHealth)
-			{
+			if (Health > MaxHealth) {
 				Health = MaxHealth;
 			}
 		}
@@ -51,14 +45,18 @@ public partial class HealthBar : Polygon2D
 	
 	private Vector2[] _polygonBuffer = new Vector2[4];
 	
-	public override void _Ready()
-	{
+	public override void _Ready() {
 		Name = "HealthBar";
 		Color = Global.Red;
 		Visible = true;
 		ZIndex = 10;
 		_smoothHealth = _health / _maxHealth; 
 		UpdatePolygon();
+
+		Label = new Label();
+		Label.Scale = Vector2.One / 6f;
+		Label.Position = new Vector2(2, -8f);
+		AddChild(Label);
 	}
 	
 	private void UpdatePolygon() {
@@ -70,21 +68,20 @@ public partial class HealthBar : Polygon2D
 		_polygonBuffer[2].Y = -VerticalGap - Thickness;
 		_polygonBuffer[3].X = HorizontalMargin + SmoothWidth;
 		_polygonBuffer[3].Y = -VerticalGap;
-
+		
 		Polygon = _polygonBuffer;
 	}
 
-	public override void _Process(double delta)
-	{
+	public override void _Process(double delta) {
 		_smoothHealth = Mathf.Lerp(_smoothHealth, _health / _maxHealth, Global.LerpWeight * (float) delta);
+		
+		Label.Text = $"{_health}";
 		
 		UpdatePolygon();
 	}
 
-	private void SpawnFloatingLabel(string text)
-	{
-		Labels.FallingLabel label = new()
-		{
+	private void SpawnFloatingLabel(string text) {
+		Labels.FallingLabel label = new() {
 			Text = text,
 			Position = new Vector2(GlobalPosition.X + (HorizontalMargin + ActualWidth) * Global.TileScale, GlobalPosition.Y),
 			Color = Global.Red,
