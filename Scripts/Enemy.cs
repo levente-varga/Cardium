@@ -3,6 +3,9 @@ namespace Cardium.Scripts;
 public partial class Enemy : Entity {
   protected Path Path = new();
 
+  public int Level;
+  protected int MaxLevel;
+
   protected bool PlayerInVision;
   protected int LastSeenPlayerDistance;
 

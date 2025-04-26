@@ -11,7 +11,7 @@ public partial class Ranger : Enemy {
     SetAnimation("idle", GD.Load<Texture2D>("res://Assets/Animations/Ranger.png"), 8, 12);
     Name = "Ranger";
     Description = "Stays just in range.";
-    MaxHealth = 1;
+    MaxHealth = 5;
     Health = MaxHealth;
     BaseVision = 6;
     BaseArmor = 0;

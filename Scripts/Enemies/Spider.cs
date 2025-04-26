@@ -9,7 +9,7 @@ public partial class Spider : Enemy {
 
     SetAnimation("idle", GD.Load<Texture2D>("res://Assets/Animations/Spider.png"), 8, 12);
     Name = "Spider";
-    MaxHealth = 5;
+    MaxHealth = 7;
     Health = MaxHealth;
     BaseVision = 4;
     BaseArmor = 0;

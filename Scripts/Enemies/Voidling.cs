@@ -12,10 +12,10 @@ public partial class Voidling : Enemy {
 
     Name = "Voidling";
     Description = "Untargetable until it attacks.";
-    MaxHealth = 3;
+    MaxHealth = 4;
     Health = MaxHealth;
     BaseVision = 5;
-    BaseCombatVision = 9;
+    BaseCombatVision = 7;
     BaseArmor = 0;
     BaseDamage = 4;
     BaseRange = 1;
