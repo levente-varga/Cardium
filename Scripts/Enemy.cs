@@ -60,7 +60,7 @@ public partial class Enemy : Entity {
 
     if (LastSeenPlayerDistance == -1) {
       // Unreachable, but might still be able to get closer
-      if (Global.Debug) SpawnFloatingLabel("[Debug] Unreachable", color: Global.Magenta, fontSize: 20);
+      SpawnDebugFloatingLabel("[Debug] Unreachable");
     }
     else if (LastSeenPlayerDistance <= BaseRange) {
       Nudge(VectorToDirection(player.Position - Position));
@@ -73,7 +73,7 @@ public partial class Enemy : Entity {
       Move(path[0], world);
     }
     else {
-      if (Global.Debug) SpawnFloatingLabel("[Debug] Unable to move", color: Global.Magenta, fontSize: 20);
+      SpawnDebugFloatingLabel("[Debug] Unable to move");
     }
 
     base.TakeTurn(player, world);

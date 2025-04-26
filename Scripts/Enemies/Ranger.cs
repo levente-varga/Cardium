@@ -13,7 +13,8 @@ public partial class Ranger : Enemy {
     Description = "Stays just in range.";
     MaxHealth = 5;
     Health = MaxHealth;
-    BaseVision = 6;
+    BaseVision = 5;
+    BaseCombatVision = 7;
     BaseArmor = 0;
     BaseDamage = 1;
     BaseRange = 3;
