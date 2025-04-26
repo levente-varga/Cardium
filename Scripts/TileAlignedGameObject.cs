@@ -51,13 +51,13 @@ public partial class TileAlignedGameObject : AnimatedSprite2D {
     base.Position = position * Global.GlobalTileSize;
   }
 
-  protected void SetStillFrame(Texture2D texture) {
-    SpriteFrames.AddAnimation("still");
-    SpriteFrames.SetAnimationLoop("still", false);
-    SpriteFrames.AddFrame("still", texture);
+  protected void SetStillFrame(Texture2D texture, string name = "still") {
+    SpriteFrames.AddAnimation(name);
+    SpriteFrames.SetAnimationLoop(name, false);
+    SpriteFrames.AddFrame(name, texture);
 
     Stop();
-    Play("still", 0);
+    Play(name, 0);
   }
 
   protected void SetAnimation(string name, Texture2D spriteSheet, int frames, double fps, bool autoPlay = true,

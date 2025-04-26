@@ -34,7 +34,7 @@ public partial class Bonfire : Interactable {
       if (healAmount > 0) player.Heal(healAmount);
       player.InventoryMenu.Open();
       if (!Extinguishable) return;
-      SetStillFrame(GD.Load<Texture2D>("res://Assets/Sprites/ExtinguishedBonfire.png"));
+      SetStillFrame(GD.Load<Texture2D>("res://Assets/Sprites/ExtinguishedBonfire.png"), "extinguished");
       State = BonfireState.Extinguished;
       return;
     }
