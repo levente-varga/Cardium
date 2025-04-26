@@ -76,6 +76,7 @@ public partial class Dungeon {
                $"    {_dungeon.Enemies.Where(e => e is Spider).ToList().Count} spiders\n" +
                $"    {_dungeon.Enemies.Where(e => e is Ranger).ToList().Count} rangers\n" +
                $"    {_dungeon.Enemies.Where(e => e is Voidling).ToList().Count} voidlings\n" +
+               $"    {_dungeon.Enemies.Where(e => e is Exterminator).ToList().Count} exterminators\n" +
                $"  {_dungeon.Interactables.Count} interactables\n" +
                $"    {_dungeon.Interactables.Where(i => i is Ladder).ToList().Count} exits\n" +
                $"    {_dungeon.Interactables.Where(i => i is Bonfire).ToList().Count} bonfires\n" +
@@ -472,9 +473,12 @@ public partial class Dungeon {
     }
 
     private void PlaceEnemies() {
+      bool bossPlaced = false;
       foreach (var room in _dungeon.Rooms.Where(room => room.Type == RoomTypes.Uncategorized)) {
         var enemyCount = _random.Next(room.Rect.Grow(-1).Area / 4) + 1;
         var usedTiles = new List<Vector2I>();
+
+        if (!bossPlaced) enemyCount = 1;
 
         for (var i = 0; i < enemyCount; i++) {
           Vector2I tile;
@@ -487,7 +491,11 @@ public partial class Dungeon {
 
           Enemy enemy;
 
-          if (_random.Next(12) == 0) {
+          if (!bossPlaced) {
+            enemy = new Exterminator();
+            bossPlaced = true;
+          }
+          else if (_random.Next(12) == 0) {
             enemy = new Voidling();
           }
           else if (_random.Next(9) == 0) {

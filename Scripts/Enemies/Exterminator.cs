@@ -21,8 +21,8 @@ public partial class Exterminator : Enemy {
     Description = "The final boss.";
     MaxHealth = 100;
     Health = MaxHealth;
-    BaseVision = 6;
-    BaseCombatVision = 10;
+    BaseVision = 3;
+    BaseCombatVision = 5;
     BaseArmor = 5;
     BaseDamage = 5;
     BaseRange = 1;
@@ -42,6 +42,8 @@ public partial class Exterminator : Enemy {
   protected override void TakeTurn(Player player, World world) {
     UpdateValue(player, world);
     ResetTemporaryStats();
+    Heal(1);
+
     if (!PlayerInVision) return;
 
     _turnsInCurrentState++;
@@ -69,15 +71,13 @@ public partial class Exterminator : Enemy {
     if (_state == ExterminatorState.Defensive) {
       TempArmor = BaseArmor;
       Heal(1);
-      if (_turnsInCurrentState >= 3) {
+      if (_turnsInCurrentState >= 4) {
         _state = ExterminatorState.Aggressive;
         _turnsInCurrentState = 0;
         PlayBackwards("defense");
         AnimationFinished += SwitchToIdleAnimation;
       }
     }
-
-    Heal(1);
   }
 
   private void SwitchToIdleAnimation() {

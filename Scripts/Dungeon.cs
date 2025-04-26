@@ -1,10 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Cardium.Scripts.Cards;
-using Cardium.Scripts.Cards.Types;
-using Cardium.Scripts.Enemies;
-using Cardium.Scripts.Interactables;
 using Godot;
 
 namespace Cardium.Scripts;
@@ -21,6 +16,7 @@ public enum TileTypes {
 
 public enum RoomTypes {
   Uncategorized,
+  Boss,
   Spawn,
   Exit,
   Bonfire,
