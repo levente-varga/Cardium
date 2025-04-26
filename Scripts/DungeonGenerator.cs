@@ -490,22 +490,23 @@ public partial class Dungeon {
           } while (usedTiles.Contains(tile));
 
           Enemy enemy;
+          var level = (int)Mathf.Pow(_random.Next(9), -2);
 
           if (!bossPlaced) {
             enemy = new Exterminator();
             bossPlaced = true;
           }
           else if (_random.Next(12) == 0) {
-            enemy = new Voidling();
+            enemy = new Voidling { Level = level };
           }
           else if (_random.Next(9) == 0) {
-            enemy = new Ranger();
+            enemy = new Ranger { Level = level };
           }
           else if (_random.Next(5) == 0) {
-            enemy = new Spider();
+            enemy = new Spider { Level = level };
           }
           else {
-            enemy = new Slime();
+            enemy = new Slime { Level = level };
           }
 
           enemy.Position = tile;
