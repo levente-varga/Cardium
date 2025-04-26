@@ -15,7 +15,7 @@ public partial class Exterminator : Enemy {
   public override void _Ready() {
     base._Ready();
 
-    SetAnimation("defense", GD.Load<Texture2D>("res://Assets/Animations/ExterminatorDefense.png"), 4, 24, false, false);
+    SetAnimation("defense", GD.Load<Texture2D>("res://Assets/Animations/ExterminatorDefense.png"), 4, 9, false, false);
     SetAnimation("idle", GD.Load<Texture2D>("res://Assets/Animations/Exterminator.png"), 8, 12);
     Name = "Exterminator";
     Description = "The final boss.";
