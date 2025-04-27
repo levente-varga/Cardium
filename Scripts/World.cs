@@ -27,6 +27,7 @@ public partial class World : Node2D {
   [Export] public WorkbenchMenu WorkbenchMenu = null!;
   [Export] public DeathMenu DeathMenu = null!;
   [Export] public VictoryMenu VictoryMenu = null!;
+  [Export] public PauseMenu PauseMenu = null!;
 
   [Export] public Overlay Overlay = null!;
 
@@ -152,10 +153,8 @@ public partial class World : Node2D {
       Global.Debug = !Global.Debug;
       _combatManager.UpdateDebugLabel();
     }
-    else if (InputMap.EventIsAction(@event, "Select") && @event.IsPressed()) {
-    }
     else if (InputMap.EventIsAction(@event, "Back") && @event.IsPressed()) {
-      // TODO: Add in-game menu
+      PauseMenu.Open();
     }
     else if (@event is InputEventMouseButton { Pressed: true, ButtonIndex: MouseButton.Left }) {
       if (_selectionMode == SelectionMode.None) return;

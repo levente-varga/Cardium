@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=3 uid="uid://cw3o4f0nr0f2v"]
+[gd_scene load_steps=43 format=3 uid="uid://cw3o4f0nr0f2v"]
 
 [ext_resource type="Script" path="res://Scripts/Hand.cs" id="1_3ixgw"]
 [ext_resource type="Script" path="res://Scripts/Camera.cs" id="3_evct5"]
@@ -13,6 +13,7 @@
 [ext_resource type="Texture2D" uid="uid://dh41xyg27nibb" path="res://Assets/Sprites/Inventory.png" id="10_xwuuf"]
 [ext_resource type="FontFile" uid="uid://cgna0pm46rmdr" path="res://Assets/Fonts/Levi Windows.ttf" id="12_aeksy"]
 [ext_resource type="Script" path="res://Scripts/Menus/InventoryMenu.cs" id="13_gbcbe"]
+[ext_resource type="Script" path="res://Scripts/Menus/PauseMenu.cs" id="13_m0npp"]
 [ext_resource type="Script" path="res://Scripts/Menus/DeathMenu.cs" id="14_cokq3"]
 [ext_resource type="Texture2D" uid="uid://bd4kysgx8xwup" path="res://Assets/Sprites/Grave.png" id="14_k82d4"]
 [ext_resource type="Script" path="res://Scripts/Menus/WorkbenchMenu.cs" id="16_t46n8"]
@@ -46,6 +47,16 @@ font_color = Color(0.466667, 0.466667, 0.466667, 1)
 font = ExtResource("12_aeksy")
 font_size = 25
 font_color = Color(0.866667, 0.866667, 0.866667, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_ybhki"]
+font = ExtResource("5_70pgm")
+font_size = 52
+font_color = Color(0.8, 0.8, 0.8, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_mx8p4"]
+font = ExtResource("12_aeksy")
+font_size = 25
+font_color = Color(0.466667, 0.466667, 0.466667, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_r4kvp"]
 font = ExtResource("5_70pgm")
@@ -231,7 +242,7 @@ vertical_alignment = 1
 [node name="PlayingCardPosition" type="Node2D" parent="Camera2D"]
 position = Vector2(-800, 0)
 
-[node name="World" type="Node2D" parent="." node_paths=PackedStringArray("Camera", "Player", "DebugLabel1", "DebugLabel2", "DebugLabel3", "DebugLabel4", "InventoryMenu", "WorkbenchMenu", "DeathMenu", "VictoryMenu", "Overlay")]
+[node name="World" type="Node2D" parent="." node_paths=PackedStringArray("Camera", "Player", "DebugLabel1", "DebugLabel2", "DebugLabel3", "DebugLabel4", "InventoryMenu", "WorkbenchMenu", "DeathMenu", "VictoryMenu", "PauseMenu", "Overlay")]
 z_index = -1
 script = ExtResource("4_ayy7p")
 Camera = NodePath("../Camera2D")
@@ -244,6 +255,7 @@ InventoryMenu = NodePath("../CanvasLayer/Inventory")
 WorkbenchMenu = NodePath("../CanvasLayer/Workbench")
 DeathMenu = NodePath("../CanvasLayer/Death")
 VictoryMenu = NodePath("../CanvasLayer/Victory")
+PauseMenu = NodePath("../CanvasLayer/PauseMenu")
 Overlay = NodePath("Overlay")
 
 [node name="Overlay" type="Node2D" parent="World" node_paths=PackedStringArray("Player")]
@@ -438,6 +450,104 @@ custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 theme = ExtResource("5_h5gro")
 label_settings = SubResource("LabelSettings_khtd6")
+vertical_alignment = 1
+
+[node name="PauseMenu" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("Player", "ResumeButton", "FleeButton", "QuitButton")]
+z_index = 20
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("13_m0npp")
+Player = NodePath("../../Player")
+ResumeButton = NodePath("CenterContainer/Container/VBoxContainer/ResumeButton")
+FleeButton = NodePath("CenterContainer/Container/VBoxContainer2/FleeButton")
+QuitButton = NodePath("CenterContainer/Container/VBoxContainer3/QuitButton")
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer/PauseMenu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.588235)
+
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/PauseMenu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Control" type="Control" parent="CanvasLayer/PauseMenu/CenterContainer"]
+layout_mode = 2
+
+[node name="Background" type="Sprite2D" parent="CanvasLayer/PauseMenu/CenterContainer/Control"]
+scale = Vector2(4, 4)
+texture = ExtResource("10_xwuuf")
+
+[node name="Container" type="VBoxContainer" parent="CanvasLayer/PauseMenu/CenterContainer"]
+custom_minimum_size = Vector2(240, 280)
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="Label" type="Label" parent="CanvasLayer/PauseMenu/CenterContainer/Container"]
+layout_mode = 2
+text = "Paused"
+label_settings = SubResource("LabelSettings_ybhki")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Control" type="Control" parent="CanvasLayer/PauseMenu/CenterContainer/Container"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/PauseMenu/CenterContainer/Container"]
+layout_mode = 2
+
+[node name="ResumeButton" type="Button" parent="CanvasLayer/PauseMenu/CenterContainer/Container/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("5_h5gro")
+text = "Resume"
+
+[node name="Label" type="Label" parent="CanvasLayer/PauseMenu/CenterContainer/Container/VBoxContainer"]
+layout_mode = 2
+text = "Close this menu"
+label_settings = SubResource("LabelSettings_mx8p4")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="CanvasLayer/PauseMenu/CenterContainer/Container"]
+layout_mode = 2
+
+[node name="FleeButton" type="Button" parent="CanvasLayer/PauseMenu/CenterContainer/Container/VBoxContainer2"]
+layout_mode = 2
+theme = ExtResource("5_h5gro")
+text = "Flee"
+
+[node name="Label" type="Label" parent="CanvasLayer/PauseMenu/CenterContainer/Container/VBoxContainer2"]
+layout_mode = 2
+text = "Leave cards behind"
+label_settings = SubResource("LabelSettings_mx8p4")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="CanvasLayer/PauseMenu/CenterContainer/Container"]
+layout_mode = 2
+
+[node name="QuitButton" type="Button" parent="CanvasLayer/PauseMenu/CenterContainer/Container/VBoxContainer3"]
+layout_mode = 2
+theme = ExtResource("5_h5gro")
+text = "Quit to desktop"
+
+[node name="Label" type="Label" parent="CanvasLayer/PauseMenu/CenterContainer/Container/VBoxContainer3"]
+layout_mode = 2
+text = "Game is not saved!"
+label_settings = SubResource("LabelSettings_mx8p4")
+horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Inventory" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("Player", "StashContainer", "InventoryContainer", "DeckContainer", "StashArea", "InventoryArea", "DeckArea", "StashSizeLabel", "InventorySizeLabel", "DeckSizeLabel", "OkButton")]
@@ -913,7 +1023,7 @@ position = Vector2(240, 32)
 scale = Vector2(4, 4)
 sprite_frames = SubResource("SpriteFrames_1c27j")
 animation = &"defeated"
-frame_progress = 0.172029
+frame_progress = 0.588538
 
 [node name="Description" type="Label" parent="CanvasLayer/Victory/CenterContainer/InventoryPanel/DescriptionRow2"]
 custom_minimum_size = Vector2(0, 96)
