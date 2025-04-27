@@ -251,9 +251,10 @@ z_index = 4
 width = 4.0
 default_color = Color(0.956863, 0.705882, 0.105882, 1)
 
-[node name="Overlay" type="Node2D" parent="World"]
+[node name="Overlay" type="Node2D" parent="World" node_paths=PackedStringArray("Player")]
 z_index = 10
 script = ExtResource("7_4aqu0")
+Player = NodePath("../../Player")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -917,7 +918,7 @@ position = Vector2(240, 32)
 scale = Vector2(4, 4)
 sprite_frames = SubResource("SpriteFrames_1c27j")
 animation = &"defeated"
-frame_progress = 0.493478
+frame_progress = 0.046269
 
 [node name="Description" type="Label" parent="CanvasLayer/Victory/CenterContainer/InventoryPanel/DescriptionRow2"]
 custom_minimum_size = Vector2(0, 96)

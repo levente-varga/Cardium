@@ -532,14 +532,17 @@ public partial class World : Node2D {
         success = playerTargetingCard.OnPlay(Player, this);
         break;
       case EnemyTargetingCard enemyTargetingCard:
+        Overlay.Range = enemyTargetingCard.Range;
         var enemy = await SelectEnemyTarget(enemyTargetingCard.Range, Player.Position);
         success = enemy is not null && enemyTargetingCard.OnPlay(Player, enemy, this);
         break;
       case InteractableTargetingCard interactableTargetingCard:
+        Overlay.Range = interactableTargetingCard.Range;
         var interactable = await SelectInteractableTarget(interactableTargetingCard.Range, Player.Position);
         success = interactable is not null && interactableTargetingCard.OnPlay(Player, interactable, this);
         break;
       case LocationTargetingCard locationTargetingCard:
+        Overlay.Range = locationTargetingCard.Range;
         var position = await SelectLocationTarget(locationTargetingCard.Range, Player.Position);
         success = position is not null && locationTargetingCard.OnPlay(Player, position.Value, this);
         break;
@@ -548,6 +551,7 @@ public partial class World : Node2D {
     GD.Print("Played card");
 
     _selectedTargetingCard = null;
+    Overlay.Range = null;
 
     return success;
   }

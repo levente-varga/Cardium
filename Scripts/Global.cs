@@ -12,6 +12,7 @@ public static class Global {
   public static Vector2I GlobalCardSize => CardSize * CardScale;
   public static Vector2I GlobalTileSize => TileSize * TileScale;
   public static Vector2 TileToWorld(Vector2I tile) => tile * GlobalTileSize;
+  public static Vector2 TileCenterToWorld(Vector2I tile) => (tile + Vector2.One / 2f) * GlobalTileSize;
   public const float LerpWeight = 15f;
 
   public static Color Yellow => new("F4B41B");
