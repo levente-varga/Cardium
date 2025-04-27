@@ -12,7 +12,8 @@ public static class Data {
   public static bool Hand;
   public static bool ShowHealth;
   public static bool CameraOnPlayer;
-  public static bool MenuOpen;
+  public static int MenusOpen;
+  public static bool MenuOpen => MenusOpen > 0;
   public static readonly Pile Stash = new Pile();
   public static readonly Pile Inventory = new Pile();
   public static readonly Pile Deck = new Pile();
@@ -23,7 +24,7 @@ public static class Data {
     Hand = false;
     ShowHealth = false;
     CameraOnPlayer = false;
-    MenuOpen = false;
+    MenusOpen = 0;
   }
 
   public static void LoadDungeonData() {
@@ -32,6 +33,6 @@ public static class Data {
     Hand = true;
     ShowHealth = true;
     CameraOnPlayer = true;
-    MenuOpen = false;
+    MenusOpen = 0;
   }
 }

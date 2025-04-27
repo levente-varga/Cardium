@@ -4,7 +4,7 @@ using Godot;
 
 namespace Cardium.Scripts.Menus;
 
-public partial class InventoryMenu : Control {
+public partial class InventoryMenu : Menu {
   private enum CardOrigin {
     None,
     Deck,
@@ -42,7 +42,7 @@ public partial class InventoryMenu : Control {
 
   public override void _Ready() {
     Visible = false;
-    OkButton.Pressed += OkButtonPressed;
+    OkButton.Pressed += Close;
   }
 
   public override void _Process(double delta) {
@@ -53,8 +53,7 @@ public partial class InventoryMenu : Control {
   }
 
   public void Open(bool enableStash = false) {
-    Visible = true;
-    Data.MenuOpen = true;
+    base.Open();
     _stashEnabled = enableStash;
     Player.PutCardsInUseIntoDeck();
     FillContainersWithCardViews();
@@ -62,14 +61,9 @@ public partial class InventoryMenu : Control {
     if (!_stashEnabled) StashArea.Color = new Color("16161688");
   }
 
-  private void OkButtonPressed() {
-    Close();
-  }
-
-  private void Close() {
+  public override void Close() {
+    base.Close();
     Player.Hand.DrawUntilFull();
-    Visible = false;
-    Data.MenuOpen = false;
     _stashEnabled = false;
     StashArea.Color = new Color("16161600");
   }

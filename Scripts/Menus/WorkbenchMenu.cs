@@ -4,7 +4,7 @@ using Godot;
 
 namespace Cardium.Scripts.Menus;
 
-public partial class WorkbenchMenu : Control {
+public partial class WorkbenchMenu : Menu {
   private enum CardOrigin {
     None,
     Stash,
@@ -59,19 +59,17 @@ public partial class WorkbenchMenu : Control {
     if (!Visible) return;
   }
 
-  public void Open() {
-    Visible = true;
-    Data.MenuOpen = true;
+  public override void Open() {
+    base.Open();
     UpgradeButton.Disabled = true;
     Player.PutCardsInUseIntoDeck();
     FillContainersWithCardViews();
     UpdateLabels();
   }
 
-  public void Close() {
+  public override void Close() {
+    base.Close();
     Player.Hand.DrawUntilFull();
-    Visible = false;
-    Data.MenuOpen = false;
     EmptySlots();
   }
 

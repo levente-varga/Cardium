@@ -2,7 +2,7 @@ using Godot;
 
 namespace Cardium.Scripts.Menus;
 
-public partial class CharacterMenu : Control {
+public partial class CharacterMenu : Menu {
   [Export] public Label HealthLabel = null!;
   [Export] public Label DefenseLabel = null!;
   [Export] public Label VisionLabel = null!;
