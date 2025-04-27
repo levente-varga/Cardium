@@ -27,6 +27,7 @@ public partial class World : Node2D {
   [Export] public Menus.InventoryMenu InventoryMenu = null!;
   [Export] public Menus.WorkbenchMenu WorkbenchMenu = null!;
   [Export] public DeathMenu DeathMenu = null!;
+  [Export] public VictoryMenu VictoryMenu = null!;
 
   [Export] public Overlay Overlay = null!;
 

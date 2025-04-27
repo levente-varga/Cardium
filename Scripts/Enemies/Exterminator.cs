@@ -87,5 +87,6 @@ public partial class Exterminator : Enemy {
   protected override void OnDeath(Entity source, World world) {
     base.OnDeath(source, world);
     
+    world.VictoryMenu.Open();
   }
 }

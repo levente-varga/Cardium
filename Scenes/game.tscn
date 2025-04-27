@@ -231,7 +231,7 @@ vertical_alignment = 1
 [node name="PlayingCardPosition" type="Node2D" parent="Camera2D"]
 position = Vector2(-800, 0)
 
-[node name="World" type="Node2D" parent="." node_paths=PackedStringArray("Camera", "Player", "DebugLabel1", "DebugLabel2", "DebugLabel3", "DebugLabel4", "InventoryMenu", "WorkbenchMenu", "DeathMenu", "Overlay")]
+[node name="World" type="Node2D" parent="." node_paths=PackedStringArray("Camera", "Player", "DebugLabel1", "DebugLabel2", "DebugLabel3", "DebugLabel4", "InventoryMenu", "WorkbenchMenu", "DeathMenu", "VictoryMenu", "Overlay")]
 z_index = -1
 script = ExtResource("4_ayy7p")
 Camera = NodePath("../Camera2D")
@@ -243,6 +243,7 @@ DebugLabel4 = NodePath("../CanvasLayer/Label4")
 InventoryMenu = NodePath("../CanvasLayer/Inventory")
 WorkbenchMenu = NodePath("../CanvasLayer/Workbench")
 DeathMenu = NodePath("../CanvasLayer/Death")
+VictoryMenu = NodePath("../CanvasLayer/Victory")
 Overlay = NodePath("Overlay")
 
 [node name="Line2D" type="Line2D" parent="World"]
@@ -843,6 +844,7 @@ theme = ExtResource("5_h5gro")
 text = "Sad... but ok"
 
 [node name="Victory" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("Player", "CloseButton", "LinkButton")]
+visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_right = 1920.0
@@ -915,7 +917,7 @@ position = Vector2(240, 32)
 scale = Vector2(4, 4)
 sprite_frames = SubResource("SpriteFrames_1c27j")
 animation = &"defeated"
-frame_progress = 0.957529
+frame_progress = 0.978643
 
 [node name="Description" type="Label" parent="CanvasLayer/Victory/CenterContainer/InventoryPanel/DescriptionRow2"]
 custom_minimum_size = Vector2(0, 96)
