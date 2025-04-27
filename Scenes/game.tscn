@@ -246,11 +246,6 @@ DeathMenu = NodePath("../CanvasLayer/Death")
 VictoryMenu = NodePath("../CanvasLayer/Victory")
 Overlay = NodePath("Overlay")
 
-[node name="Line2D" type="Line2D" parent="World"]
-z_index = 4
-width = 4.0
-default_color = Color(0.956863, 0.705882, 0.105882, 1)
-
 [node name="Overlay" type="Node2D" parent="World" node_paths=PackedStringArray("Player")]
 z_index = 10
 script = ExtResource("7_4aqu0")
@@ -918,7 +913,7 @@ position = Vector2(240, 32)
 scale = Vector2(4, 4)
 sprite_frames = SubResource("SpriteFrames_1c27j")
 animation = &"defeated"
-frame_progress = 0.046269
+frame_progress = 0.172029
 
 [node name="Description" type="Label" parent="CanvasLayer/Victory/CenterContainer/InventoryPanel/DescriptionRow2"]
 custom_minimum_size = Vector2(0, 96)

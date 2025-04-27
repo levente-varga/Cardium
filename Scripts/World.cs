@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Cardium.Scripts.Cards;
 using Cardium.Scripts.Cards.Types;
 using Cardium.Scripts.Menus;
 using Godot;
@@ -32,19 +31,16 @@ public partial class World : Node2D {
   [Export] public Overlay Overlay = null!;
 
   private readonly List<CardLoot> _loot = new();
-  private readonly List<TileMapLayer> _layers = new();
 
   private SelectionMode _selectionMode = SelectionMode.None;
   private TargetingCard? _selectedTargetingCard;
-  private int _selectionRange = 0;
+  private int _selectionRange;
   private Vector2I _selectionOrigin;
   private Vector2I _selectedCell;
-  private bool _selectionCancelled = false;
-  private bool _selectionConfirmed = false;
+  private bool _selectionCancelled;
+  private bool _selectionConfirmed;
 
   private AStarGrid2D _grid = new();
-  private Vector2I? _end = null;
-  private Line2D _line = new();
 
   private readonly Dungeon _dungeon;
   private CombatManager _combatManager = null!;
@@ -67,23 +63,6 @@ public partial class World : Node2D {
 
   public override void _Ready() {
     if (Data.InitialStart) {
-      var r = new Random();
-      for (var i = 0; i < 30; i++) {
-        var type = r.Next(9);
-        Card card = type switch {
-          0 => new HealCard(),
-          1 => new SmiteCard(),
-          2 => new HurlCard(),
-          3 => new PushCard(),
-          4 => new ChainCard(),
-          5 => new GoldenKeyCard(),
-          6 => new WoodenKeyCard(),
-          7 => new HolyCard(),
-          _ => new ShuffleCard(),
-        };
-        card.Protected = true;
-        Data.Stash.Add(card);
-      }
       Data.InitialStart = false;
       Player.Deck.FillWithInitial();
     }
@@ -91,8 +70,7 @@ public partial class World : Node2D {
     _combatManager = new CombatManager(Player, this, DebugLabel1);
 
     if (Data.Fog) SetupFogOfWar();
-    SetupPath();
-    UpdatePath();
+    SetupPathfinding();
 
     Player.Hand.Visible = Data.Hand;
     Player.Deck.Visible = Data.Hand;
@@ -208,7 +186,6 @@ public partial class World : Node2D {
           break;
       }
 
-      UpdatePath();
       QueueRedraw();
     }
     else if (@event is InputEventMouseButton { Pressed: true, ButtonIndex: MouseButton.Right }) {
@@ -219,9 +196,6 @@ public partial class World : Node2D {
   }
 
   public override void _Draw() {
-    if (_end != null)
-      DrawRect(new Rect2(Global.TileToWorld(_end.Value), Global.GlobalTileSize), Global.Yellow, false, 4);
-
     if (Global.Debug) {
       DrawRect(
         new Rect2(Global.TileToWorld(HoveredCell),
@@ -260,10 +234,7 @@ public partial class World : Node2D {
     DeathMenu.Open();
   }
   
-  private void SetupPath() {
-    _line = GetNode<Line2D>("Line2D");
-    _line.DefaultColor = Global.Yellow;
-
+  private void SetupPathfinding() {
     _grid.Region = _dungeon.Rect;
     _grid.CellSize = Global.GlobalTileSize;
     _grid.Offset = Vector2.Zero;
@@ -318,17 +289,8 @@ public partial class World : Node2D {
     }
   }
 
-  /// <summary>
-  ///  Recalculates the path
-  /// </summary>
-  private void UpdatePath() {
-    if (_end is null) return;
-    _line.Points = _grid.GetPointPath(Player.Position, _end.Value);
-  }
-
   private void OnPlayerMove(Vector2I oldPosition, Vector2I newPosition) {
     PickUpLoot();
-    UpdatePath();
     QueueRedraw();
   }
 
