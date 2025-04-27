@@ -7,7 +7,7 @@ namespace Cardium.Scripts.Cards;
 public class ShuffleCard : PlayerTargetingCard {
   public ShuffleCard() {
     Name = "Shuffle";
-    Rarity = CardRarity.Common;
+    Rarity = CardRarity.Rare;
     Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Shuffle.png");
     Type = CardType.Combat;
     UpdateDescription();

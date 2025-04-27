@@ -24,7 +24,7 @@ public partial class Exterminator : Enemy {
     BaseVision = 3;
     BaseCombatVision = 5;
     BaseArmor = 5;
-    BaseDamage = 10;
+    BaseDamage = 6;
     BaseRange = 1;
     BaseLuck = 10;
     

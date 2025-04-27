@@ -5,7 +5,7 @@ using Godot;
 
 namespace Cardium.Scripts.Cards;
 
-public class ChainCard : EnemyTargetingCard {
+public sealed class ChainCard : EnemyTargetingCard {
   private int Damage => new List<int> { 2, 3, 4, 5, 6 }[Level];
   private int BounceRange => new List<int> { 2, 2, 3, 3, 4 }[Level];
   private int Bounces => new List<int> { 1, 2, 2, 3, 4 }[Level];
@@ -14,7 +14,7 @@ public class ChainCard : EnemyTargetingCard {
 
   public ChainCard() {
     Name = "Chain";
-    Rarity = CardRarity.Rare;
+    Rarity = CardRarity.Epic;
     MaxLevel = 4;
     Range = 3;
     Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Chain.png");

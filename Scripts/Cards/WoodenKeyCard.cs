@@ -4,10 +4,10 @@ using Godot;
 
 namespace Cardium.Scripts.Cards;
 
-public class WoodenKeyCard : InteractableTargetingCard {
+public sealed class WoodenKeyCard : InteractableTargetingCard {
   public WoodenKeyCard() {
     Name = "Wooden Key";
-    Rarity = CardRarity.Common;
+    Rarity = CardRarity.Rare;
     Range = 1;
     Unstable = true;
     Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/WoodenKey.png");

@@ -23,7 +23,7 @@ public partial class Voidling : Enemy {
     BaseVision = 5;
     BaseCombatVision = 7;
     BaseArmor = 0;
-    BaseDamage = new List<int> { 3, 5, 7, 9, 11 }[Level];
+    BaseDamage = new List<int> { 3, 5, 6, 7, 8 }[Level];
     BaseRange = 1;
 
     SetModulate();
@@ -51,7 +51,7 @@ public partial class Voidling : Enemy {
     List<Card> loot = new();
     Random random = new();
       
-    var indexCount = random.Next(1, 3);
+    var indexCount = random.Next(1, 2 + Level);
     for (var i = 0; i < indexCount; i++) {
       loot.Add(
         random.Next(120) switch {

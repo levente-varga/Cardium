@@ -27,7 +27,7 @@ public partial class Slime : Enemy {
     List<Card> loot = new();
     Random random = new();
       
-    var indexCount = random.Next(1, 3);
+    var indexCount = random.Next(1, 2 + Level);
     for (var i = 0; i < indexCount; i++) {
       loot.Add(
         random.Next(125) switch {

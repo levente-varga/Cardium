@@ -30,15 +30,15 @@ public partial class Spider : Enemy {
     List<Card> loot = new();
     Random random = new();
       
-    var indexCount = random.Next(1, 4);
+    var indexCount = random.Next(1, 3 + Level);
     for (var i = 0; i < indexCount; i++) {
       loot.Add(
-        random.Next(110) switch {
+        random.Next(100) switch {
           < 40 => new SmiteCard(),
-          < 60 => new HolyCard(),
-          < 80 => new ChainCard(),
-          < 100 => new WoodenKeyCard(),
-          < 110 => new GoldenKeyCard(),
+          < 55 => new HolyCard(),
+          < 70 => new ChainCard(),
+          < 90 => new WoodenKeyCard(),
+          < 100 => new GoldenKeyCard(),
           _ => new HealCard(),
         }
       );

@@ -4,7 +4,7 @@ using Godot;
 
 namespace Cardium.Scripts.Cards;
 
-public class HolyCard : LocationTargetingCard {
+public sealed class HolyCard : LocationTargetingCard {
   private int Radius => new List<int> { 2, 2, 3, 3, 4 }[Level];
   private int TotalDamage => new List<int> { 10, 16, 25, 40, 70 }[Level];
 

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Cardium.Scripts.Menus;
 using Godot;
 
 namespace Cardium.Scripts;
@@ -37,7 +36,7 @@ public partial class Player : Entity {
     BaseRange = 2;
     Name = "Player";
     BaseDamage = 1;
-    MaxHealth = 20;
+    MaxHealth = 10;
     Health = MaxHealth;
 
     Position = Vector2I.One;

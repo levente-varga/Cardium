@@ -20,7 +20,7 @@ public partial class Ranger : Enemy {
     BaseVision = 5;
     BaseCombatVision = 7;
     BaseArmor = new List<int> { 0, 0, 1, 1, 2 }[Level];
-    BaseDamage = new List<int> { 1, 2, 3, 4, 5 }[Level];
+    BaseDamage = new List<int> { 1, 2, 2, 3, 3 }[Level];
     BaseRange = new List<int> { 2, 3, 3, 4, 4 }[Level];
   }
 
@@ -61,7 +61,7 @@ public partial class Ranger : Enemy {
     List<Card> loot = new();
     Random random = new();
       
-    var indexCount = random.Next(1, 3);
+    var indexCount = random.Next(1, 2 + Level);
     for (var i = 0; i < indexCount; i++) {
       loot.Add(
         random.Next(110) switch {
