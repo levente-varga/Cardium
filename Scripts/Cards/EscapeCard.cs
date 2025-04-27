@@ -7,7 +7,7 @@ public class EscapeCard : PlayerTargetingCard {
   public EscapeCard() {
     Name = "Escape";
     Rarity = CardRarity.Legendary;
-    Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Shuffle.png");
+    Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Escape.png");
     Type = CardType.Utility;
     Unstable = true;
     UpdateDescription();

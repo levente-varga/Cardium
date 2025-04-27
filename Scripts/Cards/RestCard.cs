@@ -7,13 +7,13 @@ public class RestCard : PlayerTargetingCard {
   public RestCard() {
     Name = "Rest";
     Rarity = CardRarity.Epic;
-    Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Shuffle.png");
+    Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Rest.png");
     Type = CardType.Utility;
     UpdateDescription();
   }
 
   protected sealed override void UpdateDescription() {
-    Description = $"Shuffles the discard pile into the deck.";
+    Description = $"Shuffles all other cards from the discard pile into the deck.";
   }
 
   public override bool OnPlay(Player player, World world) {
