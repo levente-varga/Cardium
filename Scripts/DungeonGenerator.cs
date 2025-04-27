@@ -492,10 +492,10 @@ public partial class Dungeon {
 
           Enemy enemy;
           var level = _random.Next(25) switch {
-            < 9 => 0,
-            < 16 => 1,
-            < 21 => 2,
-            < 24 => 3,
+            < 13 => 0,
+            < 19 => 1,
+            < 23 => 2,
+            < 25 => 3,
             _ => 4
           };
 
