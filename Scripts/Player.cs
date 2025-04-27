@@ -140,12 +140,9 @@ public partial class Player : Entity {
     }
     else if (InputMap.EventIsAction(@event, "Skip")) {
     }
-    else if (InputMap.EventIsAction(@event, "Reload")) {
-      ReloadDeck();
-    }
   }
 
-  private void ReloadDeck() {
+  public void ReloadDeck() {
     var cards = DiscardPile.Pile.GetCards();
     foreach (var card in cards) {
       if (Deck.Deck.IsFull) return;
