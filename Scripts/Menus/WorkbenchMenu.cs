@@ -84,6 +84,9 @@ public partial class WorkbenchMenu : Menu {
       return;
     }
 
+    Utils.SpawnFloatingLabel(Slot2Area, Slot2Area.Size / 2 - new Vector2(0, 100), $"Upgraded into\n{_slot1!.Name} (lvl {_slot1!.Level})",
+      color: _slot1.RarityColor, height: 160);
+    
     _slot1.Protected = isProtected;
     Data.Stash.Add(_slot1);
     EmptySlots(false);

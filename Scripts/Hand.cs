@@ -187,26 +187,6 @@ public partial class Hand : Node2D {
 
   public List<Card> GetCards() => _cardViews.Select(view => view.Card).ToList();
 
-  public override void _Input(InputEvent @event) {
-    Card? card = @event switch {
-      InputEventKey { Pressed: true, KeyLabel: Key.Key1 } => new HealCard(),
-      InputEventKey { Pressed: true, KeyLabel: Key.Key2 } => new SmiteCard(),
-      InputEventKey { Pressed: true, KeyLabel: Key.Key3 } => new HurlCard(),
-      InputEventKey { Pressed: true, KeyLabel: Key.Key4 } => new PushCard(),
-      InputEventKey { Pressed: true, KeyLabel: Key.Key5 } => new ChainCard(),
-      InputEventKey { Pressed: true, KeyLabel: Key.Key6 } => new GoldenKeyCard(),
-      InputEventKey { Pressed: true, KeyLabel: Key.Key7 } => new GoldenKeyCard(),
-      InputEventKey { Pressed: true, KeyLabel: Key.Key8 } => new HolyCard(),
-      InputEventKey { Pressed: true, KeyLabel: Key.Key9 } => new ShuffleCard(),
-      _ => null
-    };
-
-    if (card == null) return;
-
-    RemoveLast(false);
-    Add(card);
-  }
-
   private void OnCardMouseEntered(CardView view) => _hovered = view;
 
   private void OnCardMouseExited(CardView view) {

@@ -550,40 +550,9 @@ public partial class Dungeon {
         if (tileCandidates.Count == 0) continue;
         Chest chest = new();
         chest.Position = tileCandidates[_random.Next(tileCandidates.Count)];
-        FillChest(chest);
         _dungeon.Interactables.Add(chest);
         chests++;
       }
-    }
-
-    private void FillChest(Chest chest) {
-      chest.Content.Add(_random.Next(3) switch {
-        0 => new HurlCard(),
-        1 => new PushCard(),
-        2 => new ShuffleCard(),
-        _ => new HealCard(),
-      });
-      if (_random.Next(5) < 3)
-        chest.Content.Add(_random.Next(2) switch {
-          0 => new HurlCard(),
-          1 => new PushCard(),
-          _ => new HealCard(),
-        });
-      if (_random.Next(3) < 1)
-        chest.Content.Add(_random.Next(2) switch {
-          0 => new SmiteCard(),
-          _ => new ChainCard(),
-        });
-      if (_random.Next(4) < 1)
-        chest.Content.Add(_random.Next(2) switch {
-          0 => new WoodenKeyCard(),
-          _ => new SmiteCard(),
-        });
-      if (_random.Next(5) < 1)
-        chest.Content.Add(_random.Next(2) switch {
-          0 => new GoldenKeyCard(),
-          _ => new HolyCard(),
-        });
     }
 
     private void PlaceExits() {
