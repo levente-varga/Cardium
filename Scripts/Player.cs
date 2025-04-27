@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Godot;
 
@@ -9,8 +10,6 @@ public partial class Player : Entity {
   [Export] public Hand Hand = null!;
   [Export] public PileView DiscardPile = null!;
   [Export] public DeckView Deck = null!;
-  [Export] public InventoryMenu InventoryMenu = null!;
-  [Export] public WorkbenchMenu WorkbenchMenu = null!;
 
   public delegate void OnActionDelegate();
 
@@ -22,7 +21,7 @@ public partial class Player : Entity {
   private const ulong MinMoveDelayMsec = 125;
   private ulong _moveDelayMsec = BaseMoveDelayMsec;
   private ulong _consecutiveMoves;
-  
+
   private readonly HashSet<string> _blockedActions = new() { "Right", "Left", "Up", "Down" };
 
   public override void _Ready() {
@@ -32,7 +31,7 @@ public partial class Player : Entity {
       if (!Input.IsActionPressed(action))
         _blockedActions.Remove(action);
     }
-    
+
     BaseVision = 3;
     BaseRange = 2;
     Name = "Player";
@@ -65,7 +64,7 @@ public partial class Player : Entity {
                       + $"Hand: {Hand.Size}/{Hand.Capacity}";
 
     HandleMovement();
-    
+
     base._Process(delta);
   }
 
@@ -73,11 +72,12 @@ public partial class Player : Entity {
     if (_blockedActions.Count == 0 || !_blockedActions.Contains(action)) {
       return Input.IsActionPressed(action);
     }
+
     if (!Input.IsActionPressed(action))
       _blockedActions.Remove(action);
     return false;
   }
-  
+
   private void HandleMovement() {
     if (Data.MenuOpen || Hand.IsPlayingACard) return;
 
@@ -88,16 +88,19 @@ public partial class Player : Entity {
         _moveDirection = Direction.Right;
       }
     }
+
     if (IsActionAllowed("Left")) {
       if (_moveDirection == null || lastMoveDirection != Direction.Left && Input.IsActionJustPressed("Left")) {
         _moveDirection = Direction.Left;
       }
     }
+
     if (IsActionAllowed("Up")) {
       if (_moveDirection == null || lastMoveDirection != Direction.Up && Input.IsActionJustPressed("Up")) {
         _moveDirection = Direction.Up;
       }
     }
+
     if (IsActionAllowed("Down")) {
       if (_moveDirection == null || lastMoveDirection != Direction.Down && Input.IsActionJustPressed("Down")) {
         _moveDirection = Direction.Down;
@@ -107,7 +110,7 @@ public partial class Player : Entity {
     if (_moveDirection != null && _moveDirection != lastMoveDirection) {
       _lastMoveMsec = null;
     }
-    
+
     var timeSinceLastMove = _lastMoveMsec == null ? ulong.MaxValue : Time.GetTicksMsec() - _lastMoveMsec;
     if (timeSinceLastMove < _moveDelayMsec) return;
 
@@ -117,7 +120,7 @@ public partial class Player : Entity {
       _moveDelayMsec = BaseMoveDelayMsec;
       return;
     }
-    
+
     Move(_moveDirection!.Value, World);
     _lastMoveMsec = Time.GetTicksMsec();
     _moveDelayMsec = MinMoveDelayMsec + (BaseMoveDelayMsec - MinMoveDelayMsec) / ++_consecutiveMoves;
@@ -125,29 +128,24 @@ public partial class Player : Entity {
 
   public override void _Input(InputEvent @event) {
     if (Data.MenuOpen || Hand.IsPlayingACard) return;
-    
+
     if (!@event.IsPressed()) return;
-    
+
     if (InputMap.EventIsAction(@event, "Interact")) {
-      
     }
     else if (InputMap.EventIsAction(@event, "Use")) {
-      
     }
     else if (InputMap.EventIsAction(@event, "Reset")) {
       GetTree().ReloadCurrentScene();
     }
     else if (InputMap.EventIsAction(@event, "Skip")) {
-      
-    }
-    else if (InputMap.EventIsAction(@event, "Reload")) {
-      ReloadDeck();
     }
   }
 
-  private void ReloadDeck() {
+  public void ReloadDeck(List<Type> except) {
     var cards = DiscardPile.Pile.GetCards();
     foreach (var card in cards) {
+      if (except.Contains(card.GetType())) continue;
       if (Deck.Deck.IsFull) return;
       DiscardPile.Remove(card);
       Deck.Add(card);
@@ -173,10 +171,10 @@ public partial class Player : Entity {
     TurnsLived++;
     OnActionEvent?.Invoke();
   }
-  
+
   protected override void Nudge(Direction direction) {
     var i = World.GetInteractableAt(Position + DirectionToVector(direction));
-    i?.OnNudge(this, World.Camera);
+    i?.OnNudge(this, World);
 
     base.Nudge(direction);
   }
@@ -199,17 +197,18 @@ public partial class Player : Entity {
       DiscardPile.Remove(card);
     }
   }
-  
+
   protected override void TakeTurn(Player player, World world) {
     if (Global.Debug) SpawnDebugFloatingLabel("Start of turn");
   }
 
-  public void PickUpCard(Card card) => PickUpCards(new List<Card>{ card });
+  public void PickUpCard(Card card) => PickUpCards(new List<Card> { card });
+
   public void PickUpCards(List<Card> cards) {
     for (var i = 0; i < cards.Count; i++) {
       var card = cards[i];
       Inventory.Add(card);
-      SpawnFloatingLabel($"x1 {card.Name} card", card.RarityColor, 120 + i * 40);
+      SpawnFloatingLabel($"x1 {card.Name} (lvl. {card.Level})", card.RarityColor, 120 + i * 40, fontSize: 28);
     }
   }
 

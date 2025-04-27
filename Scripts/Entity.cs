@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Cardium.Scripts.Cards.Types;
 using Godot;
 
 namespace Cardium.Scripts;
@@ -46,6 +45,14 @@ public partial class Entity : TileAlignedGameObject {
   public HealthBar HealthBar = new();
 
   private Vector2I _previousPosition;
+  
+  public delegate void OnDamagedDelegate(Entity entity, int damage);
+
+  public event OnDamagedDelegate? OnDamagedEvent;
+  
+  public delegate void OnDeathDelegate(Entity entity);
+
+  public event OnDeathDelegate? OnDeathEvent;
 
   public override void _Ready() {
     base._Ready();
@@ -77,19 +84,27 @@ public partial class Entity : TileAlignedGameObject {
     UpdateBuffsOnEndOfTurn();
   }
 
-  public virtual void ReceiveDamage(Entity source, int damage) {
+  public virtual void ReceiveDamage(Entity source, int damage, World world) {
     if (Invincible || damage < 1) return;
 
     Blink();
+    
+    if (new Random().Next(100) < Luck) {
+      SpawnFallingLabel("Miss!");
+      OnDamagedEvent?.Invoke(this, 0);
+      return;
+    }
 
-    // TODO: Implement dodge based on luck
+    OnDamagedEvent?.Invoke(this, damage);
 
     Health -= Math.Max(1, damage - BaseArmor);
-    if (Health <= 0) OnDeath(source);
+    if (Health <= 0) OnDeath(source, world);
   }
 
-  protected virtual void OnDeath(Entity source) {
+  protected virtual void OnDeath(Entity source, World world) {
     Health = 0;
+    
+    OnDeathEvent?.Invoke(this);
   }
 
   public bool InRange(Vector2I position) {
@@ -137,10 +152,11 @@ public partial class Entity : TileAlignedGameObject {
     }
   }
 
-  private void ResetTemporaryStats() {
+  protected void ResetTemporaryStats() {
     TempArmor = 0;
     TempDamage = 0;
     TempRange = 0;
     TempLuck = 0;
+    TempVision = 0;
   }
 }

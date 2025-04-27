@@ -1,5 +1,3 @@
-using Cardium.Scripts.Cards;
-
 namespace Cardium.Scripts;
 
 public enum Level {
@@ -7,25 +5,31 @@ public enum Level {
   One,
 }
 
-public class Data {
+public static class Data {
   public static Level Level;
   public static bool InitialStart = true;
   public static bool Fog;
   public static bool Hand;
   public static bool ShowHealth;
   public static bool CameraOnPlayer;
-  public static bool MenuOpen;
-  public static readonly Pile Stash = new Pile();
-  public static readonly Pile Inventory = new Pile();
-  public static readonly Pile Deck = new Pile();
+  public static int MenusOpen;
+  public static bool MenuOpen => MenusOpen > 0;
+  public static readonly Pile Stash = new ();
+  public static readonly Pile Inventory = new ();
+  public static readonly Pile Deck = new ();
 
-public static void LoadLobbyData() {
+  public static void EraseUnprotectedCardsOutsideStash() {
+    Inventory.RemoveUnprotected();
+    Deck.RemoveUnprotected();
+  }
+
+  public static void LoadLobbyData() {
     Level = Level.Lobby;
     Fog = false;
     Hand = false;
     ShowHealth = false;
     CameraOnPlayer = false;
-    MenuOpen = false;
+    MenusOpen = 0;
   }
 
   public static void LoadDungeonData() {
@@ -34,6 +38,6 @@ public static void LoadLobbyData() {
     Hand = true;
     ShowHealth = true;
     CameraOnPlayer = true;
-    MenuOpen = false;
+    MenusOpen = 0;
   }
 }

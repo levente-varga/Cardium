@@ -10,10 +10,12 @@ public class Deck : Pile {
   }
 
   private int _capacity = 1;
-  public int Capacity { 
+
+  public int Capacity {
     get => _capacity;
     private set => _capacity = Math.Max(value, 1);
   }
+
   public bool IsFull => Size >= Capacity;
   public bool IsNotFull => Size < Capacity;
 
@@ -34,6 +36,6 @@ public class Deck : Pile {
   }
 
   public void Shuffle() {
-    Utils.FisherYatesShuffle(Cards);        
+    Utils.FisherYatesShuffle(Cards);
   }
 }

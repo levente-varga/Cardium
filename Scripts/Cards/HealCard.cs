@@ -5,25 +5,24 @@ using Godot;
 namespace Cardium.Scripts.Cards;
 
 public class HealCard : PlayerTargetingCard {
-    private int HealAmount => new List<int>{2, 4, 7, 12, 20}[Level];
-    
-    public HealCard() {
-        Name = "Heal";
-        Rarity = CardRarity.Common;
-        MaxLevel = 4;
-        Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Heal.png");
-        Type = CardType.Combat;
-        UpdateDescription();
-    }
-    
-    protected sealed override void UpdateDescription() {
-        Description = $"Heals for {Highlight($"{HealAmount}")} missing health.";
-    }
-    
-    public override bool OnPlay(Player player)
-    {
-        player.Heal(HealAmount);
-        
-        return true;
-    }
+  private int HealAmount => new List<int> { 2, 4, 7, 12, 20 }[Level];
+
+  public HealCard() {
+    Name = "Heal";
+    Rarity = CardRarity.Common;
+    MaxLevel = 4;
+    Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Heal.png");
+    Type = CardType.Combat;
+    UpdateDescription();
+  }
+
+  protected sealed override void UpdateDescription() {
+    Description = $"Heals for {Highlight($"{HealAmount}")} missing health.";
+  }
+
+  public override bool OnPlay(Player player, World world) {
+    player.Heal(HealAmount);
+
+    return true;
+  }
 }

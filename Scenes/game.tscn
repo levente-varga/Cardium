@@ -1,19 +1,24 @@
-[gd_scene load_steps=25 format=3 uid="uid://cw3o4f0nr0f2v"]
+[gd_scene load_steps=43 format=3 uid="uid://cw3o4f0nr0f2v"]
 
 [ext_resource type="Script" path="res://Scripts/Hand.cs" id="1_3ixgw"]
 [ext_resource type="Script" path="res://Scripts/Camera.cs" id="3_evct5"]
 [ext_resource type="Script" path="res://Scripts/Player.cs" id="3_q31ct"]
 [ext_resource type="Script" path="res://Scripts/World.cs" id="4_ayy7p"]
-[ext_resource type="Script" path="res://Scripts/CharacterPanel.cs" id="4_dv04k"]
 [ext_resource type="Script" path="res://Scripts/DeckView.cs" id="4_exrb1"]
 [ext_resource type="Script" path="res://Scripts/PileView.cs" id="4_kmy3g"]
 [ext_resource type="FontFile" uid="uid://2rxest3pjy34" path="res://Assets/Fonts/alagard.ttf" id="5_70pgm"]
 [ext_resource type="Theme" uid="uid://ckiq2eob4d0lc" path="res://Scenes/theme.tres" id="5_h5gro"]
 [ext_resource type="Script" path="res://Scripts/Overlay.cs" id="7_4aqu0"]
+[ext_resource type="Script" path="res://Scripts/Menus/CharacterMenu.cs" id="10_cxp1q"]
 [ext_resource type="Texture2D" uid="uid://dh41xyg27nibb" path="res://Assets/Sprites/Inventory.png" id="10_xwuuf"]
 [ext_resource type="FontFile" uid="uid://cgna0pm46rmdr" path="res://Assets/Fonts/Levi Windows.ttf" id="12_aeksy"]
-[ext_resource type="Script" path="res://Scripts/InventoryMenu.cs" id="13_gdisq"]
-[ext_resource type="Script" path="res://Scripts/WorkbenchMenu.cs" id="14_nw0sm"]
+[ext_resource type="Script" path="res://Scripts/Menus/InventoryMenu.cs" id="13_gbcbe"]
+[ext_resource type="Script" path="res://Scripts/Menus/PauseMenu.cs" id="13_m0npp"]
+[ext_resource type="Script" path="res://Scripts/Menus/DeathMenu.cs" id="14_cokq3"]
+[ext_resource type="Texture2D" uid="uid://bd4kysgx8xwup" path="res://Assets/Sprites/Grave.png" id="14_k82d4"]
+[ext_resource type="Script" path="res://Scripts/Menus/WorkbenchMenu.cs" id="16_t46n8"]
+[ext_resource type="Script" path="res://Scripts/Menus/VictoryMenu.cs" id="16_xikg0"]
+[ext_resource type="Texture2D" uid="uid://2omjmpddb04r" path="res://Assets/Animations/ExterminatorDefeated.png" id="17_mrkco"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_n205a"]
 
@@ -43,6 +48,16 @@ font = ExtResource("12_aeksy")
 font_size = 25
 font_color = Color(0.866667, 0.866667, 0.866667, 1)
 
+[sub_resource type="LabelSettings" id="LabelSettings_ybhki"]
+font = ExtResource("5_70pgm")
+font_size = 52
+font_color = Color(0.8, 0.8, 0.8, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_mx8p4"]
+font = ExtResource("12_aeksy")
+font_size = 25
+font_color = Color(0.466667, 0.466667, 0.466667, 1)
+
 [sub_resource type="LabelSettings" id="LabelSettings_r4kvp"]
 font = ExtResource("5_70pgm")
 font_size = 32
@@ -60,9 +75,83 @@ font = ExtResource("12_aeksy")
 font_size = 25
 font_color = Color(0.466667, 0.466667, 0.466667, 1)
 
+[sub_resource type="LabelSettings" id="LabelSettings_apxgv"]
+font = ExtResource("5_70pgm")
+font_size = 100
+font_color = Color(0.901961, 0.282353, 0.180392, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_sd7cl"]
+font = ExtResource("5_70pgm")
+font_size = 100
+font_color = Color(0.956863, 0.705882, 0.105882, 1)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qaqjc"]
+atlas = ExtResource("17_mrkco")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y84oo"]
+atlas = ExtResource("17_mrkco")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b16fc"]
+atlas = ExtResource("17_mrkco")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_un4kx"]
+atlas = ExtResource("17_mrkco")
+region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_l8clk"]
+atlas = ExtResource("17_mrkco")
+region = Rect2(64, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xpxg3"]
+atlas = ExtResource("17_mrkco")
+region = Rect2(80, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_utyqq"]
+atlas = ExtResource("17_mrkco")
+region = Rect2(96, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_x0m1s"]
+atlas = ExtResource("17_mrkco")
+region = Rect2(112, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_1c27j"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qaqjc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y84oo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b16fc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_un4kx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_l8clk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xpxg3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_utyqq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_x0m1s")
+}],
+"loop": true,
+"name": &"defeated",
+"speed": 12.0
+}]
+
 [node name="Root" type="Node"]
 
-[node name="Player" type="AnimatedSprite2D" parent="." node_paths=PackedStringArray("World", "DebugLabel", "Hand", "DiscardPile", "Deck", "InventoryMenu", "WorkbenchMenu")]
+[node name="Player" type="AnimatedSprite2D" parent="." node_paths=PackedStringArray("World", "DebugLabel", "Hand", "DiscardPile", "Deck")]
 z_index = 5
 scale = Vector2(4, 4)
 sprite_frames = SubResource("SpriteFrames_n205a")
@@ -73,8 +162,6 @@ DebugLabel = NodePath("../CanvasLayer/Label2")
 Hand = NodePath("../Camera2D/Hand")
 DiscardPile = NodePath("../Camera2D/DiscardPile")
 Deck = NodePath("../Camera2D/Deck")
-InventoryMenu = NodePath("../CanvasLayer/Inventory")
-WorkbenchMenu = NodePath("../CanvasLayer/Workbench")
 
 [node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("Target", "Canvas")]
 script = ExtResource("3_evct5")
@@ -155,7 +242,7 @@ vertical_alignment = 1
 [node name="PlayingCardPosition" type="Node2D" parent="Camera2D"]
 position = Vector2(-800, 0)
 
-[node name="World" type="Node2D" parent="." node_paths=PackedStringArray("Camera", "Player", "DebugLabel1", "DebugLabel2", "DebugLabel3", "DebugLabel4", "Overlay")]
+[node name="World" type="Node2D" parent="." node_paths=PackedStringArray("Camera", "Player", "DebugLabel1", "DebugLabel2", "DebugLabel3", "DebugLabel4", "InventoryMenu", "WorkbenchMenu", "DeathMenu", "VictoryMenu", "PauseMenu", "Overlay")]
 z_index = -1
 script = ExtResource("4_ayy7p")
 Camera = NodePath("../Camera2D")
@@ -164,16 +251,17 @@ DebugLabel1 = NodePath("../CanvasLayer/Label1")
 DebugLabel2 = NodePath("../CanvasLayer/Label2")
 DebugLabel3 = NodePath("../CanvasLayer/Label3")
 DebugLabel4 = NodePath("../CanvasLayer/Label4")
+InventoryMenu = NodePath("../CanvasLayer/Inventory")
+WorkbenchMenu = NodePath("../CanvasLayer/Workbench")
+DeathMenu = NodePath("../CanvasLayer/Death")
+VictoryMenu = NodePath("../CanvasLayer/Victory")
+PauseMenu = NodePath("../CanvasLayer/PauseMenu")
 Overlay = NodePath("Overlay")
 
-[node name="Line2D" type="Line2D" parent="World"]
-z_index = 4
-width = 4.0
-default_color = Color(0.956863, 0.705882, 0.105882, 1)
-
-[node name="Overlay" type="Node2D" parent="World"]
+[node name="Overlay" type="Node2D" parent="World" node_paths=PackedStringArray("Player")]
 z_index = 10
 script = ExtResource("7_4aqu0")
+Player = NodePath("../../Player")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -227,7 +315,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("4_dv04k")
+script = ExtResource("10_cxp1q")
 HealthLabel = NodePath("CenterContainer/Container/Values/HealthValue")
 DefenseLabel = NodePath("CenterContainer/Container/Values/DefenseValue")
 VisionLabel = NodePath("CenterContainer/Container/Values/VisionValue")
@@ -364,6 +452,104 @@ theme = ExtResource("5_h5gro")
 label_settings = SubResource("LabelSettings_khtd6")
 vertical_alignment = 1
 
+[node name="PauseMenu" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("Player", "ResumeButton", "FleeButton", "QuitButton")]
+z_index = 20
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("13_m0npp")
+Player = NodePath("../../Player")
+ResumeButton = NodePath("CenterContainer/Container/VBoxContainer/ResumeButton")
+FleeButton = NodePath("CenterContainer/Container/VBoxContainer2/FleeButton")
+QuitButton = NodePath("CenterContainer/Container/VBoxContainer3/QuitButton")
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer/PauseMenu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.588235)
+
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/PauseMenu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Control" type="Control" parent="CanvasLayer/PauseMenu/CenterContainer"]
+layout_mode = 2
+
+[node name="Background" type="Sprite2D" parent="CanvasLayer/PauseMenu/CenterContainer/Control"]
+scale = Vector2(4, 4)
+texture = ExtResource("10_xwuuf")
+
+[node name="Container" type="VBoxContainer" parent="CanvasLayer/PauseMenu/CenterContainer"]
+custom_minimum_size = Vector2(240, 280)
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="Label" type="Label" parent="CanvasLayer/PauseMenu/CenterContainer/Container"]
+layout_mode = 2
+text = "Paused"
+label_settings = SubResource("LabelSettings_ybhki")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Control" type="Control" parent="CanvasLayer/PauseMenu/CenterContainer/Container"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/PauseMenu/CenterContainer/Container"]
+layout_mode = 2
+
+[node name="ResumeButton" type="Button" parent="CanvasLayer/PauseMenu/CenterContainer/Container/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("5_h5gro")
+text = "Resume"
+
+[node name="Label" type="Label" parent="CanvasLayer/PauseMenu/CenterContainer/Container/VBoxContainer"]
+layout_mode = 2
+text = "Close this menu"
+label_settings = SubResource("LabelSettings_mx8p4")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="CanvasLayer/PauseMenu/CenterContainer/Container"]
+layout_mode = 2
+
+[node name="FleeButton" type="Button" parent="CanvasLayer/PauseMenu/CenterContainer/Container/VBoxContainer2"]
+layout_mode = 2
+theme = ExtResource("5_h5gro")
+text = "Flee"
+
+[node name="Label" type="Label" parent="CanvasLayer/PauseMenu/CenterContainer/Container/VBoxContainer2"]
+layout_mode = 2
+text = "Leave cards behind"
+label_settings = SubResource("LabelSettings_mx8p4")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="CanvasLayer/PauseMenu/CenterContainer/Container"]
+layout_mode = 2
+
+[node name="QuitButton" type="Button" parent="CanvasLayer/PauseMenu/CenterContainer/Container/VBoxContainer3"]
+layout_mode = 2
+theme = ExtResource("5_h5gro")
+text = "Quit to desktop"
+
+[node name="Label" type="Label" parent="CanvasLayer/PauseMenu/CenterContainer/Container/VBoxContainer3"]
+layout_mode = 2
+text = "Game is not saved!"
+label_settings = SubResource("LabelSettings_mx8p4")
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="Inventory" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("Player", "StashContainer", "InventoryContainer", "DeckContainer", "StashArea", "InventoryArea", "DeckArea", "StashSizeLabel", "InventorySizeLabel", "DeckSizeLabel", "OkButton")]
 visible = false
 layout_mode = 3
@@ -372,7 +558,7 @@ offset_right = 1920.0
 offset_bottom = 1080.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-script = ExtResource("13_gdisq")
+script = ExtResource("13_gbcbe")
 Player = NodePath("../../Player")
 StashContainer = NodePath("CenterContainer/InventoryPanel/ContentRow/StashPage/StashScrollContainer/CenterContainer/MarginContainer/StashContainer")
 InventoryContainer = NodePath("CenterContainer/InventoryPanel/ContentRow/InventoryPage/InventoryScrollContainer/CenterContainer/MarginContainer/InventoryContainer")
@@ -664,14 +850,235 @@ offset_bottom = 928.0
 mouse_filter = 2
 color = Color(1, 1, 1, 0)
 
-[node name="Workbench" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("Player", "StashContainer", "Slot1Container", "Slot2Container", "Slot3Container", "StashArea", "Slot1Area", "Slot2Area", "Slot3Area", "StashSizeLabel", "SlotSizeLabel", "CancelButton", "UpgradeButton")]
+[node name="Death" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("Player", "CloseButton")]
+visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_right = 1920.0
 offset_bottom = 1080.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-script = ExtResource("14_nw0sm")
+script = ExtResource("14_cokq3")
+Player = NodePath("../../Player")
+CloseButton = NodePath("CenterContainer/InventoryPanel/ButtonRow/CloseButton")
+
+[node name="Background" type="ColorRect" parent="CanvasLayer/Death"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.588235)
+
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/Death"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelBackground" type="ColorRect" parent="CanvasLayer/Death/CenterContainer"]
+clip_contents = true
+custom_minimum_size = Vector2(480, 600)
+layout_mode = 2
+color = Color(0.0846899, 0.0846899, 0.0846899, 1)
+
+[node name="InventoryPanel" type="VBoxContainer" parent="CanvasLayer/Death/CenterContainer"]
+custom_minimum_size = Vector2(480, 600)
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Control" type="Control" parent="CanvasLayer/Death/CenterContainer/InventoryPanel"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+
+[node name="LabelRow" type="HBoxContainer" parent="CanvasLayer/Death/CenterContainer/InventoryPanel"]
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="DeathLabel" type="Label" parent="CanvasLayer/Death/CenterContainer/InventoryPanel/LabelRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Death"
+label_settings = SubResource("LabelSettings_apxgv")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Control2" type="Control" parent="CanvasLayer/Death/CenterContainer/InventoryPanel"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+
+[node name="DescriptionRow2" type="VBoxContainer" parent="CanvasLayer/Death/CenterContainer/InventoryPanel"]
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/Death/CenterContainer/InventoryPanel/DescriptionRow2"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+
+[node name="Sprite2D" type="Sprite2D" parent="CanvasLayer/Death/CenterContainer/InventoryPanel/DescriptionRow2/CenterContainer"]
+position = Vector2(240, 32)
+scale = Vector2(4, 4)
+texture = ExtResource("14_k82d4")
+
+[node name="Description" type="Label" parent="CanvasLayer/Death/CenterContainer/InventoryPanel/DescriptionRow2"]
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Unprotected cards not kept in the Stash 
+have been lost, forever..."
+label_settings = SubResource("LabelSettings_m4nry")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Filler" type="HBoxContainer" parent="CanvasLayer/Death/CenterContainer/InventoryPanel"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 32
+
+[node name="ButtonRow" type="HBoxContainer" parent="CanvasLayer/Death/CenterContainer/InventoryPanel"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+alignment = 1
+
+[node name="CloseButton" type="Button" parent="CanvasLayer/Death/CenterContainer/InventoryPanel/ButtonRow"]
+custom_minimum_size = Vector2(200, 64)
+layout_mode = 2
+theme = ExtResource("5_h5gro")
+text = "Sad... but ok"
+
+[node name="Victory" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("Player", "CloseButton", "LinkButton")]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("16_xikg0")
+Player = NodePath("../../Player")
+CloseButton = NodePath("CenterContainer/InventoryPanel/ButtonRow2/CloseButton")
+LinkButton = NodePath("CenterContainer/InventoryPanel/ButtonRow/LinkButton")
+
+[node name="Background" type="ColorRect" parent="CanvasLayer/Victory"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.588235)
+
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/Victory"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelBackground" type="ColorRect" parent="CanvasLayer/Victory/CenterContainer"]
+clip_contents = true
+custom_minimum_size = Vector2(480, 800)
+layout_mode = 2
+color = Color(0.0846899, 0.0846899, 0.0846899, 1)
+
+[node name="InventoryPanel" type="VBoxContainer" parent="CanvasLayer/Victory/CenterContainer"]
+custom_minimum_size = Vector2(480, 800)
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Control" type="Control" parent="CanvasLayer/Victory/CenterContainer/InventoryPanel"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+
+[node name="LabelRow" type="HBoxContainer" parent="CanvasLayer/Victory/CenterContainer/InventoryPanel"]
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="DeathLabel" type="Label" parent="CanvasLayer/Victory/CenterContainer/InventoryPanel/LabelRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Victory"
+label_settings = SubResource("LabelSettings_sd7cl")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Control2" type="Control" parent="CanvasLayer/Victory/CenterContainer/InventoryPanel"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+
+[node name="DescriptionRow2" type="VBoxContainer" parent="CanvasLayer/Victory/CenterContainer/InventoryPanel"]
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/Victory/CenterContainer/InventoryPanel/DescriptionRow2"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+
+[node name="Sprite2D" type="AnimatedSprite2D" parent="CanvasLayer/Victory/CenterContainer/InventoryPanel/DescriptionRow2/CenterContainer"]
+position = Vector2(240, 32)
+scale = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_1c27j")
+animation = &"defeated"
+frame_progress = 0.588538
+
+[node name="Description" type="Label" parent="CanvasLayer/Victory/CenterContainer/InventoryPanel/DescriptionRow2"]
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "You just killed the final boss! 
+Congrats!
+
+If you could spare 5 more minutes, 
+it would mean a lot if you filled out 
+the feedback form below.
+
+Thank you for playing!"
+label_settings = SubResource("LabelSettings_m4nry")
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="Filler" type="HBoxContainer" parent="CanvasLayer/Victory/CenterContainer/InventoryPanel"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 32
+
+[node name="ButtonRow" type="HBoxContainer" parent="CanvasLayer/Victory/CenterContainer/InventoryPanel"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+alignment = 1
+
+[node name="LinkButton" type="LinkButton" parent="CanvasLayer/Victory/CenterContainer/InventoryPanel/ButtonRow"]
+layout_mode = 2
+size_flags_vertical = 0
+theme = ExtResource("5_h5gro")
+text = "Form"
+uri = "https://docs.google.com/forms/d/e/1FAIpQLSelYm6Da3QR0MkthMspFtos36GOlAQj_62esjDhSL2w1juk0w/viewform?usp=header"
+
+[node name="ButtonRow2" type="HBoxContainer" parent="CanvasLayer/Victory/CenterContainer/InventoryPanel"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+alignment = 1
+
+[node name="CloseButton" type="Button" parent="CanvasLayer/Victory/CenterContainer/InventoryPanel/ButtonRow2"]
+custom_minimum_size = Vector2(200, 64)
+layout_mode = 2
+theme = ExtResource("5_h5gro")
+text = "Not now"
+
+[node name="Workbench" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("Player", "StashContainer", "Slot1Container", "Slot2Container", "Slot3Container", "StashArea", "Slot1Area", "Slot2Area", "Slot3Area", "StashSizeLabel", "SlotSizeLabel", "CancelButton", "UpgradeButton")]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("16_t46n8")
 Player = NodePath("../../Player")
 StashContainer = NodePath("CenterContainer/WorkbenchPanel/ContentRow/StashScrollContainer/CenterContainer/MarginContainer/StashContainer")
 Slot1Container = NodePath("CenterContainer/WorkbenchPanel/ContentRow/WorkbenchPage/Slot1Container")
