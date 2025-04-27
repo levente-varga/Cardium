@@ -24,8 +24,8 @@ public partial class World : Node2D {
   [Export] public Label DebugLabel3 = null!;
   [Export] public Label DebugLabel4 = null!;
   
-  [Export] public Menus.InventoryMenu InventoryMenu = null!;
-  [Export] public Menus.WorkbenchMenu WorkbenchMenu = null!;
+  [Export] public InventoryMenu InventoryMenu = null!;
+  [Export] public WorkbenchMenu WorkbenchMenu = null!;
   [Export] public DeathMenu DeathMenu = null!;
   [Export] public VictoryMenu VictoryMenu = null!;
 
@@ -48,6 +48,8 @@ public partial class World : Node2D {
 
   private readonly Dungeon _dungeon;
   private CombatManager _combatManager = null!;
+
+  private int _escapeAfterFrames = -1;
 
   public World() {
     _dungeon = Dungeon.GenerateLobby();
@@ -128,6 +130,15 @@ public partial class World : Node2D {
   }
 
   public override void _Process(double delta) {
+    if (_escapeAfterFrames >= 0) {
+      _escapeAfterFrames--;
+      if (_escapeAfterFrames == -1) {
+        Data.LoadLobbyData();
+        Player.SaveCards();
+        Player.GetTree().ReloadCurrentScene();
+      }
+    }
+    
     DebugLabel1.Visible = Global.Debug;
     DebugLabel2.Visible = Global.Debug;
     DebugLabel3.Visible = Global.Debug;
@@ -166,9 +177,7 @@ public partial class World : Node2D {
     else if (InputMap.EventIsAction(@event, "Select") && @event.IsPressed()) {
     }
     else if (InputMap.EventIsAction(@event, "Back") && @event.IsPressed()) {
-      Data.LoadLobbyData();
-      Player.SaveCards();
-      GetTree().ReloadCurrentScene();
+      // TODO: Add in-game menu
     }
     else if (@event is InputEventMouseButton { Pressed: true, ButtonIndex: MouseButton.Left }) {
       if (_selectionMode == SelectionMode.None) return;
@@ -520,7 +529,7 @@ public partial class World : Node2D {
 
     switch (card) {
       case PlayerTargetingCard playerTargetingCard:
-        success = playerTargetingCard.OnPlay(Player);
+        success = playerTargetingCard.OnPlay(Player, this);
         break;
       case EnemyTargetingCard enemyTargetingCard:
         var enemy = await SelectEnemyTarget(enemyTargetingCard.Range, Player.Position);
@@ -541,5 +550,9 @@ public partial class World : Node2D {
     _selectedTargetingCard = null;
 
     return success;
+  }
+
+  public void QueueEscape() {
+    _escapeAfterFrames = 1;
   }
 }

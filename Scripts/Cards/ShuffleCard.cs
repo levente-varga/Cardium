@@ -17,7 +17,7 @@ public class ShuffleCard : PlayerTargetingCard {
     Description = $"Puts cards from hand into deck, shuffles it, then draws the same amount of cards.";
   }
 
-  public override bool OnPlay(Player player) {
+  public override bool OnPlay(Player player, World world) {
     List<Card> cards = new();
 
     foreach (var card in player.Hand.GetCards()) {

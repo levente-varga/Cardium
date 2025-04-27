@@ -19,7 +19,7 @@ public class ShieldCard : PlayerTargetingCard {
     Description = $"Raises Armor by {Highlight($"{ExtraArmor}")} for {Highlight($"{Duration}")} turns.";
   }
 
-  public override bool OnPlay(Player player) {
+  public override bool OnPlay(Player player, World world) {
     // TODO: Implement
 
     return true;

@@ -20,7 +20,7 @@ public class HealCard : PlayerTargetingCard {
     Description = $"Heals for {Highlight($"{HealAmount}")} missing health.";
   }
 
-  public override bool OnPlay(Player player) {
+  public override bool OnPlay(Player player, World world) {
     player.Heal(HealAmount);
 
     return true;
