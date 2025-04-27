@@ -76,12 +76,15 @@ public partial class WorkbenchMenu : Menu {
   private void UpgradeButtonPressed() {
     if (!CardsAreValid) return;
 
+    var isProtected = _slot1!.Protected || _slot2!.Protected || _slot3!.Protected;
+    
     if (!_slot1!.Upgrade()) {
       Utils.SpawnFloatingLabel(Slot2Area, Slot2Area.Size / 2 - new Vector2(0, 100), "Already at maximum level!",
         color: Global.Red, height: 160);
       return;
     }
 
+    _slot1.Protected = isProtected;
     Data.Stash.Add(_slot1);
     EmptySlots(false);
     FillContainersWithCardViews();
