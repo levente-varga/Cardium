@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Cardium.Scripts.Cards;
 using Cardium.Scripts.Cards.Types;
+using Cardium.Scripts.Menus;
 using Godot;
 
 namespace Cardium.Scripts;
@@ -22,6 +23,10 @@ public partial class World : Node2D {
   [Export] public Label DebugLabel2 = null!;
   [Export] public Label DebugLabel3 = null!;
   [Export] public Label DebugLabel4 = null!;
+  
+  [Export] public Menus.InventoryMenu InventoryMenu = null!;
+  [Export] public Menus.WorkbenchMenu WorkbenchMenu = null!;
+  [Export] public DeathMenu DeathMenu = null!;
 
   [Export] public Overlay Overlay = null!;
 
@@ -377,7 +382,7 @@ public partial class World : Node2D {
 
   public void Interact(Vector2I position) {
     var interactable = _dungeon.Interactables.FirstOrDefault(interactable => interactable.Position == position);
-    interactable?.OnInteract(Player, Camera);
+    interactable?.OnInteract(Player, this);
   }
 
   private void PickUpLoot() {

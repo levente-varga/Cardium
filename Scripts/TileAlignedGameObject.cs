@@ -107,7 +107,7 @@ public partial class TileAlignedGameObject : AnimatedSprite2D {
     OnNudgeEvent?.Invoke(Position + DirectionToVector(direction));
   }
 
-  public virtual void OnNudge(Player player, Camera camera) {
+  public virtual void OnNudge(Player player, World world) {
     OnNudgedEvent?.Invoke();
   }
 

@@ -1,8 +1,8 @@
 using Godot;
 
-namespace Cardium.Scripts;
+namespace Cardium.Scripts.Menus;
 
-public partial class CharacterPanel : Control {
+public partial class CharacterMenu : Control {
   [Export] public Label HealthLabel = null!;
   [Export] public Label DefenseLabel = null!;
   [Export] public Label VisionLabel = null!;

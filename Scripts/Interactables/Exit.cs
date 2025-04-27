@@ -11,8 +11,8 @@ public partial class Exit : Interactable {
     SetStillFrame(ResourceLoader.Load<Texture2D>("res://Assets/Sprites/Ladder.png"));
   }
 
-  public override void OnNudge(Player player, Camera camera) {
-    base.OnNudge(player, camera);
+  public override void OnNudge(Player player, World world) {
+    base.OnNudge(player, world);
 
     if (player.TurnsLived - _lastPlayerTurnsLived == 1) {
       GetTree().Quit();
@@ -23,7 +23,7 @@ public partial class Exit : Interactable {
 
     _lastPlayerTurnsLived = player.TurnsLived;
 
-    camera.Shake(10);
+    world.Camera.Shake(10);
     SpawnFloatingLabel("Quit game?", height: Global.GlobalTileSize.Y * 3);
   }
 }

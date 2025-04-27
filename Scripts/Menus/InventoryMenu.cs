@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Cardium.Scripts.Cards.Types;
 using Godot;
 
-namespace Cardium.Scripts;
+namespace Cardium.Scripts.Menus;
 
 public partial class InventoryMenu : Control {
   private enum CardOrigin {

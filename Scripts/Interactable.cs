@@ -17,5 +17,5 @@ public partial class Interactable : TileAlignedGameObject {
 
   public event OnSolidityChangeDelegate? OnSolidityChangeEvent;
 
-  public virtual void OnInteract(Player player, Camera camera) => Blink();
+  public virtual void OnInteract(Player player, World world) => Blink();
 }

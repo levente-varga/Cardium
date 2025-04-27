@@ -15,13 +15,13 @@ public partial class Chest : Interactable {
     base._Process(delta);
   }
 
-  public override void OnInteract(Player player, Camera camera) {
-    base.OnInteract(player, camera);
+  public override void OnInteract(Player player, World world) {
+    base.OnInteract(player, world);
 
     if (Interacted) return;
 
     Interacted = true;
-    camera.Shake(10);
+    world.Camera.Shake(10);
     Play("open");
     SpawnFallingLabel("Opened!");
 

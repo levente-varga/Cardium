@@ -4,18 +4,18 @@
 [ext_resource type="Script" path="res://Scripts/Camera.cs" id="3_evct5"]
 [ext_resource type="Script" path="res://Scripts/Player.cs" id="3_q31ct"]
 [ext_resource type="Script" path="res://Scripts/World.cs" id="4_ayy7p"]
-[ext_resource type="Script" path="res://Scripts/CharacterPanel.cs" id="4_dv04k"]
 [ext_resource type="Script" path="res://Scripts/DeckView.cs" id="4_exrb1"]
 [ext_resource type="Script" path="res://Scripts/PileView.cs" id="4_kmy3g"]
 [ext_resource type="FontFile" uid="uid://2rxest3pjy34" path="res://Assets/Fonts/alagard.ttf" id="5_70pgm"]
 [ext_resource type="Theme" uid="uid://ckiq2eob4d0lc" path="res://Scenes/theme.tres" id="5_h5gro"]
 [ext_resource type="Script" path="res://Scripts/Overlay.cs" id="7_4aqu0"]
+[ext_resource type="Script" path="res://Scripts/Menus/CharacterMenu.cs" id="10_cxp1q"]
 [ext_resource type="Texture2D" uid="uid://dh41xyg27nibb" path="res://Assets/Sprites/Inventory.png" id="10_xwuuf"]
 [ext_resource type="FontFile" uid="uid://cgna0pm46rmdr" path="res://Assets/Fonts/Levi Windows.ttf" id="12_aeksy"]
-[ext_resource type="Script" path="res://Scripts/InventoryMenu.cs" id="13_gdisq"]
+[ext_resource type="Script" path="res://Scripts/Menus/InventoryMenu.cs" id="13_gbcbe"]
 [ext_resource type="Script" path="res://Scripts/Menus/DeathMenu.cs" id="14_cokq3"]
 [ext_resource type="Texture2D" uid="uid://bd4kysgx8xwup" path="res://Assets/Sprites/Grave.png" id="14_k82d4"]
-[ext_resource type="Script" path="res://Scripts/WorkbenchMenu.cs" id="14_nw0sm"]
+[ext_resource type="Script" path="res://Scripts/Menus/WorkbenchMenu.cs" id="16_t46n8"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_n205a"]
 
@@ -69,7 +69,7 @@ font_color = Color(0.901961, 0.282353, 0.180392, 1)
 
 [node name="Root" type="Node"]
 
-[node name="Player" type="AnimatedSprite2D" parent="." node_paths=PackedStringArray("World", "DebugLabel", "Hand", "DiscardPile", "Deck", "InventoryMenu", "WorkbenchMenu", "DeathMenu")]
+[node name="Player" type="AnimatedSprite2D" parent="." node_paths=PackedStringArray("World", "DebugLabel", "Hand", "DiscardPile", "Deck")]
 z_index = 5
 scale = Vector2(4, 4)
 sprite_frames = SubResource("SpriteFrames_n205a")
@@ -80,9 +80,6 @@ DebugLabel = NodePath("../CanvasLayer/Label2")
 Hand = NodePath("../Camera2D/Hand")
 DiscardPile = NodePath("../Camera2D/DiscardPile")
 Deck = NodePath("../Camera2D/Deck")
-InventoryMenu = NodePath("../CanvasLayer/Inventory")
-WorkbenchMenu = NodePath("../CanvasLayer/Workbench")
-DeathMenu = NodePath("../CanvasLayer/Death")
 
 [node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("Target", "Canvas")]
 script = ExtResource("3_evct5")
@@ -163,7 +160,7 @@ vertical_alignment = 1
 [node name="PlayingCardPosition" type="Node2D" parent="Camera2D"]
 position = Vector2(-800, 0)
 
-[node name="World" type="Node2D" parent="." node_paths=PackedStringArray("Camera", "Player", "DebugLabel1", "DebugLabel2", "DebugLabel3", "DebugLabel4", "Overlay")]
+[node name="World" type="Node2D" parent="." node_paths=PackedStringArray("Camera", "Player", "DebugLabel1", "DebugLabel2", "DebugLabel3", "DebugLabel4", "InventoryMenu", "WorkbenchMenu", "DeathMenu", "Overlay")]
 z_index = -1
 script = ExtResource("4_ayy7p")
 Camera = NodePath("../Camera2D")
@@ -172,6 +169,9 @@ DebugLabel1 = NodePath("../CanvasLayer/Label1")
 DebugLabel2 = NodePath("../CanvasLayer/Label2")
 DebugLabel3 = NodePath("../CanvasLayer/Label3")
 DebugLabel4 = NodePath("../CanvasLayer/Label4")
+InventoryMenu = NodePath("../CanvasLayer/Inventory")
+WorkbenchMenu = NodePath("../CanvasLayer/Workbench")
+DeathMenu = NodePath("../CanvasLayer/Death")
 Overlay = NodePath("Overlay")
 
 [node name="Line2D" type="Line2D" parent="World"]
@@ -235,7 +235,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("4_dv04k")
+script = ExtResource("10_cxp1q")
 HealthLabel = NodePath("CenterContainer/Container/Values/HealthValue")
 DefenseLabel = NodePath("CenterContainer/Container/Values/DefenseValue")
 VisionLabel = NodePath("CenterContainer/Container/Values/VisionValue")
@@ -380,7 +380,7 @@ offset_right = 1920.0
 offset_bottom = 1080.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-script = ExtResource("13_gdisq")
+script = ExtResource("13_gbcbe")
 Player = NodePath("../../Player")
 StashContainer = NodePath("CenterContainer/InventoryPanel/ContentRow/StashPage/StashScrollContainer/CenterContainer/MarginContainer/StashContainer")
 InventoryContainer = NodePath("CenterContainer/InventoryPanel/ContentRow/InventoryPage/InventoryScrollContainer/CenterContainer/MarginContainer/InventoryContainer")
@@ -778,7 +778,7 @@ offset_right = 1920.0
 offset_bottom = 1080.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-script = ExtResource("14_nw0sm")
+script = ExtResource("16_t46n8")
 Player = NodePath("../../Player")
 StashContainer = NodePath("CenterContainer/WorkbenchPanel/ContentRow/StashScrollContainer/CenterContainer/MarginContainer/StashContainer")
 Slot1Container = NodePath("CenterContainer/WorkbenchPanel/ContentRow/WorkbenchPage/Slot1Container")

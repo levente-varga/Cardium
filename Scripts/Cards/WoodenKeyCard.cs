@@ -22,7 +22,7 @@ public class WoodenKeyCard : InteractableTargetingCard {
   public override bool OnPlay(Player player, Interactable target, World world) {
     switch (target) {
       case Door door:
-        door.OnInteract(player, world.Camera);
+        door.OnInteract(player, world);
         break;
       default: return false;
     }

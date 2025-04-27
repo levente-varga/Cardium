@@ -11,10 +11,10 @@ public partial class Sign : Interactable {
     SetStillFrame(ResourceLoader.Load<Texture2D>("res://Assets/Sprites/Sign.png"));
   }
 
-  public override void OnNudge(Player player, Camera camera) {
-    base.OnNudge(player, camera);
+  public override void OnNudge(Player player, World world) {
+    base.OnNudge(player, world);
 
-    camera.Shake(10);
+    world.Camera.Shake(10);
     if (Text != "") SpawnFloatingLabel(Text);
   }
 }

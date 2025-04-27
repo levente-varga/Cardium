@@ -10,9 +10,6 @@ public partial class Player : Entity {
   [Export] public Hand Hand = null!;
   [Export] public PileView DiscardPile = null!;
   [Export] public DeckView Deck = null!;
-  [Export] public InventoryMenu InventoryMenu = null!;
-  [Export] public WorkbenchMenu WorkbenchMenu = null!;
-  [Export] public DeathMenu DeathMenu = null!;
 
   public delegate void OnActionDelegate();
 
@@ -179,7 +176,7 @@ public partial class Player : Entity {
 
   protected override void Nudge(Direction direction) {
     var i = World.GetInteractableAt(Position + DirectionToVector(direction));
-    i?.OnNudge(this, World.Camera);
+    i?.OnNudge(this, World);
 
     base.Nudge(direction);
   }

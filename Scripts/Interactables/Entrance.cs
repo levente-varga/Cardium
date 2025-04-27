@@ -11,8 +11,8 @@ public partial class Entrance : Interactable {
     SetAnimation("open", ResourceLoader.Load<Texture2D>("res://Assets/Animations/Door.png"), 8, 12, false, false);
   }
 
-  public override void OnNudge(Player player, Camera camera) {
-    base.OnNudge(player, camera);
+  public override void OnNudge(Player player, World world) {
+    base.OnNudge(player, world);
 
     if (Interacted) {
       Data.LoadDungeonData();
@@ -28,7 +28,7 @@ public partial class Entrance : Interactable {
     player.OnMoveEvent += OnPlayerMove;
     _player = player;
 
-    camera.Shake(10);
+    world.Camera.Shake(10);
     Play("open");
   }
 

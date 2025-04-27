@@ -22,7 +22,7 @@ public class GoldenKeyCard : InteractableTargetingCard {
   public override bool OnPlay(Player player, Interactable target, World world) {
     switch (target) {
       case Chest chest:
-        chest.OnInteract(player, world.Camera);
+        chest.OnInteract(player, world);
         break;
       default: return false;
     }

@@ -11,20 +11,20 @@ public partial class Stash : Interactable {
     SetAnimation("open", ResourceLoader.Load<Texture2D>("res://Assets/Animations/Chest.png"), 6, 12, false, false);
   }
 
-  public override void OnNudge(Player player, Camera camera) {
+  public override void OnNudge(Player player, World world) {
     if (Interacted) return;
 
-    base.OnNudge(player, camera);
+    base.OnNudge(player, world);
 
     Blink();
-    player.InventoryMenu.Open(true);
+    world.InventoryMenu.Open(true);
 
     Interacted = true;
 
     player.OnMoveEvent += OnPlayerMove;
     _player = player;
 
-    camera.Shake(10);
+    world.Camera.Shake(10);
     Play("open");
   }
 

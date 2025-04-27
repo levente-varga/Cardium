@@ -1,9 +1,8 @@
 using System.Collections.Generic;
 using Cardium.Scripts.Cards.Types;
-using Cardium.Scripts.Interactables;
 using Godot;
 
-namespace Cardium.Scripts;
+namespace Cardium.Scripts.Menus;
 
 public partial class WorkbenchMenu : Control {
   private enum CardOrigin {
