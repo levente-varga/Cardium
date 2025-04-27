@@ -48,7 +48,7 @@ public class Card {
   }
 
   public Color RarityColor => Rarity switch {
-    CardRarity.Common => new Color("00CB9F"),
+    CardRarity.Common => new Color("CCCCCC"),
     CardRarity.Rare => new Color("2398FF"),
     CardRarity.Epic => new Color("CB1EE9"),
     CardRarity.Legendary => new Color("FF8325"),

@@ -211,7 +211,7 @@ public partial class Player : Entity {
     for (var i = 0; i < cards.Count; i++) {
       var card = cards[i];
       Inventory.Add(card);
-      SpawnFloatingLabel($"x1 {card.Name} card", card.RarityColor, 120 + i * 40);
+      SpawnFloatingLabel($"x1 {card.Name} (lvl. {card.Level})", card.RarityColor, 120 + i * 40, fontSize: 28);
     }
   }
 
