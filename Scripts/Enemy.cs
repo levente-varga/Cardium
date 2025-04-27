@@ -35,13 +35,13 @@ public partial class Enemy : Entity {
     base._Process(delta);
   }
 
-  protected void UpdateValue(Player player, World world) {
-    if (!PlayerInVision && Utils.ManhattanDistanceBetween(player.Position, Position) > Vision) return;
+  protected void UpdateValue(Player player, World world, bool aggro = false) {
+    if (!aggro && !PlayerInVision && Utils.ManhattanDistanceBetween(player.Position, Position) > Vision) return;
 
     LastSeenPlayerDistance = world.GetDistanceBetween(Position, player.Position);
 
-    if (!PlayerInVision) {
-      if (LastSeenPlayerDistance != -1 && LastSeenPlayerDistance <= Vision) {
+    if (aggro || !PlayerInVision) {
+      if (aggro || LastSeenPlayerDistance != -1 && LastSeenPlayerDistance <= Vision) {
         PlayerInVision = true;
         HealthBar.Visible = Data.ShowHealth;
       }
@@ -84,4 +84,10 @@ public partial class Enemy : Entity {
   }
 
   protected virtual List<Card> GenerateLoot() => new List<Card>();
+
+  public override void ReceiveDamage(Entity source, int damage, World world) {
+    base.ReceiveDamage(source, damage, world);
+
+    if (source is Player player) UpdateValue(player, world, true);
+  }
 }
