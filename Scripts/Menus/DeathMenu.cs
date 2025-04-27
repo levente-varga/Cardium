@@ -17,4 +17,13 @@ public partial class DeathMenu : Menu {
   public override void _Input(InputEvent @event) {
     if (!Visible) return;
   }
+
+  public override void Close() {
+    base.Close();
+    
+    Player.SaveCards();
+    Data.EraseCardsOutsideStash();
+    Data.LoadLobbyData();
+    GetTree().ReloadCurrentScene();
+  }
 }

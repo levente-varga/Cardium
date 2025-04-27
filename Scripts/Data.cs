@@ -18,6 +18,11 @@ public static class Data {
   public static readonly Pile Inventory = new Pile();
   public static readonly Pile Deck = new Pile();
 
+  public static void EraseCardsOutsideStash() {
+    Inventory.Clear();
+    Deck.Clear();
+  }
+
   public static void LoadLobbyData() {
     Level = Level.Lobby;
     Fog = false;
