@@ -28,6 +28,7 @@ public partial class Hand : Node2D {
   [Export] public float DefaultCardAngle = 7f;
   [Export] public float TiltAngle;
   [Export] public Vector2 Origin = Vector2.Zero;
+  [Export] public Control HelpOverlay = null!;
 
   [Export] public Control PlayArea = null!;
   [Export] public Control DiscardArea = null!;
@@ -153,6 +154,7 @@ public partial class Hand : Node2D {
     if (Size >= Capacity) return;
     var view = _cardScene.Instantiate<CardView>();
     view.Card = card;
+    view.OnDragStartEvent += OnCardDragStart;
     view.OnDragEndEvent += OnCardDragEnd;
     view.OnDragEvent += OnCardDrag;
     view.OnMouseEnteredEvent += OnCardMouseEntered;
@@ -173,6 +175,7 @@ public partial class Hand : Node2D {
     var view = _cardViews.FirstOrDefault(view => view.Card == card);
     if (view == null) return false;
 
+    view.OnDragStartEvent -= OnCardDragStart;
     view.OnDragEndEvent -= OnCardDragEnd;
     view.OnDragEvent -= OnCardDrag;
     view.OnMouseEnteredEvent -= OnCardMouseEntered;
@@ -195,6 +198,11 @@ public partial class Hand : Node2D {
 
   private void OnCardDragStart(CardView view) {
     _draggedCardState = DraggedCardState.None;
+
+    if (Data.InitialCardPlaysLeft > 0) {
+      GD.Print("Showing help areas");
+      HelpOverlay.Visible = true;
+    }
   }
 
   private void OnCardDrag(CardView view, Vector2 mousePosition) {
@@ -224,13 +232,16 @@ public partial class Hand : Node2D {
   }
 
   private void OnCardDragEnd(CardView view, Vector2 mousePosition) {
+    HelpOverlay.Visible = false;
     if (_draggedCardState == DraggedCardState.OverPlayArea) {
+      if (Data.InitialCardPlaysLeft > 0) Data.InitialCardPlaysLeft--;
       view.OnEnterPlayingMode();
       State = HandState.Playing;
       _ = Play(view);
     }
     else {
       if (_draggedCardState == DraggedCardState.OverDiscardArea) {
+        if (Data.InitialCardPlaysLeft > 0) Data.InitialCardPlaysLeft--;
         Discard(view);
         OnCardDiscardedEvent?.Invoke(view.Card);
       }

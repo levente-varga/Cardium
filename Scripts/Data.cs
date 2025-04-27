@@ -8,6 +8,7 @@ public enum Level {
 public static class Data {
   public static Level Level;
   public static bool InitialStart = true;
+  public static int InitialCardPlaysLeft = 1;
   public static bool Fog;
   public static bool Hand;
   public static bool ShowHealth;

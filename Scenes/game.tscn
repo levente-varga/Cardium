@@ -1,4 +1,4 @@
-[gd_scene load_steps=43 format=3 uid="uid://cw3o4f0nr0f2v"]
+[gd_scene load_steps=46 format=3 uid="uid://cw3o4f0nr0f2v"]
 
 [ext_resource type="Script" path="res://Scripts/Hand.cs" id="1_3ixgw"]
 [ext_resource type="Script" path="res://Scripts/Camera.cs" id="3_evct5"]
@@ -37,6 +37,26 @@ font_color = Color(0.8, 0.8, 0.8, 1)
 [sub_resource type="LabelSettings" id="LabelSettings_7y8e8"]
 font_size = 32
 font_color = Color(0.462745, 0.462745, 0.462745, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tb324"]
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.333333, 0.333333, 0.333333, 1)
+corner_detail = 4
+
+[sub_resource type="LabelSettings" id="LabelSettings_erij8"]
+line_spacing = 0.0
+font = ExtResource("5_70pgm")
+font_size = 64
+font_color = Color(0.8, 0.8, 0.8, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_bxtp4"]
+line_spacing = 0.0
+font = ExtResource("5_70pgm")
+font_color = Color(0.8, 0.8, 0.8, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_f4q7g"]
 font = ExtResource("12_aeksy")
@@ -200,10 +220,11 @@ label_settings = SubResource("LabelSettings_m54we")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Hand" type="Node2D" parent="Camera2D" node_paths=PackedStringArray("Player", "PlayArea", "DiscardArea")]
+[node name="Hand" type="Node2D" parent="Camera2D" node_paths=PackedStringArray("Player", "HelpOverlay", "PlayArea", "DiscardArea")]
 z_index = 10
 script = ExtResource("1_3ixgw")
 Player = NodePath("../../Player")
+HelpOverlay = NodePath("../../CanvasLayer/CardPlayHelpOverlay")
 PlayArea = NodePath("../../CanvasLayer/PlayArea")
 DiscardArea = NodePath("../../CanvasLayer/DiscardArea")
 
@@ -293,6 +314,7 @@ layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 32.0
 offset_bottom = -312.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -305,6 +327,91 @@ offset_top = 800.0
 offset_right = 512.0
 offset_bottom = 1080.0
 mouse_filter = 2
+
+[node name="CardPlayHelpOverlay" type="Control" parent="CanvasLayer"]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 22.3333
+mouse_filter = 2
+
+[node name="PlayHighlight" type="Panel" parent="CanvasLayer/CardPlayHelpOverlay"]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 32.0
+offset_right = 1888.0
+offset_bottom = 768.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_tb324")
+
+[node name="DiscardHighlight" type="Panel" parent="CanvasLayer/CardPlayHelpOverlay"]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 800.0
+offset_right = 512.0
+offset_bottom = 1048.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_tb324")
+
+[node name="CenterContainer" type="VBoxContainer" parent="CanvasLayer/CardPlayHelpOverlay"]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 32.0
+offset_right = 1888.0
+offset_bottom = 768.0
+mouse_filter = 2
+
+[node name="Control" type="Control" parent="CanvasLayer/CardPlayHelpOverlay/CenterContainer"]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/CardPlayHelpOverlay/CenterContainer"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 40
+
+[node name="Label" type="Label" parent="CanvasLayer/CardPlayHelpOverlay/CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "Play"
+label_settings = SubResource("LabelSettings_erij8")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Description" type="Label" parent="CanvasLayer/CardPlayHelpOverlay/CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "Drag a card here to play it"
+label_settings = SubResource("LabelSettings_bxtp4")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CenterContainer2" type="CenterContainer" parent="CanvasLayer/CardPlayHelpOverlay"]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 800.0
+offset_right = 512.0
+offset_bottom = 1048.0
+mouse_filter = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/CardPlayHelpOverlay/CenterContainer2"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 40
+
+[node name="Label" type="Label" parent="CanvasLayer/CardPlayHelpOverlay/CenterContainer2/VBoxContainer"]
+layout_mode = 2
+text = "Discard"
+label_settings = SubResource("LabelSettings_erij8")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Description" type="Label" parent="CanvasLayer/CardPlayHelpOverlay/CenterContainer2/VBoxContainer"]
+layout_mode = 2
+text = "Drag a card here to discard it 
+and draw a new card"
+label_settings = SubResource("LabelSettings_bxtp4")
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="CharacterPanel" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("HealthLabel", "DefenseLabel", "VisionLabel", "HandLabel", "DeckLabel", "InventoryLabel", "Player")]
 visible = false
