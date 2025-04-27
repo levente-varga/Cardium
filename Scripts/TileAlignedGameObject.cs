@@ -48,6 +48,7 @@ public partial class TileAlignedGameObject : AnimatedSprite2D {
 
   public void SetPosition(Vector2I position) {
     Position = position;
+    _previousPosition = position;
     base.Position = position * Global.GlobalTileSize;
   }
 
