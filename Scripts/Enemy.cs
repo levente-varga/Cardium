@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Godot;
 
 namespace Cardium.Scripts;
@@ -14,17 +15,16 @@ public partial class Enemy : Entity {
 
   protected bool PlayerInVision;
   protected int LastSeenPlayerDistance;
-
   
-
   protected int BaseCombatVision = 3;
   public int TempCombatVision { private get; set; }
   public int CombatVision => BaseCombatVision + TempCombatVision;
-
-
+  
   public override void _Ready() {
     base._Ready();
     AddChild(Path);
+    
+    Inventory.AddAll(GenerateLoot());
 
     HealthBar.Visible = false;
     BaseCombatVision = BaseVision + 3;
@@ -82,4 +82,6 @@ public partial class Enemy : Entity {
 
     base.TakeTurn(player, world);
   }
+
+  protected virtual List<Card> GenerateLoot() => new List<Card>();
 }

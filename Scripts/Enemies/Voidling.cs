@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using Cardium.Scripts.Cards;
 using Godot;
 
 namespace Cardium.Scripts.Enemies;
@@ -43,5 +45,27 @@ public partial class Voidling : Enemy {
 
   private void SetModulate() {
     Modulate = new Color(1, 1, 1, Stealth ? 0.25f : 1);
+  }
+  
+  protected override List<Card> GenerateLoot() {
+    List<Card> loot = new();
+    Random random = new();
+      
+    var indexCount = random.Next(1, 3);
+    for (var i = 0; i < indexCount; i++) {
+      loot.Add(
+        random.Next(120) switch {
+          < 40 => new GoldenKeyCard(),
+          < 60 => new HolyCard(),
+          < 80 => new SmiteCard(),
+          < 100 => new HurlCard(),
+          < 110 => new RestCard(),
+          < 120 => new EscapeCard(),
+          _ => new HealCard(),
+        }
+      );
+    }
+
+    return loot;
   }
 }

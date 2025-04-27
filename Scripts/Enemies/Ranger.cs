@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using Cardium.Scripts.Cards;
 using Godot;
 
 namespace Cardium.Scripts.Enemies;
@@ -53,5 +55,26 @@ public partial class Ranger : Enemy {
       player.ReceiveDamage(this, BaseDamage, world);
       Nudge(VectorToDirection(player.Position - Position));
     }
+  }
+
+  protected override List<Card> GenerateLoot() {
+    List<Card> loot = new();
+    Random random = new();
+      
+    var indexCount = random.Next(1, 3);
+    for (var i = 0; i < indexCount; i++) {
+      loot.Add(
+        random.Next(110) switch {
+          < 40 => new SmiteCard(),
+          < 60 => new ChainCard(),
+          < 80 => new TeleportCard(),
+          < 100 => new WoodenKeyCard(),
+          < 110 => new GoldenKeyCard(),
+          _ => new HealCard(),
+        }
+      );
+    }
+
+    return loot;
   }
 }

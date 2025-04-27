@@ -10,6 +10,10 @@ public class Pile {
   public bool IsEmpty => Cards.Count <= 0;
   public bool IsNotEmpty => Cards.Count > 0;
 
+  public virtual void AddAll(List<Card> cards) {
+    foreach (var card in cards) Add(card);
+  }
+
   public virtual bool Add(Card card) {
     Cards.Add(card);
     return true;

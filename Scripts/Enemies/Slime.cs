@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Cardium.Scripts.Cards;
 using Godot;
@@ -20,7 +21,26 @@ public partial class Slime : Enemy {
     BaseLuck = 0f;
     BaseRange = 1;
     Description = "A slime enemy.";
+  }
+  
+  protected override List<Card> GenerateLoot() {
+    List<Card> loot = new();
+    Random random = new();
+      
+    var indexCount = random.Next(1, 3);
+    for (var i = 0; i < indexCount; i++) {
+      loot.Add(
+        random.Next(125) switch {
+          < 80 => new HealCard(),
+          < 100 => new HurlCard(),
+          < 110 => new ShuffleCard(),
+          < 120 => new WoodenKeyCard(),
+          < 125 => new GoldenKeyCard(),
+          _ => new HealCard(),
+        }
+      );
+    }
 
-    Inventory.Add(new HealCard());
+    return loot;
   }
 }

@@ -630,5 +630,33 @@ public partial class Dungeon {
 
       return tiles;
     }
+    
+    private List<Card> GenerateChestLoot() {
+      List<Card> loot = new();
+      
+      var indexCount = _random.Next(3, 8);
+      for (var i = 0; i < indexCount; i++) {
+        var index = _random.Next(215);
+        
+        loot.Add(
+          index switch {
+            < 40 => new HealCard(),
+            < 80 => new HurlCard(),
+            < 120 => new SmiteCard(),
+            < 140 => new ChainCard(),
+            < 160 => new ShuffleCard(),
+            < 180 => new TeleportCard(),
+            < 190 => new HolyCard(),
+            < 200 => new WoodenKeyCard(),
+            < 205 => new RestCard(),
+            < 210 => new EscapeCard(),
+            < 215 => new GoldenKeyCard(),
+            _ => new HealCard(),
+          }
+        );
+      }
+
+      return loot;
+    }
   }
 }

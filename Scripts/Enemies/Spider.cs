@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Cardium.Scripts.Cards;
 using Godot;
@@ -23,5 +24,26 @@ public partial class Spider : Enemy {
     Description = "A spider enemy.";
 
     Inventory.Add(new PushCard());
+  }
+  
+  protected override List<Card> GenerateLoot() {
+    List<Card> loot = new();
+    Random random = new();
+      
+    var indexCount = random.Next(1, 4);
+    for (var i = 0; i < indexCount; i++) {
+      loot.Add(
+        random.Next(110) switch {
+          < 40 => new SmiteCard(),
+          < 60 => new HolyCard(),
+          < 80 => new ChainCard(),
+          < 100 => new WoodenKeyCard(),
+          < 110 => new GoldenKeyCard(),
+          _ => new HealCard(),
+        }
+      );
+    }
+
+    return loot;
   }
 }
