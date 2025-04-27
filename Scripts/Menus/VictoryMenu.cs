@@ -2,9 +2,10 @@ using Godot;
 
 namespace Cardium.Scripts.Menus;
 
-public partial class DeathMenu : Menu {
+public partial class VictoryMenu : Menu {
   [Export] public Player Player = null!;
   [Export] public Button CloseButton = null!;
+  [Export] public LinkButton LinkButton = null!;
 
   public override void _Ready() {
     Visible = false;
@@ -15,7 +16,6 @@ public partial class DeathMenu : Menu {
     base.Close();
     
     Player.SaveCards();
-    Data.EraseUnprotectedCardsOutsideStash();
     Data.LoadLobbyData();
     GetTree().ReloadCurrentScene();
   }

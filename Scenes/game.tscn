@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://cw3o4f0nr0f2v"]
+[gd_scene load_steps=40 format=3 uid="uid://cw3o4f0nr0f2v"]
 
 [ext_resource type="Script" path="res://Scripts/Hand.cs" id="1_3ixgw"]
 [ext_resource type="Script" path="res://Scripts/Camera.cs" id="3_evct5"]
@@ -16,6 +16,8 @@
 [ext_resource type="Script" path="res://Scripts/Menus/DeathMenu.cs" id="14_cokq3"]
 [ext_resource type="Texture2D" uid="uid://bd4kysgx8xwup" path="res://Assets/Sprites/Grave.png" id="14_k82d4"]
 [ext_resource type="Script" path="res://Scripts/Menus/WorkbenchMenu.cs" id="16_t46n8"]
+[ext_resource type="Script" path="res://Scripts/Menus/VictoryMenu.cs" id="16_xikg0"]
+[ext_resource type="Texture2D" uid="uid://2omjmpddb04r" path="res://Assets/Animations/ExterminatorDefeated.png" id="17_mrkco"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_n205a"]
 
@@ -66,6 +68,75 @@ font_color = Color(0.466667, 0.466667, 0.466667, 1)
 font = ExtResource("5_70pgm")
 font_size = 100
 font_color = Color(0.901961, 0.282353, 0.180392, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_sd7cl"]
+font = ExtResource("5_70pgm")
+font_size = 100
+font_color = Color(0.956863, 0.705882, 0.105882, 1)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qaqjc"]
+atlas = ExtResource("17_mrkco")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y84oo"]
+atlas = ExtResource("17_mrkco")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b16fc"]
+atlas = ExtResource("17_mrkco")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_un4kx"]
+atlas = ExtResource("17_mrkco")
+region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_l8clk"]
+atlas = ExtResource("17_mrkco")
+region = Rect2(64, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xpxg3"]
+atlas = ExtResource("17_mrkco")
+region = Rect2(80, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_utyqq"]
+atlas = ExtResource("17_mrkco")
+region = Rect2(96, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_x0m1s"]
+atlas = ExtResource("17_mrkco")
+region = Rect2(112, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_1c27j"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qaqjc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y84oo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b16fc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_un4kx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_l8clk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xpxg3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_utyqq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_x0m1s")
+}],
+"loop": true,
+"name": &"defeated",
+"speed": 12.0
+}]
 
 [node name="Root" type="Node"]
 
@@ -673,6 +744,7 @@ mouse_filter = 2
 color = Color(1, 1, 1, 0)
 
 [node name="Death" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("Player", "CloseButton")]
+visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_right = 1920.0
@@ -769,6 +841,126 @@ custom_minimum_size = Vector2(200, 64)
 layout_mode = 2
 theme = ExtResource("5_h5gro")
 text = "Sad... but ok"
+
+[node name="Victory" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("Player", "CloseButton", "LinkButton")]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("16_xikg0")
+Player = NodePath("../../Player")
+CloseButton = NodePath("CenterContainer/InventoryPanel/ButtonRow2/CloseButton")
+LinkButton = NodePath("CenterContainer/InventoryPanel/ButtonRow/LinkButton")
+
+[node name="Background" type="ColorRect" parent="CanvasLayer/Victory"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.588235)
+
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/Victory"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelBackground" type="ColorRect" parent="CanvasLayer/Victory/CenterContainer"]
+clip_contents = true
+custom_minimum_size = Vector2(480, 800)
+layout_mode = 2
+color = Color(0.0846899, 0.0846899, 0.0846899, 1)
+
+[node name="InventoryPanel" type="VBoxContainer" parent="CanvasLayer/Victory/CenterContainer"]
+custom_minimum_size = Vector2(480, 800)
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Control" type="Control" parent="CanvasLayer/Victory/CenterContainer/InventoryPanel"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+
+[node name="LabelRow" type="HBoxContainer" parent="CanvasLayer/Victory/CenterContainer/InventoryPanel"]
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="DeathLabel" type="Label" parent="CanvasLayer/Victory/CenterContainer/InventoryPanel/LabelRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Victory"
+label_settings = SubResource("LabelSettings_sd7cl")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Control2" type="Control" parent="CanvasLayer/Victory/CenterContainer/InventoryPanel"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+
+[node name="DescriptionRow2" type="VBoxContainer" parent="CanvasLayer/Victory/CenterContainer/InventoryPanel"]
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/Victory/CenterContainer/InventoryPanel/DescriptionRow2"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+
+[node name="Sprite2D" type="AnimatedSprite2D" parent="CanvasLayer/Victory/CenterContainer/InventoryPanel/DescriptionRow2/CenterContainer"]
+position = Vector2(240, 32)
+scale = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_1c27j")
+animation = &"defeated"
+frame_progress = 0.00429695
+
+[node name="Description" type="Label" parent="CanvasLayer/Victory/CenterContainer/InventoryPanel/DescriptionRow2"]
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "You just killed the final boss! 
+Congrats!
+
+If you could spare 5 more minutes, 
+it would mean a lot if you filled out 
+the feedback form below.
+
+Thank you for playing!"
+label_settings = SubResource("LabelSettings_m4nry")
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="Filler" type="HBoxContainer" parent="CanvasLayer/Victory/CenterContainer/InventoryPanel"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 32
+
+[node name="ButtonRow" type="HBoxContainer" parent="CanvasLayer/Victory/CenterContainer/InventoryPanel"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+alignment = 1
+
+[node name="LinkButton" type="LinkButton" parent="CanvasLayer/Victory/CenterContainer/InventoryPanel/ButtonRow"]
+layout_mode = 2
+size_flags_vertical = 0
+theme = ExtResource("5_h5gro")
+text = "Form"
+uri = "https://docs.google.com/forms/d/e/1FAIpQLSelYm6Da3QR0MkthMspFtos36GOlAQj_62esjDhSL2w1juk0w/viewform?usp=header"
+
+[node name="ButtonRow2" type="HBoxContainer" parent="CanvasLayer/Victory/CenterContainer/InventoryPanel"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+alignment = 1
+
+[node name="CloseButton" type="Button" parent="CanvasLayer/Victory/CenterContainer/InventoryPanel/ButtonRow2"]
+custom_minimum_size = Vector2(200, 64)
+layout_mode = 2
+theme = ExtResource("5_h5gro")
+text = "Not now"
 
 [node name="Workbench" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("Player", "StashContainer", "Slot1Container", "Slot2Container", "Slot3Container", "StashArea", "Slot1Area", "Slot2Area", "Slot3Area", "StashSizeLabel", "SlotSizeLabel", "CancelButton", "UpgradeButton")]
 visible = false

@@ -15,8 +15,9 @@
 [resource]
 default_font = ExtResource("1_u3hck")
 Button/colors/font_color = Color(0.8, 0.8, 0.8, 1)
-Button/colors/font_disabled_color = Color(0.933333, 0.933333, 0.933333, 0.458824)
+Button/colors/font_disabled_color = Color(0.8, 0.8, 0.8, 0.458824)
 Button/colors/font_hover_color = Color(0.857992, 0.387246, 0.228431, 1)
+Button/colors/font_hover_pressed_color = Color(0.658824, 0.188235, 0, 1)
 Button/colors/font_pressed_color = Color(0.658251, 0.188208, 0, 1)
 Button/constants/h_separation = 0
 Button/font_sizes/font_size = 32
@@ -26,3 +27,9 @@ Button/styles/focus = SubResource("StyleBoxEmpty_ctndu")
 Button/styles/hover = SubResource("StyleBoxEmpty_8b2wa")
 Button/styles/normal = SubResource("StyleBoxEmpty_21bk1")
 Button/styles/pressed = SubResource("StyleBoxEmpty_trsqd")
+LinkButton/colors/font_color = Color(0.8, 0.8, 0.8, 1)
+LinkButton/colors/font_disabled_color = Color(0.8, 0.8, 0.8, 0.458824)
+LinkButton/colors/font_hover_color = Color(0.858824, 0.388235, 0.227451, 1)
+LinkButton/colors/font_hover_pressed_color = Color(0.658824, 0.188235, 0, 1)
+LinkButton/colors/font_pressed_color = Color(0.658824, 0.188235, 0, 1)
+LinkButton/font_sizes/font_size = 32
