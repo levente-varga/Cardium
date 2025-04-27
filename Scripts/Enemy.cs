@@ -15,9 +15,7 @@ public partial class Enemy : Entity {
   protected bool PlayerInVision;
   protected int LastSeenPlayerDistance;
 
-  public delegate void OnDeathDelegate(Enemy enemy);
-
-  public event OnDeathDelegate? OnDeathEvent;
+  
 
   protected int BaseCombatVision = 3;
   public int TempCombatVision { private get; set; }
@@ -83,11 +81,5 @@ public partial class Enemy : Entity {
     }
 
     base.TakeTurn(player, world);
-  }
-
-  protected override void OnDeath(Entity source) {
-    base.OnDeath(source);
-
-    OnDeathEvent?.Invoke(this);
   }
 }

@@ -49,6 +49,10 @@ public partial class Entity : TileAlignedGameObject {
   public delegate void OnDamagedDelegate(Entity entity, int damage);
 
   public event OnDamagedDelegate? OnDamagedEvent;
+  
+  public delegate void OnDeathDelegate(Entity entity);
+
+  public event OnDeathDelegate? OnDeathEvent;
 
   public override void _Ready() {
     base._Ready();
@@ -99,6 +103,8 @@ public partial class Entity : TileAlignedGameObject {
 
   protected virtual void OnDeath(Entity source) {
     Health = 0;
+    
+    OnDeathEvent?.Invoke(this);
   }
 
   public bool InRange(Vector2I position) {

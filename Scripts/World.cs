@@ -94,6 +94,7 @@ public partial class World : Node2D {
     Player.Hand.Visible = Data.Hand;
     Player.Deck.Visible = Data.Hand;
     Player.DiscardPile.Visible = Data.Hand;
+    Player.OnDeathEvent += OnPlayerDeath;
 
     if (Data.CameraOnPlayer) {
       Camera.Target = Player;
@@ -241,6 +242,12 @@ public partial class World : Node2D {
     }
   }
 
+  private void OnPlayerDeath(Entity entity) {
+    if (entity is not Scripts.Player) return;
+    
+    DeathMenu.Open();
+  }
+  
   private void SetupPath() {
     _line = GetNode<Line2D>("Line2D");
     _line.DefaultColor = Global.Yellow;

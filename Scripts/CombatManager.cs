@@ -41,7 +41,8 @@ public class CombatManager {
     enemy.OnMoveEvent += _world.OnEntityMove;
   }
 
-  private void OnEnemyDeath(Enemy enemy) {
+  private void OnEnemyDeath(Entity entity) {
+    if (entity is not Enemy enemy) return;
     GD.Print(enemy.Name + " died!");
     Enemies.Remove(enemy);
     enemy.OnDeathEvent -= OnEnemyDeath;
