@@ -22,7 +22,7 @@ public partial class DeathMenu : Menu {
     base.Close();
     
     Player.SaveCards();
-    Data.EraseCardsOutsideStash();
+    Data.EraseUnprotectedCardsOutsideStash();
     Data.LoadLobbyData();
     GetTree().ReloadCurrentScene();
   }

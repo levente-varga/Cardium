@@ -23,6 +23,10 @@ public class Pile {
     return true;
   }
 
+  public void RemoveUnprotected() {
+    Cards.RemoveAll(card => !card.Protected);
+  }
+
   public void Clear() => Cards.Clear();
   public bool Contains(Card card) => Cards.Contains(card);
   public int IndexOf(Card card) => Cards.IndexOf(card);

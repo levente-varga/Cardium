@@ -14,13 +14,13 @@ public static class Data {
   public static bool CameraOnPlayer;
   public static int MenusOpen;
   public static bool MenuOpen => MenusOpen > 0;
-  public static readonly Pile Stash = new Pile();
-  public static readonly Pile Inventory = new Pile();
-  public static readonly Pile Deck = new Pile();
+  public static readonly Pile Stash = new ();
+  public static readonly Pile Inventory = new ();
+  public static readonly Pile Deck = new ();
 
-  public static void EraseCardsOutsideStash() {
-    Inventory.Clear();
-    Deck.Clear();
+  public static void EraseUnprotectedCardsOutsideStash() {
+    Inventory.RemoveUnprotected();
+    Deck.RemoveUnprotected();
   }
 
   public static void LoadLobbyData() {
