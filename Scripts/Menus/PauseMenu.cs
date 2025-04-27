@@ -5,12 +5,15 @@ namespace Cardium.Scripts.Menus;
 public partial class PauseMenu : Menu {
   [Export] public Player Player = null!;
   [Export] public Button ResumeButton = null!;
+  [Export] public Button HelpButton = null!;
   [Export] public Button FleeButton = null!;
   [Export] public Button QuitButton = null!;
+  [Export] public HelpMenu HelpMenu = null!;
 
   public override void _Ready() {
     Visible = false;
     ResumeButton.Pressed += Close;
+    HelpButton.Pressed += HelpMenu.Open;
     FleeButton.Pressed += Flee;
     QuitButton.Pressed += Quit;
   }

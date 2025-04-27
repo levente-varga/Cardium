@@ -1,4 +1,4 @@
-[gd_scene load_steps=46 format=3 uid="uid://cw3o4f0nr0f2v"]
+[gd_scene load_steps=49 format=3 uid="uid://cw3o4f0nr0f2v"]
 
 [ext_resource type="Script" path="res://Scripts/Hand.cs" id="1_3ixgw"]
 [ext_resource type="Script" path="res://Scripts/Camera.cs" id="3_evct5"]
@@ -19,6 +19,7 @@
 [ext_resource type="Script" path="res://Scripts/Menus/WorkbenchMenu.cs" id="16_t46n8"]
 [ext_resource type="Script" path="res://Scripts/Menus/VictoryMenu.cs" id="16_xikg0"]
 [ext_resource type="Texture2D" uid="uid://2omjmpddb04r" path="res://Assets/Animations/ExterminatorDefeated.png" id="17_mrkco"]
+[ext_resource type="Script" path="res://Scripts/Menus/HelpMenu.cs" id="18_2iv0a"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_n205a"]
 
@@ -168,6 +169,16 @@ font_color = Color(0.8, 0.8, 0.8, 1)
 font = ExtResource("12_aeksy")
 font_size = 25
 font_color = Color(0.466667, 0.466667, 0.466667, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_h3005"]
+font = ExtResource("5_70pgm")
+font_size = 100
+font_color = Color(0.8, 0.8, 0.8, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_7g7sd"]
+font = ExtResource("5_70pgm")
+font_size = 32
+font_color = Color(0.8, 0.8, 0.8, 1)
 
 [node name="Root" type="Node"]
 
@@ -1314,9 +1325,8 @@ offset_bottom = 928.0
 mouse_filter = 2
 color = Color(1, 1, 1, 0)
 
-[node name="PauseMenu" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("Player", "ResumeButton", "FleeButton", "QuitButton")]
+[node name="PauseMenu" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("Player", "ResumeButton", "HelpButton", "FleeButton", "QuitButton", "HelpMenu")]
 visible = false
-z_index = 20
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -1326,8 +1336,10 @@ grow_vertical = 2
 script = ExtResource("13_m0npp")
 Player = NodePath("../../Player")
 ResumeButton = NodePath("CenterContainer/Container/VBoxContainer/ResumeButton")
+HelpButton = NodePath("CenterContainer/Container/VBoxContainer4/HelpButton")
 FleeButton = NodePath("CenterContainer/Container/VBoxContainer2/FleeButton")
 QuitButton = NodePath("CenterContainer/Container/VBoxContainer3/QuitButton")
+HelpMenu = NodePath("../Help")
 
 [node name="ColorRect" type="ColorRect" parent="CanvasLayer/PauseMenu"]
 layout_mode = 1
@@ -1359,6 +1371,7 @@ layout_mode = 2
 theme_override_constants/separation = 32
 
 [node name="Label" type="Label" parent="CanvasLayer/PauseMenu/CenterContainer/Container"]
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 text = "Paused"
 label_settings = SubResource("LabelSettings_ybhki")
@@ -1366,6 +1379,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Control" type="Control" parent="CanvasLayer/PauseMenu/CenterContainer/Container"]
+custom_minimum_size = Vector2(0, 16)
 layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/PauseMenu/CenterContainer/Container"]
@@ -1379,6 +1393,21 @@ text = "Resume"
 [node name="Label" type="Label" parent="CanvasLayer/PauseMenu/CenterContainer/Container/VBoxContainer"]
 layout_mode = 2
 text = "Close this menu"
+label_settings = SubResource("LabelSettings_mx8p4")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VBoxContainer4" type="VBoxContainer" parent="CanvasLayer/PauseMenu/CenterContainer/Container"]
+layout_mode = 2
+
+[node name="HelpButton" type="Button" parent="CanvasLayer/PauseMenu/CenterContainer/Container/VBoxContainer4"]
+layout_mode = 2
+theme = ExtResource("5_h5gro")
+text = "Help"
+
+[node name="Label" type="Label" parent="CanvasLayer/PauseMenu/CenterContainer/Container/VBoxContainer4"]
+layout_mode = 2
+text = "Useful tips"
 label_settings = SubResource("LabelSettings_mx8p4")
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -1412,3 +1441,161 @@ text = "Game is not saved!"
 label_settings = SubResource("LabelSettings_mx8p4")
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="Help" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("CloseButton")]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("18_2iv0a")
+CloseButton = NodePath("CenterContainer/InventoryPanel/ButtonRow2/CloseButton")
+
+[node name="Background" type="ColorRect" parent="CanvasLayer/Help"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.588235)
+
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/Help"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelBackground" type="ColorRect" parent="CanvasLayer/Help/CenterContainer"]
+clip_contents = true
+custom_minimum_size = Vector2(800, 900)
+layout_mode = 2
+color = Color(0.0846899, 0.0846899, 0.0846899, 1)
+
+[node name="InventoryPanel" type="VBoxContainer" parent="CanvasLayer/Help/CenterContainer"]
+custom_minimum_size = Vector2(800, 900)
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Control" type="Control" parent="CanvasLayer/Help/CenterContainer/InventoryPanel"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+
+[node name="LabelRow" type="HBoxContainer" parent="CanvasLayer/Help/CenterContainer/InventoryPanel"]
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="DeathLabel" type="Label" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/LabelRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Help"
+label_settings = SubResource("LabelSettings_h3005")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Control2" type="Control" parent="CanvasLayer/Help/CenterContainer/InventoryPanel"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+
+[node name="Description" type="VBoxContainer" parent="CanvasLayer/Help/CenterContainer/InventoryPanel"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Title" type="Label" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Description"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Goal"
+label_settings = SubResource("LabelSettings_7g7sd")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Description5" type="RichTextLabel" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Description"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("5_h5gro")
+bbcode_enabled = true
+text = "[center]Kill the [color=#e68700]Executioner[/color].
+Collect cards by killing enemies and opening [color=#f4b41b]Chests[/color].
+[color=#cccccc]Upgrade[/color] cards back at home using the [color=#bf7958]Workbench[/color]."
+fit_content = true
+
+[node name="Control2" type="Control" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Description"]
+layout_mode = 2
+
+[node name="Controls" type="Label" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Description"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Controls"
+label_settings = SubResource("LabelSettings_7g7sd")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Description4" type="RichTextLabel" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Description"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("5_h5gro")
+bbcode_enabled = true
+text = "[center]Use the [color=#cccccc]arrow keys[/color] or [color=#cccccc]WASD[/color] to move, and nudge objects.
+Use a mouse to drag-and-drop cards onto the play and sicard areas.
+[color=#cccccc]Esc[/color] opens the menu."
+fit_content = true
+
+[node name="Control3" type="Control" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Description"]
+layout_mode = 2
+
+[node name="Controls2" type="Label" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Description"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Gameplay"
+label_settings = SubResource("LabelSettings_7g7sd")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Description6" type="RichTextLabel" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Description"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("5_h5gro")
+bbcode_enabled = true
+text = "[center]Use [color=#e6482e]Bonfires[/color] to reset health and deck, and manage your inventory.
+Find [color=#bf7958]Ladders[/color] to get back to the safety of your home."
+fit_content = true
+
+[node name="Control4" type="Control" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Description"]
+layout_mode = 2
+
+[node name="Controls3" type="Label" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Description"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Tips"
+label_settings = SubResource("LabelSettings_7g7sd")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Description7" type="RichTextLabel" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Description"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("5_h5gro")
+bbcode_enabled = true
+text = "[center]Upon death, you will lose all cards that are not stored in the [color=#f4b41b]Stash[/color]!
+However, cards with a [color=#cccccc]shield symbol[/color] in the top-right corner are kept."
+fit_content = true
+
+[node name="Filler" type="HBoxContainer" parent="CanvasLayer/Help/CenterContainer/InventoryPanel"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 32
+
+[node name="ButtonRow2" type="HBoxContainer" parent="CanvasLayer/Help/CenterContainer/InventoryPanel"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+alignment = 1
+
+[node name="CloseButton" type="Button" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/ButtonRow2"]
+custom_minimum_size = Vector2(200, 64)
+layout_mode = 2
+theme = ExtResource("5_h5gro")
+text = "Close"
