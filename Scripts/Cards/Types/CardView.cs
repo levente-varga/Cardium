@@ -24,6 +24,9 @@ public partial class CardView : Node2D {
   [Export] private RichTextLabel _descriptionLabel = null!;
   [Export] private Label _nameLabel = null!;
   [Export] private Sprite2D _frame = null!;
+  [Export] private Node2D _levelContainer = null!;
+  [Export] private Sprite2D _protection = null!;
+  [Export] private Sprite2D _levelPlaceholder = null!;
   public Card Card = null!;
 
   public bool Enabled = true;
@@ -77,17 +80,26 @@ public partial class CardView : Node2D {
     _nameLabel.Text = Card.Name;
 
     SetupLevelMarker();
+    SetupProtectionMarker();
   }
 
+  private void SetupProtectionMarker() {
+    _protection.Visible = Card.Protected;
+    _levelPlaceholder.Visible = Card.Protected;
+    if (Card.Level == 0) {
+      _protection.Position += Vector2.Up;
+    }
+  }
+  
   private void SetupLevelMarker() {
     for (var i = 0; i < Card.Level; i++) {
-      var levelMarker = new Sprite2D();
-      levelMarker.Texture = GD.Load<Texture2D>(i == Card.Level - 1
-        ? "res://Assets/Sprites/Cards/EnergyEnd.png"
-        : "res://Assets/Sprites/Cards/EnergyDot.png");
-      levelMarker.Centered = false;
-      levelMarker.Position = new Vector2(-16 + i * 2, -25);
-      _frame.AddChild(levelMarker);
+      var marker = new Sprite2D();
+      marker.Texture = GD.Load<Texture2D>(i == Card.Level - 1
+        ? "res://Assets/Sprites/Cards/LevelMarkerEnd.png"
+        : "res://Assets/Sprites/Cards/LevelMarker.png");
+      marker.Centered = false;
+      marker.Position = new Vector2(-16 + i * 2, -25);
+      _levelContainer.AddChild(marker);
     }
   }
 

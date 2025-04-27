@@ -748,7 +748,7 @@ texture = ExtResource("14_k82d4")
 custom_minimum_size = Vector2(0, 96)
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Cards not kept in the Stash 
+text = "Unprotected cards not kept in the Stash 
 have been lost, forever..."
 label_settings = SubResource("LabelSettings_m4nry")
 horizontal_alignment = 1

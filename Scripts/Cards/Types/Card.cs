@@ -24,7 +24,7 @@ public class Card {
   public CardType Type { get; protected set; }
   public CardRarity Rarity { get; protected set; }
   public bool Unstable { get; protected set; } = false;
-  public bool Protected { get; protected set; } = false;
+  public bool Protected { get; set; } = false;
 
   protected string Highlight(string text, string color = "CCCCCC") => Highlight(text, new Color(color));
   protected string Highlight(string text, Color color) => $"[color=#{color.ToHtml()}]{text}[/color]";

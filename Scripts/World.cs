@@ -64,7 +64,6 @@ public partial class World : Node2D {
 
   public override void _Ready() {
     if (Data.InitialStart) {
-      Data.InitialStart = false;
       var r = new Random();
       for (var i = 0; i < 30; i++) {
         var type = r.Next(9);
@@ -79,9 +78,10 @@ public partial class World : Node2D {
           7 => new HolyCard(),
           _ => new ShuffleCard(),
         };
+        card.Protected = true;
         Data.Stash.Add(card);
       }
-
+      Data.InitialStart = false;
       Player.Deck.FillWithInitial();
     }
 

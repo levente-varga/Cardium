@@ -57,11 +57,11 @@ public partial class DeckView : Node2D {
 
   public void FillWithInitial() {
     Deck.Clear();
-    Add(new HealCard());
-    Add(new HurlCard());
-    Add(new SmiteCard());
-    Add(new WoodenKeyCard());
-    Add(new ShuffleCard());
+    Add(new HealCard { Protected = true });
+    Add(new HurlCard { Protected = true });
+    Add(new SmiteCard { Protected = true });
+    Add(new WoodenKeyCard { Protected = true });
+    Add(new ShuffleCard { Protected = true });
     Deck.Shuffle();
   }
 }
