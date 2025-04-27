@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Cardium.Scripts.Menus;
 using Godot;
 
 namespace Cardium.Scripts;
@@ -11,6 +12,7 @@ public partial class Player : Entity {
   [Export] public DeckView Deck = null!;
   [Export] public InventoryMenu InventoryMenu = null!;
   [Export] public WorkbenchMenu WorkbenchMenu = null!;
+  [Export] public DeathMenu DeathMenu = null!;
 
   public delegate void OnActionDelegate();
 
