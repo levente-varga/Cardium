@@ -35,7 +35,7 @@ public class ChainCard : EnemyTargetingCard {
       if (bouncesLeft <= 0) return;
 
       bouncesLeft--;
-      current.ReceiveDamage(player, Damage);
+      current.ReceiveDamage(player, Damage, world);
       hit.Add(current);
 
       if (bouncesLeft <= 0) return;

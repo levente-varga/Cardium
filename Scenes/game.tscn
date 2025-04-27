@@ -915,7 +915,7 @@ position = Vector2(240, 32)
 scale = Vector2(4, 4)
 sprite_frames = SubResource("SpriteFrames_1c27j")
 animation = &"defeated"
-frame_progress = 0.00429695
+frame_progress = 0.957529
 
 [node name="Description" type="Label" parent="CanvasLayer/Victory/CenterContainer/InventoryPanel/DescriptionRow2"]
 custom_minimum_size = Vector2(0, 96)

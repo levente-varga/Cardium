@@ -84,7 +84,7 @@ public partial class Entity : TileAlignedGameObject {
     UpdateBuffsOnEndOfTurn();
   }
 
-  public virtual void ReceiveDamage(Entity source, int damage) {
+  public virtual void ReceiveDamage(Entity source, int damage, World world) {
     if (Invincible || damage < 1) return;
 
     Blink();
@@ -98,10 +98,10 @@ public partial class Entity : TileAlignedGameObject {
     OnDamagedEvent?.Invoke(this, damage);
 
     Health -= Math.Max(1, damage - BaseArmor);
-    if (Health <= 0) OnDeath(source);
+    if (Health <= 0) OnDeath(source, world);
   }
 
-  protected virtual void OnDeath(Entity source) {
+  protected virtual void OnDeath(Entity source, World world) {
     Health = 0;
     
     OnDeathEvent?.Invoke(this);

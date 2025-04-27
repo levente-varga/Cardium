@@ -50,7 +50,7 @@ public partial class Ranger : Enemy {
       }
     }
     else {
-      player.ReceiveDamage(this, BaseDamage);
+      player.ReceiveDamage(this, BaseDamage, world);
       Nudge(VectorToDirection(player.Position - Position));
     }
   }

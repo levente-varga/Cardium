@@ -59,7 +59,7 @@ public class CombatManager {
 
   private void Attack(Entity target, Entity source) {
     GD.Print(source.Name + " attacked " + target.Name + " for " + source.Damage + " damage!");
-    target.ReceiveDamage(source, source.Damage);
+    target.ReceiveDamage(source, source.Damage, _world);
 
     _world.Camera.Shake(6 * source.Damage);
   }

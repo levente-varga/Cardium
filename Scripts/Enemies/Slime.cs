@@ -23,20 +23,4 @@ public partial class Slime : Enemy {
 
     Inventory.Add(new HealCard());
   }
-
-  public override void _Process(double delta) {
-    base._Process(delta);
-  }
-
-  protected override void TakeTurn(Player player, World world) {
-    base.TakeTurn(player, world);
-  }
-
-  public override void ReceiveDamage(Entity source, int damage) {
-    base.ReceiveDamage(source, damage);
-  }
-
-  protected override void OnDeath(Entity source) {
-    base.OnDeath(source);
-  }
 }

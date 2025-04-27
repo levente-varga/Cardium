@@ -36,7 +36,7 @@ public class HolyCard : LocationTargetingCard {
     var remainder = TotalDamage % enemies.Count;
     var baseDamagePerEnemy = TotalDamage / enemies.Count;
     for (var i = 0; i < enemies.Count; i++) {
-      enemies[i].ReceiveDamage(player, baseDamagePerEnemy + (i < remainder ? 1 : 0));
+      enemies[i].ReceiveDamage(player, baseDamagePerEnemy + (i < remainder ? 1 : 0), world);
     }
 
     return true;

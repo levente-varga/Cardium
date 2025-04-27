@@ -36,7 +36,7 @@ public class HurlCard : LocationTargetingCard {
     }
 
     foreach (var enemy in enemies) {
-      enemy.ReceiveDamage(player, Damage);
+      enemy.ReceiveDamage(player, Damage, world);
     }
 
     return true;

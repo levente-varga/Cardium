@@ -55,7 +55,7 @@ public partial class Exterminator : Enemy {
       }
       else if (LastSeenPlayerDistance <= BaseRange) {
         Nudge(VectorToDirection(player.Position - Position));
-        player.ReceiveDamage(this, BaseDamage);
+        player.ReceiveDamage(this, BaseDamage, world);
         return;
       }
 
@@ -82,5 +82,10 @@ public partial class Exterminator : Enemy {
   private void SwitchToIdleAnimation() {
     Play("idle");
     AnimationFinished -= SwitchToIdleAnimation;
+  }
+
+  protected override void OnDeath(Entity source, World world) {
+    base.OnDeath(source, world);
+    
   }
 }

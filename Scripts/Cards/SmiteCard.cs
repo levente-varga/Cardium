@@ -22,7 +22,7 @@ public class SmiteCard : EnemyTargetingCard {
   }
 
   public override bool OnPlay(Player player, Enemy target, World world) {
-    target.ReceiveDamage(player, Damage);
+    target.ReceiveDamage(player, Damage, world);
 
     return true;
   }

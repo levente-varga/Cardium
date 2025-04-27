@@ -68,7 +68,7 @@ public partial class Enemy : Entity {
     }
     else if (LastSeenPlayerDistance <= BaseRange) {
       Nudge(VectorToDirection(player.Position - Position));
-      player.ReceiveDamage(this, BaseDamage);
+      player.ReceiveDamage(this, BaseDamage, world);
       return;
     }
 

@@ -24,20 +24,4 @@ public partial class Spider : Enemy {
 
     Inventory.Add(new PushCard());
   }
-
-  public override void _Process(double delta) {
-    base._Process(delta);
-  }
-
-  protected override void TakeTurn(Player player, World world) {
-    base.TakeTurn(player, world);
-  }
-
-  public override void ReceiveDamage(Entity source, int damage) {
-    base.ReceiveDamage(source, damage);
-  }
-
-  protected override void OnDeath(Entity source) {
-    base.OnDeath(source);
-  }
 }
