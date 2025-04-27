@@ -21,6 +21,11 @@ public class TeleportCard : LocationTargetingCard {
   }
 
   public override bool OnPlay(Player player, Vector2I position, World world) {
+    if (!world.IsEmpty(position)) {
+      player.SpawnFloatingLabel("Occupied!", Global.Red, height: 184);
+      return false;
+    }
+    
     player.SetPosition(position);
 
     return true;
