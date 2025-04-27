@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using Cardium.Scripts.Cards.Types;
 using Godot;
 
@@ -17,7 +19,7 @@ public class RestCard : PlayerTargetingCard {
   }
 
   public override bool OnPlay(Player player, World world) {
-    player.ReloadDeck();
+    player.ReloadDeck(except: new List<Type> { typeof(RestCard) });
 
     return true;
   }

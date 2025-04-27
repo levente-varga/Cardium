@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Cardium.Scripts.Menus;
 using Godot;
@@ -142,9 +143,10 @@ public partial class Player : Entity {
     }
   }
 
-  public void ReloadDeck() {
+  public void ReloadDeck(List<Type> except) {
     var cards = DiscardPile.Pile.GetCards();
     foreach (var card in cards) {
+      if (except.Contains(card.GetType())) continue;
       if (Deck.Deck.IsFull) return;
       DiscardPile.Remove(card);
       Deck.Add(card);
