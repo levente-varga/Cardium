@@ -22,8 +22,6 @@ public partial class Spider : Enemy {
     BaseLuck = 0f;
     BaseRange = 1;
     Description = "A spider enemy.";
-
-    Inventory.Add(new PushCard());
   }
   
   protected override List<Card> GenerateLoot() {

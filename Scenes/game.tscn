@@ -48,16 +48,6 @@ font = ExtResource("12_aeksy")
 font_size = 25
 font_color = Color(0.866667, 0.866667, 0.866667, 1)
 
-[sub_resource type="LabelSettings" id="LabelSettings_ybhki"]
-font = ExtResource("5_70pgm")
-font_size = 52
-font_color = Color(0.8, 0.8, 0.8, 1)
-
-[sub_resource type="LabelSettings" id="LabelSettings_mx8p4"]
-font = ExtResource("12_aeksy")
-font_size = 25
-font_color = Color(0.466667, 0.466667, 0.466667, 1)
-
 [sub_resource type="LabelSettings" id="LabelSettings_r4kvp"]
 font = ExtResource("5_70pgm")
 font_size = 32
@@ -148,6 +138,16 @@ animations = [{
 "name": &"defeated",
 "speed": 12.0
 }]
+
+[sub_resource type="LabelSettings" id="LabelSettings_ybhki"]
+font = ExtResource("5_70pgm")
+font_size = 52
+font_color = Color(0.8, 0.8, 0.8, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_mx8p4"]
+font = ExtResource("12_aeksy")
+font_size = 25
+font_color = Color(0.466667, 0.466667, 0.466667, 1)
 
 [node name="Root" type="Node"]
 
@@ -450,104 +450,6 @@ custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 theme = ExtResource("5_h5gro")
 label_settings = SubResource("LabelSettings_khtd6")
-vertical_alignment = 1
-
-[node name="PauseMenu" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("Player", "ResumeButton", "FleeButton", "QuitButton")]
-z_index = 20
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-script = ExtResource("13_m0npp")
-Player = NodePath("../../Player")
-ResumeButton = NodePath("CenterContainer/Container/VBoxContainer/ResumeButton")
-FleeButton = NodePath("CenterContainer/Container/VBoxContainer2/FleeButton")
-QuitButton = NodePath("CenterContainer/Container/VBoxContainer3/QuitButton")
-
-[node name="ColorRect" type="ColorRect" parent="CanvasLayer/PauseMenu"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0, 0, 0, 0.588235)
-
-[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/PauseMenu"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Control" type="Control" parent="CanvasLayer/PauseMenu/CenterContainer"]
-layout_mode = 2
-
-[node name="Background" type="Sprite2D" parent="CanvasLayer/PauseMenu/CenterContainer/Control"]
-scale = Vector2(4, 4)
-texture = ExtResource("10_xwuuf")
-
-[node name="Container" type="VBoxContainer" parent="CanvasLayer/PauseMenu/CenterContainer"]
-custom_minimum_size = Vector2(240, 280)
-layout_mode = 2
-theme_override_constants/separation = 32
-
-[node name="Label" type="Label" parent="CanvasLayer/PauseMenu/CenterContainer/Container"]
-layout_mode = 2
-text = "Paused"
-label_settings = SubResource("LabelSettings_ybhki")
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Control" type="Control" parent="CanvasLayer/PauseMenu/CenterContainer/Container"]
-layout_mode = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/PauseMenu/CenterContainer/Container"]
-layout_mode = 2
-
-[node name="ResumeButton" type="Button" parent="CanvasLayer/PauseMenu/CenterContainer/Container/VBoxContainer"]
-layout_mode = 2
-theme = ExtResource("5_h5gro")
-text = "Resume"
-
-[node name="Label" type="Label" parent="CanvasLayer/PauseMenu/CenterContainer/Container/VBoxContainer"]
-layout_mode = 2
-text = "Close this menu"
-label_settings = SubResource("LabelSettings_mx8p4")
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="VBoxContainer2" type="VBoxContainer" parent="CanvasLayer/PauseMenu/CenterContainer/Container"]
-layout_mode = 2
-
-[node name="FleeButton" type="Button" parent="CanvasLayer/PauseMenu/CenterContainer/Container/VBoxContainer2"]
-layout_mode = 2
-theme = ExtResource("5_h5gro")
-text = "Flee"
-
-[node name="Label" type="Label" parent="CanvasLayer/PauseMenu/CenterContainer/Container/VBoxContainer2"]
-layout_mode = 2
-text = "Leave cards behind"
-label_settings = SubResource("LabelSettings_mx8p4")
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="VBoxContainer3" type="VBoxContainer" parent="CanvasLayer/PauseMenu/CenterContainer/Container"]
-layout_mode = 2
-
-[node name="QuitButton" type="Button" parent="CanvasLayer/PauseMenu/CenterContainer/Container/VBoxContainer3"]
-layout_mode = 2
-theme = ExtResource("5_h5gro")
-text = "Quit to desktop"
-
-[node name="Label" type="Label" parent="CanvasLayer/PauseMenu/CenterContainer/Container/VBoxContainer3"]
-layout_mode = 2
-text = "Game is not saved!"
-label_settings = SubResource("LabelSettings_mx8p4")
-horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Inventory" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("Player", "StashContainer", "InventoryContainer", "DeckContainer", "StashArea", "InventoryArea", "DeckArea", "StashSizeLabel", "InventorySizeLabel", "DeckSizeLabel", "OkButton")]
@@ -1304,3 +1206,102 @@ offset_right = 1733.0
 offset_bottom = 928.0
 mouse_filter = 2
 color = Color(1, 1, 1, 0)
+
+[node name="PauseMenu" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("Player", "ResumeButton", "FleeButton", "QuitButton")]
+visible = false
+z_index = 20
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("13_m0npp")
+Player = NodePath("../../Player")
+ResumeButton = NodePath("CenterContainer/Container/VBoxContainer/ResumeButton")
+FleeButton = NodePath("CenterContainer/Container/VBoxContainer2/FleeButton")
+QuitButton = NodePath("CenterContainer/Container/VBoxContainer3/QuitButton")
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer/PauseMenu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.588235)
+
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/PauseMenu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Control" type="Control" parent="CanvasLayer/PauseMenu/CenterContainer"]
+layout_mode = 2
+
+[node name="Background" type="Sprite2D" parent="CanvasLayer/PauseMenu/CenterContainer/Control"]
+scale = Vector2(4, 4)
+texture = ExtResource("10_xwuuf")
+
+[node name="Container" type="VBoxContainer" parent="CanvasLayer/PauseMenu/CenterContainer"]
+custom_minimum_size = Vector2(240, 280)
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="Label" type="Label" parent="CanvasLayer/PauseMenu/CenterContainer/Container"]
+layout_mode = 2
+text = "Paused"
+label_settings = SubResource("LabelSettings_ybhki")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Control" type="Control" parent="CanvasLayer/PauseMenu/CenterContainer/Container"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/PauseMenu/CenterContainer/Container"]
+layout_mode = 2
+
+[node name="ResumeButton" type="Button" parent="CanvasLayer/PauseMenu/CenterContainer/Container/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("5_h5gro")
+text = "Resume"
+
+[node name="Label" type="Label" parent="CanvasLayer/PauseMenu/CenterContainer/Container/VBoxContainer"]
+layout_mode = 2
+text = "Close this menu"
+label_settings = SubResource("LabelSettings_mx8p4")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="CanvasLayer/PauseMenu/CenterContainer/Container"]
+layout_mode = 2
+
+[node name="FleeButton" type="Button" parent="CanvasLayer/PauseMenu/CenterContainer/Container/VBoxContainer2"]
+layout_mode = 2
+theme = ExtResource("5_h5gro")
+text = "Flee"
+
+[node name="Label" type="Label" parent="CanvasLayer/PauseMenu/CenterContainer/Container/VBoxContainer2"]
+layout_mode = 2
+text = "Leave cards behind"
+label_settings = SubResource("LabelSettings_mx8p4")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="CanvasLayer/PauseMenu/CenterContainer/Container"]
+layout_mode = 2
+
+[node name="QuitButton" type="Button" parent="CanvasLayer/PauseMenu/CenterContainer/Container/VBoxContainer3"]
+layout_mode = 2
+theme = ExtResource("5_h5gro")
+text = "Quit to desktop"
+
+[node name="Label" type="Label" parent="CanvasLayer/PauseMenu/CenterContainer/Container/VBoxContainer3"]
+layout_mode = 2
+text = "Game is not saved!"
+label_settings = SubResource("LabelSettings_mx8p4")
+horizontal_alignment = 1
+vertical_alignment = 1
