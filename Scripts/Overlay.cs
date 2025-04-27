@@ -24,12 +24,12 @@ public partial class Overlay : Node2D {
   public int? Range;
 
   public override void _Ready() {
-    Modulate = new Color(1, 1, 1, 0.3f);
+    
   }
 
   public override void _Draw() {
     foreach (var tile in _tiles) {
-      DrawRect(new Rect2(Global.TileToWorld(tile.Position), Global.GlobalTileSize), tile.Color);
+      DrawRect(new Rect2(Global.TileToWorld(tile.Position), Global.GlobalTileSize), new Color(tile.Color.R, tile.Color.G, tile.Color.B, 0.3f));
     }
     
     DrawRangeBorder();
@@ -38,18 +38,40 @@ public partial class Overlay : Node2D {
   }
 
   private void DrawRangeBorder() {
-    if (Range == null) return;
+    if (Range is null or <= 0) return;
     
-    Vector2 center = Global.TileCenterToWorld(Player.Position);
+    var current = Global.TileToWorld(Player.Position) + Vector2.Up * Range.Value * Global.GlobalTileSize;;
+    Vector2 next;
 
-    Vector2 up = center + Vector2.Up * Global.GlobalTileSize * Range.Value;
-    Vector2 right = center + Vector2.Right * Global.GlobalTileSize * Range.Value;
-    Vector2 down = center + Vector2.Down * Global.GlobalTileSize * Range.Value;
-    Vector2 left = center + Vector2.Left * Global.GlobalTileSize * Range.Value;
+    var right = Vector2.Right * Global.GlobalTileSize;
+    var left = Vector2.Left * Global.GlobalTileSize;
+    var up = Vector2.Up * Global.GlobalTileSize;
+    var down = Vector2.Down * Global.GlobalTileSize;
 
-    DrawLine(up, right, Colors.Red, 2.0f);
-    DrawLine(right, down, Colors.Red, 2.0f);
-    DrawLine(down, left, Colors.Red, 2.0f);
-    DrawLine(left, up, Colors.Red, 2.0f);
+    var edgesPerSide = Range.Value * 2 + 1;
+
+    for (var i = 0; i < edgesPerSide; i++) {
+      next = current + (i % 2 == 0 ? right : down);
+      DrawLine(current, next, Colors.White, 4);
+      current = next;
+    }
+
+    for (var i = 0; i < edgesPerSide; i++) {
+      next = current + (i % 2 == 0 ? down : left);
+      DrawLine(current, next, Colors.White, 4);
+      current = next;
+    }
+
+    for (var i = 0; i < edgesPerSide; i++) {
+      next = current + (i % 2 == 0 ? left : up);
+      DrawLine(current, next, Colors.White, 4);
+      current = next;
+    }
+    
+    for (var i = 0; i < edgesPerSide; i++) {
+      next = current + (i % 2 == 0 ? up : right);
+      DrawLine(current, next, Colors.White, 4);
+      current = next;
+    }
   }
 }
