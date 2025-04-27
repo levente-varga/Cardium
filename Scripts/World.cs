@@ -244,6 +244,8 @@ public partial class World : Node2D {
 
   private void OnPlayerDeath(Entity entity) {
     if (entity is not Scripts.Player) return;
+
+    Statistics.Deaths++;
     
     DeathMenu.Open();
   }

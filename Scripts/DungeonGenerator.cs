@@ -104,6 +104,7 @@ public partial class Dungeon {
       _dungeon.Interactables.Add(new Stash { Position = new Vector2I(6, 1) });
       _dungeon.Interactables.Add(new Workbench { Position = new Vector2I(8, 1) });
       _dungeon.Interactables.Add(new Sign { Position = new Vector2I(12, 2), Text = "That way!" });
+      if (Statistics.Deaths > 0) _dungeon.Interactables.Add(new Grave { Position = new Vector2I(7, 5) });
       _dungeon.Player.Position = new Vector2I(5, 3);
 
       DecorateGround();
@@ -546,6 +547,7 @@ public partial class Dungeon {
       foreach (var room in _dungeon.Rooms.Where(room => room.Type == RoomTypes.Uncategorized)) {
         if (_random.Next(chests / 2) > 0) continue;
         var tileCandidates = GetRoomPerimeterTiles(room);
+        if (tileCandidates.Count == 0) continue;
         Chest chest = new();
         chest.Position = tileCandidates[_random.Next(tileCandidates.Count)];
         FillChest(chest);

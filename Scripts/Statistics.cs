@@ -2,6 +2,7 @@ namespace Cardium.Scripts;
 
 public static class Statistics {
   public static int Runs;
+  public static int Deaths;
   public static int EnemiesKilled;
   public static int StepsTaken;
   public static int ActionsTaken;
