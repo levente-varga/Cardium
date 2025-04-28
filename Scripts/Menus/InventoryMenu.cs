@@ -185,9 +185,10 @@ public partial class InventoryMenu : Menu {
       FillContainersWithCardViews();
     }
     else if (mouseOverInventoryArea && _draggedCardOrigin != CardOrigin.Inventory) {
-      RemoveDraggedCardFromItsOrigin(view.Card);
-      Player.Inventory.Add(view.Card);
-      FillContainersWithCardViews();
+      if (Player.Inventory.Add(view.Card)) {
+        RemoveDraggedCardFromItsOrigin(view.Card);
+        FillContainersWithCardViews();
+      }
     }
     else if (_stashEnabled && mouseOverStashArea && _draggedCardOrigin != CardOrigin.Stash) {
       RemoveDraggedCardFromItsOrigin(view.Card);
