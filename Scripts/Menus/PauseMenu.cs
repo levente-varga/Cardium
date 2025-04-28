@@ -21,10 +21,17 @@ public partial class PauseMenu : Menu {
   public override void Open() {
     base.Open();
 
+    Data.PauseMenuOpen = true;
     FleeButton.Disabled = Data.Level == Level.Lobby;
   }
+  
+  public override void Close() {
+    base.Close();
 
-  public void Flee() {
+    Data.PauseMenuOpen = false;
+  }
+
+  private void Flee() {
     base.Close();
     
     Player.SaveCards();
@@ -32,8 +39,8 @@ public partial class PauseMenu : Menu {
     Data.LoadLobbyData();
     GetTree().ReloadCurrentScene();
   }
-  
-  public void Quit() {
+
+  private void Quit() {
     Player.GetTree().Quit();
   }
 }

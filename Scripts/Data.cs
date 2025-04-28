@@ -14,7 +14,8 @@ public static class Data {
   public static bool ShowHealth;
   public static bool CameraOnPlayer;
   public static int MenusOpen;
-  public static bool MenuOpen => MenusOpen > 0;
+  public static bool PauseMenuOpen;
+  public static bool MenuOpen => MenusOpen > 0 || PauseMenuOpen;
   public static readonly Pile Stash = new ();
   public static readonly Pile Inventory = new ();
   public static readonly Pile Deck = new ();

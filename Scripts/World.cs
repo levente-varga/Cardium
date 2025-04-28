@@ -154,7 +154,12 @@ public partial class World : Node2D {
       _combatManager.UpdateDebugLabel();
     }
     else if (InputMap.EventIsAction(@event, "Back") && @event.IsPressed()) {
-      PauseMenu.Open();
+      if (!Data.MenuOpen) {
+        PauseMenu.Open();
+      }
+      else {
+        PauseMenu.Close();
+      }
     }
     else if (@event is InputEventMouseButton { Pressed: true, ButtonIndex: MouseButton.Left }) {
       if (_selectionMode == SelectionMode.None) return;
