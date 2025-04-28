@@ -89,6 +89,7 @@ public partial class WorkbenchMenu : Menu {
     
     _slot1.Protected = isProtected;
     Data.Stash.Add(_slot1);
+    Statistics.CardsUpgraded++;
     EmptySlots(false);
     FillContainersWithCardViews();
   }

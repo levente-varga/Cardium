@@ -23,6 +23,8 @@ public static class Data {
     Inventory.RemoveUnprotected();
     Deck.RemoveUnprotected();
   }
+  
+  public static int UnprotectedCardCount => Inventory.UnprotectedCount + Deck.UnprotectedCount;
 
   public static void LoadLobbyData() {
     Level = Level.Lobby;

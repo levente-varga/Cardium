@@ -83,7 +83,13 @@ public partial class Enemy : Entity {
     base.TakeTurn(player, world);
   }
 
-  protected virtual List<Card> GenerateLoot() => new List<Card>();
+  protected virtual List<Card> GenerateLoot() => new ();
+
+  protected override void OnDamaged(Entity source, int damage, World world) {
+    Statistics.TotalDamage += damage;
+    
+    base.OnDamaged(source, damage, world);
+  }
 
   public override void ReceiveDamage(Entity source, int damage, World world) {
     base.ReceiveDamage(source, damage, world);

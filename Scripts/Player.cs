@@ -121,6 +121,7 @@ public partial class Player : Entity {
       return;
     }
 
+    Statistics.Steps++;
     Move(_moveDirection!.Value, World);
     _lastMoveMsec = Time.GetTicksMsec();
     _moveDelayMsec = MinMoveDelayMsec + (BaseMoveDelayMsec - MinMoveDelayMsec) / ++_consecutiveMoves;
@@ -173,6 +174,8 @@ public partial class Player : Entity {
   }
 
   protected override void Nudge(Direction direction) {
+    Statistics.Nudges++;
+    
     var i = World.GetInteractableAt(Position + DirectionToVector(direction));
     i?.OnNudge(this, World);
 
@@ -184,6 +187,18 @@ public partial class Player : Entity {
     if (interactablePositions.Count == 0) return;
 
     World.Interact(interactablePositions[0]);
+  }
+
+  protected override void OnDamaged(Entity source, int damage, World world) {
+    base.OnDamaged(source, damage, world);
+    
+    Statistics.TotalDamageTaken += damage;
+  }
+
+  protected override void OnHealed(int amount) {
+    base.OnHealed(amount);
+    
+    Statistics.TotalHealAmount += amount;
   }
 
   public void PutCardsInUseIntoDeck() {
@@ -208,6 +223,7 @@ public partial class Player : Entity {
     for (var i = 0; i < cards.Count; i++) {
       var card = cards[i];
       Inventory.Add(card);
+      Statistics.CardsCollected++;
       SpawnFloatingLabel($"x1 {card.Name} (lvl. {card.Level})", card.RarityColor, 120 + i * 40, fontSize: 28);
     }
   }

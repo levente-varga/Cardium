@@ -94,7 +94,11 @@ public partial class Entity : TileAlignedGameObject {
       OnDamagedEvent?.Invoke(this, 0);
       return;
     }
+    
+    OnDamaged(source, damage, world);
+  }
 
+  protected virtual void OnDamaged(Entity source, int damage, World world) {
     OnDamagedEvent?.Invoke(this, damage);
 
     Health -= Math.Max(1, damage - BaseArmor);
@@ -127,8 +131,12 @@ public partial class Entity : TileAlignedGameObject {
     var actualAmount = Math.Min(MaxHealth - Health, amount);
     if (actualAmount <= 0) return;
 
-    Health += actualAmount;
-    SpawnFloatingLabel(actualAmount.ToString(), color: Global.Green);
+    OnHealed(amount);
+  }
+
+  protected virtual void OnHealed(int amount) {
+    Health += amount;
+    SpawnFloatingLabel(amount.ToString(), color: Global.Green);
   }
 
   public void AddBuff(Buff buff) {

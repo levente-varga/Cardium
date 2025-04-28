@@ -20,6 +20,7 @@ public partial class Door : Interactable {
 
     Interacted = true;
     Solid = false;
+    Statistics.DoorsOpened++;
     world.Camera.Shake(10);
     SpawnFallingLabel("Opened!");
     Play("open");

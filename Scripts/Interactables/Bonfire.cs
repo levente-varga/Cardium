@@ -41,6 +41,7 @@ public partial class Bonfire : Interactable {
 
     State = BonfireState.Lit;
     Interacted = true;
+    Statistics.BonfiresLit++;
 
     world.Camera.Shake(25);
     SetAnimation("idle", GD.Load<Texture2D>("res://Assets/Animations/Bonfire.png"), 4, 12);

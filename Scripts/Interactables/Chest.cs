@@ -19,6 +19,7 @@ public partial class Chest : Interactable {
     if (Interacted) return;
 
     Interacted = true;
+    Statistics.ChestsOpened++;
     world.Camera.Shake(10);
     Play("open");
     SpawnFallingLabel("Opened!");

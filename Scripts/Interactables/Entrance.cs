@@ -15,6 +15,7 @@ public partial class Entrance : Interactable {
     base.OnNudge(player, world);
 
     if (Interacted) {
+      Statistics.Runs++;
       Data.LoadDungeonData();
       player.SaveCards();
       GetTree().ReloadCurrentScene();

@@ -18,7 +18,7 @@ public partial class Records : Interactable {
     base.OnNudge(player, world);
 
     world.Camera.Shake(10);
-    SpawnFloatingLabel(GetText());
+    SpawnFloatingLabel(GetText(), height: Global.GlobalTileSize.Y * 3);
   }
 
   private string GetText() {
@@ -43,7 +43,7 @@ public partial class Records : Interactable {
       3 => $"Collected {Statistics.CardsCollected} cards",
       4 => $"Lost {Statistics.CardsLost} cards",
       5 => $"Upgraded {Statistics.CardsUpgraded} cards",
-      6 => $"Taken {Statistics.StepsTaken} steps",
+      6 => $"Taken {Statistics.Steps} steps",
       7 => $"Opened {Statistics.DoorsOpened} doors",
       8 => $"Opened {Statistics.ChestsOpened} chests",
       9 => $"Taken {Statistics.ActionsTaken} actions",
@@ -52,6 +52,7 @@ public partial class Records : Interactable {
       12 => $"Healed {Statistics.TotalHealAmount} health",
       13 => $"Dealt {Statistics.TotalDamage} damage",
       14 => $"Received {Statistics.TotalDamageTaken} damage",
+      15 => $"Nudged {Statistics.Nudges} times",
       _ => "?",
     };
   }

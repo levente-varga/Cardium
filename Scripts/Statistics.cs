@@ -4,7 +4,8 @@ public static class Statistics {
   public static int Runs;
   public static int Deaths;
   public static int EnemiesKilled;
-  public static int StepsTaken;
+  public static int Steps;
+  public static int Nudges;
   public static int ActionsTaken;
   public static int BonfiresLit;
   public static int ChestsOpened;

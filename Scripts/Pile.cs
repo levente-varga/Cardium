@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Cardium.Scripts;
 
@@ -9,6 +10,7 @@ public class Pile {
   public int Size => Cards.Count;
   public bool IsEmpty => Cards.Count <= 0;
   public bool IsNotEmpty => Cards.Count > 0;
+  public int UnprotectedCount => Cards.Where(card => !card.Protected).ToArray().Length;
 
   public virtual void AddAll(List<Card> cards) {
     foreach (var card in cards) Add(card);

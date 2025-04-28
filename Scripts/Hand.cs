@@ -258,6 +258,7 @@ public partial class Hand : Node2D {
     if (success) {
       if (view.Card.Unstable) Redraw(view);
       else Discard(view);
+      Statistics.CardsPlayed++;
       OnCardPlayedEvent?.Invoke(view.Card);
     }
     else {

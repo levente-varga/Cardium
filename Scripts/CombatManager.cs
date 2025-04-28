@@ -21,6 +21,8 @@ public class CombatManager {
   }
 
   private void OnPlayerAction() {
+    Statistics.ActionsTaken++;
+    
     foreach (var enemy in Enemies) {
       enemy.OnTakeTurn(_player, _world);
     }
@@ -44,6 +46,7 @@ public class CombatManager {
   private void OnEnemyDeath(Entity entity) {
     if (entity is not Enemy enemy) return;
     GD.Print(enemy.Name + " died!");
+    Statistics.EnemiesKilled++;
     Enemies.Remove(enemy);
     enemy.OnDeathEvent -= OnEnemyDeath;
     enemy.OnNudgeEvent -= OnNudge;
