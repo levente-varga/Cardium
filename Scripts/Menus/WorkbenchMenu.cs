@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Cardium.Scripts.Cards.Types;
 using Godot;
@@ -11,6 +12,7 @@ public partial class WorkbenchMenu : Menu {
     Slot1,
     Slot2,
     Slot3,
+    Result,
   }
 
   private enum DraggedCardState {
@@ -18,7 +20,7 @@ public partial class WorkbenchMenu : Menu {
     OverStashArea,
     OverSlot1,
     OverSlot2,
-    OverSlot3
+    OverSlot3,
   }
 
   [Export] public Player Player = null!;
@@ -26,6 +28,7 @@ public partial class WorkbenchMenu : Menu {
   [Export] public Container Slot1Container = null!;
   [Export] public Container Slot2Container = null!;
   [Export] public Container Slot3Container = null!;
+  [Export] public Container ResultContainer = null!;
   [Export] public ColorRect StashArea = null!;
   [Export] public ColorRect Slot1Area = null!;
   [Export] public ColorRect Slot2Area = null!;
@@ -33,13 +36,13 @@ public partial class WorkbenchMenu : Menu {
   [Export] public Label StashSizeLabel = null!;
   [Export] public Label SlotSizeLabel = null!;
   [Export] public Button CancelButton = null!;
-  [Export] public Button UpgradeButton = null!;
 
   [Export] private PackedScene _cardScene = ResourceLoader.Load<PackedScene>("res://Scenes/card.tscn");
 
   private Card? _slot1;
   private Card? _slot2;
   private Card? _slot3;
+  private Card? _result;
 
   private DraggedCardState _draggedCardState;
 
@@ -48,20 +51,10 @@ public partial class WorkbenchMenu : Menu {
 
   public override void _Ready() {
     Visible = false;
-    UpgradeButton.Pressed += UpgradeButtonPressed;
     CancelButton.Pressed += Close;
   }
-
-  public override void _Process(double delta) {
-  }
-
-  public override void _Input(InputEvent @event) {
-    if (!Visible) return;
-  }
-
   public override void Open() {
     base.Open();
-    UpgradeButton.Disabled = true;
     Player.PutCardsInUseIntoDeck();
     FillContainersWithCardViews();
     UpdateLabels();
@@ -71,27 +64,6 @@ public partial class WorkbenchMenu : Menu {
     base.Close();
     Player.Hand.DrawUntilFull();
     EmptySlots();
-  }
-
-  private void UpgradeButtonPressed() {
-    if (!CardsAreValid) return;
-
-    var isProtected = _slot1!.Protected || _slot2!.Protected || _slot3!.Protected;
-    
-    if (!_slot1!.Upgrade()) {
-      Utils.SpawnFloatingLabel(Slot2Area, Slot2Area.Size / 2 - new Vector2(0, 100), "Already at maximum level!",
-        color: Global.Red, height: 160);
-      return;
-    }
-
-    Utils.SpawnFloatingLabel(Slot2Area, Slot2Area.Size / 2 - new Vector2(0, 100), $"Upgraded into\n{_slot1!.Name} (lvl {_slot1!.Level})",
-      color: _slot1.RarityColor, height: 160);
-    
-    _slot1.Protected = isProtected;
-    Data.Stash.Add(_slot1);
-    Statistics.CardsUpgraded++;
-    EmptySlots(false);
-    FillContainersWithCardViews();
   }
 
   private void EmptySlots(bool returnToStash = true) {
@@ -109,8 +81,6 @@ public partial class WorkbenchMenu : Menu {
       if (returnToStash) Data.Stash.Add(_slot3);
       _slot3 = null;
     }
-
-    UpdateUpgradeButton();
   }
 
   private void FillContainersWithCardViews() {
@@ -118,6 +88,7 @@ public partial class WorkbenchMenu : Menu {
     FillSlotWithCardView(Slot1Container, _slot1);
     FillSlotWithCardView(Slot2Container, _slot2);
     FillSlotWithCardView(Slot3Container, _slot3);
+    FillSlotWithCardView(ResultContainer, _result);
   }
 
   private void FillSlotWithCardView(Container slotContainer, Card? card) {
@@ -185,6 +156,9 @@ public partial class WorkbenchMenu : Menu {
     else if (_slot3 == view.Card) {
       _draggedCardOrigin = CardOrigin.Slot3;
     }
+    else if (_result == view.Card) {
+      _draggedCardOrigin = CardOrigin.Result;
+    }
     else if (Data.Stash.Contains(view.Card)) {
       _draggedCardOrigin = CardOrigin.Stash;
     }
@@ -239,6 +213,9 @@ public partial class WorkbenchMenu : Menu {
       case CardOrigin.Slot3:
         _slot3 = null;
         break;
+      case CardOrigin.Result:
+        _result = null;
+        break;
       case CardOrigin.Stash:
         Data.Stash.Remove(card);
         break;
@@ -272,17 +249,37 @@ public partial class WorkbenchMenu : Menu {
     else if (mouseOverStashArea && _draggedCardOrigin != CardOrigin.Stash) {
       RemoveDraggedCardFromItsOrigin(view.Card);
       Data.Stash.Add(view.Card);
+      if (_draggedCardOrigin == CardOrigin.Result) {
+        Statistics.CardsUpgraded++;
+        EmptySlots(false);
+      }
       FillContainersWithCardViews();
     }
+
+    if (_result == null && CardsAreValid) {
+      var isProtected = _slot1!.Protected || _slot2!.Protected || _slot3!.Protected;
+
+      _result = CreateUpgradedCard(_slot1.GetType(), _slot1!.Level + 1);
+      
+      if (_result == null) {
+        Utils.SpawnFloatingLabel(Slot2Area, Slot2Area.Size / 2 - new Vector2(0, 100), "Already at maximum level!",
+          color: Global.Red, height: 160);
+        return;
+      }
+      else {
+        _result.Protected = isProtected;
+      }
+      FillContainersWithCardViews();
+    }
+    else if (!CardsAreValid && _result != null) {
+      _result = null;
+      FillContainersWithCardViews();
+    }
+    
 
     _draggedCardOrigin = CardOrigin.None;
 
     UpdateLabels();
-    UpdateUpgradeButton();
-  }
-
-  private void UpdateUpgradeButton() {
-    UpgradeButton.Disabled = !CardsAreValid;
   }
 
   private bool CardsAreValid =>
@@ -293,4 +290,29 @@ public partial class WorkbenchMenu : Menu {
     _slot2.GetType() == _slot3.GetType() &&
     _slot1.Level == _slot2.Level &&
     _slot2.Level == _slot3.Level;
+  
+  private Card? CreateUpgradedCard(Type cardType, int level) {
+    GD.Print($"Creating upgraded card variant...");
+
+    if (!typeof(Card).IsAssignableFrom(cardType)) {
+      GD.Print($"Can't cast {cardType} to Card!");
+      return null;
+    }
+
+    var card = (Card)Activator.CreateInstance(cardType)!;
+
+    int upgradedLevel;
+    for (upgradedLevel = 0; upgradedLevel < level; upgradedLevel++) {
+      if (!card.Upgrade()) break;
+    }
+
+    if (upgradedLevel != level) {
+      GD.Print($"Can't upgrade");
+    }
+    else {
+      GD.Print($"Upgraded!");
+    }
+    
+    return upgradedLevel == level ? card : null;
+  }
 }
