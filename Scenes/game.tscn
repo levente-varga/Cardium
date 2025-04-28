@@ -1,4 +1,4 @@
-[gd_scene load_steps=50 format=3 uid="uid://cw3o4f0nr0f2v"]
+[gd_scene load_steps=87 format=3 uid="uid://cw3o4f0nr0f2v"]
 
 [ext_resource type="Script" path="res://Scripts/Hand.cs" id="1_3ixgw"]
 [ext_resource type="Script" path="res://Scripts/Camera.cs" id="3_evct5"]
@@ -20,6 +20,13 @@
 [ext_resource type="Script" path="res://Scripts/Menus/VictoryMenu.cs" id="16_xikg0"]
 [ext_resource type="Texture2D" uid="uid://2omjmpddb04r" path="res://Assets/Animations/ExterminatorDefeated.png" id="17_mrkco"]
 [ext_resource type="Script" path="res://Scripts/Menus/HelpMenu.cs" id="18_2iv0a"]
+[ext_resource type="Texture2D" uid="uid://emad6f5mxusm" path="res://Assets/Animations/Exterminator.png" id="21_qpikw"]
+[ext_resource type="Texture2D" uid="uid://4svosk72j2wi" path="res://Assets/Animations/Chest.png" id="22_rv1k3"]
+[ext_resource type="Texture2D" uid="uid://dr2ethnncqxu4" path="res://Assets/Animations/Card.png" id="23_xcspb"]
+[ext_resource type="Texture2D" uid="uid://cxthqk4m5hid" path="res://Assets/Animations/Bonfire.png" id="24_2f0x8"]
+[ext_resource type="Texture2D" uid="uid://y7rxxk0bkjea" path="res://Assets/Sprites/Workbench.png" id="25_3o4hs"]
+[ext_resource type="Texture2D" uid="uid://dj6lpymiq73yn" path="res://Assets/Sprites/Ladder.png" id="26_81gsf"]
+[ext_resource type="Texture2D" uid="uid://dayp1l1u5lwwl" path="res://Assets/Sprites/ProtectionSymbol.png" id="27_3bl2f"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_n205a"]
 
@@ -187,6 +194,238 @@ font_color = Color(0.466667, 0.466667, 0.466667, 1)
 font = ExtResource("5_70pgm")
 font_size = 100
 font_color = Color(0.8, 0.8, 0.8, 1)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xid6y"]
+atlas = ExtResource("21_qpikw")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_o6n3x"]
+atlas = ExtResource("21_qpikw")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wcktj"]
+atlas = ExtResource("21_qpikw")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ah35o"]
+atlas = ExtResource("21_qpikw")
+region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_g3w7n"]
+atlas = ExtResource("21_qpikw")
+region = Rect2(64, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yfhwd"]
+atlas = ExtResource("21_qpikw")
+region = Rect2(80, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1heh0"]
+atlas = ExtResource("21_qpikw")
+region = Rect2(96, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6m1sa"]
+atlas = ExtResource("21_qpikw")
+region = Rect2(112, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_0eurg"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xid6y")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_o6n3x")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wcktj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ah35o")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_g3w7n")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yfhwd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1heh0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6m1sa")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 12.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7p8ub"]
+atlas = ExtResource("22_rv1k3")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qja7v"]
+atlas = ExtResource("22_rv1k3")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b24a7"]
+atlas = ExtResource("22_rv1k3")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nx7m6"]
+atlas = ExtResource("22_rv1k3")
+region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rrjou"]
+atlas = ExtResource("22_rv1k3")
+region = Rect2(64, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5kklb"]
+atlas = ExtResource("22_rv1k3")
+region = Rect2(80, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_q0aas"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7p8ub")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qja7v")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b24a7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nx7m6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rrjou")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5kklb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5kklb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rrjou")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nx7m6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b24a7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qja7v")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7p8ub")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 12.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h2ep3"]
+atlas = ExtResource("23_xcspb")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tas2k"]
+atlas = ExtResource("23_xcspb")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3s5r1"]
+atlas = ExtResource("23_xcspb")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7h8no"]
+atlas = ExtResource("23_xcspb")
+region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q3t3w"]
+atlas = ExtResource("23_xcspb")
+region = Rect2(64, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8lo54"]
+atlas = ExtResource("23_xcspb")
+region = Rect2(80, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_n1xqs"]
+atlas = ExtResource("23_xcspb")
+region = Rect2(96, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nj10v"]
+atlas = ExtResource("23_xcspb")
+region = Rect2(112, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_kyjdf"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_h2ep3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tas2k")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3s5r1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7h8no")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_q3t3w")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8lo54")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_n1xqs")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nj10v")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 12.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_c5ee6"]
+atlas = ExtResource("24_2f0x8")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rpayg"]
+atlas = ExtResource("24_2f0x8")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_47xya"]
+atlas = ExtResource("24_2f0x8")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_evdu3"]
+atlas = ExtResource("24_2f0x8")
+region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_w7kmc"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_c5ee6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rpayg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_47xya")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_evdu3")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 12.0
+}]
 
 [sub_resource type="LabelSettings" id="LabelSettings_7g7sd"]
 font = ExtResource("5_70pgm")
@@ -1476,6 +1715,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Help" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("CloseButton")]
+visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_right = 1920.0
@@ -1504,24 +1744,27 @@ grow_vertical = 2
 
 [node name="PanelBackground" type="ColorRect" parent="CanvasLayer/Help/CenterContainer"]
 clip_contents = true
-custom_minimum_size = Vector2(720, 900)
+custom_minimum_size = Vector2(740, 960)
 layout_mode = 2
 color = Color(0.0846899, 0.0846899, 0.0846899, 1)
 
 [node name="InventoryPanel" type="VBoxContainer" parent="CanvasLayer/Help/CenterContainer"]
-custom_minimum_size = Vector2(720, 900)
+custom_minimum_size = Vector2(740, 960)
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="Control" type="Control" parent="CanvasLayer/Help/CenterContainer/InventoryPanel"]
+[node name="Title" type="VBoxContainer" parent="CanvasLayer/Help/CenterContainer/InventoryPanel"]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Title"]
 custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 
-[node name="LabelRow" type="HBoxContainer" parent="CanvasLayer/Help/CenterContainer/InventoryPanel"]
+[node name="LabelRow" type="HBoxContainer" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Title"]
 layout_mode = 2
 theme_override_constants/separation = 32
 
-[node name="DeathLabel" type="Label" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/LabelRow"]
+[node name="DeathLabel" type="Label" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Title/LabelRow"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Help"
@@ -1529,15 +1772,75 @@ label_settings = SubResource("LabelSettings_h3005")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Control2" type="Control" parent="CanvasLayer/Help/CenterContainer/InventoryPanel"]
+[node name="Control2" type="Control" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Title"]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 
-[node name="Description" type="VBoxContainer" parent="CanvasLayer/Help/CenterContainer/InventoryPanel"]
+[node name="Content" type="HBoxContainer" parent="CanvasLayer/Help/CenterContainer/InventoryPanel"]
 layout_mode = 2
+
+[node name="Description" type="VBoxContainer" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content"]
+custom_minimum_size = Vector2(700, 0)
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/separation = 16
 
-[node name="Title" type="Label" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Description"]
+[node name="Exterminator" type="AnimatedSprite2D" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
+position = Vector2(345, 60)
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_0eurg")
+animation = &"idle"
+autoplay = "idle"
+frame_progress = 0.132723
+
+[node name="Chest" type="AnimatedSprite2D" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
+position = Vector2(571, 91)
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_q0aas")
+animation = &"idle"
+autoplay = "idle"
+frame_progress = 0.251436
+
+[node name="CardPickup" type="AnimatedSprite2D" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
+position = Vector2(171, 91)
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_kyjdf")
+animation = &"idle"
+autoplay = "idle"
+frame_progress = 0.424616
+
+[node name="Bonfire" type="AnimatedSprite2D" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
+position = Vector2(103, 432)
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_w7kmc")
+animation = &"idle"
+autoplay = "idle"
+frame_progress = 0.476996
+
+[node name="Workbench" type="Sprite2D" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
+position = Vector2(498, 122)
+scale = Vector2(2, 2)
+texture = ExtResource("25_3o4hs")
+
+[node name="Ladder" type="Sprite2D" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
+position = Vector2(171, 463)
+scale = Vector2(2, 2)
+texture = ExtResource("26_81gsf")
+
+[node name="Stash" type="AnimatedSprite2D" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
+position = Vector2(623, 572)
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_q0aas")
+animation = &"idle"
+autoplay = "idle"
+frame_progress = 0.244847
+
+[node name="Protection" type="Sprite2D" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
+position = Vector2(269, 606)
+scale = Vector2(2, 2)
+texture = ExtResource("27_3bl2f")
+
+[node name="Title" type="Label" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Goal"
@@ -1545,20 +1848,20 @@ label_settings = SubResource("LabelSettings_7g7sd")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Description5" type="RichTextLabel" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Description"]
+[node name="Description5" type="RichTextLabel" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("5_h5gro")
 bbcode_enabled = true
-text = "[center]Kill the [color=#e68700]Exterminator[/color].
-Collect cards by killing enemies and opening [color=#f4b41b]Chests[/color].
-[color=#cccccc]Upgrade[/color] cards back at home using the [color=#bf7958]Workbench[/color]."
+text = "[center]Kill the         [color=#e68700]Exterminator[/color].
+Collect        [color=#f4b41b]Cards[/color] by killing enemies and opening         [color=#f4b41b]Chests[/color].
+[color=#cccccc]Upgrade[/color] cards back at home using the         [color=#bf7958]Workbench[/color]."
 fit_content = true
 
-[node name="Control2" type="Control" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Description"]
+[node name="Control2" type="Control" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
 layout_mode = 2
 
-[node name="Controls" type="Label" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Description"]
+[node name="Controls" type="Label" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Controls"
@@ -1566,7 +1869,7 @@ label_settings = SubResource("LabelSettings_7g7sd")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Description4" type="RichTextLabel" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Description"]
+[node name="Description4" type="RichTextLabel" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("5_h5gro")
@@ -1576,10 +1879,10 @@ Use a [color=#cccccc]mouse[/color] to drag-and-drop cards onto the play and disc
 [color=#cccccc]Esc[/color] opens the menu."
 fit_content = true
 
-[node name="Control3" type="Control" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Description"]
+[node name="Control3" type="Control" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
 layout_mode = 2
 
-[node name="Controls2" type="Label" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Description"]
+[node name="Controls2" type="Label" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Gameplay"
@@ -1587,19 +1890,20 @@ label_settings = SubResource("LabelSettings_7g7sd")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Description6" type="RichTextLabel" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Description"]
+[node name="Description6" type="RichTextLabel" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("5_h5gro")
 bbcode_enabled = true
-text = "[center]Use [color=#e6482e]Bonfires[/color] to reset health and deck, and manage your inventory.
-Find [color=#bf7958]Ladders[/color] to get back to the safety of your home."
+text = "[center]Cards picked up go to the inventory, not the deck!
+Use         [color=#e6482e]Bonfires[/color] to reset health and manage your deck and inventory.
+Find         [color=#bf7958]Ladders[/color] to get back to the safety of your home."
 fit_content = true
 
-[node name="Control4" type="Control" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Description"]
+[node name="Control4" type="Control" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
 layout_mode = 2
 
-[node name="Controls3" type="Label" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Description"]
+[node name="Controls3" type="Label" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Tips"
@@ -1607,13 +1911,13 @@ label_settings = SubResource("LabelSettings_7g7sd")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Description7" type="RichTextLabel" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Description"]
+[node name="Description7" type="RichTextLabel" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("5_h5gro")
 bbcode_enabled = true
-text = "[center]Upon death, you will lose all cards that are not stored in the [color=#f4b41b]Stash[/color]!
-However, cards with a [color=#cccccc]shield symbol[/color] in the top-right corner are kept."
+text = "[center]Upon death, you will lose all cards that are not stored in the          [color=#f4b41b]Stash[/color]!
+However, cards with a        [color=#cccccc]shield symbol[/color] in the top-right corner are kept."
 fit_content = true
 
 [node name="Filler" type="HBoxContainer" parent="CanvasLayer/Help/CenterContainer/InventoryPanel"]
