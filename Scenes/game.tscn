@@ -1,4 +1,4 @@
-[gd_scene load_steps=87 format=3 uid="uid://cw3o4f0nr0f2v"]
+[gd_scene load_steps=88 format=3 uid="uid://cw3o4f0nr0f2v"]
 
 [ext_resource type="Script" path="res://Scripts/Hand.cs" id="1_3ixgw"]
 [ext_resource type="Script" path="res://Scripts/Camera.cs" id="3_evct5"]
@@ -166,6 +166,12 @@ animations = [{
 "name": &"defeated",
 "speed": 12.0
 }]
+
+[sub_resource type="LabelSettings" id="LabelSettings_oatr4"]
+line_spacing = 0.0
+font = ExtResource("5_70pgm")
+font_size = 32
+font_color = Color(0.8, 0.8, 0.8, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pj7tk"]
 bg_color = Color(0.0666667, 0.0666667, 0.0666667, 1)
@@ -1221,8 +1227,7 @@ layout_mode = 2
 theme = ExtResource("5_h5gro")
 text = "Sad... but ok"
 
-[node name="Victory" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("Player", "CloseButton", "LinkButton")]
-visible = false
+[node name="Victory" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("Player", "CloseButton", "LinkButton", "PlaytimeLabel")]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 1920.0
@@ -1233,6 +1238,7 @@ script = ExtResource("16_xikg0")
 Player = NodePath("../../Player")
 CloseButton = NodePath("CenterContainer/InventoryPanel/ButtonRow2/CloseButton")
 LinkButton = NodePath("CenterContainer/InventoryPanel/ButtonRow/LinkButton")
+PlaytimeLabel = NodePath("CenterContainer/InventoryPanel/DescriptionRow2/PlaytimeLabel")
 
 [node name="Background" type="ColorRect" parent="CanvasLayer/Victory"]
 layout_mode = 1
@@ -1284,10 +1290,10 @@ layout_mode = 2
 
 [node name="DescriptionRow2" type="VBoxContainer" parent="CanvasLayer/Victory/CenterContainer/InventoryPanel"]
 layout_mode = 2
-theme_override_constants/separation = 32
+theme_override_constants/separation = 8
 
 [node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/Victory/CenterContainer/InventoryPanel/DescriptionRow2"]
-custom_minimum_size = Vector2(0, 64)
+custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 
 [node name="Sprite2D" type="AnimatedSprite2D" parent="CanvasLayer/Victory/CenterContainer/InventoryPanel/DescriptionRow2/CenterContainer"]
@@ -1298,11 +1304,27 @@ animation = &"defeated"
 frame_progress = 0.588538
 
 [node name="Description" type="Label" parent="CanvasLayer/Victory/CenterContainer/InventoryPanel/DescriptionRow2"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "You just killed the final boss in
+"
+label_settings = SubResource("LabelSettings_m4nry")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PlaytimeLabel" type="Label" parent="CanvasLayer/Victory/CenterContainer/InventoryPanel/DescriptionRow2"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0 mins"
+label_settings = SubResource("LabelSettings_oatr4")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Description2" type="Label" parent="CanvasLayer/Victory/CenterContainer/InventoryPanel/DescriptionRow2"]
 custom_minimum_size = Vector2(0, 96)
 layout_mode = 2
 size_flags_horizontal = 3
-text = "You just killed the final boss! 
-Congrats!
+text = "Congrats!
 
 If you could spare 5 more minutes, 
 it would mean a lot if you filled out 
@@ -1791,7 +1813,7 @@ scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_0eurg")
 animation = &"idle"
 autoplay = "idle"
-frame_progress = 0.225094
+frame_progress = 0.490013
 
 [node name="Chest" type="AnimatedSprite2D" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
 position = Vector2(571, 91)
@@ -1799,7 +1821,7 @@ scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_q0aas")
 animation = &"idle"
 autoplay = "idle"
-frame_progress = 0.343807
+frame_progress = 0.608725
 
 [node name="CardPickup" type="AnimatedSprite2D" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
 position = Vector2(171, 91)
@@ -1807,7 +1829,7 @@ scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_kyjdf")
 animation = &"idle"
 autoplay = "idle"
-frame_progress = 0.516987
+frame_progress = 0.781892
 
 [node name="Bonfire" type="AnimatedSprite2D" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
 position = Vector2(103, 432)
@@ -1815,7 +1837,7 @@ scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_w7kmc")
 animation = &"idle"
 autoplay = "idle"
-frame_progress = 0.569366
+frame_progress = 0.83427
 
 [node name="Workbench" type="Sprite2D" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
 position = Vector2(498, 122)
@@ -1833,7 +1855,7 @@ scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_q0aas")
 animation = &"idle"
 autoplay = "idle"
-frame_progress = 0.337218
+frame_progress = 0.602137
 
 [node name="Protection" type="Sprite2D" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
 position = Vector2(269, 606)
