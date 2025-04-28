@@ -10,6 +10,7 @@ public static class Statistics {
   public static int ChestsOpened;
   public static int DoorsOpened;
   public static int CardsCollected;
+  public static int CardsLost;
   public static int CardsUpgraded;
   public static int CardsPlayed;
   public static int TotalDamage;

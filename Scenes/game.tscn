@@ -1518,7 +1518,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("5_h5gro")
 bbcode_enabled = true
-text = "[center]Kill the [color=#e68700]Executioner[/color].
+text = "[center]Kill the [color=#e68700]Exterminator[/color].
 Collect cards by killing enemies and opening [color=#f4b41b]Chests[/color].
 [color=#cccccc]Upgrade[/color] cards back at home using the [color=#bf7958]Workbench[/color]."
 fit_content = true

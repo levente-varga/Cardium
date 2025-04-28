@@ -105,6 +105,7 @@ public partial class Dungeon {
       _dungeon.Interactables.Add(new Workbench { Position = new Vector2I(8, 1) });
       _dungeon.Interactables.Add(new Sign { Position = new Vector2I(12, 2), Text = "That way!" });
       if (Statistics.Deaths > 0) _dungeon.Interactables.Add(new Grave { Position = new Vector2I(7, 5) });
+      if (Statistics.Runs > 0) _dungeon.Interactables.Add(new Records { Position = new Vector2I(4, 2) });
       _dungeon.Player.Position = new Vector2I(5, 3);
 
       DecorateGround();
