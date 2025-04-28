@@ -1,3 +1,5 @@
+using System;
+
 namespace Cardium.Scripts;
 
 public static class Statistics {
@@ -17,4 +19,5 @@ public static class Statistics {
   public static int TotalDamage;
   public static int TotalDamageTaken;
   public static int TotalHealAmount;
+  public static DateTime StartTime = DateTime.Now;
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Godot;
 
@@ -5,7 +6,7 @@ namespace Cardium.Scripts.Interactables;
 
 public partial class Records : Interactable {
   private int _index = -1;
-  private const int MaxIndex = 16;
+  private const int MaxIndex = 17;
   private List<int> _order = new ();
 
   public override void _Ready() {
@@ -53,6 +54,7 @@ public partial class Records : Interactable {
       13 => $"Dealt {Statistics.TotalDamage} damage",
       14 => $"Received {Statistics.TotalDamageTaken} damage",
       15 => $"Nudged {Statistics.Nudges} times",
+      16 => $"Playing for {(DateTime.Now - Statistics.StartTime).Minutes} minutes",
       _ => "?",
     };
   }
