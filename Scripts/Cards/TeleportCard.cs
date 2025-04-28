@@ -5,7 +5,7 @@ using Godot;
 namespace Cardium.Scripts.Cards;
 
 public class TeleportCard : LocationTargetingCard {
-  public override int Range => new List<int> { 2, 3, 4 }[Level];
+  public override int Range => new List<int> { 2, 3, 5 }[Level];
 
   public TeleportCard() {
     Name = "Teleport";

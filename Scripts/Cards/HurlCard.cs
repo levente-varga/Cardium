@@ -5,7 +5,7 @@ using Godot;
 namespace Cardium.Scripts.Cards;
 
 public sealed class HurlCard : LocationTargetingCard {
-  private int Damage => new List<int> { 3, 5, 8, 10, 15 }[Level];
+  private int Damage => new List<int> { 3, 5, 8, 11, 17 }[Level];
   private int Radius => new List<int> { 1, 1, 1, 2, 2 }[Level];
 
   public HurlCard() {
