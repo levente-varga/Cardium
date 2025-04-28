@@ -5,7 +5,7 @@ namespace Cardium.Scripts.Interactables;
 
 public partial class Records : Interactable {
   private int _index = -1;
-  private const int MaxIndex = 14;
+  private const int MaxIndex = 16;
   private List<int> _order = new ();
 
   public override void _Ready() {
@@ -31,7 +31,7 @@ public partial class Records : Interactable {
         Utils.FisherYatesShuffle(_order);
         break;
       }
-      case > MaxIndex:
+      case >= MaxIndex:
         _index = 0;
         break;
     }
