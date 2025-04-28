@@ -22,6 +22,7 @@ public static class Global {
   public static Color Magenta => new("FF23D9");
   public static Color Purple => new("7D3CD7");
   public static Color Green => new("38D973");
+  public static Color Orange => new("E68700");
 
   public static bool Debug = false;
 }

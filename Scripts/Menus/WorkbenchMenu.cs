@@ -121,7 +121,7 @@ public partial class WorkbenchMenu : Menu {
   }
 
   private void FillSlotWithCardView(Container slotContainer, Card? card) {
-    foreach (var child in slotContainer.GetChildren()) child?.QueueFree();
+    foreach (var child in slotContainer.GetChildren()) if (child is Container) child.QueueFree();
     if (card == null) return;
     var cardContainer = new Container();
     cardContainer.SetCustomMinimumSize(Global.GlobalCardSize);

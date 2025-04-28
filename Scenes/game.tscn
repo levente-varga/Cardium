@@ -1,4 +1,4 @@
-[gd_scene load_steps=49 format=3 uid="uid://cw3o4f0nr0f2v"]
+[gd_scene load_steps=50 format=3 uid="uid://cw3o4f0nr0f2v"]
 
 [ext_resource type="Script" path="res://Scripts/Hand.cs" id="1_3ixgw"]
 [ext_resource type="Script" path="res://Scripts/Camera.cs" id="3_evct5"]
@@ -159,6 +159,19 @@ animations = [{
 "name": &"defeated",
 "speed": 12.0
 }]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pj7tk"]
+bg_color = Color(0.0666667, 0.0666667, 0.0666667, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.133333, 0.133333, 0.133333, 1)
+corner_radius_top_left = 32
+corner_radius_top_right = 32
+corner_radius_bottom_right = 32
+corner_radius_bottom_left = 32
+corner_detail = 20
 
 [sub_resource type="LabelSettings" id="LabelSettings_ybhki"]
 font = ExtResource("5_70pgm")
@@ -1018,7 +1031,7 @@ layout_mode = 2
 layout_mode = 2
 theme_override_constants/separation = 32
 
-[node name="DeathLabel" type="Label" parent="CanvasLayer/Victory/CenterContainer/InventoryPanel/LabelRow"]
+[node name="VictoryLabel" type="Label" parent="CanvasLayer/Victory/CenterContainer/InventoryPanel/LabelRow"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Victory"
@@ -1091,7 +1104,6 @@ theme = ExtResource("5_h5gro")
 text = "Not now"
 
 [node name="Workbench" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("Player", "StashContainer", "Slot1Container", "Slot2Container", "Slot3Container", "StashArea", "Slot1Area", "Slot2Area", "Slot3Area", "StashSizeLabel", "SlotSizeLabel", "CancelButton", "UpgradeButton")]
-visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_right = 1920.0
@@ -1196,7 +1208,8 @@ theme_override_constants/separation = 32
 custom_minimum_size = Vector2(0, 96)
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Only cards stored in the Stash can be used at the Workbench."
+text = "For now, only cards stored in the Stash 
+can be used at the Workbench."
 label_settings = SubResource("LabelSettings_m4nry")
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -1207,7 +1220,8 @@ custom_minimum_size = Vector2(0, 96)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 2.0
-text = "Place 3 cards of the same type and level here to upgrade them into a more powerful card."
+text = "Place 3 cards of the same type and level here to upgrade them into a more powerful card.
+Upgrades of protected cards are also protected."
 label_settings = SubResource("LabelSettings_m4nry")
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -1264,13 +1278,31 @@ alignment = 1
 custom_minimum_size = Vector2(320, 0)
 layout_mode = 2
 
+[node name="Panel" type="Panel" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel/ContentRow/WorkbenchPage/Slot1Container"]
+custom_minimum_size = Vector2(260, 360)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_pj7tk")
+
 [node name="Slot2Container" type="CenterContainer" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel/ContentRow/WorkbenchPage"]
 custom_minimum_size = Vector2(320, 0)
 layout_mode = 2
 
+[node name="Panel" type="Panel" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel/ContentRow/WorkbenchPage/Slot2Container"]
+custom_minimum_size = Vector2(260, 360)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_pj7tk")
+
 [node name="Slot3Container" type="CenterContainer" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel/ContentRow/WorkbenchPage"]
 custom_minimum_size = Vector2(320, 0)
 layout_mode = 2
+
+[node name="Panel" type="Panel" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel/ContentRow/WorkbenchPage/Slot3Container"]
+custom_minimum_size = Vector2(260, 360)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_pj7tk")
 
 [node name="ButtonRow" type="HBoxContainer" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel"]
 custom_minimum_size = Vector2(0, 64)
