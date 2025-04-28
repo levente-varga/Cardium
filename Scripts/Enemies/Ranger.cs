@@ -64,12 +64,13 @@ public partial class Ranger : Enemy {
     var indexCount = random.Next(1, 2 + Level);
     for (var i = 0; i < indexCount; i++) {
       loot.Add(
-        random.Next(110) switch {
+        random.Next(150) switch {
           < 40 => new SmiteCard(),
           < 60 => new ChainCard(),
           < 80 => new TeleportCard(),
           < 100 => new WoodenKeyCard(),
           < 110 => new GoldenKeyCard(),
+          < 150 => new ScoutCard(),
           _ => new HealCard(),
         }
       );

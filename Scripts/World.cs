@@ -217,7 +217,7 @@ public partial class World : Node2D {
       }
     }
 
-    if (Data.Fog) UpdateFogOfWar();
+    if (Data.Fog) UpdateFogOfWar(Player.Position, Player.Vision);
 
     base._Draw();
   }
@@ -283,14 +283,21 @@ public partial class World : Node2D {
     && !IsEnemy(position)
     && Player.Position != position;
 
-  private void UpdateFogOfWar() {
-    var tiles = GetTilesInRange(Player.Position, Player.Vision);
-    var edge = GetTilesExactlyInRange(Player.Position, Player.Vision + 1);
+  public void UpdateFogOfWar(Vector2I position, int vision) {
+    var tiles = GetTilesInRange(position, vision);
 
     foreach (var tile in tiles) _dungeon.FogLayer.SetCell(tile, 0, new Vector2I(2, 0));
-    foreach (var tile in edge.Where(tile => _dungeon.FogLayer.GetCellAtlasCoords(tile).X == 2)) {
+    DimFogOfWarBetweenRanges(position, vision, vision + 1);
+  }
+
+  public void DimFogOfWarBetweenRanges(Vector2I position, int near, int far, bool onlyDiscovered = true) {
+    var tiles = far - near <= 1
+      ? GetTilesExactlyInRange(position, far) 
+      : GetTilesBetweenRanges(position, near, far);
+    if (onlyDiscovered) tiles = tiles.Where(tile => _dungeon.FogLayer.GetCellAtlasCoords(tile).X == 2).ToList();
+    foreach (var tile in tiles) {
       _dungeon.FogLayer.SetCell(tile, 0, new Vector2I(1, 0));
-    }
+    } 
   }
 
   private void OnPlayerMove(Vector2I oldPosition, Vector2I newPosition) {
@@ -402,6 +409,19 @@ public partial class World : Node2D {
       .ToArray();
   }
 
+  public static List<Vector2I> GetTilesBetweenRanges(Vector2I from, int near, int far) {
+    var tiles = new List<Vector2I>();
+
+    for (var x = -far; x <= far; x++) {
+      for (var y = -(far - Math.Abs(x)); y <= far - Math.Abs(x); y++) {
+        if (Math.Abs(x) + Math.Abs(y) <= near) continue;
+        tiles.Add(from + new Vector2I(x, y));
+      }
+    }
+
+    return tiles;
+  }
+  
   public static List<Vector2I> GetTilesInRange(Vector2I from, int range) {
     var tiles = new List<Vector2I>();
 
