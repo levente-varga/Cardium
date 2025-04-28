@@ -153,7 +153,6 @@ public partial class Player : Entity {
     }
 
     Hand.DrawUntilFull();
-    TakeTurn();
   }
 
   private void SetupActionListeners() {
