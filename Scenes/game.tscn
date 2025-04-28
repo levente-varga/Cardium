@@ -1104,6 +1104,7 @@ theme = ExtResource("5_h5gro")
 text = "Not now"
 
 [node name="Workbench" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("Player", "StashContainer", "Slot1Container", "Slot2Container", "Slot3Container", "StashArea", "Slot1Area", "Slot2Area", "Slot3Area", "StashSizeLabel", "SlotSizeLabel", "CancelButton", "UpgradeButton")]
+visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_right = 1920.0
@@ -1475,7 +1476,6 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Help" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("CloseButton")]
-visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_right = 1920.0
@@ -1504,12 +1504,12 @@ grow_vertical = 2
 
 [node name="PanelBackground" type="ColorRect" parent="CanvasLayer/Help/CenterContainer"]
 clip_contents = true
-custom_minimum_size = Vector2(800, 900)
+custom_minimum_size = Vector2(720, 900)
 layout_mode = 2
 color = Color(0.0846899, 0.0846899, 0.0846899, 1)
 
 [node name="InventoryPanel" type="VBoxContainer" parent="CanvasLayer/Help/CenterContainer"]
-custom_minimum_size = Vector2(800, 900)
+custom_minimum_size = Vector2(720, 900)
 layout_mode = 2
 theme_override_constants/separation = 0
 
@@ -1572,7 +1572,7 @@ size_flags_horizontal = 3
 theme = ExtResource("5_h5gro")
 bbcode_enabled = true
 text = "[center]Use the [color=#cccccc]arrow keys[/color] or [color=#cccccc]WASD[/color] to move, and nudge objects.
-Use a mouse to drag-and-drop cards onto the play and sicard areas.
+Use a [color=#cccccc]mouse[/color] to drag-and-drop cards onto the play and discard areas.
 [color=#cccccc]Esc[/color] opens the menu."
 fit_content = true
 
