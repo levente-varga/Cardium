@@ -148,12 +148,7 @@ public partial class World : Node2D {
   }
 
   public override void _Input(InputEvent @event) {
-    if (InputMap.EventIsAction(@event, "Debug") && @event.IsPressed()) {
-      GD.Print("Debug " + (Global.Debug ? "on" : "off"));
-      Global.Debug = !Global.Debug;
-      _combatManager.UpdateDebugLabel();
-    }
-    else if (InputMap.EventIsAction(@event, "Back") && @event.IsPressed()) {
+    if (InputMap.EventIsAction(@event, "Back") && @event.IsPressed()) {
       if (!Data.MenuOpen) {
         PauseMenu.Open();
       }

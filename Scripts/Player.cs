@@ -127,22 +127,6 @@ public partial class Player : Entity {
     _moveDelayMsec = MinMoveDelayMsec + (BaseMoveDelayMsec - MinMoveDelayMsec) / ++_consecutiveMoves;
   }
 
-  public override void _Input(InputEvent @event) {
-    if (Data.MenuOpen || Hand.IsPlayingACard) return;
-
-    if (!@event.IsPressed()) return;
-
-    if (InputMap.EventIsAction(@event, "Interact")) {
-    }
-    else if (InputMap.EventIsAction(@event, "Use")) {
-    }
-    else if (InputMap.EventIsAction(@event, "Reset")) {
-      GetTree().ReloadCurrentScene();
-    }
-    else if (InputMap.EventIsAction(@event, "Skip")) {
-    }
-  }
-
   public void ReloadDeck(List<Type> except) {
     var cards = DiscardPile.Pile.GetCards();
     foreach (var card in cards) {
