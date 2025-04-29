@@ -23,25 +23,15 @@ public partial class Slime : Enemy {
     Description = "A slime enemy.";
   }
   
-  protected override List<Card> GenerateLoot() {
-    List<Card> loot = new();
-    Random random = new();
-      
-    var indexCount = random.Next(1, 2 + Level);
-    for (var i = 0; i < indexCount; i++) {
-      loot.Add(
-        random.Next(126) switch {
-          < 80 => new HealCard(),
-          < 100 => new HurlCard(),
-          < 110 => new ShuffleCard(),
-          < 120 => new WoodenKeyCard(),
-          < 125 => new GoldenKeyCard(),
-          < 126 => new GuideCard(),
-          _ => new HealCard(),
-        }
-      );
+  protected override List<Card> GenerateLoot => Utils.GenerateLoot(
+    Global.Random.Next(1, 2 + Level), 
+    new Dictionary<Type, int> {
+      { typeof(HealCard), 80 },
+      { typeof(HurlCard), 20 },
+      { typeof(ShuffleCard), 10 },
+      { typeof(WoodenKeyCard), 10 },
+      { typeof(GoldenKeyCard), 5 },
+      { typeof(GuideCard), 1 },
     }
-
-    return loot;
-  }
+  );
 }

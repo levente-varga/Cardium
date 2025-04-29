@@ -57,25 +57,15 @@ public partial class Ranger : Enemy {
     }
   }
 
-  protected override List<Card> GenerateLoot() {
-    List<Card> loot = new();
-    Random random = new();
-      
-    var indexCount = random.Next(1, 2 + Level);
-    for (var i = 0; i < indexCount; i++) {
-      loot.Add(
-        random.Next(135) switch {
-          < 40 => new SmiteCard(),
-          < 80 => new ScoutCard(),
-          < 100 => new ChainCard(),
-          < 120 => new TeleportCard(),
-          < 130 => new WoodenKeyCard(),
-          < 135 => new GoldenKeyCard(),
-          _ => new HealCard(),
-        }
-      );
+  protected override List<Card> GenerateLoot => Utils.GenerateLoot(
+    Global.Random.Next(1, 2 + Level), 
+    new Dictionary<Type, int> {
+      { typeof(SmiteCard), 40 },
+      { typeof(ScoutCard), 40 },
+      { typeof(ChainCard), 20 },
+      { typeof(TeleportCard), 20 },
+      { typeof(WoodenKeyCard), 10 },
+      { typeof(GoldenKeyCard), 5 },
     }
-
-    return loot;
-  }
+  );
 }

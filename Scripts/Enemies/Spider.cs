@@ -24,26 +24,16 @@ public partial class Spider : Enemy {
     Description = "A spider enemy.";
   }
   
-  protected override List<Card> GenerateLoot() {
-    List<Card> loot = new();
-    Random random = new();
-      
-    var indexCount = random.Next(1, 3 + Level);
-    for (var i = 0; i < indexCount; i++) {
-      loot.Add(
-        random.Next(126) switch {
-          < 40 => new HealCard(),
-          < 80 => new SmiteCard(),
-          < 95 => new HolyCard(),
-          < 110 => new ChainCard(),
-          < 120 => new WoodenKeyCard(),
-          < 125 => new GoldenKeyCard(),
-          < 126 => new GuideCard(),
-          _ => new HealCard(),
-        }
-      );
+  protected override List<Card> GenerateLoot => Utils.GenerateLoot(
+    Global.Random.Next(1, 3 + Level), 
+    new Dictionary<Type, int> {
+      { typeof(HealCard), 40 },
+      { typeof(SmiteCard), 40 },
+      { typeof(HolyCard), 15 },
+      { typeof(ChainCard), 15 },
+      { typeof(WoodenKeyCard), 10 },
+      { typeof(GoldenKeyCard), 5 },
+      { typeof(GuideCard), 1 },
     }
-
-    return loot;
-  }
+  );
 }

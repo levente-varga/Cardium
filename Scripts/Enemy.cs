@@ -24,7 +24,7 @@ public partial class Enemy : Entity {
     base._Ready();
     AddChild(Path);
     
-    Inventory.AddAll(GenerateLoot());
+    Inventory.AddAll(GenerateLoot);
 
     HealthBar.Visible = false;
     BaseCombatVision = BaseVision + 3;
@@ -83,7 +83,7 @@ public partial class Enemy : Entity {
     base.TakeTurn(player, world);
   }
 
-  protected virtual List<Card> GenerateLoot() => new ();
+  protected virtual List<Card> GenerateLoot => new ();
 
   protected override void OnDamaged(Entity source, int damage, World world) {
     Statistics.TotalDamage += damage;

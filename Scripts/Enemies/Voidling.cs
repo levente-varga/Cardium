@@ -47,26 +47,16 @@ public partial class Voidling : Enemy {
     Modulate = new Color(1, 1, 1, Stealth ? 0.25f : 1);
   }
   
-  protected override List<Card> GenerateLoot() {
-    List<Card> loot = new();
-    Random random = new();
-      
-    var indexCount = random.Next(1, 2 + Level);
-    for (var i = 0; i < indexCount; i++) {
-      loot.Add(
-        random.Next(125) switch {
-          < 20 => new GoldenKeyCard(),
-          < 60 => new HolyCard(),
-          < 80 => new SmiteCard(),
-          < 100 => new HurlCard(),
-          < 110 => new RestCard(),
-          < 120 => new GuideCard(),
-          < 125 => new EscapeCard(),
-          _ => new HealCard(),
-        }
-      );
+  protected override List<Card> GenerateLoot => Utils.GenerateLoot(
+    Global.Random.Next(1, 2 + Level), 
+    new Dictionary<Type, int> {
+      { typeof(HolyCard), 40 },
+      { typeof(GoldenKeyCard), 20 },
+      { typeof(SmiteCard), 20 },
+      { typeof(HurlCard), 20 },
+      { typeof(RestCard), 10 },
+      { typeof(GuideCard), 5 },
+      { typeof(EscapeCard), 5 },
     }
-
-    return loot;
-  }
+  );
 }

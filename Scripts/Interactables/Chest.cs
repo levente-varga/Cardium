@@ -6,7 +6,7 @@ using Godot;
 namespace Cardium.Scripts.Interactables;
 
 public partial class Chest : Interactable {
-  public readonly List<Card> Content = GenerateLoot();
+  public readonly List<Card> Content = GenerateLoot;
 
   public override void _Ready() {
     base._Ready();
@@ -27,8 +27,9 @@ public partial class Chest : Interactable {
     player.PickUpCards(Content);
   }
   
-  private static List<Card> GenerateLoot() {
-    return Utils.GenerateLoot(new Random().Next(3, 8), new Dictionary<Type, int> {
+  private static List<Card> GenerateLoot => Utils.GenerateLoot(
+    Global.Random.Next(3, 8), 
+    new Dictionary<Type, int> {
       { typeof(HealCard), 40 },
       { typeof(SmiteCard), 40 },
       { typeof(ChainCard), 40 },
@@ -38,6 +39,6 @@ public partial class Chest : Interactable {
       { typeof(RestCard), 5 },
       { typeof(EscapeCard), 5 },
       { typeof(GuideCard), 5 },
-    });
-  }
+    }
+  );
 }
