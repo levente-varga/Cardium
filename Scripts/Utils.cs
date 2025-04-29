@@ -42,4 +42,11 @@ public static class Utils {
       (list[i], list[j]) = (list[j], list[i]);
     }
   }
+
+  public static Direction VectorToDirection(Vector2 vector) {
+    if (MathF.Abs(vector.X) > MathF.Abs(vector.Y)) {
+      return vector.X > 0 ? Direction.Right : Direction.Left;
+    }
+    return vector.Y > 0 ? Direction.Down : Direction.Up;
+  }
 }

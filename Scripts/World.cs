@@ -43,17 +43,17 @@ public partial class World : Node2D {
 
   private AStarGrid2D _grid = new();
 
-  private readonly Dungeon _dungeon;
+  public readonly Dungeon Dungeon;
   private CombatManager _combatManager = null!;
 
   private int _escapeAfterFrames = -1;
 
   public World() {
-    _dungeon = Dungeon.GenerateLobby();
+    Dungeon = Dungeon.GenerateLobby();
 
-    _dungeon = Data.Level switch {
+    Dungeon = Data.Level switch {
       Level.Lobby => Dungeon.GenerateLobby(),
-      Level.One => Dungeon.Generate(99, 99, 1000),
+      Level.One => Dungeon.Generate(new Vector2I(99, 99), 1000),
       _ => throw new ArgumentOutOfRangeException()
     };
 
@@ -83,25 +83,25 @@ public partial class World : Node2D {
     }
     else {
       var target = new Node2D();
-      target.Position = Global.TileToWorld(_dungeon.Rect.GetCenter()) + 3 * Global.GlobalTileSize * Vector2I.Up;
+      target.Position = Global.TileToWorld(Dungeon.Rect.GetCenter()) + 3 * Global.GlobalTileSize * Vector2I.Up;
       AddChild(target);
       Camera.Target = target;
     }
 
-    AddChild(_dungeon.WallLayer);
-    AddChild(_dungeon.DecorLayer);
-    AddChild(_dungeon.GroundLayer);
-    AddChild(_dungeon.FogLayer);
+    AddChild(Dungeon.WallLayer);
+    AddChild(Dungeon.DecorLayer);
+    AddChild(Dungeon.GroundLayer);
+    AddChild(Dungeon.FogLayer);
 
-    _dungeon.FogLayer.ZIndex = 10;
+    Dungeon.FogLayer.ZIndex = 10;
 
-    SpawnPlayer(Player, _dungeon.Player.Position);
+    SpawnPlayer(Player, Dungeon.Player.Position);
 
-    foreach (var enemy in _dungeon.Enemies) {
+    foreach (var enemy in Dungeon.Enemies) {
       SpawnEnemy(enemy);
     }
 
-    foreach (var interactable in _dungeon.Interactables) {
+    foreach (var interactable in Dungeon.Interactables) {
       SpawnInteractable(interactable);
     }
 
@@ -122,7 +122,7 @@ public partial class World : Node2D {
     DebugLabel2.Visible = Global.Debug;
     DebugLabel3.Visible = Global.Debug;
     DebugLabel4.Visible = Global.Debug;
-    DebugLabel3.Text = "Region: " + _dungeon.Rect + "\n"
+    DebugLabel3.Text = "Region: " + Dungeon.Rect + "\n"
                        + "Hovered cell: " + HoveredCell + "\n"
                        + "Selection mode: " + _selectionMode + "\n"
                        + "Selection range: " + _selectionRange + "\n"
@@ -218,9 +218,9 @@ public partial class World : Node2D {
   }
 
   private void SetupFogOfWar() {
-    for (var x = _dungeon.Rect.Position.X; x < _dungeon.Rect.End.X; x++) {
-      for (var y = _dungeon.Rect.Position.Y; y < _dungeon.Rect.End.Y; y++) {
-        _dungeon.FogLayer.SetCell(new Vector2I(x, y), 0, new Vector2I(0, 0));
+    for (var x = Dungeon.Rect.Position.X; x < Dungeon.Rect.End.X; x++) {
+      for (var y = Dungeon.Rect.Position.Y; y < Dungeon.Rect.End.Y; y++) {
+        Dungeon.FogLayer.SetCell(new Vector2I(x, y), 0, new Vector2I(0, 0));
       }
     }
   }
@@ -234,14 +234,14 @@ public partial class World : Node2D {
   }
   
   private void SetupPathfinding() {
-    _grid.Region = _dungeon.Rect;
+    _grid.Region = Dungeon.Rect;
     _grid.CellSize = Global.GlobalTileSize;
     _grid.Offset = Vector2.Zero;
     _grid.DiagonalMode = AStarGrid2D.DiagonalModeEnum.Never;
     _grid.DefaultEstimateHeuristic = AStarGrid2D.Heuristic.Euclidean;
     _grid.Update();
 
-    foreach (var cell in _dungeon.WallLayer.GetUsedCells()) {
+    foreach (var cell in Dungeon.WallLayer.GetUsedCells()) {
       _grid.SetPointSolid(cell);
     }
   }
@@ -258,9 +258,9 @@ public partial class World : Node2D {
   public bool IsInteractable(Vector2I position) =>
     GetInteractableAt(position) != null && GetInteractableAt(position) is { Solid: true };
 
-  public bool IsWall(Vector2I position) => _dungeon.WallLayer.GetCellTileData(position) != null;
+  public bool IsWall(Vector2I position) => Dungeon.WallLayer.GetCellTileData(position) != null;
 
-  public bool IsAnyInteractableNextTo(Vector2I position) => _dungeon.Interactables.Any(i =>
+  public bool IsAnyInteractableNextTo(Vector2I position) => Dungeon.Interactables.Any(i =>
     i.Position == position + Vector2I.Right ||
     i.Position == position + Vector2I.Left ||
     i.Position == position + Vector2I.Up ||
@@ -270,7 +270,7 @@ public partial class World : Node2D {
     _combatManager.Enemies.FirstOrDefault(enemy => enemy.Position == position);
 
   public Interactable? GetInteractableAt(Vector2I position) =>
-    _dungeon.Interactables.FirstOrDefault(interactable => interactable.Position == position);
+    Dungeon.Interactables.FirstOrDefault(interactable => interactable.Position == position);
 
   public bool IsEmpty(Vector2I position) =>
     !IsWall(position)
@@ -281,7 +281,7 @@ public partial class World : Node2D {
   public void UpdateFogOfWar(Vector2I position, int vision) {
     var tiles = GetTilesInRange(position, vision);
 
-    foreach (var tile in tiles) _dungeon.FogLayer.SetCell(tile, 0, new Vector2I(2, 0));
+    foreach (var tile in tiles) Dungeon.FogLayer.SetCell(tile, 0, new Vector2I(2, 0));
     DimFogOfWarBetweenRanges(position, vision, vision + 1);
   }
 
@@ -289,9 +289,9 @@ public partial class World : Node2D {
     var tiles = far - near <= 1
       ? GetTilesExactlyInRange(position, far) 
       : GetTilesBetweenRanges(position, near, far);
-    if (onlyDiscovered) tiles = tiles.Where(tile => _dungeon.FogLayer.GetCellAtlasCoords(tile).X == 2).ToList();
+    if (onlyDiscovered) tiles = tiles.Where(tile => Dungeon.FogLayer.GetCellAtlasCoords(tile).X == 2).ToList();
     foreach (var tile in tiles) {
-      _dungeon.FogLayer.SetCell(tile, 0, new Vector2I(1, 0));
+      Dungeon.FogLayer.SetCell(tile, 0, new Vector2I(1, 0));
     } 
   }
 
@@ -313,7 +313,7 @@ public partial class World : Node2D {
     AddChild(enemy);
     enemy.SetPosition(enemy.Position);
     _combatManager.AddEnemy(enemy);
-    if (_dungeon.Rect.HasPoint(enemy.Position)) {
+    if (Dungeon.Rect.HasPoint(enemy.Position)) {
       _grid.SetPointSolid(enemy.Position);
     }
   }
@@ -334,7 +334,7 @@ public partial class World : Node2D {
     AddChild(interactable);
     interactable.SetPosition(interactable.Position);
     interactable.OnSolidityChangeEvent += OnInteractableSolidityChange;
-    if (_dungeon.Rect.HasPoint(interactable.Position)) {
+    if (Dungeon.Rect.HasPoint(interactable.Position)) {
       _grid.SetPointSolid(interactable.Position, interactable.Solid);
     }
   }
@@ -343,7 +343,7 @@ public partial class World : Node2D {
     //AddChild(player);
     player.SetPosition(position);
     player.OnMoveEvent += OnPlayerMove;
-    if (_dungeon.Rect.HasPoint(player.Position)) {
+    if (Dungeon.Rect.HasPoint(player.Position)) {
       _grid.SetPointSolid(player.Position);
     }
   }
@@ -363,12 +363,12 @@ public partial class World : Node2D {
       position + Vector2I.Right,
     };
 
-    return _dungeon.Interactables.Where(i => adjacentPositions.Contains(i.Position)).ToList().Select(i => i.Position)
+    return Dungeon.Interactables.Where(i => adjacentPositions.Contains(i.Position)).ToList().Select(i => i.Position)
       .ToList();
   }
 
   public void Interact(Vector2I position) {
-    var interactable = _dungeon.Interactables.FirstOrDefault(interactable => interactable.Position == position);
+    var interactable = Dungeon.Interactables.FirstOrDefault(interactable => interactable.Position == position);
     interactable?.OnInteract(Player, this);
   }
 
@@ -458,7 +458,7 @@ public partial class World : Node2D {
   public List<Enemy> GetEnemiesInRange(int range, Vector2I from) => _combatManager.Enemies
     .Where(enemy => Utils.ManhattanDistanceBetween(from, enemy.Position) <= range).ToList();
 
-  public List<Interactable> GetInteractablesInRange(int range, Vector2I from) => _dungeon.Interactables
+  public List<Interactable> GetInteractablesInRange(int range, Vector2I from) => Dungeon.Interactables
     .Where(interactable => Utils.ManhattanDistanceBetween(from, interactable.Position) <= range).ToList();
 
   private async Task<Enemy?> SelectEnemyTarget(int range, Vector2I from) {

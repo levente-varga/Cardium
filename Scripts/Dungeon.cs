@@ -55,9 +55,6 @@ public partial class Dungeon {
     FogLayer.TileSet = ResourceLoader.Load<TileSet>("res://Assets/TileSets/fog.tres");
   }
 
-  public static Dungeon Generate(int width, int height, int roomTries) =>
-    Generate(new Vector2I(width, height), roomTries);
-
   public static Dungeon Generate(Vector2I size, int roomTries) => new Generator().GenerateDungeon(size, roomTries);
 
   public static Dungeon GenerateLobby() => new Generator().GenerateLobbyDungeon();
@@ -105,6 +102,10 @@ public partial class Dungeon {
     GenerateBitmasks(0, 0);
   }
 
+  public void SetDecor(Vector2I tile, int sourceId, Vector2I atlasCoords) {
+    DecorLayer.SetCell(tile, sourceId, atlasCoords);
+  }
+  
   private bool IsWall(Vector2I cell) => !Rect.HasPoint(cell) || Tiles[cell.X][cell.Y] == TileTypes.Wall;
 
   private int GetWallBitmask(int x, int y) {

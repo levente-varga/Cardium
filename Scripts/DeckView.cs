@@ -64,6 +64,7 @@ public partial class DeckView : Node2D {
     Add(new WoodenKeyCard { Protected = true });
     Add(new RestCard { Protected = true });
     Add(new ShuffleCard { Protected = true });
+    Add(new GuideCard { Protected = true });
     Deck.Shuffle();
   }
 }
