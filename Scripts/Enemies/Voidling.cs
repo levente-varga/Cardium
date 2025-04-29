@@ -23,7 +23,7 @@ public partial class Voidling : Enemy {
     BaseVision = 5;
     BaseCombatVision = 7;
     BaseArmor = 0;
-    BaseDamage = new List<int> { 3, 5, 6, 7, 8 }[Level];
+    BaseDamage = new List<int> { 3, 4, 5, 6, 7 }[Level];
     BaseRange = 1;
 
     SetModulate();

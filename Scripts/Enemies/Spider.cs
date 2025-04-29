@@ -17,7 +17,7 @@ public partial class Spider : Enemy {
     Health = MaxHealth;
     BaseVision = 4;
     BaseCombatVision = 5;
-    BaseArmor = new List<int> { 0, 1, 2, 3, 4 }[Level];
+    BaseArmor = new List<int> { 0, 1, 2, 3, 5 }[Level];
     BaseDamage = new List<int> { 2, 3, 4, 5, 6 }[Level];
     BaseLuck = 0f;
     BaseRange = 1;
@@ -27,7 +27,7 @@ public partial class Spider : Enemy {
   protected override List<Card> GenerateLoot => Utils.GenerateLoot(
     Global.Random.Next(1, 3 + Level), 
     new Dictionary<Type, int> {
-      { typeof(HealCard), 40 },
+      { typeof(HurlCard), 40 },
       { typeof(SmiteCard), 40 },
       { typeof(HolyCard), 15 },
       { typeof(ChainCard), 15 },
