@@ -28,28 +28,16 @@ public partial class Chest : Interactable {
   }
   
   private static List<Card> GenerateLoot() {
-    List<Card> loot = new();
-    Random random = new();
-      
-    var indexCount = random.Next(3, 8);
-    for (var i = 0; i < indexCount; i++) {
-      loot.Add(
-        random.Next(205) switch {
-          < 40 => new HealCard(),
-          < 80 => new HurlCard(),
-          < 120 => new SmiteCard(),
-          < 140 => new ChainCard(),
-          < 160 => new ShuffleCard(),
-          < 180 => new TeleportCard(),
-          < 190 => new HolyCard(),
-          < 195 => new RestCard(),
-          < 200 => new EscapeCard(),
-          < 205 => new GuideCard(),
-          _ => new HealCard(),
-        }
-      );
-    }
-
-    return loot;
+    return Utils.GenerateLoot(new Random().Next(3, 8), new Dictionary<Type, int> {
+      { typeof(HealCard), 40 },
+      { typeof(SmiteCard), 40 },
+      { typeof(ChainCard), 40 },
+      { typeof(ShuffleCard), 20 },
+      { typeof(TeleportCard), 20 },
+      { typeof(HolyCard), 10 },
+      { typeof(RestCard), 5 },
+      { typeof(EscapeCard), 5 },
+      { typeof(GuideCard), 5 },
+    });
   }
 }

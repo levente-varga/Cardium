@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Cardium.Scripts.Cards;
 using Cardium.Scripts.Labels;
 using Godot;
 
@@ -48,5 +49,29 @@ public static class Utils {
       return vector.X > 0 ? Direction.Right : Direction.Left;
     }
     return vector.Y > 0 ? Direction.Down : Direction.Up;
+  }
+
+  public static List<Card> GenerateLoot(int amount, Dictionary<Type, int> dropRate) {
+    List<Card> loot = new();
+    Random random = new();
+
+    var total = 0;
+    foreach (var entry in dropRate) {
+      if (typeof(Card).IsAssignableFrom(entry.Key)) total += entry.Value;
+      else dropRate.Remove(entry.Key);
+    }
+    
+    for (var i = 0; i < amount; i++) {
+      var selection = random.Next(total);
+      var current = 0;
+      foreach (var entry in dropRate) {
+        current += entry.Value;
+        if (selection >= current) continue;
+        loot.Add((Card)Activator.CreateInstance(entry.Key)!);
+        break;
+      }
+    }
+    
+    return loot;
   }
 }
