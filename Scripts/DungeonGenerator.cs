@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Cardium.Scripts.Cards;
 using Cardium.Scripts.Enemies;
 using Cardium.Scripts.Interactables;
 using Godot;
@@ -20,9 +19,7 @@ public partial class Dungeon {
     private static readonly List<Vector2I> Directions = new() {
       Vector2I.Down, Vector2I.Up, Vector2I.Left, Vector2I.Right
     };
-
-    private readonly Random _random = new();
-
+    
     /// For each open position in the dungeon, the index of the connected region
     /// that that position is a part of.
     private readonly List<List<int>> _regions = new();
@@ -133,11 +130,11 @@ public partial class Dungeon {
           // Based on how "windy" passages are, try to prefer carving in the
           // same direction.
           Vector2I direction;
-          if (unmadeCells.Contains(lastDirection) && _random.Next(100) > WindingPercent) {
+          if (unmadeCells.Contains(lastDirection) && Global.Random.Next(100) > WindingPercent) {
             direction = lastDirection;
           }
           else {
-            direction = unmadeCells[_random.Next(0, unmadeCells.Count)];
+            direction = unmadeCells[Global.Random.Next(0, unmadeCells.Count)];
           }
 
           Carve(cell + direction);
@@ -163,11 +160,11 @@ public partial class Dungeon {
       }
 
       for (var i = 0; i < NumRoomTries; i++) {
-        var size = _random.Next(1, 3 + RoomExtraSize) * 2 + 1;
-        var rectangularity = _random.Next(0, 1 + size / 2) * 2;
+        var size = Global.Random.Next(1, 3 + RoomExtraSize) * 2 + 1;
+        var rectangularity = Global.Random.Next(0, 1 + size / 2) * 2;
         var width = size;
         var height = size;
-        if (_random.Next(0, 2) == 0) {
+        if (Global.Random.Next(0, 2) == 0) {
           width += rectangularity;
         }
         else {
@@ -182,8 +179,8 @@ public partial class Dungeon {
 
     private bool PlaceRoom(Vector2I size) {
       Vector2I position = new(
-        _random.Next(0, (_dungeon.Rect.Size.X - size.X) / 2) * 2 + 1,
-        _random.Next(0, (_dungeon.Rect.Size.Y - size.Y) / 2) * 2 + 1
+        Global.Random.Next(0, (_dungeon.Rect.Size.X - size.X) / 2) * 2 + 1,
+        Global.Random.Next(0, (_dungeon.Rect.Size.Y - size.Y) / 2) * 2 + 1
       );
 
       var room = new Room {
@@ -261,7 +258,7 @@ public partial class Dungeon {
 
       // Keep connecting regions until we're down to one.
       while (openRegions.Count > 1) {
-        var index = _random.Next(0, connectors.Count);
+        var index = Global.Random.Next(0, connectors.Count);
         var connector = connectors[index];
 
         // Carve the connection.
@@ -298,7 +295,7 @@ public partial class Dungeon {
 
           if (adjacentRegions.Count > 1) return false;
 
-          if (_random.Next(ExtraConnectorChance) == 0) AddJunction(pos);
+          if (Global.Random.Next(ExtraConnectorChance) == 0) AddJunction(pos);
 
           return true;
         });
@@ -416,11 +413,11 @@ public partial class Dungeon {
             spawnRoomPicked = true;
           }
           else {
-            if (_random.Next((int)Mathf.Pow(exits * 2f, 2)) == 0) {
+            if (Global.Random.Next((int)Mathf.Pow(exits * 2f, 2)) == 0) {
               exits++;
               room.Type = RoomTypes.Exit;
             }
-            else if (_random.Next((int)Mathf.Pow(bonfires, 1.2f)) == 0) {
+            else if (Global.Random.Next((int)Mathf.Pow(bonfires, 1.2f)) == 0) {
               bonfires++;
               room.Type = RoomTypes.Bonfire;
             }
@@ -461,7 +458,7 @@ public partial class Dungeon {
             _ => 1
           };
 
-          var random = _random.Next(100);
+          var random = Global.Random.Next(100);
           random = (int)(random * factor);
 
           switch (random) {
@@ -477,7 +474,7 @@ public partial class Dungeon {
     private void PlaceEnemies() {
       bool bossPlaced = false;
       foreach (var room in _dungeon.Rooms.Where(room => room.Type == RoomTypes.Uncategorized)) {
-        var enemyCount = _random.Next(room.Rect.Grow(-1).Area / 4) + 1;
+        var enemyCount = Global.Random.Next(room.Rect.Grow(-1).Area / 4) + 1;
         var usedTiles = new List<Vector2I>();
 
         if (!bossPlaced) enemyCount = 1;
@@ -486,13 +483,13 @@ public partial class Dungeon {
           Vector2I tile;
           do {
             tile = new Vector2I(
-              _random.Next(room.Rect.Position.X + 1, room.Rect.End.X - 2),
-              _random.Next(room.Rect.Position.Y + 1, room.Rect.End.Y - 2)
+              Global.Random.Next(room.Rect.Position.X + 1, room.Rect.End.X - 2),
+              Global.Random.Next(room.Rect.Position.Y + 1, room.Rect.End.Y - 2)
             );
           } while (usedTiles.Contains(tile));
 
           Enemy enemy;
-          var level = _random.Next(100) switch {
+          var level = Global.Random.Next(100) switch {
             < 50 => 0,
             < 75 => 1,
             < 90 => 2,
@@ -505,7 +502,7 @@ public partial class Dungeon {
             bossPlaced = true;
           }
           else {
-            enemy = _random.Next(100) switch {
+            enemy = Global.Random.Next(100) switch {
               < 50 => new Slime { Level = level },
               < 80 => new Spider { Level = level },
               < 90 => new Ranger { Level = level },
@@ -525,7 +522,7 @@ public partial class Dungeon {
       for (var x = 0; x < _dungeon.Rect.Size.X; x++) {
         for (var y = 0; y < _dungeon.Rect.Size.Y; y++) {
           if (_dungeon.Tiles[x][y] != TileTypes.Entrance) continue;
-          if (_random.Next(doors + 2) > 0) continue;
+          if (Global.Random.Next(doors + 2) > 0) continue;
           Door door = new() { Position = new Vector2I(x, y) };
           _dungeon.Interactables.Add(door);
           doors++;
@@ -538,7 +535,7 @@ public partial class Dungeon {
         var tileCandidates = GetRoomInteriorTiles(room);
 
         Bonfire bonfire = new();
-        bonfire.Position = tileCandidates[_random.Next(tileCandidates.Count)];
+        bonfire.Position = tileCandidates[Global.Random.Next(tileCandidates.Count)];
         _dungeon.Interactables.Add(bonfire);
       }
     }
@@ -546,11 +543,11 @@ public partial class Dungeon {
     private void PlaceChests() {
       var chests = 0;
       foreach (var room in _dungeon.Rooms.Where(room => room.Type == RoomTypes.Uncategorized)) {
-        if (_random.Next(chests / 2) > 0) continue;
+        if (Global.Random.Next(chests / 2) > 0) continue;
         var tileCandidates = GetRoomPerimeterTiles(room);
         if (tileCandidates.Count == 0) continue;
         Chest chest = new();
-        chest.Position = tileCandidates[_random.Next(tileCandidates.Count)];
+        chest.Position = tileCandidates[Global.Random.Next(tileCandidates.Count)];
         _dungeon.Interactables.Add(chest);
         chests++;
       }
@@ -561,7 +558,7 @@ public partial class Dungeon {
         var tileCandidates = GetRoomInteriorTiles(room);
 
         Ladder ladder = new();
-        ladder.Position = tileCandidates[_random.Next(tileCandidates.Count)];
+        ladder.Position = tileCandidates[Global.Random.Next(tileCandidates.Count)];
         _dungeon.Interactables.Add(ladder);
       }
     }
@@ -576,7 +573,7 @@ public partial class Dungeon {
       if (room == null) return;
       var tileCandidates = GetRoomInteriorTiles(room);
 
-      _dungeon.Player.Position = tileCandidates[_random.Next(tileCandidates.Count)];
+      _dungeon.Player.Position = tileCandidates[Global.Random.Next(tileCandidates.Count)];
     }
 
     private List<Vector2I> GetRoomInteriorTiles(Room room) {

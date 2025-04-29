@@ -6,7 +6,7 @@ public partial class FallingLabel : DisappearingLabel {
   private Vector2 _velocity = new(0, 0);
 
   public override void _Ready() {
-    _velocity = new Vector2(Random.Next(80, 100), Random.Next(-500, -400));
+    _velocity = new Vector2(Global.Random.Next(80, 100), Global.Random.Next(-500, -400));
 
     base._Ready();
   }

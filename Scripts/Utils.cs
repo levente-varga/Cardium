@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Cardium.Scripts.Cards;
 using Cardium.Scripts.Labels;
 using Godot;
 
@@ -37,9 +36,8 @@ public static class Utils {
   public static void FisherYatesShuffle<T>(List<T> list) {
     if (list.Count < 2) return;
 
-    var random = new Random();
     for (var i = list.Count - 1; i > 0; i--) {
-      var j = random.Next(0, i);
+      var j = Global.Random.Next(0, i);
       (list[i], list[j]) = (list[j], list[i]);
     }
   }
@@ -53,7 +51,6 @@ public static class Utils {
 
   public static List<Card> GenerateLoot(int amount, Dictionary<Type, int> dropRate) {
     List<Card> loot = new();
-    Random random = new();
 
     var total = 0;
     foreach (var entry in dropRate) {
@@ -62,7 +59,7 @@ public static class Utils {
     }
     
     for (var i = 0; i < amount; i++) {
-      var selection = random.Next(total);
+      var selection = Global.Random.Next(total);
       var current = 0;
       foreach (var entry in dropRate) {
         current += entry.Value;

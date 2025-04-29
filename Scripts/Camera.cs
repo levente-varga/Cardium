@@ -8,7 +8,6 @@ public partial class Camera : Camera2D {
   [Export] public CanvasLayer Canvas = null!;
 
   private float _shake;
-  private readonly Random _random = new();
 
   private Vector2 TargetCenter => Target.GlobalPosition + Global.GlobalTileSize / 2;
 
@@ -53,8 +52,8 @@ public partial class Camera : Camera2D {
 
   private void Shake(double delta) {
     var offset = new Vector2(
-      (float)(_random.NextDouble() * 2 - 1),
-      (float)(_random.NextDouble() * 2 - 1)
+      (float)(Global.Random.NextDouble() * 2 - 1),
+      (float)(Global.Random.NextDouble() * 2 - 1)
     );
     if (offset == Vector2.Zero) offset = Vector2.One;
     offset = offset.Normalized() * _shake;

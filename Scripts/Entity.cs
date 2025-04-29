@@ -89,7 +89,7 @@ public partial class Entity : TileAlignedGameObject {
 
     Blink();
     
-    if (new Random().Next(100) < Luck) {
+    if (Global.Random.Next(100) < Luck) {
       SpawnFallingLabel("Miss!");
       OnDamagedEvent?.Invoke(this, 0);
       return;

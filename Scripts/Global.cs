@@ -1,8 +1,11 @@
+using System;
 using Godot;
 
 namespace Cardium.Scripts;
 
 public static class Global {
+  public static readonly Random Random = new();
+  
   public static Vector2I TileSize => new(16, 16);
   public static Vector2I CardSize => new(38, 54);
   public const int TileScale = 4;
