@@ -1847,7 +1847,7 @@ scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_0eurg")
 animation = &"idle"
 autoplay = "idle"
-frame_progress = 0.8348
+frame_progress = 0.117004
 
 [node name="Chest" type="AnimatedSprite2D" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
 position = Vector2(571, 91)
@@ -1855,7 +1855,7 @@ scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_q0aas")
 animation = &"idle"
 autoplay = "idle"
-frame_progress = 0.953548
+frame_progress = 0.235749
 
 [node name="CardPickup" type="AnimatedSprite2D" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
 position = Vector2(171, 91)
@@ -1863,7 +1863,7 @@ scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_kyjdf")
 animation = &"idle"
 autoplay = "idle"
-frame_progress = 0.126496
+frame_progress = 0.408691
 
 [node name="Bonfire" type="AnimatedSprite2D" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
 position = Vector2(103, 432)
@@ -1871,7 +1871,7 @@ scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_w7kmc")
 animation = &"idle"
 autoplay = "idle"
-frame_progress = 0.178827
+frame_progress = 0.46102
 
 [node name="Workbench" type="Sprite2D" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
 position = Vector2(498, 122)
@@ -1889,10 +1889,10 @@ scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_q0aas")
 animation = &"idle"
 autoplay = "idle"
-frame_progress = 0.946966
+frame_progress = 0.229167
 
 [node name="Protection" type="Sprite2D" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
-position = Vector2(269, 606)
+position = Vector2(267, 606)
 scale = Vector2(2, 2)
 texture = ExtResource("27_3bl2f")
 
@@ -1973,7 +1973,7 @@ size_flags_horizontal = 3
 theme = ExtResource("5_h5gro")
 bbcode_enabled = true
 text = "[center]Upon death, you will lose all cards that are not stored in the          [color=#f4b41b]Stash[/color]!
-However, cards with a        [color=#cccccc]shield symbol[/color] in the top-right corner are kept."
+However, cards with a        [color=#cccccc]Shield symbol[/color] in the top-right corner are kept."
 fit_content = true
 
 [node name="Filler" type="HBoxContainer" parent="CanvasLayer/Help/CenterContainer/InventoryPanel"]
