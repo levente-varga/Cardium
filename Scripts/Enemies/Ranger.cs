@@ -21,7 +21,7 @@ public partial class Ranger : Enemy {
     BaseCombatVision = 7;
     BaseArmor = new List<int> { 0, 0, 1, 1, 2 }[Level];
     BaseDamage = new List<int> { 1, 2, 2, 3, 3 }[Level];
-    BaseRange = new List<int> { 2, 3, 3, 4, 4 }[Level];
+    BaseRange = new List<int> { 3, 3, 3, 3, 3 }[Level];
   }
 
   protected override void TakeTurn(Player player, World world) {
@@ -64,13 +64,13 @@ public partial class Ranger : Enemy {
     var indexCount = random.Next(1, 2 + Level);
     for (var i = 0; i < indexCount; i++) {
       loot.Add(
-        random.Next(150) switch {
+        random.Next(135) switch {
           < 40 => new SmiteCard(),
-          < 60 => new ChainCard(),
-          < 80 => new TeleportCard(),
-          < 100 => new WoodenKeyCard(),
-          < 110 => new GoldenKeyCard(),
-          < 150 => new ScoutCard(),
+          < 80 => new ScoutCard(),
+          < 100 => new ChainCard(),
+          < 120 => new TeleportCard(),
+          < 130 => new WoodenKeyCard(),
+          < 135 => new GoldenKeyCard(),
           _ => new HealCard(),
         }
       );

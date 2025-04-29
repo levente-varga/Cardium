@@ -34,7 +34,7 @@ public partial class Chest : Interactable {
     var indexCount = random.Next(3, 8);
     for (var i = 0; i < indexCount; i++) {
       loot.Add(
-        random.Next(215) switch {
+        random.Next(205) switch {
           < 40 => new HealCard(),
           < 80 => new HurlCard(),
           < 120 => new SmiteCard(),
@@ -42,10 +42,9 @@ public partial class Chest : Interactable {
           < 160 => new ShuffleCard(),
           < 180 => new TeleportCard(),
           < 190 => new HolyCard(),
-          < 200 => new WoodenKeyCard(),
-          < 205 => new RestCard(),
-          < 210 => new EscapeCard(),
-          < 215 => new GoldenKeyCard(),
+          < 195 => new RestCard(),
+          < 200 => new EscapeCard(),
+          < 205 => new GuideCard(),
           _ => new HealCard(),
         }
       );

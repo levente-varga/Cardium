@@ -54,13 +54,14 @@ public partial class Voidling : Enemy {
     var indexCount = random.Next(1, 2 + Level);
     for (var i = 0; i < indexCount; i++) {
       loot.Add(
-        random.Next(120) switch {
-          < 40 => new GoldenKeyCard(),
+        random.Next(125) switch {
+          < 20 => new GoldenKeyCard(),
           < 60 => new HolyCard(),
           < 80 => new SmiteCard(),
           < 100 => new HurlCard(),
           < 110 => new RestCard(),
-          < 120 => new EscapeCard(),
+          < 120 => new GuideCard(),
+          < 125 => new EscapeCard(),
           _ => new HealCard(),
         }
       );

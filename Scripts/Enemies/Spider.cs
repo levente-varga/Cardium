@@ -31,12 +31,14 @@ public partial class Spider : Enemy {
     var indexCount = random.Next(1, 3 + Level);
     for (var i = 0; i < indexCount; i++) {
       loot.Add(
-        random.Next(100) switch {
-          < 40 => new SmiteCard(),
-          < 55 => new HolyCard(),
-          < 70 => new ChainCard(),
-          < 90 => new WoodenKeyCard(),
-          < 100 => new GoldenKeyCard(),
+        random.Next(126) switch {
+          < 40 => new HealCard(),
+          < 80 => new SmiteCard(),
+          < 95 => new HolyCard(),
+          < 110 => new ChainCard(),
+          < 120 => new WoodenKeyCard(),
+          < 125 => new GoldenKeyCard(),
+          < 126 => new GuideCard(),
           _ => new HealCard(),
         }
       );

@@ -5,14 +5,14 @@ using Godot;
 namespace Cardium.Scripts.Cards;
 
 public sealed class HurlCard : LocationTargetingCard {
-  private int Damage => new List<int> { 3, 5, 8, 11, 17 }[Level];
-  private int Radius => new List<int> { 1, 1, 1, 2, 2 }[Level];
+  private int Damage => new List<int> { 3, 5, 9, 20 }[Level];
+  private int Radius => new List<int> { 1, 1, 2, 3}[Level];
+  public override int Range => new List<int> { 3, 3, 4, 5 }[Level];
 
   public HurlCard() {
     Name = "Hurl";
     Rarity = CardRarity.Common;
-    Range = 3;
-    MaxLevel = 4;
+    MaxLevel = 3;
     Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Hurl.png");
     Type = CardType.Combat;
     UpdateDescription();

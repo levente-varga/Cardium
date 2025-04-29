@@ -492,11 +492,11 @@ public partial class Dungeon {
           } while (usedTiles.Contains(tile));
 
           Enemy enemy;
-          var level = _random.Next(25) switch {
-            < 13 => 0,
-            < 19 => 1,
-            < 23 => 2,
-            < 25 => 3,
+          var level = _random.Next(100) switch {
+            < 50 => 0,
+            < 75 => 1,
+            < 90 => 2,
+            < 98 => 3,
             _ => 4
           };
 
@@ -505,10 +505,10 @@ public partial class Dungeon {
             bossPlaced = true;
           }
           else {
-            enemy = _random.Next(25) switch {
-              < 9 => new Slime { Level = level },
-              < 17 => new Spider { Level = level },
-              < 22 => new Ranger { Level = level },
+            enemy = _random.Next(100) switch {
+              < 50 => new Slime { Level = level },
+              < 80 => new Spider { Level = level },
+              < 90 => new Ranger { Level = level },
               _ => new Voidling { Level = level },
             };
           }
@@ -599,34 +599,6 @@ public partial class Dungeon {
       }
 
       return tiles;
-    }
-    
-    private List<Card> GenerateChestLoot() {
-      List<Card> loot = new();
-      
-      var indexCount = _random.Next(3, 8);
-      for (var i = 0; i < indexCount; i++) {
-        var index = _random.Next(215);
-        
-        loot.Add(
-          index switch {
-            < 40 => new HealCard(),
-            < 80 => new HurlCard(),
-            < 120 => new SmiteCard(),
-            < 140 => new ChainCard(),
-            < 160 => new ShuffleCard(),
-            < 180 => new TeleportCard(),
-            < 190 => new HolyCard(),
-            < 200 => new WoodenKeyCard(),
-            < 205 => new RestCard(),
-            < 210 => new EscapeCard(),
-            < 215 => new GoldenKeyCard(),
-            _ => new HealCard(),
-          }
-        );
-      }
-
-      return loot;
     }
   }
 }

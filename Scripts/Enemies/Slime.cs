@@ -30,12 +30,13 @@ public partial class Slime : Enemy {
     var indexCount = random.Next(1, 2 + Level);
     for (var i = 0; i < indexCount; i++) {
       loot.Add(
-        random.Next(125) switch {
+        random.Next(126) switch {
           < 80 => new HealCard(),
           < 100 => new HurlCard(),
           < 110 => new ShuffleCard(),
           < 120 => new WoodenKeyCard(),
           < 125 => new GoldenKeyCard(),
+          < 126 => new GuideCard(),
           _ => new HealCard(),
         }
       );

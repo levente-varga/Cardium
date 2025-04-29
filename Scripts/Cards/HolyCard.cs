@@ -5,14 +5,14 @@ using Godot;
 namespace Cardium.Scripts.Cards;
 
 public sealed class HolyCard : LocationTargetingCard {
-  private int Radius => new List<int> { 2, 2, 3, 3, 4 }[Level];
-  private int TotalDamage => new List<int> { 10, 16, 26, 39, 60 }[Level];
+  private int Radius => new List<int> { 2, 2, 3, 4 }[Level];
+  private int TotalDamage => new List<int> { 10, 16, 27, 50 }[Level];
 
   public HolyCard() {
     Name = "Holy";
     Rarity = CardRarity.Epic;
     Range = 3;
-    MaxLevel = 4;
+    MaxLevel = 3;
     Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Holy.png");
     Type = CardType.Combat;
     UpdateDescription();

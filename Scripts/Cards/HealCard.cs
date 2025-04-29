@@ -5,12 +5,12 @@ using Godot;
 namespace Cardium.Scripts.Cards;
 
 public class HealCard : PlayerTargetingCard {
-  private int HealAmount => new List<int> { 2, 3, 5, 7, 10 }[Level];
+  private int HealAmount => new List<int> { 2, 4, 7, 10 }[Level];
 
   public HealCard() {
     Name = "Heal";
     Rarity = CardRarity.Common;
-    MaxLevel = 4;
+    MaxLevel = 3;
     Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Heal.png");
     Type = CardType.Combat;
     UpdateDescription();

@@ -5,13 +5,13 @@ using Godot;
 namespace Cardium.Scripts.Cards;
 
 public sealed class SmiteCard : EnemyTargetingCard {
-  private int Damage => new List<int> { 5, 8, 13, 20, 30 }[Level];
+  private int Damage => new List<int> { 5, 9, 16, 30 }[Level];
+  public override int Range => new List<int> { 3, 3, 4, 5 }[Level];
 
   public SmiteCard() {
     Name = "Smite";
     Rarity = CardRarity.Common;
-    Range = 3;
-    MaxLevel = 4;
+    MaxLevel = 3;
     Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Smite.png");
     Type = CardType.Combat;
     UpdateDescription();

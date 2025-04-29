@@ -5,12 +5,12 @@ using Godot;
 namespace Cardium.Scripts.Cards;
 
 public class TeleportCard : LocationTargetingCard {
-  public override int Range => new List<int> { 2, 3, 5 }[Level];
+  public override int Range => new List<int> { 2, 3, 4, 5 }[Level];
 
   public TeleportCard() {
     Name = "Teleport";
     Rarity = CardRarity.Epic;
-    MaxLevel = 2;
+    MaxLevel = 3;
     Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Teleport.png");
     Type = CardType.Combat;
     UpdateDescription();

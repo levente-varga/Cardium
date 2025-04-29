@@ -6,17 +6,17 @@ using Godot;
 namespace Cardium.Scripts.Cards;
 
 public sealed class ChainCard : EnemyTargetingCard {
-  private int Damage => new List<int> { 2, 3, 4, 5, 6 }[Level];
-  private int BounceRange => new List<int> { 2, 2, 3, 3, 4 }[Level];
-  private int Bounces => new List<int> { 1, 2, 2, 3, 4 }[Level];
+  private int Damage => new List<int> { 3, 5, 8, 15 }[Level];
+  private int BounceRange => new List<int> { 3, 3, 4, 5 }[Level];
+  private int Bounces => new List<int> { 1, 2, 2, 3 }[Level];
+  public override int Range => new List<int> { 3, 3, 4, 5 }[Level];
 
   private readonly Random _random = new();
 
   public ChainCard() {
     Name = "Chain";
     Rarity = CardRarity.Epic;
-    MaxLevel = 4;
-    Range = 3;
+    MaxLevel = 3;
     Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Chain.png");
     Type = CardType.Combat;
     UpdateDescription();

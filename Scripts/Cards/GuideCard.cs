@@ -1,7 +1,6 @@
 using System.Linq;
 using Cardium.Scripts.Cards.Types;
 using Cardium.Scripts.Enemies;
-using Cardium.Scripts.Interactables;
 using Godot;
 
 namespace Cardium.Scripts.Cards;
