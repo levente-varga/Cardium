@@ -104,10 +104,22 @@ public partial class Entity : TileAlignedGameObject {
   }
 
   protected virtual void OnDamaged(Entity source, int damage, World world) {
-    OnDamagedEvent?.Invoke(this, damage);
+    var remainingDamage = Math.Max(1, damage - BaseArmor);;
+    
+    if (Shield > 0) {
+      var shieldedDamage = Mathf.Max(remainingDamage, Shield);
+      remainingDamage -= shieldedDamage;
+      if (shieldedDamage <= Shield) {
+        Shield -= shieldedDamage;
+        return;
+      }
+      Shield = 0;
+    }
 
-    Health -= Math.Max(1, damage - BaseArmor);
+    Health -= remainingDamage;
     if (Health <= 0) OnDeath(source, world);
+    
+    OnDamagedEvent?.Invoke(this, damage);
   }
 
   protected virtual void OnDeath(Entity source, World world) {
