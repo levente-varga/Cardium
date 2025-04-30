@@ -52,6 +52,8 @@ public static class Utils {
   public static List<Card> GenerateLoot(int amount, Dictionary<Type, int> dropRate) {
     List<Card> loot = new();
 
+    bool isProtection = Global.Random.Next(100) == 0;
+
     var total = 0;
     foreach (var entry in dropRate) {
       if (typeof(Card).IsAssignableFrom(entry.Key)) total += entry.Value;
