@@ -16,6 +16,13 @@ public partial class CardView : Node2D {
     Grow,
     Slide,
   }
+  
+  public enum CardOrigin {
+    None,
+    Deck,
+    Stash,
+    Inventory,
+  }
 
   [Export] private Node2D _hoverBase = null!;
   [Export] private Node2D _base = null!;
@@ -27,10 +34,27 @@ public partial class CardView : Node2D {
   [Export] private Node2D _levelContainer = null!;
   [Export] private Sprite2D _protection = null!;
   [Export] private Sprite2D _levelPlaceholder = null!;
+  [Export] private Sprite2D _originIndicator = null!;
+  [Export] private Sprite2D _originSprite = null!;
   public Card Card = null!;
 
   public bool Enabled = true;
   public bool Draggable = true;
+  private CardOrigin _origin;
+
+  public CardOrigin Origin {
+    get => _origin;
+    set {
+      _origin = value;
+      _originIndicator.Visible = value != CardOrigin.None;
+      _originSprite.Texture = _origin switch {
+        CardOrigin.Deck => ResourceLoader.Load<Texture2D>("res://Assets/Sprites/Symbols/DeckSymbol.png"),
+        CardOrigin.Stash => ResourceLoader.Load<Texture2D>("res://Assets/Sprites/Symbols/StashSymbol.png"),
+        CardOrigin.Inventory => ResourceLoader.Load<Texture2D>("res://Assets/Sprites/Symbols/InventorySymbol.png"),
+        _ => throw new ArgumentOutOfRangeException()
+      };
+    }
+  }
 
   public HoverAnimationType HoverAnimation = HoverAnimationType.Slide;
   private CardState _state;
@@ -78,6 +102,8 @@ public partial class CardView : Node2D {
     _descriptionLabel.Text = $"[center]{Card.Description}[/center]";
 
     _nameLabel.Text = Card.Name;
+    
+    _originIndicator.Visible = _origin != CardOrigin.None;
 
     SetupLevelMarker();
     SetupProtectionMarker();

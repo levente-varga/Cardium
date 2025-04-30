@@ -1,4 +1,4 @@
-[gd_scene load_steps=88 format=3 uid="uid://cw3o4f0nr0f2v"]
+[gd_scene load_steps=91 format=3 uid="uid://cw3o4f0nr0f2v"]
 
 [ext_resource type="Script" path="res://Scripts/Hand.cs" id="1_3ixgw"]
 [ext_resource type="Script" path="res://Scripts/Camera.cs" id="3_evct5"]
@@ -16,6 +16,9 @@
 [ext_resource type="Script" path="res://Scripts/Menus/PauseMenu.cs" id="13_m0npp"]
 [ext_resource type="Script" path="res://Scripts/Menus/DeathMenu.cs" id="14_cokq3"]
 [ext_resource type="Texture2D" uid="uid://bd4kysgx8xwup" path="res://Assets/Sprites/Grave.png" id="14_k82d4"]
+[ext_resource type="Texture2D" uid="uid://bxmwo7rg2dt56" path="res://Assets/Sprites/Symbols/StashSymbol.png" id="14_st5ht"]
+[ext_resource type="Texture2D" uid="uid://cn7bi0x41vy8a" path="res://Assets/Sprites/Symbols/InventorySymbol.png" id="15_he6bv"]
+[ext_resource type="Texture2D" uid="uid://cnlc1otlj1kfs" path="res://Assets/Sprites/Symbols/DeckSymbol.png" id="16_gr7jj"]
 [ext_resource type="Script" path="res://Scripts/Menus/WorkbenchMenu.cs" id="16_t46n8"]
 [ext_resource type="Script" path="res://Scripts/Menus/VictoryMenu.cs" id="16_xikg0"]
 [ext_resource type="Texture2D" uid="uid://2omjmpddb04r" path="res://Assets/Animations/ExterminatorDefeated.png" id="17_mrkco"]
@@ -829,7 +832,6 @@ label_settings = SubResource("LabelSettings_khtd6")
 vertical_alignment = 1
 
 [node name="Inventory" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("Player", "StashContainer", "InventoryContainer", "DeckContainer", "StashArea", "InventoryArea", "DeckArea", "StashSizeLabel", "InventorySizeLabel", "DeckSizeLabel", "OkButton")]
-visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_right = 1920.0
@@ -885,29 +887,46 @@ theme_override_constants/separation = 32
 custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Stash
-"
+text = "    Stash"
 label_settings = SubResource("LabelSettings_r4kvp")
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="Symbol" type="Sprite2D" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/LabelRow/StashLabel"]
+position = Vector2(208, 16)
+scale = Vector2(2, 2)
+texture = ExtResource("14_st5ht")
+centered = false
 
 [node name="InventoryLabel" type="Label" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/LabelRow"]
 custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Inventory"
+text = "    Inventory"
 label_settings = SubResource("LabelSettings_r4kvp")
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="Symbol" type="Sprite2D" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/LabelRow/InventoryLabel"]
+position = Vector2(176, 16)
+scale = Vector2(2, 2)
+texture = ExtResource("15_he6bv")
+centered = false
 
 [node name="DeckLabel" type="Label" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/LabelRow"]
 custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Deck"
+text = "    Deck"
 label_settings = SubResource("LabelSettings_r4kvp")
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="Symbol" type="Sprite2D" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/LabelRow/DeckLabel"]
+position = Vector2(214, 16)
+scale = Vector2(2, 2)
+texture = ExtResource("16_gr7jj")
+centered = false
 
 [node name="NumbersRow" type="HBoxContainer" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel"]
 layout_mode = 2
@@ -1772,6 +1791,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Help" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("CloseButton")]
+visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_right = 1920.0
@@ -1847,7 +1867,7 @@ scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_0eurg")
 animation = &"idle"
 autoplay = "idle"
-frame_progress = 0.117004
+frame_progress = 0.414311
 
 [node name="Chest" type="AnimatedSprite2D" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
 position = Vector2(571, 91)
@@ -1855,7 +1875,7 @@ scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_q0aas")
 animation = &"idle"
 autoplay = "idle"
-frame_progress = 0.235749
+frame_progress = 0.533035
 
 [node name="CardPickup" type="AnimatedSprite2D" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
 position = Vector2(171, 91)
@@ -1863,7 +1883,7 @@ scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_kyjdf")
 animation = &"idle"
 autoplay = "idle"
-frame_progress = 0.408691
+frame_progress = 0.705956
 
 [node name="Bonfire" type="AnimatedSprite2D" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
 position = Vector2(103, 432)
@@ -1871,7 +1891,7 @@ scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_w7kmc")
 animation = &"idle"
 autoplay = "idle"
-frame_progress = 0.46102
+frame_progress = 0.758287
 
 [node name="Workbench" type="Sprite2D" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
 position = Vector2(498, 122)
@@ -1889,7 +1909,7 @@ scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_q0aas")
 animation = &"idle"
 autoplay = "idle"
-frame_progress = 0.229167
+frame_progress = 0.526457
 
 [node name="Protection" type="Sprite2D" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
 position = Vector2(267, 606)
