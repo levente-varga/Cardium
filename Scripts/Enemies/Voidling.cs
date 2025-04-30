@@ -54,7 +54,7 @@ public partial class Voidling : Enemy {
       { typeof(GoldenKeyCard), 20 },
       { typeof(SmiteCard), 20 },
       { typeof(HurlCard), 20 },
-      { typeof(RestCard), 10 },
+      { typeof(TeleportCard), 10 },
       { typeof(GuideCard), 5 },
       { typeof(EscapeCard), 5 },
     }

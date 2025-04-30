@@ -27,6 +27,7 @@ public partial class Slime : Enemy {
     Global.Random.Next(1, 2 + Level), 
     new Dictionary<Type, int> {
       { typeof(HealCard), 80 },
+      { typeof(ShieldCard), 30 },
       { typeof(HurlCard), 20 },
       { typeof(ShuffleCard), 10 },
       { typeof(WoodenKeyCard), 10 },

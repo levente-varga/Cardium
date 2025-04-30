@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Cardium.Scripts.Cards;
 using Godot;
@@ -58,11 +57,7 @@ public partial class DeckView : Node2D {
   public void FillWithInitial() {
     Deck.Clear();
     Add(new HealCard { Protected = true });
-    Add(new HealCard { Protected = true });
-    Add(new ShieldCard { Protected = true });
     Add(new HurlCard { Protected = true });
-    Add(new HurlCard { Protected = true });
-    Add(new SmiteCard { Protected = true });
     Add(new SmiteCard { Protected = true });
     Add(new WoodenKeyCard { Protected = true });
     Add(new RestCard { Protected = true });

@@ -31,9 +31,10 @@ public partial class Chest : Interactable {
     Global.Random.Next(3, 8), 
     new Dictionary<Type, int> {
       { typeof(HealCard), 40 },
+      { typeof(ShieldCard), 20 },
       { typeof(SmiteCard), 40 },
       { typeof(ChainCard), 40 },
-      { typeof(ShuffleCard), 20 },
+      { typeof(ShuffleCard), 10 },
       { typeof(TeleportCard), 20 },
       { typeof(HolyCard), 10 },
       { typeof(RestCard), 5 },
