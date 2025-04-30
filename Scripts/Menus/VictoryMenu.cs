@@ -17,7 +17,7 @@ public partial class VictoryMenu : Menu {
   public override void Open() {
     base.Open();
     
-    PlaytimeLabel.Text = $"{(DateTime.Now - Statistics.StartTime).Minutes} mins";
+    PlaytimeLabel.Text = $"{(int)(DateTime.Now - Statistics.StartTime).TotalMinutes} mins";
   }
 
   public override void Close() {

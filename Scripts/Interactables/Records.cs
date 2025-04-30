@@ -54,7 +54,7 @@ public partial class Records : Interactable {
       13 => $"Dealt {Statistics.TotalDamage} damage",
       14 => $"Received {Statistics.TotalDamageTaken} damage",
       15 => $"Nudged {Statistics.Nudges} times",
-      16 => $"Playing for {(DateTime.Now - Statistics.StartTime).Minutes} minutes",
+      16 => $"Playing for {(int)(DateTime.Now - Statistics.StartTime).TotalMinutes} minutes",
       _ => "?",
     };
   }
