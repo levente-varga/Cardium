@@ -69,9 +69,9 @@ public partial class InventoryMenu : Menu {
   }
 
   private void FillContainersWithCardViews() {
-    FillContainerWithCardViews(StashContainer, Data.Stash.GetCards());
-    FillContainerWithCardViews(InventoryContainer, Player.Inventory.GetCards());
-    FillContainerWithCardViews(DeckContainer, Player.Deck.Deck.GetCards());
+    FillContainerWithCardViews(StashContainer, Data.Stash.GetCardsOrdered());
+    FillContainerWithCardViews(InventoryContainer, Player.Inventory.GetCardsOrdered());
+    FillContainerWithCardViews(DeckContainer, Player.Deck.Deck.GetCardsOrdered());
   }
 
   private void FillContainerWithCardViews(Container container, List<Card> cards) {

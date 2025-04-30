@@ -1,11 +1,26 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using Godot;
 
 namespace Cardium.Scripts;
 
 public class Pile {
   protected readonly List<Card> Cards = new();
   public List<Card> GetCards() => new(Cards);
+
+  public List<Card> GetCardsOrdered() {
+    var cards = new List<Card>(Cards);
+    cards.Sort((card, other) => {
+      var nameOrder = string.Compare(card.Name, other.Name, StringComparison.Ordinal);
+      var result = nameOrder == 0 ? card.Level.CompareTo(other.Level) : nameOrder;
+      GD.Print($"Comparing {card.Name} to {other.Name} and {card.Level} to {other.Level} => {result}");
+      return result;
+    });
+    GD.Print("Result:");
+    foreach (var card in cards) GD.Print($"{card.Name} (lvl. {card.Level})");
+    return cards;
+  }
 
   public int Size => Cards.Count;
   public bool IsEmpty => Cards.Count <= 0;

@@ -5,7 +5,7 @@ using Godot;
 namespace Cardium.Scripts;
 
 public class Deck : Pile {
-  public Deck(int capacity = 30) {
+  public Deck(int capacity = 20) {
     Capacity = capacity;
   }
 

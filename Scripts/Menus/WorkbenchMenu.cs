@@ -84,7 +84,7 @@ public partial class WorkbenchMenu : Menu {
   }
 
   private void FillContainersWithCardViews() {
-    FillScrollContainerWithCardViews(StashContainer, Data.Stash.GetCards());
+    FillScrollContainerWithCardViews(StashContainer, Data.Stash.GetCardsOrdered());
     FillSlotWithCardView(Slot1Container, _slot1);
     FillSlotWithCardView(Slot2Container, _slot2);
     FillSlotWithCardView(Slot3Container, _slot3);
