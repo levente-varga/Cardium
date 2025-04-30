@@ -1,0 +1,82 @@
+[gd_scene load_steps=12 format=3 uid="uid://cpa3ey8lb5hil"]
+
+[ext_resource type="Script" path="res://Scripts/TileAlignedGameObject.cs" id="1_s6ud6"]
+[ext_resource type="Texture2D" uid="uid://emad6f5mxusm" path="res://Assets/Animations/Exterminator.png" id="2_2h2v3"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4sc4v"]
+atlas = ExtResource("2_2h2v3")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wbaot"]
+atlas = ExtResource("2_2h2v3")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jc28a"]
+atlas = ExtResource("2_2h2v3")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rusb0"]
+atlas = ExtResource("2_2h2v3")
+region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bqmo8"]
+atlas = ExtResource("2_2h2v3")
+region = Rect2(64, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yrmlj"]
+atlas = ExtResource("2_2h2v3")
+region = Rect2(80, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7bnip"]
+atlas = ExtResource("2_2h2v3")
+region = Rect2(96, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s8mwj"]
+atlas = ExtResource("2_2h2v3")
+region = Rect2(112, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_6i88m"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4sc4v")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wbaot")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jc28a")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rusb0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bqmo8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yrmlj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7bnip")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s8mwj")
+}],
+"loop": true,
+"name": &"default",
+"speed": 12.0
+}]
+
+[node name="TileAlignedGameObject" type="Node2D" node_paths=PackedStringArray("Sprite")]
+script = ExtResource("1_s6ud6")
+Sprite = NodePath("Sprite")
+
+[node name="Sprite" type="AnimatedSprite2D" parent="."]
+scale = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_6i88m")
+frame_progress = 0.857785
+centered = false
+
+[node name="StatusBar" type="Node2D" parent="."]
+
+[node name="Polygon2D" type="Polygon2D" parent="StatusBar"]

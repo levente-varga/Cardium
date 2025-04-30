@@ -59,6 +59,7 @@ public partial class DeckView : Node2D {
     Deck.Clear();
     Add(new HealCard { Protected = true });
     Add(new HealCard { Protected = true });
+    Add(new ShieldCard { Protected = true });
     Add(new HurlCard { Protected = true });
     Add(new HurlCard { Protected = true });
     Add(new SmiteCard { Protected = true });

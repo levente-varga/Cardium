@@ -1,26 +1,27 @@
+using System.Collections.Generic;
 using Cardium.Scripts.Cards.Types;
 using Godot;
 
 namespace Cardium.Scripts.Cards;
 
 public class ShieldCard : PlayerTargetingCard {
-  public int ExtraArmor = 2;
-  public int Duration = 3;
+  private int Amount => new List<int> { 2, 4, 7, 10 }[Level];
+
 
   public ShieldCard() {
     Name = "Shield";
-    Rarity = CardRarity.Common;
+    Rarity = CardRarity.Rare;
     Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Shield.png");
     Type = CardType.Combat;
     UpdateDescription();
   }
 
   protected sealed override void UpdateDescription() {
-    Description = $"Raises Armor by {Highlight($"{ExtraArmor}")} for {Highlight($"{Duration}")} turns.";
+    Description = $"Sets a shield of {Highlight($"{Amount}")}.";
   }
 
   public override bool OnPlay(Player player, World world) {
-    // TODO: Implement
+    player.SetShield(Amount);
 
     return true;
   }

@@ -14,6 +14,11 @@ public partial class Entity : TileAlignedGameObject {
     get => HealthBar.MaxHealth;
     set => HealthBar.MaxHealth = value;
   }
+  
+  public int Shield {
+    get => HealthBar.Shield;
+    protected set => HealthBar.Shield = value;
+  }
 
   protected int BaseArmor = 0;
   protected int BaseDamage = 1;
@@ -132,6 +137,12 @@ public partial class Entity : TileAlignedGameObject {
     if (actualAmount <= 0) return;
 
     OnHealed(amount);
+  }
+  
+  public void SetShield(int amount) {
+    if (amount <= 0) return;
+
+    Shield = amount;
   }
 
   protected virtual void OnHealed(int amount) {
