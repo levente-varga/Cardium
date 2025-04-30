@@ -10,7 +10,7 @@ namespace Cardium.Scripts;
 public partial class Dungeon {
   private class Generator {
     public int NumRoomTries = 100;
-    public static int ExtraConnectorChance => 5;
+    public static int ExtraConnectorChance => 15;
     public static int RoomExtraSize => 0;
     public static int WindingPercent => 70;
     public static int MinSmallRooms => 2;

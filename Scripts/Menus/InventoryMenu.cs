@@ -180,9 +180,10 @@ public partial class InventoryMenu : Menu {
     var mouseOverStashArea = StashArea.GetRect().HasPoint(mousePosition);
 
     if (mouseOverDeckArea && _draggedCardOrigin != CardOrigin.Deck) {
-      RemoveDraggedCardFromItsOrigin(view.Card);
-      Player.Deck.Add(view.Card);
-      FillContainersWithCardViews();
+      if (Player.Deck.Add(view.Card)) {
+        RemoveDraggedCardFromItsOrigin(view.Card);
+        FillContainersWithCardViews();
+      }
     }
     else if (mouseOverInventoryArea && _draggedCardOrigin != CardOrigin.Inventory) {
       if (Player.Inventory.Add(view.Card)) {
@@ -191,9 +192,10 @@ public partial class InventoryMenu : Menu {
       }
     }
     else if (_stashEnabled && mouseOverStashArea && _draggedCardOrigin != CardOrigin.Stash) {
-      RemoveDraggedCardFromItsOrigin(view.Card);
-      Data.Stash.Add(view.Card);
-      FillContainersWithCardViews();
+      if (Data.Stash.Add(view.Card)) {
+        RemoveDraggedCardFromItsOrigin(view.Card);
+        FillContainersWithCardViews();
+      }
     }
 
     UpdateLabels();
