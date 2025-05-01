@@ -15,11 +15,12 @@ public partial class TileAlignedGameObject : AnimatedSprite2D {
   private Vector2I _previousPosition;
 
   public delegate void OnMoveDelegate(Vector2I from, Vector2I to);
-
   public event OnMoveDelegate? OnMoveEvent;
+  
+  public delegate void OnTeleportDelegate(Vector2I from, Vector2I to);
+  public event OnTeleportDelegate? OnTeleportEvent;
 
   public delegate void OnNudgeDelegate(Vector2I at);
-
   public event OnNudgeDelegate? OnNudgeEvent;
 
   public delegate void OnNudgedDelegate();
@@ -50,6 +51,7 @@ public partial class TileAlignedGameObject : AnimatedSprite2D {
     Position = position;
     _previousPosition = position;
     base.Position = position * Global.GlobalTileSize;
+    OnTeleportEvent?.Invoke(_previousPosition, Position);
   }
 
   protected void SetStillFrame(Texture2D texture, string name = "still") {

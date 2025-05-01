@@ -296,7 +296,7 @@ public partial class World : Node2D {
     } 
   }
 
-  private void OnPlayerMove(Vector2I oldPosition, Vector2I newPosition) {
+  private void PickUpLootAndRedraw(Vector2I oldPosition, Vector2I newPosition) {
     PickUpLoot();
     QueueRedraw();
   }
@@ -343,7 +343,8 @@ public partial class World : Node2D {
   private void SpawnPlayer(Player player, Vector2I position) {
     //AddChild(player);
     player.SetPosition(position);
-    player.OnMoveEvent += OnPlayerMove;
+    player.OnMoveEvent += PickUpLootAndRedraw;
+    player.OnTeleportEvent += PickUpLootAndRedraw;
     if (Dungeon.Rect.HasPoint(player.Position)) {
       _grid.SetPointSolid(player.Position);
     }

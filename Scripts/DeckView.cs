@@ -62,6 +62,7 @@ public partial class DeckView : Node2D {
 
   public void FillWithInitial() {
     Deck.Clear();
+    Add(new TeleportCard() { Protected = true, Origin = Card.Origins.Deck });
     Add(new HealCard { Protected = true, Origin = Card.Origins.Deck });
     Add(new HealCard { Protected = true, Origin = Card.Origins.Deck });
     Add(new HurlCard { Protected = true, Origin = Card.Origins.Deck });
