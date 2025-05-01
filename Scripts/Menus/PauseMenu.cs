@@ -32,7 +32,7 @@ public partial class PauseMenu : Menu {
   }
 
   private void Flee() {
-    base.Close();
+    Close();
     
     Player.SaveCards();
     Data.EraseUnprotectedCardsOutsideStash();
