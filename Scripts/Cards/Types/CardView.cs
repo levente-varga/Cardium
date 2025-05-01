@@ -128,12 +128,6 @@ public partial class CardView : Node2D {
   }
 
   protected override void Dispose(bool disposing) {
-    _hoverTween?.Kill();
-    _hoverTween?.Dispose();
-    _scaleTween?.Kill();
-    _scaleTween?.Dispose();
-    _rotationTween?.Kill();
-    _rotationTween?.Dispose();
     Card.OnOriginChangedEvent -= UpdateOriginIndicator;
     
     base.Dispose(disposing);
