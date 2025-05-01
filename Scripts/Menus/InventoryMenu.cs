@@ -67,7 +67,6 @@ public partial class InventoryMenu : Menu {
     for (var i = 0; i < cards.Count; i++) {
       var rowNumber = i / CardsPerRow;
       var card = cards[i];
-      GD.Print($"Adding card of {card.Origin} origin to {container.Name}");
 
       if (i % CardsPerRow == 0) {
         row = new HBoxContainer();
@@ -82,9 +81,9 @@ public partial class InventoryMenu : Menu {
       view.Draggable = container != StashContainer || _stashEnabled;
       view.HoverAnimation = CardView.HoverAnimationType.Grow;
       view.Position = Global.GlobalCardSize / 2;
-      view.OnDragStartEvent += OnCardDragStartEventHandler;
       view.OnDragEndEvent += OnCardDragEndEventHandler;
       view.OnDragEvent += OnCardDragEventHandler;
+      view.ShowOrigin = false;
       cardContainer.AddChild(view);
       row.AddChild(cardContainer);
 
@@ -99,20 +98,6 @@ public partial class InventoryMenu : Menu {
     StashSizeLabel.Text = $"({Data.Stash.Size})";
     InventorySizeLabel.Text = $"({Data.Inventory.Size})";
     DeckSizeLabel.Text = $"({Data.Deck.Size} / {Data.Deck.Capacity})";
-  }
-
-  private void OnCardDragStartEventHandler(CardView view) {
-    return;
-    view.Card.Origin = Card.Origins.None;
-    if (Data.Inventory.Contains(view.Card)) {
-      view.Card.Origin = Card.Origins.Inventory;
-    }
-    else if (Data.Deck.Contains(view.Card)) {
-      view.Card.Origin = Card.Origins.Deck;
-    }
-    else if (Data.Stash.Contains(view.Card)) {
-      view.Card.Origin = Card.Origins.Stash;
-    }
   }
 
   private void OnCardDragEventHandler(CardView view, Vector2 mousePosition) {

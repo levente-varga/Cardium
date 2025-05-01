@@ -140,7 +140,7 @@ public partial class CardView : Node2D {
   }
 
   public void UpdateOriginIndicator(Card.Origins newOrigin) {
-    _originIndicator.Visible = ShowOrigin;
+    _originIndicator.Visible = ShowOrigin && newOrigin != Card.Origins.None;
     _originSprite.Texture = newOrigin switch {
       Card.Origins.Deck => ResourceLoader.Load<Texture2D>("res://Assets/Sprites/Symbols/DeckSymbol.png"),
       Card.Origins.Stash => ResourceLoader.Load<Texture2D>("res://Assets/Sprites/Symbols/StashSymbol.png"),

@@ -151,6 +151,7 @@ public partial class Hand : Node2D {
     if (Size >= Capacity) return;
     var view = _cardScene.Instantiate<CardView>();
     view.Card = card;
+    view.ShowOrigin = false;
     view.OnDragStartEvent += OnCardDragStart;
     view.OnDragEndEvent += OnCardDragEnd;
     view.OnDragEvent += OnCardDrag;
