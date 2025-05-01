@@ -6,9 +6,9 @@ namespace Cardium.Scripts.Cards;
 public class EscapeCard : PlayerTargetingCard {
   public EscapeCard() {
     Name = "Escape";
-    Rarity = CardRarity.Legendary;
+    Rarity = Rarities.Legendary;
     Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Escape.png");
-    Type = CardType.Utility;
+    Type = Types.Utility;
     Unstable = true;
     UpdateDescription();
   }

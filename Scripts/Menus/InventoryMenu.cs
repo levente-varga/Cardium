@@ -31,24 +31,17 @@ public partial class InventoryMenu : Menu {
   private DraggedCardState _draggedCardState;
 
   private const int CardsPerRow = 2;
-  private CardView.CardOrigin _draggedCardOrigin;
 
   public override void _Ready() {
     Visible = false;
     OkButton.Pressed += Close;
   }
 
-  public override void _Process(double delta) {
-  }
-
-  public override void _Input(InputEvent @event) {
-    if (!Visible) return;
-  }
-
   public void Open(bool enableStash = false) {
     base.Open();
     _stashEnabled = enableStash;
     Player.PutCardsInUseIntoDeck();
+    Player.SaveCards();
     FillContainersWithCardViews();
     UpdateLabels();
     if (!_stashEnabled) StashArea.Color = new Color("16161688");
@@ -56,23 +49,25 @@ public partial class InventoryMenu : Menu {
 
   public override void Close() {
     base.Close();
+    Player.LoadCards();
     Player.Hand.DrawUntilFull();
     _stashEnabled = false;
     StashArea.Color = new Color("16161600");
   }
 
   private void FillContainersWithCardViews() {
-    FillContainerWithCardViews(StashContainer, Data.Stash.GetCardsOrdered(), CardView.CardOrigin.Stash);
-    FillContainerWithCardViews(InventoryContainer, Player.Inventory.GetCardsOrdered(), CardView.CardOrigin.Inventory);
-    FillContainerWithCardViews(DeckContainer, Player.Deck.Deck.GetCardsOrdered(), CardView.CardOrigin.Deck);
+    FillContainerWithCardViews(StashContainer, Data.Stash.GetCardsSorted());
+    FillContainerWithCardViews(InventoryContainer, Data.Inventory.GetCardsSorted());
+    FillContainerWithCardViews(DeckContainer, Data.Deck.GetCardsSorted());
   }
 
-  private void FillContainerWithCardViews(Container container, List<Card> cards, CardView.CardOrigin origin) {
+  private void FillContainerWithCardViews(Container container, List<Card> cards) {
     foreach (var child in container.GetChildren()) child?.QueueFree();
     HBoxContainer row = null!;
     for (var i = 0; i < cards.Count; i++) {
       var rowNumber = i / CardsPerRow;
       var card = cards[i];
+      GD.Print($"Adding card of {card.Origin} origin to {container.Name}");
 
       if (i % CardsPerRow == 0) {
         row = new HBoxContainer();
@@ -90,7 +85,6 @@ public partial class InventoryMenu : Menu {
       view.OnDragStartEvent += OnCardDragStartEventHandler;
       view.OnDragEndEvent += OnCardDragEndEventHandler;
       view.OnDragEvent += OnCardDragEventHandler;
-      view.Origin = origin;
       cardContainer.AddChild(view);
       row.AddChild(cardContainer);
 
@@ -103,20 +97,21 @@ public partial class InventoryMenu : Menu {
 
   public void UpdateLabels() {
     StashSizeLabel.Text = $"({Data.Stash.Size})";
-    InventorySizeLabel.Text = $"({Player.Inventory.Size})";
-    DeckSizeLabel.Text = $"({Player.Deck.Deck.Size} / {Player.Deck.Deck.Capacity})";
+    InventorySizeLabel.Text = $"({Data.Inventory.Size})";
+    DeckSizeLabel.Text = $"({Data.Deck.Size} / {Data.Deck.Capacity})";
   }
 
   private void OnCardDragStartEventHandler(CardView view) {
-    _draggedCardOrigin = CardView.CardOrigin.None;
-    if (Player.Inventory.Contains(view.Card)) {
-      _draggedCardOrigin = CardView.CardOrigin.Inventory;
+    return;
+    view.Card.Origin = Card.Origins.None;
+    if (Data.Inventory.Contains(view.Card)) {
+      view.Card.Origin = Card.Origins.Inventory;
     }
-    else if (Player.Deck.Deck.Contains(view.Card)) {
-      _draggedCardOrigin = CardView.CardOrigin.Deck;
+    else if (Data.Deck.Contains(view.Card)) {
+      view.Card.Origin = Card.Origins.Deck;
     }
     else if (Data.Stash.Contains(view.Card)) {
-      _draggedCardOrigin = CardView.CardOrigin.Stash;
+      view.Card.Origin = Card.Origins.Stash;
     }
   }
 
@@ -125,19 +120,19 @@ public partial class InventoryMenu : Menu {
     var mouseOverInventoryArea = InventoryArea.GetRect().HasPoint(mousePosition);
     var mouseOverStashArea = StashArea.GetRect().HasPoint(mousePosition);
 
-    if (mouseOverDeckArea && _draggedCardOrigin != CardView.CardOrigin.Deck) {
+    if (mouseOverDeckArea && view.Card.Origin != Card.Origins.Deck) {
       if (_draggedCardState != DraggedCardState.OverDeckArea) {
         _draggedCardState = DraggedCardState.OverDeckArea;
         view.PlayScaleAnimation(0.75f);
       }
     }
-    else if (mouseOverInventoryArea && _draggedCardOrigin != CardView.CardOrigin.Inventory) {
+    else if (mouseOverInventoryArea && view.Card.Origin != Card.Origins.Inventory) {
       if (_draggedCardState != DraggedCardState.OverInventoryArea) {
         _draggedCardState = DraggedCardState.OverInventoryArea;
         view.PlayScaleAnimation(0.75f);
       }
     }
-    else if (_stashEnabled && mouseOverStashArea && _draggedCardOrigin != CardView.CardOrigin.Stash) {
+    else if (_stashEnabled && mouseOverStashArea && view.Card.Origin != Card.Origins.Stash) {
       if (_draggedCardState != DraggedCardState.OverStashArea) {
         _draggedCardState = DraggedCardState.OverStashArea;
         view.PlayScaleAnimation(0.75f);
@@ -152,17 +147,17 @@ public partial class InventoryMenu : Menu {
   }
 
   private void RemoveDraggedCardFromItsOrigin(Card card) {
-    switch (_draggedCardOrigin) {
-      case CardView.CardOrigin.Deck:
-        Player.Deck.Remove(card);
+    switch (card.Origin) {
+      case Card.Origins.Deck:
+        Data.Deck.Remove(card);
         break;
-      case CardView.CardOrigin.Inventory:
-        Player.Inventory.Remove(card);
+      case Card.Origins.Inventory:
+        Data.Inventory.Remove(card);
         break;
-      case CardView.CardOrigin.Stash:
+      case Card.Origins.Stash:
         Data.Stash.Remove(card);
         break;
-      case CardView.CardOrigin.None:
+      case Card.Origins.None:
       default:
         break;
     }
@@ -173,26 +168,28 @@ public partial class InventoryMenu : Menu {
     var mouseOverInventoryArea = InventoryArea.GetRect().HasPoint(mousePosition);
     var mouseOverStashArea = StashArea.GetRect().HasPoint(mousePosition);
 
-    if (mouseOverDeckArea && _draggedCardOrigin != CardView.CardOrigin.Deck) {
-      if (Player.Deck.Add(view.Card)) {
+    if (mouseOverDeckArea && view.Card.Origin != Card.Origins.Deck) {
+      if (Data.Deck.Add(view.Card)) {
         RemoveDraggedCardFromItsOrigin(view.Card);
+        view.Card.Origin = Card.Origins.Deck;
         FillContainersWithCardViews();
       }
     }
-    else if (mouseOverInventoryArea && _draggedCardOrigin != CardView.CardOrigin.Inventory) {
-      if (Player.Inventory.Add(view.Card)) {
+    else if (mouseOverInventoryArea && view.Card.Origin != Card.Origins.Inventory) {
+      if (Data.Inventory.Add(view.Card)) {
         RemoveDraggedCardFromItsOrigin(view.Card);
+        view.Card.Origin = Card.Origins.Inventory;
         FillContainersWithCardViews();
       }
     }
-    else if (_stashEnabled && mouseOverStashArea && _draggedCardOrigin != CardView.CardOrigin.Stash) {
+    else if (_stashEnabled && mouseOverStashArea && view.Card.Origin != Card.Origins.Stash) {
       if (Data.Stash.Add(view.Card)) {
         RemoveDraggedCardFromItsOrigin(view.Card);
+        view.Card.Origin = Card.Origins.Stash;
         FillContainersWithCardViews();
       }
     }
 
     UpdateLabels();
-    _draggedCardOrigin = CardView.CardOrigin.None;
   }
 }

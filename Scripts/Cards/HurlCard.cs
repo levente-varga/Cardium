@@ -11,10 +11,10 @@ public sealed class HurlCard : LocationTargetingCard {
 
   public HurlCard() {
     Name = "Hurl";
-    Rarity = CardRarity.Common;
+    Rarity = Rarities.Common;
     MaxLevel = 3;
     Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Hurl.png");
-    Type = CardType.Combat;
+    Type = Types.Combat;
     UpdateDescription();
   }
 

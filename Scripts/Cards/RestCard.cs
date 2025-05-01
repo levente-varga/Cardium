@@ -8,9 +8,9 @@ namespace Cardium.Scripts.Cards;
 public class RestCard : PlayerTargetingCard {
   public RestCard() {
     Name = "Rest";
-    Rarity = CardRarity.Legendary;
+    Rarity = Rarities.Legendary;
     Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Rest.png");
-    Type = CardType.Utility;
+    Type = Types.Utility;
     UpdateDescription();
   }
 

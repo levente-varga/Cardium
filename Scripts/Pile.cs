@@ -1,24 +1,25 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using Cardium.Scripts.Cards.Types;
 using Godot;
 
 namespace Cardium.Scripts;
 
 public class Pile {
-  protected readonly List<Card> Cards = new();
-  public List<Card> GetCards() => new(Cards);
+  public readonly List<Card> Cards = new();
+  
+  private int? _capacity;
+  public int? Capacity {
+    get => _capacity;
+    set => _capacity = value == null ? null : Mathf.Max(value.Value, 1);
+  }
 
-  public List<Card> GetCardsOrdered() {
+  public bool IsFull => Capacity != null && Size >= Capacity;
+  public bool IsNotFull => Capacity == null || Size < Capacity;
+
+  public List<Card> GetCardsSorted() {
     var cards = new List<Card>(Cards);
-    cards.Sort((card, other) => {
-      var nameOrder = string.Compare(card.Name, other.Name, StringComparison.Ordinal);
-      var result = nameOrder == 0 ? card.Level.CompareTo(other.Level) : nameOrder;
-      GD.Print($"Comparing {card.Name} to {other.Name} and {card.Level} to {other.Level} => {result}");
-      return result;
-    });
-    GD.Print("Result:");
-    foreach (var card in cards) GD.Print($"{card.Name} (lvl. {card.Level})");
+    Utils.SortCards(cards);
     return cards;
   }
 
@@ -32,6 +33,7 @@ public class Pile {
   }
 
   public virtual bool Add(Card card) {
+    if (IsFull) return false;
     Cards.Add(card);
     return true;
   }
@@ -51,4 +53,14 @@ public class Pile {
   public void Clear() => Cards.Clear();
   public bool Contains(Card card) => Cards.Contains(card);
   public int IndexOf(Card card) => Cards.IndexOf(card);
+  
+  public Card? Draw() {
+    if (IsEmpty) return null;
+    var card = Cards.First();
+    return Remove(card) ? card : null;
+  }
+
+  public void Shuffle() {
+    Utils.FisherYatesShuffle(Cards);
+  }
 }

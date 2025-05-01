@@ -7,11 +7,11 @@ namespace Cardium.Scripts.Cards;
 public sealed class WoodenKeyCard : InteractableTargetingCard {
   public WoodenKeyCard() {
     Name = "Wooden Key";
-    Rarity = CardRarity.Rare;
+    Rarity = Rarities.Rare;
     Range = 1;
     Unstable = true;
     Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/WoodenKey.png");
-    Type = CardType.Utility;
+    Type = Types.Utility;
     UpdateDescription();
   }
 

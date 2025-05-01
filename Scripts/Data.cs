@@ -1,3 +1,7 @@
+using System.Collections.Generic;
+using System.Linq;
+using Cardium.Scripts.Cards.Types;
+
 namespace Cardium.Scripts;
 
 public enum Level {
@@ -18,7 +22,13 @@ public static class Data {
   public static bool MenuOpen => MenusOpen > 0 || PauseMenuOpen;
   public static readonly Pile Stash = new ();
   public static readonly Pile Inventory = new ();
-  public static readonly Pile Deck = new ();
+  public static readonly Pile Deck = new () { Capacity = 20 };
+
+  public static int TotalCardCount => Stash.Size + Inventory.Size + Deck.Size;
+  public static List<Card> GetAllCards() => Stash.Cards
+    .Union(Inventory.Cards)
+    .Union(Deck.Cards)
+    .ToList();
 
   public static void EraseUnprotectedCardsOutsideStash() {
     Inventory.RemoveUnprotected();

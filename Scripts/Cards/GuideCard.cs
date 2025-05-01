@@ -8,10 +8,10 @@ namespace Cardium.Scripts.Cards;
 public class GuideCard : PlayerTargetingCard {
   public GuideCard() {
     Name = "Guide";
-    Rarity = CardRarity.Legendary;
+    Rarity = Rarities.Legendary;
     Unstable = true;
     Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Guide.png");
-    Type = CardType.Utility;
+    Type = Types.Utility;
     UpdateDescription();
   }
 

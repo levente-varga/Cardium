@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Cardium.Scripts.Cards.Types;
 using Godot;
 
 namespace Cardium.Scripts;
@@ -128,7 +129,7 @@ public partial class Player : Entity {
   }
 
   public void ReloadDeck(List<Type> except) {
-    var cards = DiscardPile.Pile.GetCards();
+    var cards = DiscardPile.Pile.Cards;
     foreach (var card in cards) {
       if (except.Contains(card.GetType())) continue;
       if (Deck.Deck.IsFull) return;
@@ -185,12 +186,12 @@ public partial class Player : Entity {
   }
 
   public void PutCardsInUseIntoDeck() {
-    foreach (var card in Hand.GetCards()) {
+    foreach (var card in Hand.Cards) {
       Deck.Add(card);
       Hand.Remove(card);
     }
 
-    foreach (var card in DiscardPile.GetCards()) {
+    foreach (var card in DiscardPile.Pile.Cards) {
       Deck.Add(card);
       DiscardPile.Remove(card);
     }
@@ -205,6 +206,7 @@ public partial class Player : Entity {
   public void PickUpCards(List<Card> cards) {
     for (var i = 0; i < cards.Count; i++) {
       var card = cards[i];
+      card.Origin = Card.Origins.Inventory;
       Inventory.Add(card);
       Statistics.CardsCollected++;
       SpawnFloatingLabel($"x1 {card.Name} (lvl. {card.Level}){(card.Protected ? " [protected]" : "")}", card.RarityColor, 120 + i * 40, fontSize: 28);
@@ -214,14 +216,33 @@ public partial class Player : Entity {
   public void SaveCards() {
     Data.Deck.Clear();
     Data.Inventory.Clear();
-    foreach (var card in Deck.Deck.GetCards()) Data.Deck.Add(card);
-    foreach (var card in DiscardPile.GetCards()) Data.Deck.Add(card);
-    foreach (var card in Hand.GetCards()) Data.Deck.Add(card);
-    foreach (var card in Inventory.GetCards()) Data.Inventory.Add(card);
+    Data.Deck.AddAll(Deck.Deck.Cards);
+    Data.Deck.AddAll(DiscardPile.Pile.Cards);
+    Data.Deck.AddAll(Hand.Cards);
+    Data.Inventory.AddAll(Inventory.Cards);
+    
+    GD.Print("Saved cards to Data:");
+    GD.Print("  Stash:");
+    foreach (var card in Data.Stash.Cards) GD.Print($"    {card.Name} (lvl. {card.Level}) [{card.Origin}]");
+    GD.Print("  Inventory:");
+    foreach (var card in Data.Inventory.Cards) GD.Print($"    {card.Name} (lvl. {card.Level}) [{card.Origin}]");
+    GD.Print("  Deck:");
+    foreach (var card in Data.Deck.Cards) GD.Print($"    {card.Name} (lvl. {card.Level}) [{card.Origin}]");
   }
 
   public void LoadCards() {
-    foreach (var card in Data.Deck.GetCards()) Deck.Add(card);
-    foreach (var card in Data.Inventory.GetCards()) Inventory.Add(card);
+    Deck.Clear();
+    Inventory.Clear();
+    foreach (var card in Data.Deck.Cards) Deck.Add(card);
+    foreach (var card in Data.Inventory.Cards) Inventory.Add(card);
+    
+    GD.Print("Loaded cards from Data:");
+    GD.Print("  Stash:");
+    foreach (var card in Data.Stash.Cards) GD.Print($"    {card.Name} (lvl. {card.Level}) [{card.Origin}]");
+    GD.Print("  Inventory:");
+    foreach (var card in Inventory.Cards) GD.Print($"    {card.Name} (lvl. {card.Level}) [{card.Origin}]");
+    GD.Print("  Deck:");
+    foreach (var card in Deck.Deck.Cards) GD.Print($"    {card.Name} (lvl. {card.Level}) [{card.Origin}]");
+
   }
 }

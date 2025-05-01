@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Cardium.Scripts.Cards;
 using Cardium.Scripts.Cards.Types;
 using Godot;
 
@@ -78,14 +77,12 @@ public partial class Hand : Node2D {
       var card = Player.Deck.DrawCard();
       if (card == null) break;
       Add(card, false);
-      GD.Print($"Hand size: {Size}");
     }
 
     if (positionHand) PositionCards();
   }
 
   private void PositionCards() {
-    GD.Print($"Positioning hand ({Size})");
     var oldCardAngles = new Dictionary<CardView, float>(_cardAngles);
     _cardAngles = GetCardAngles();
 
@@ -188,7 +185,7 @@ public partial class Hand : Node2D {
     return true;
   }
 
-  public List<Card> GetCards() => _cardViews.Select(view => view.Card).ToList();
+  public List<Card> Cards => _cardViews.Select(view => view.Card).ToList();
 
   private void OnCardMouseEntered(CardView view) => _hovered = view;
 
@@ -200,7 +197,6 @@ public partial class Hand : Node2D {
     _draggedCardState = DraggedCardState.None;
 
     if (Data.InitialCardPlaysLeft > 0) {
-      GD.Print("Showing help areas");
       HelpOverlay.Visible = true;
     }
   }

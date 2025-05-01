@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cardium.Scripts.Cards;
+using Cardium.Scripts.Cards.Types;
 using Godot;
 
 namespace Cardium.Scripts.Enemies;

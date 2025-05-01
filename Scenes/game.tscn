@@ -832,6 +832,7 @@ label_settings = SubResource("LabelSettings_khtd6")
 vertical_alignment = 1
 
 [node name="Inventory" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("Player", "StashContainer", "InventoryContainer", "DeckContainer", "StashArea", "InventoryArea", "DeckArea", "StashSizeLabel", "InventorySizeLabel", "DeckSizeLabel", "OkButton")]
+visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_right = 1920.0
@@ -1384,8 +1385,7 @@ layout_mode = 2
 theme = ExtResource("5_h5gro")
 text = "Not now"
 
-[node name="Workbench" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("Player", "StashContainer", "Slot1Container", "Slot2Container", "Slot3Container", "ResultContainer", "StashArea", "Slot1Area", "Slot2Area", "Slot3Area", "StashSizeLabel", "SlotSizeLabel", "CancelButton")]
-visible = false
+[node name="Workbench" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("Player", "ListContainer", "Slot1Container", "Slot2Container", "Slot3Container", "ResultContainer", "ListArea", "Slot1Area", "Slot2Area", "Slot3Area", "ListSizeLabel", "SlotSizeLabel", "CancelButton")]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 1920.0
@@ -1394,18 +1394,18 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("16_t46n8")
 Player = NodePath("../../Player")
-StashContainer = NodePath("CenterContainer/WorkbenchPanel/ContentRow/VBoxContainer2/StashScrollContainer/CenterContainer/MarginContainer/StashContainer")
+ListContainer = NodePath("CenterContainer/WorkbenchPanel/ContentRow/VBoxContainer2/ListScrollContainer/CenterContainer/MarginContainer/ListContainer")
 Slot1Container = NodePath("CenterContainer/WorkbenchPanel/ContentRow/VBoxContainer/WorkbenchPage/Slot1Container")
 Slot2Container = NodePath("CenterContainer/WorkbenchPanel/ContentRow/VBoxContainer/WorkbenchPage/Slot2Container")
 Slot3Container = NodePath("CenterContainer/WorkbenchPanel/ContentRow/VBoxContainer/WorkbenchPage/Slot3Container")
 ResultContainer = NodePath("CenterContainer/WorkbenchPanel/ContentRow/VBoxContainer/WorkbenchPage2/ResultContainer")
-StashArea = NodePath("StashArea")
+ListArea = NodePath("ListArea")
 Slot1Area = NodePath("Slot1Area")
 Slot2Area = NodePath("Slot2Area")
 Slot3Area = NodePath("Slot3Area")
-StashSizeLabel = NodePath("CenterContainer/WorkbenchPanel/Header/NumbersRow/StashSizeLabel")
+ListSizeLabel = NodePath("CenterContainer/WorkbenchPanel/Header/NumbersRow/ListSizeLabel")
 SlotSizeLabel = NodePath("CenterContainer/WorkbenchPanel/Header/NumbersRow/WorkbenchSizeLabel")
-CancelButton = NodePath("CenterContainer/WorkbenchPanel/ContentRow/VBoxContainer2/ButtonRow/CancelButton")
+CancelButton = NodePath("CenterContainer/WorkbenchPanel/ContentRow/VBoxContainer2/Control/ButtonRow/CancelButton")
 
 [node name="Background" type="ColorRect" parent="CanvasLayer/Workbench"]
 layout_mode = 1
@@ -1444,11 +1444,11 @@ theme_override_constants/separation = 0
 layout_mode = 2
 theme_override_constants/separation = 32
 
-[node name="StashLabel" type="Label" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel/Header/LabelRow"]
+[node name="ListLabel" type="Label" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel/Header/LabelRow"]
 custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Stash
+text = "All cards
 "
 label_settings = SubResource("LabelSettings_r4kvp")
 horizontal_alignment = 1
@@ -1468,7 +1468,7 @@ vertical_alignment = 1
 layout_mode = 2
 theme_override_constants/separation = 32
 
-[node name="StashSizeLabel" type="Label" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel/Header/NumbersRow"]
+[node name="ListSizeLabel" type="Label" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel/Header/NumbersRow"]
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -1491,18 +1491,18 @@ vertical_alignment = 1
 layout_mode = 2
 theme_override_constants/separation = 32
 
-[node name="StashLabel" type="Label" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel/Header/DescriptionRow2"]
+[node name="ListDescription" type="Label" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel/Header/DescriptionRow2"]
 custom_minimum_size = Vector2(0, 96)
 layout_mode = 2
 size_flags_horizontal = 3
-text = "For now, only cards stored in the Stash 
-can be used at the Workbench."
+text = "Cards in the Stash, Inventory and Deck
+that can be upgraded."
 label_settings = SubResource("LabelSettings_m4nry")
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
 
-[node name="WorkbenchLabel" type="Label" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel/Header/DescriptionRow2"]
+[node name="WorkbenchDescription" type="Label" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel/Header/DescriptionRow2"]
 custom_minimum_size = Vector2(0, 96)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -1525,7 +1525,7 @@ theme_override_constants/separation = 15
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="StashScrollContainer" type="ScrollContainer" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel/ContentRow/VBoxContainer2"]
+[node name="ListScrollContainer" type="ScrollContainer" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel/ContentRow/VBoxContainer2"]
 clip_contents = false
 layout_mode = 2
 size_flags_horizontal = 3
@@ -1533,12 +1533,12 @@ size_flags_vertical = 3
 horizontal_scroll_mode = 0
 vertical_scroll_mode = 3
 
-[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel/ContentRow/VBoxContainer2/StashScrollContainer"]
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel/ContentRow/VBoxContainer2/ListScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel/ContentRow/VBoxContainer2/StashScrollContainer/CenterContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel/ContentRow/VBoxContainer2/ListScrollContainer/CenterContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -1547,18 +1547,31 @@ theme_override_constants/margin_top = 24
 theme_override_constants/margin_right = 24
 theme_override_constants/margin_bottom = 24
 
-[node name="StashContainer" type="VBoxContainer" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel/ContentRow/VBoxContainer2/StashScrollContainer/CenterContainer/MarginContainer"]
+[node name="ListContainer" type="VBoxContainer" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel/ContentRow/VBoxContainer2/ListScrollContainer/CenterContainer/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 18
 
-[node name="ButtonRow" type="HBoxContainer" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel/ContentRow/VBoxContainer2"]
+[node name="Control" type="Control" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel/ContentRow/VBoxContainer2"]
 custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel/ContentRow/VBoxContainer2/Control"]
+layout_mode = 2
+offset_right = 554.0
+offset_bottom = 64.0
+color = Color(0.0862745, 0.0862745, 0.0862745, 1)
+
+[node name="ButtonRow" type="HBoxContainer" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel/ContentRow/VBoxContainer2/Control"]
+z_index = 1
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+offset_right = 554.0
+offset_bottom = 64.0
 alignment = 1
 
-[node name="CancelButton" type="Button" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel/ContentRow/VBoxContainer2/ButtonRow"]
+[node name="CancelButton" type="Button" parent="CanvasLayer/Workbench/CenterContainer/WorkbenchPanel/ContentRow/VBoxContainer2/Control/ButtonRow"]
 custom_minimum_size = Vector2(200, 64)
 layout_mode = 2
 theme = ExtResource("5_h5gro")
@@ -1637,7 +1650,7 @@ layout_mode = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_pj7tk")
 
-[node name="StashArea" type="ColorRect" parent="CanvasLayer/Workbench"]
+[node name="ListArea" type="ColorRect" parent="CanvasLayer/Workbench"]
 layout_mode = 0
 offset_left = 112.0
 offset_top = 272.0
@@ -1867,7 +1880,7 @@ scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_0eurg")
 animation = &"idle"
 autoplay = "idle"
-frame_progress = 0.414311
+frame_progress = 0.638124
 
 [node name="Chest" type="AnimatedSprite2D" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
 position = Vector2(571, 91)
@@ -1875,7 +1888,7 @@ scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_q0aas")
 animation = &"idle"
 autoplay = "idle"
-frame_progress = 0.533035
+frame_progress = 0.756843
 
 [node name="CardPickup" type="AnimatedSprite2D" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
 position = Vector2(171, 91)
@@ -1883,7 +1896,7 @@ scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_kyjdf")
 animation = &"idle"
 autoplay = "idle"
-frame_progress = 0.705956
+frame_progress = 0.929746
 
 [node name="Bonfire" type="AnimatedSprite2D" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
 position = Vector2(103, 432)
@@ -1891,7 +1904,7 @@ scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_w7kmc")
 animation = &"idle"
 autoplay = "idle"
-frame_progress = 0.758287
+frame_progress = 0.982083
 
 [node name="Workbench" type="Sprite2D" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
 position = Vector2(498, 122)
@@ -1909,7 +1922,7 @@ scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_q0aas")
 animation = &"idle"
 autoplay = "idle"
-frame_progress = 0.526457
+frame_progress = 0.75027
 
 [node name="Protection" type="Sprite2D" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
 position = Vector2(267, 606)

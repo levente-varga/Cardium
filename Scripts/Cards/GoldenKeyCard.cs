@@ -7,11 +7,11 @@ namespace Cardium.Scripts.Cards;
 public sealed class GoldenKeyCard : InteractableTargetingCard {
   public GoldenKeyCard() {
     Name = "Golden Key";
-    Rarity = CardRarity.Legendary;
+    Rarity = Rarities.Legendary;
     Unstable = true;
     Range = 1;
     Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/GoldenKey.png");
-    Type = CardType.Utility;
+    Type = Types.Utility;
     UpdateDescription();
   }
 

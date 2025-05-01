@@ -15,10 +15,10 @@ public sealed class ChainCard : EnemyTargetingCard {
 
   public ChainCard() {
     Name = "Chain";
-    Rarity = CardRarity.Epic;
+    Rarity = Rarities.Epic;
     MaxLevel = 3;
     Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Chain.png");
-    Type = CardType.Combat;
+    Type = Types.Combat;
     UpdateDescription();
   }
 

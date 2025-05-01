@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Cardium.Scripts.Cards;
+using Cardium.Scripts.Cards.Types;
 using Godot;
 
 namespace Cardium.Scripts;
@@ -9,7 +10,7 @@ public partial class DeckView : Node2D {
   [Export] private Label SizeLabel = null!;
 
   private readonly List<Node2D> _cardBackViews = new();
-  public Deck Deck { get; } = new();
+  public Pile Deck { get; } = new () { Capacity = 20 };
 
   public override void _Process(double delta) {
     SizeLabel.Text = Deck.IsEmpty ? "" : $"{Deck.Size}";
@@ -17,7 +18,6 @@ public partial class DeckView : Node2D {
 
   public bool Add(Card card) {
     if (!Deck.Add(card)) return false;
-    GD.Print("Card added to deck view");
     var view = _cardBackScene.Instantiate<Node2D>();
     _cardBackViews.Add(view);
     PositionCardBackViews();
@@ -30,6 +30,8 @@ public partial class DeckView : Node2D {
     RemoveCardView();
     return true;
   }
+
+  public void Clear() => Deck.Clear();
 
   private void PositionCardBackViews() {
     for (var i = 0; i < _cardBackViews.Count; i++) {
@@ -56,15 +58,15 @@ public partial class DeckView : Node2D {
 
   public void FillWithInitial() {
     Deck.Clear();
-    Add(new HealCard { Protected = true });
-    Add(new HealCard { Protected = true });
-    Add(new HurlCard { Protected = true });
-    Add(new HurlCard { Protected = true });
-    Add(new SmiteCard { Protected = true });
-    Add(new SmiteCard { Protected = true });
-    Add(new WoodenKeyCard { Protected = true });
-    Add(new RestCard { Protected = true });
-    Add(new ShuffleCard { Protected = true });
+    Add(new HealCard { Protected = true, Origin = Card.Origins.Deck });
+    Add(new HealCard { Protected = true, Origin = Card.Origins.Deck });
+    Add(new HurlCard { Protected = true, Origin = Card.Origins.Deck });
+    Add(new HurlCard { Protected = true, Origin = Card.Origins.Deck });
+    Add(new SmiteCard { Protected = true, Origin = Card.Origins.Deck });
+    Add(new SmiteCard { Protected = true, Origin = Card.Origins.Deck });
+    Add(new WoodenKeyCard { Protected = true, Origin = Card.Origins.Deck });
+    Add(new RestCard { Protected = true, Origin = Card.Origins.Deck });
+    Add(new ShuffleCard { Protected = true, Origin = Card.Origins.Deck });
     Deck.Shuffle();
   }
 }

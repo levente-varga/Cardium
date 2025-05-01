@@ -1,53 +1,53 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Cardium.Scripts.Cards.Types;
 using Godot;
 
 namespace Cardium.Scripts.Menus;
 
 public partial class WorkbenchMenu : Menu {
-  private enum CardOrigin {
+  private enum DraggedCardOrigin {
     None,
-    Stash,
+    List,
+    Slot0,
     Slot1,
     Slot2,
-    Slot3,
     Result,
   }
 
   private enum DraggedCardState {
     None,
-    OverStashArea,
+    OverListArea,
     OverSlot1,
     OverSlot2,
     OverSlot3,
   }
 
   [Export] public Player Player = null!;
-  [Export] public Container StashContainer = null!;
+  [Export] public Container ListContainer = null!;
   [Export] public Container Slot1Container = null!;
   [Export] public Container Slot2Container = null!;
   [Export] public Container Slot3Container = null!;
   [Export] public Container ResultContainer = null!;
-  [Export] public ColorRect StashArea = null!;
+  [Export] public ColorRect ListArea = null!;
   [Export] public ColorRect Slot1Area = null!;
   [Export] public ColorRect Slot2Area = null!;
   [Export] public ColorRect Slot3Area = null!;
-  [Export] public Label StashSizeLabel = null!;
+  [Export] public Label ListSizeLabel = null!;
   [Export] public Label SlotSizeLabel = null!;
   [Export] public Button CancelButton = null!;
 
   [Export] private PackedScene _cardScene = ResourceLoader.Load<PackedScene>("res://Scenes/card.tscn");
+  
+  private readonly List<Card?> _slots = new(3) { null, null, null };
 
-  private Card? _slot1;
-  private Card? _slot2;
-  private Card? _slot3;
   private Card? _result;
 
   private DraggedCardState _draggedCardState;
 
   private const int CardsPerRow = 2;
-  private CardOrigin _draggedCardOrigin;
+  private DraggedCardOrigin _draggedCardOrigin;
 
   public override void _Ready() {
     Visible = false;
@@ -56,38 +56,35 @@ public partial class WorkbenchMenu : Menu {
   public override void Open() {
     base.Open();
     Player.PutCardsInUseIntoDeck();
+    Player.SaveCards();
     FillContainersWithCardViews();
     UpdateLabels();
   }
 
   public override void Close() {
     base.Close();
-    Player.Hand.DrawUntilFull();
     EmptySlots();
+    Player.LoadCards();
+    Player.Hand.DrawUntilFull();
   }
 
-  private void EmptySlots(bool returnToStash = true) {
-    if (_slot1 != null) {
-      if (returnToStash) Data.Stash.Add(_slot1);
-      _slot1 = null;
-    }
+  private void EmptySlots(bool returnToList = true) {
+    for (var i = 0; i < _slots.Count; i++) EmptySlot(i, returnToList);
+    _result = null;
+  }
 
-    if (_slot2 != null) {
-      if (returnToStash) Data.Stash.Add(_slot2);
-      _slot2 = null;
-    }
-
-    if (_slot3 != null) {
-      if (returnToStash) Data.Stash.Add(_slot3);
-      _slot3 = null;
+  private void EmptySlot(int index, bool returnToList = true) {
+    if (_slots[index] != null) {
+      if (returnToList) ReturnCardToItsOrigin(_slots[index]!);
+      _slots[index] = null;
     }
   }
 
   private void FillContainersWithCardViews() {
-    FillScrollContainerWithCardViews(StashContainer, Data.Stash.GetCardsOrdered());
-    FillSlotWithCardView(Slot1Container, _slot1);
-    FillSlotWithCardView(Slot2Container, _slot2);
-    FillSlotWithCardView(Slot3Container, _slot3);
+    FillScrollContainerWithCardViews();
+    FillSlotWithCardView(Slot1Container, _slots[0]);
+    FillSlotWithCardView(Slot2Container, _slots[1]);
+    FillSlotWithCardView(Slot3Container, _slots[2]);
     FillSlotWithCardView(ResultContainer, _result);
   }
 
@@ -107,12 +104,32 @@ public partial class WorkbenchMenu : Menu {
     slotContainer.AddChild(cardContainer);
   }
 
-  private void FillScrollContainerWithCardViews(Container container, List<Card> cards) {
-    foreach (var child in container.GetChildren()) child?.QueueFree();
-    HBoxContainer row = null!;
+  private void FillScrollContainerWithCardViews() {
+    foreach (var child in ListContainer.GetChildren()) child?.QueueFree();
+
+    var cards = new List<Card>();
+    var views = new List<CardView>();
+
+    cards.AddRange(Data.Stash.Cards);
+    cards.AddRange(Data.Inventory.Cards);
+    cards.AddRange(Data.Deck.Cards);
+    
+    Utils.SortCards(cards);
+    
     for (var i = 0; i < cards.Count; i++) {
+      var view = _cardScene.Instantiate<CardView>();
+      view.Card = cards[i];
+      view.HoverAnimation = CardView.HoverAnimationType.Grow;
+      view.Position = Global.GlobalCardSize / 2;
+      view.OnDragStartEvent += OnCardDragStartEventHandler;
+      view.OnDragEndEvent += OnCardDragEndEventHandler;
+      view.OnDragEvent += OnCardDragEventHandler;
+      views.Add(view);
+    }
+    
+    HBoxContainer row = null!;
+    for (var i = 0; i < views.Count; i++) {
       var rowNumber = i / CardsPerRow;
-      var card = cards[i];
 
       if (i % CardsPerRow == 0) {
         row = new HBoxContainer();
@@ -121,46 +138,39 @@ public partial class WorkbenchMenu : Menu {
 
       var cardContainer = new Container();
       cardContainer.SetCustomMinimumSize(Global.GlobalCardSize);
-      var view = _cardScene.Instantiate<CardView>();
-      view.Card = card;
-      view.HoverAnimation = CardView.HoverAnimationType.Grow;
-      view.Position = Global.GlobalCardSize / 2;
-      view.OnDragStartEvent += OnCardDragStartEventHandler;
-      view.OnDragEndEvent += OnCardDragEndEventHandler;
-      view.OnDragEvent += OnCardDragEventHandler;
-      cardContainer.AddChild(view);
+      cardContainer.AddChild(views[i]);
       row.AddChild(cardContainer);
 
       if (i != cards.Count - 1 && rowNumber == (i + 1) / CardsPerRow) continue;
       row.SetCustomMinimumSize(new Vector2(Global.CardSize.X * CardsPerRow, Global.CardSize.Y));
-      container.AddChild(row);
+      ListContainer.AddChild(row);
       row = new HBoxContainer();
     }
   }
 
-  private int GetOccupiedSlotsCount() => (_slot1 == null ? 0 : 1) + (_slot2 == null ? 0 : 1) + (_slot3 == null ? 0 : 1);
+  private int OccupiedSlotsCount => _slots.Sum(slot => slot != null ? 1 : 0);
 
   private void UpdateLabels() {
-    StashSizeLabel.Text = $"({Data.Stash.Size})";
-    SlotSizeLabel.Text = $"({GetOccupiedSlotsCount()} / 3)";
+    ListSizeLabel.Text = $"({Data.TotalCardCount})";
+    SlotSizeLabel.Text = $"({OccupiedSlotsCount} / 3)";
   }
 
   private void OnCardDragStartEventHandler(CardView view) {
-    _draggedCardOrigin = CardOrigin.None;
-    if (_slot1 == view.Card) {
-      _draggedCardOrigin = CardOrigin.Slot1;
+    _draggedCardOrigin = DraggedCardOrigin.None;
+    if (_slots[0] == view.Card) {
+      _draggedCardOrigin = DraggedCardOrigin.Slot0;
     }
-    else if (_slot2 == view.Card) {
-      _draggedCardOrigin = CardOrigin.Slot2;
+    else if (_slots[1] == view.Card) {
+      _draggedCardOrigin = DraggedCardOrigin.Slot1;
     }
-    else if (_slot3 == view.Card) {
-      _draggedCardOrigin = CardOrigin.Slot3;
+    else if (_slots[2] == view.Card) {
+      _draggedCardOrigin = DraggedCardOrigin.Slot2;
     }
     else if (_result == view.Card) {
-      _draggedCardOrigin = CardOrigin.Result;
+      _draggedCardOrigin = DraggedCardOrigin.Result;
     }
-    else if (Data.Stash.Contains(view.Card)) {
-      _draggedCardOrigin = CardOrigin.Stash;
+    else if (Data.GetAllCards().Contains(view.Card)) {
+      _draggedCardOrigin = DraggedCardOrigin.List;
     }
   }
 
@@ -168,29 +178,29 @@ public partial class WorkbenchMenu : Menu {
     var mouseOverSlot1Area = Slot1Area.GetRect().HasPoint(mousePosition);
     var mouseOverSlot2Area = Slot2Area.GetRect().HasPoint(mousePosition);
     var mouseOverSlot3Area = Slot3Area.GetRect().HasPoint(mousePosition);
-    var mouseOverStashArea = StashArea.GetRect().HasPoint(mousePosition);
+    var mouseOverListArea = ListArea.GetRect().HasPoint(mousePosition);
 
-    if (mouseOverSlot1Area && _draggedCardOrigin != CardOrigin.Slot1 && _slot1 == null) {
+    if (mouseOverSlot1Area && _draggedCardOrigin != DraggedCardOrigin.Slot0 && _slots[0] == null) {
       if (_draggedCardState != DraggedCardState.OverSlot1) {
         _draggedCardState = DraggedCardState.OverSlot1;
         view.PlayScaleAnimation(0.75f);
       }
     }
-    else if (mouseOverSlot2Area && _draggedCardOrigin != CardOrigin.Slot2 && _slot2 == null) {
+    else if (mouseOverSlot2Area && _draggedCardOrigin != DraggedCardOrigin.Slot1 && _slots[1] == null) {
       if (_draggedCardState != DraggedCardState.OverSlot2) {
         _draggedCardState = DraggedCardState.OverSlot2;
         view.PlayScaleAnimation(0.75f);
       }
     }
-    else if (mouseOverSlot3Area && _draggedCardOrigin != CardOrigin.Slot3 && _slot3 == null) {
+    else if (mouseOverSlot3Area && _draggedCardOrigin != DraggedCardOrigin.Slot2 && _slots[2] == null) {
       if (_draggedCardState != DraggedCardState.OverSlot3) {
         _draggedCardState = DraggedCardState.OverSlot3;
         view.PlayScaleAnimation(0.75f);
       }
     }
-    else if (mouseOverStashArea && _draggedCardOrigin != CardOrigin.Stash) {
-      if (_draggedCardState != DraggedCardState.OverStashArea) {
-        _draggedCardState = DraggedCardState.OverStashArea;
+    else if (mouseOverListArea && _draggedCardOrigin != DraggedCardOrigin.List) {
+      if (_draggedCardState != DraggedCardState.OverListArea) {
+        _draggedCardState = DraggedCardState.OverListArea;
         view.PlayScaleAnimation(0.75f);
       }
     }
@@ -202,25 +212,55 @@ public partial class WorkbenchMenu : Menu {
     }
   }
 
-  private void RemoveDraggedCardFromItsOrigin(Card card) {
+  private void RemoveDraggedCardFromItsOrigin(CardView view) {
     switch (_draggedCardOrigin) {
-      case CardOrigin.Slot1:
-        _slot1 = null;
+      case DraggedCardOrigin.Slot0:
+        _slots[0] = null;
         break;
-      case CardOrigin.Slot2:
-        _slot2 = null;
+      case DraggedCardOrigin.Slot1:
+        _slots[1] = null;
         break;
-      case CardOrigin.Slot3:
-        _slot3 = null;
+      case DraggedCardOrigin.Slot2:
+        _slots[2] = null;
         break;
-      case CardOrigin.Result:
+      case DraggedCardOrigin.Result:
         _result = null;
         break;
-      case CardOrigin.Stash:
-        Data.Stash.Remove(card);
+      case DraggedCardOrigin.List:
+        switch (view.Card.Origin) {
+          case Card.Origins.Deck:
+            Data.Deck.Remove(view.Card);
+            break;
+          case Card.Origins.Inventory:
+            Data.Inventory.Remove(view.Card);
+            break;
+          case Card.Origins.Stash:
+            Data.Stash.Remove(view.Card);
+            break;
+          case Card.Origins.None:
+          default: 
+            break;
+        }
         break;
-      case CardOrigin.None:
+      case DraggedCardOrigin.None:
       default:
+        break;
+    }
+  }
+  
+  private void ReturnCardToItsOrigin(Card card) {
+    switch (card.Origin) {
+      case Card.Origins.Deck:
+        Data.Deck.Add(card);
+        break;
+      case Card.Origins.Inventory:
+        Data.Inventory.Add(card);
+        break;
+      case Card.Origins.Stash:
+        Data.Stash.Add(card);
+        break;
+      case Card.Origins.None:
+      default: 
         break;
     }
   }
@@ -229,37 +269,50 @@ public partial class WorkbenchMenu : Menu {
     var mouseOverSlot1Area = Slot1Area.GetRect().HasPoint(mousePosition);
     var mouseOverSlot2Area = Slot2Area.GetRect().HasPoint(mousePosition);
     var mouseOverSlot3Area = Slot3Area.GetRect().HasPoint(mousePosition);
-    var mouseOverStashArea = StashArea.GetRect().HasPoint(mousePosition);
+    var mouseOverListArea = ListArea.GetRect().HasPoint(mousePosition);
 
-    if (mouseOverSlot1Area && _draggedCardOrigin != CardOrigin.Slot1 && _slot1 == null) {
-      RemoveDraggedCardFromItsOrigin(view.Card);
-      _slot1 = view.Card;
+    if (mouseOverSlot1Area && _draggedCardOrigin != DraggedCardOrigin.Slot0 && _slots[0] == null) {
+      RemoveDraggedCardFromItsOrigin(view);
+      _slots[0] = view.Card;
       FillContainersWithCardViews();
     }
-    else if (mouseOverSlot2Area && _draggedCardOrigin != CardOrigin.Slot2 && _slot2 == null) {
-      RemoveDraggedCardFromItsOrigin(view.Card);
-      _slot2 = view.Card;
+    else if (mouseOverSlot2Area && _draggedCardOrigin != DraggedCardOrigin.Slot1 && _slots[1] == null) {
+      RemoveDraggedCardFromItsOrigin(view);
+      _slots[1] = view.Card;
       FillContainersWithCardViews();
     }
-    else if (mouseOverSlot3Area && _draggedCardOrigin != CardOrigin.Slot3 && _slot3 == null) {
-      RemoveDraggedCardFromItsOrigin(view.Card);
-      _slot3 = view.Card;
+    else if (mouseOverSlot3Area && _draggedCardOrigin != DraggedCardOrigin.Slot2 && _slots[2] == null) {
+      RemoveDraggedCardFromItsOrigin(view);
+      _slots[2] = view.Card;
       FillContainersWithCardViews();
     }
-    else if (mouseOverStashArea && _draggedCardOrigin != CardOrigin.Stash) {
-      RemoveDraggedCardFromItsOrigin(view.Card);
-      Data.Stash.Add(view.Card);
-      if (_draggedCardOrigin == CardOrigin.Result) {
+    else if (mouseOverListArea && _draggedCardOrigin != DraggedCardOrigin.List) {
+      RemoveDraggedCardFromItsOrigin(view);
+      switch (view.Card.Origin) {
+        case Card.Origins.Deck:
+          Data.Deck.Add(view.Card);
+          break;
+        case Card.Origins.Inventory:
+          Data.Inventory.Add(view.Card);
+          break;
+        case Card.Origins.Stash:
+        case Card.Origins.None:
+        default:
+          Data.Stash.Add(view.Card);
+          break;
+      }
+      if (_draggedCardOrigin == DraggedCardOrigin.Result) {
         Statistics.CardsUpgraded++;
+        view.Card.Origin = Card.Origins.Stash;
         EmptySlots(false);
       }
       FillContainersWithCardViews();
     }
 
     if (_result == null && CardsAreValid) {
-      var isProtected = _slot1!.Protected || _slot2!.Protected || _slot3!.Protected;
+      var isProtected = _slots[0]!.Protected || _slots[1]!.Protected || _slots[2]!.Protected;
 
-      _result = CreateUpgradedCard(_slot1.GetType(), _slot1!.Level + 1);
+      _result = CreateUpgradedCard(_slots[0]!.GetType(), _slots[0]!.Level + 1);
       
       if (_result == null) {
         Utils.SpawnFloatingLabel(Slot2Area, Slot2Area.Size / 2 - new Vector2(0, 100), "Already at maximum level!",
@@ -277,19 +330,16 @@ public partial class WorkbenchMenu : Menu {
     }
     
 
-    _draggedCardOrigin = CardOrigin.None;
+    _draggedCardOrigin = DraggedCardOrigin.None;
 
     UpdateLabels();
   }
 
-  private bool CardsAreValid =>
-    _slot1 != null &&
-    _slot2 != null &&
-    _slot3 != null &&
-    _slot1.GetType() == _slot2.GetType() &&
-    _slot2.GetType() == _slot3.GetType() &&
-    _slot1.Level == _slot2.Level &&
-    _slot2.Level == _slot3.Level;
+  private bool CardsAreValid => _slots.All(slot => slot != null) &&
+    _slots[0]!.GetType() == _slots[1]!.GetType() &&
+    _slots[1]!.GetType() == _slots[2]!.GetType() &&
+    _slots[0]!.Level == _slots[1]!.Level &&
+    _slots[1]!.Level == _slots[2]!.Level;
   
   private Card? CreateUpgradedCard(Type cardType, int level) {
     GD.Print($"Creating upgraded card variant...");

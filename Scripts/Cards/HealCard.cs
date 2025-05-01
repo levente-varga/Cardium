@@ -9,10 +9,10 @@ public class HealCard : PlayerTargetingCard {
 
   public HealCard() {
     Name = "Heal";
-    Rarity = CardRarity.Common;
+    Rarity = Rarities.Common;
     MaxLevel = 3;
     Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Heal.png");
-    Type = CardType.Combat;
+    Type = Types.Combat;
     UpdateDescription();
   }
 

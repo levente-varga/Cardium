@@ -10,9 +10,9 @@ public class ShieldCard : PlayerTargetingCard {
 
   public ShieldCard() {
     Name = "Shield";
-    Rarity = CardRarity.Rare;
+    Rarity = Rarities.Rare;
     Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Shield.png");
-    Type = CardType.Combat;
+    Type = Types.Combat;
     UpdateDescription();
   }
 

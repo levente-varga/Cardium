@@ -66,6 +66,7 @@ public partial class World : Node2D {
     if (Data.InitialStart) {
       Data.InitialStart = false;
       Player.Deck.FillWithInitial();
+      Player.SaveCards();
     }
 
     _combatManager = new CombatManager(Player, this, DebugLabel1);
@@ -323,7 +324,7 @@ public partial class World : Node2D {
     enemy.QueueFree();
     _grid.SetPointSolid(enemy.Position, false);
 
-    foreach (var loot in enemy.Inventory.GetCards().Select(card => new CardLoot { Card = card })) {
+    foreach (var loot in enemy.Inventory.Cards.Select(card => new CardLoot { Card = card })) {
       loot.SetPosition(enemy.Position);
       _loot.Add(loot);
       AddChild(loot);

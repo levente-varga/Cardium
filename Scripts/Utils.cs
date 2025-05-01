@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Cardium.Scripts.Cards.Types;
 using Cardium.Scripts.Labels;
 using Godot;
 
@@ -52,7 +53,7 @@ public static class Utils {
   public static List<Card> GenerateLoot(int amount, Dictionary<Type, int> dropRate) {
     List<Card> loot = new();
 
-    bool isProtection = Global.Random.Next(100) == 0;
+    bool isProtected = Global.Random.Next(100) == 0;
 
     var total = 0;
     foreach (var entry in dropRate) {
@@ -72,5 +73,18 @@ public static class Utils {
     }
     
     return loot;
+  }
+  
+  public static void SortCards(List<Card> cards) {
+    cards.Sort((card, other) => {
+      var nameOrder = string.Compare(card.Name, other.Name, StringComparison.Ordinal);
+      if (nameOrder != 0) return nameOrder;
+      var levelOrder = card.Level.CompareTo(other.Level);
+      if (levelOrder != 0) return levelOrder;
+      return card.Origin.CompareTo(card.Origin);
+    });
+    return;
+    GD.Print("Sorting result:");
+    foreach (var card in cards) GD.Print($"  {card.Name} (lvl. {card.Level}) - {card.Origin}");
   }
 }

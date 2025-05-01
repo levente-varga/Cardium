@@ -9,10 +9,10 @@ public class ScoutCard : PlayerTargetingCard {
 
   public ScoutCard() {
     Name = "Scout";
-    Rarity = CardRarity.Rare;
+    Rarity = Rarities.Rare;
     MaxLevel = 3;
     Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Scout.png");
-    Type = CardType.Utility;
+    Type = Types.Utility;
     UpdateDescription();
   }
 

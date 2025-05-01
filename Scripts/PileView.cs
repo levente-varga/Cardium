@@ -1,5 +1,5 @@
-using System;
 using System.Collections.Generic;
+using Cardium.Scripts.Cards.Types;
 using Godot;
 
 namespace Cardium.Scripts;
@@ -21,9 +21,7 @@ public partial class PileView : Node2D {
   public override void _Process(double delta) {
     SizeLabel.Text = Pile.IsEmpty ? "" : $"{Pile.Size}";
   }
-
-  public List<Card> GetCards() => Pile.GetCards();
-
+  
   public void Add(Card card) {
     Pile.Add(card);
     var view = _cardBackScene.Instantiate<Node2D>();

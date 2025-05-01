@@ -16,13 +16,6 @@ public partial class CardView : Node2D {
     Grow,
     Slide,
   }
-  
-  public enum CardOrigin {
-    None,
-    Deck,
-    Stash,
-    Inventory,
-  }
 
   [Export] private Node2D _hoverBase = null!;
   [Export] private Node2D _base = null!;
@@ -40,21 +33,7 @@ public partial class CardView : Node2D {
 
   public bool Enabled = true;
   public bool Draggable = true;
-  private CardOrigin _origin;
-
-  public CardOrigin Origin {
-    get => _origin;
-    set {
-      _origin = value;
-      _originIndicator.Visible = value != CardOrigin.None;
-      _originSprite.Texture = _origin switch {
-        CardOrigin.Deck => ResourceLoader.Load<Texture2D>("res://Assets/Sprites/Symbols/DeckSymbol.png"),
-        CardOrigin.Stash => ResourceLoader.Load<Texture2D>("res://Assets/Sprites/Symbols/StashSymbol.png"),
-        CardOrigin.Inventory => ResourceLoader.Load<Texture2D>("res://Assets/Sprites/Symbols/InventorySymbol.png"),
-        _ => throw new ArgumentOutOfRangeException()
-      };
-    }
-  }
+  public bool ShowOrigin = true;
 
   public HoverAnimationType HoverAnimation = HoverAnimationType.Slide;
   private CardState _state;
@@ -98,15 +77,17 @@ public partial class CardView : Node2D {
     _hitbox.ButtonDown += OnMouseDown;
     _hitbox.ButtonUp += OnMouseUp;
     _hitbox.Pressed += OnPressed;
+    Card.OnOriginChangedEvent += UpdateOriginIndicator;
 
     _descriptionLabel.Text = $"[center]{Card.Description}[/center]";
 
     _nameLabel.Text = Card.Name;
     
-    _originIndicator.Visible = _origin != CardOrigin.None;
+    _originIndicator.Visible = ShowOrigin;
 
     SetupLevelMarker();
     SetupProtectionMarker();
+    UpdateOriginIndicator(Card.Origin);
   }
 
   private void SetupProtectionMarker() {
@@ -146,6 +127,29 @@ public partial class CardView : Node2D {
     }
   }
 
+  protected override void Dispose(bool disposing) {
+    _hoverTween?.Kill();
+    _hoverTween?.Dispose();
+    _scaleTween?.Kill();
+    _scaleTween?.Dispose();
+    _rotationTween?.Kill();
+    _rotationTween?.Dispose();
+    Card.OnOriginChangedEvent -= UpdateOriginIndicator;
+    
+    base.Dispose(disposing);
+  }
+
+  public void UpdateOriginIndicator(Card.Origins newOrigin) {
+    _originIndicator.Visible = ShowOrigin;
+    _originSprite.Texture = newOrigin switch {
+      Card.Origins.Deck => ResourceLoader.Load<Texture2D>("res://Assets/Sprites/Symbols/DeckSymbol.png"),
+      Card.Origins.Stash => ResourceLoader.Load<Texture2D>("res://Assets/Sprites/Symbols/StashSymbol.png"),
+      Card.Origins.Inventory => ResourceLoader.Load<Texture2D>("res://Assets/Sprites/Symbols/InventorySymbol.png"),
+      _ => null
+    };
+    QueueRedraw();
+  }
+  
   public void OnEnterPlayingMode() {
     PlayMoveToPlayingPositionAnimation();
     _state = CardState.Playing;

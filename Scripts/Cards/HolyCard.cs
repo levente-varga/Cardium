@@ -10,11 +10,11 @@ public sealed class HolyCard : LocationTargetingCard {
 
   public HolyCard() {
     Name = "Holy";
-    Rarity = CardRarity.Epic;
+    Rarity = Rarities.Epic;
     Range = 3;
     MaxLevel = 3;
     Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Holy.png");
-    Type = CardType.Combat;
+    Type = Types.Combat;
     UpdateDescription();
   }
 

@@ -9,10 +9,10 @@ public class TeleportCard : LocationTargetingCard {
 
   public TeleportCard() {
     Name = "Teleport";
-    Rarity = CardRarity.Epic;
+    Rarity = Rarities.Epic;
     MaxLevel = 3;
     Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Teleport.png");
-    Type = CardType.Combat;
+    Type = Types.Combat;
     UpdateDescription();
   }
 

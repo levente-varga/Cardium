@@ -10,10 +10,10 @@ public sealed class SmiteCard : EnemyTargetingCard {
 
   public SmiteCard() {
     Name = "Smite";
-    Rarity = CardRarity.Common;
+    Rarity = Rarities.Common;
     MaxLevel = 3;
     Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Smite.png");
-    Type = CardType.Combat;
+    Type = Types.Combat;
     UpdateDescription();
   }
 

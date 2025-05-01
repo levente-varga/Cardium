@@ -7,9 +7,9 @@ namespace Cardium.Scripts.Cards;
 public class ShuffleCard : PlayerTargetingCard {
   public ShuffleCard() {
     Name = "Shuffle";
-    Rarity = CardRarity.Rare;
+    Rarity = Rarities.Rare;
     Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Shuffle.png");
-    Type = CardType.Combat;
+    Type = Types.Combat;
     UpdateDescription();
   }
 
@@ -20,7 +20,7 @@ public class ShuffleCard : PlayerTargetingCard {
   public override bool OnPlay(Player player, World world) {
     List<Card> cards = new();
 
-    foreach (var card in player.Hand.GetCards()) {
+    foreach (var card in player.Hand.Cards) {
       if (card == this) continue;
       if (!player.Hand.Remove(card, false)) {
         continue;
