@@ -92,6 +92,7 @@ public partial class HealthBar : Node2D {
     _label = new Label();
     _label.Scale = Vector2.One / 6f;
     _label.Position = new Vector2(2, -8f);
+    _label.ZIndex = 10;
     AddChild(_label);
     
     UpdatePolygons();
