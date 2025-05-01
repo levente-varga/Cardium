@@ -471,6 +471,33 @@ public partial class Dungeon {
       }
     }
 
+    private int GenerateEnemyLevel(Difficulty difficulty) {
+      var random = Global.Random.Next(100);
+      return difficulty switch {
+        Difficulty.Easy => random switch {
+          < 75 => 0,
+          _ => 1
+        },
+        Difficulty.Moderate => random switch {
+          < 30 => 0,
+          < 85 => 1,
+          _ => 2
+        },
+        Difficulty.Hard => random switch {
+          < 15 => 0,
+          < 40 => 1,
+          < 90 => 2,
+          _ => 3,
+        },
+        Difficulty.Brutal => random switch {
+          < 20 => 1,
+          < 50 => 2,
+          < 90 => 3,
+          _ => 4
+        },
+      };
+    }
+    
     private void PlaceEnemies() {
       bool bossPlaced = false;
       foreach (var room in _dungeon.Rooms.Where(room => room.Type == RoomTypes.Uncategorized)) {
@@ -489,13 +516,7 @@ public partial class Dungeon {
           } while (usedTiles.Contains(tile));
 
           Enemy enemy;
-          var level = Global.Random.Next(100) switch {
-            < 50 => 0,
-            < 75 => 1,
-            < 90 => 2,
-            < 98 => 3,
-            _ => 4
-          };
+          var level = GenerateEnemyLevel(Data.Difficulty);
 
           if (!bossPlaced) {
             enemy = new Exterminator();

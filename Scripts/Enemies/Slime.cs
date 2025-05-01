@@ -17,7 +17,7 @@ public partial class Slime : Enemy {
     MaxHealth = new List<int> { 5, 7, 9, 12, 15 }[Level];
     Health = MaxHealth;
     BaseVision = 2;
-    BaseArmor = new List<int> { 0, 0, 1, 2, 4 }[Level];
+    BaseArmor = new List<int> { 0, 0, 1, 2, 6 }[Level];
     BaseDamage = new List<int> { 1, 2, 3, 4, 5 }[Level];
     BaseLuck = 0f;
     BaseRange = 1;

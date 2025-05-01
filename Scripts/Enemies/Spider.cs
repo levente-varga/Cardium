@@ -18,7 +18,7 @@ public partial class Spider : Enemy {
     Health = MaxHealth;
     BaseVision = 4;
     BaseCombatVision = 5;
-    BaseArmor = new List<int> { 0, 1, 2, 3, 5 }[Level];
+    BaseArmor = new List<int> { 0, 0, 1, 3, 8 }[Level];
     BaseDamage = new List<int> { 2, 3, 4, 5, 6 }[Level];
     BaseLuck = 0f;
     BaseRange = 1;

@@ -9,8 +9,16 @@ public enum Level {
   One,
 }
 
+public enum Difficulty {
+  Easy,
+  Moderate,
+  Hard,
+  Brutal,
+}
+
 public static class Data {
   public static Level Level;
+  public static Difficulty Difficulty = Difficulty.Easy;
   public static bool InitialStart = true;
   public static int InitialCardPlaysLeft = 1;
   public static bool Fog;
