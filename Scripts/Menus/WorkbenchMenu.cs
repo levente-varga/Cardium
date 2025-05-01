@@ -271,17 +271,29 @@ public partial class WorkbenchMenu : Menu {
     var mouseOverSlot3Area = Slot3Area.GetRect().HasPoint(mousePosition);
     var mouseOverListArea = ListArea.GetRect().HasPoint(mousePosition);
 
-    if (mouseOverSlot1Area && _draggedCardOrigin != DraggedCardOrigin.Slot0 && _slots[0] == null) {
+    if (mouseOverSlot1Area && _draggedCardOrigin != DraggedCardOrigin.Slot0 && (_slots[0] == null || view.Card == _result)) {
+      if (view.Card == _result) {
+        Statistics.CardsUpgraded++;
+        EmptySlots(false);
+      }
       RemoveDraggedCardFromItsOrigin(view);
       _slots[0] = view.Card;
       FillContainersWithCardViews();
     }
-    else if (mouseOverSlot2Area && _draggedCardOrigin != DraggedCardOrigin.Slot1 && _slots[1] == null) {
+    else if (mouseOverSlot2Area && _draggedCardOrigin != DraggedCardOrigin.Slot1 && (_slots[1] == null || view.Card == _result)) {
+      if (view.Card == _result) {
+        Statistics.CardsUpgraded++;
+        EmptySlots(false);
+      }
       RemoveDraggedCardFromItsOrigin(view);
       _slots[1] = view.Card;
       FillContainersWithCardViews();
     }
-    else if (mouseOverSlot3Area && _draggedCardOrigin != DraggedCardOrigin.Slot2 && _slots[2] == null) {
+    else if (mouseOverSlot3Area && _draggedCardOrigin != DraggedCardOrigin.Slot2 && (_slots[2] == null || view.Card == _result)) {
+      if (view.Card == _result) {
+        Statistics.CardsUpgraded++;
+        EmptySlots(false);
+      }
       RemoveDraggedCardFromItsOrigin(view);
       _slots[2] = view.Card;
       FillContainersWithCardViews();
@@ -303,7 +315,6 @@ public partial class WorkbenchMenu : Menu {
       }
       if (_draggedCardOrigin == DraggedCardOrigin.Result) {
         Statistics.CardsUpgraded++;
-        view.Card.Origin = Card.Origins.Stash;
         EmptySlots(false);
       }
       FillContainersWithCardViews();
@@ -320,6 +331,7 @@ public partial class WorkbenchMenu : Menu {
         return;
       }
       else {
+        _result.Origin = Card.Origins.Stash;
         _result.Protected = isProtected;
       }
       FillContainersWithCardViews();
