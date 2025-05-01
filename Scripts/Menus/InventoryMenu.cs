@@ -48,7 +48,16 @@ public partial class InventoryMenu : Menu {
     DeckToStashButton.Pressed += () => MoveCards(Data.Deck, Data.Stash, Card.Origins.Stash);
     DeckToInventoryButton.Pressed += () => MoveCards(Data.Deck, Data.Inventory, Card.Origins.Inventory);
   }
-  
+
+  public override void _Input(InputEvent @event) {
+    if (!Visible) return;
+    
+    if (InputMap.EventIsAction(@event, "Back") && @event.IsPressed()) {
+      Close();
+      GetViewport().SetInputAsHandled();
+    }
+  }
+
   public void Open(bool enableStash = false) {
     base.Open();
     _stashEnabled = enableStash;

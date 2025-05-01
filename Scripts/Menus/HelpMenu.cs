@@ -9,4 +9,13 @@ public partial class HelpMenu : Menu {
     Visible = false;
     CloseButton.Pressed += Close;
   }
+  
+  public override void _Input(InputEvent @event) {
+    if (!Visible) return;
+    
+    if (InputMap.EventIsAction(@event, "Back") && @event.IsPressed()) {
+      Close();
+      GetViewport().SetInputAsHandled();
+    }
+  }
 }
