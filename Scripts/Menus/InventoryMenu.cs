@@ -23,6 +23,12 @@ public partial class InventoryMenu : Menu {
   [Export] public Label InventorySizeLabel = null!;
   [Export] public Label DeckSizeLabel = null!;
   [Export] public Button OkButton = null!;
+  [Export] public Button StashToInventoryButton = null!;
+  [Export] public Button StashToDeckButton = null!;
+  [Export] public Button InventoryToStashButton = null!;
+  [Export] public Button InventoryToDeckButton = null!;
+  [Export] public Button DeckToStashButton = null!;
+  [Export] public Button DeckToInventoryButton = null!;
 
   [Export] private PackedScene _cardScene = ResourceLoader.Load<PackedScene>("res://Scenes/card.tscn");
 
@@ -35,8 +41,14 @@ public partial class InventoryMenu : Menu {
   public override void _Ready() {
     Visible = false;
     OkButton.Pressed += Close;
+    StashToInventoryButton.Pressed += () => MoveCards(Data.Stash, Data.Inventory, Card.Origins.Inventory);
+    StashToDeckButton.Pressed += () => MoveCards(Data.Stash, Data.Deck, Card.Origins.Deck);
+    InventoryToStashButton.Pressed += () => MoveCards(Data.Inventory, Data.Stash, Card.Origins.Stash);
+    InventoryToDeckButton.Pressed += () => MoveCards(Data.Inventory, Data.Deck, Card.Origins.Deck);
+    DeckToStashButton.Pressed += () => MoveCards(Data.Deck, Data.Stash, Card.Origins.Stash);
+    DeckToInventoryButton.Pressed += () => MoveCards(Data.Deck, Data.Inventory, Card.Origins.Inventory);
   }
-
+  
   public void Open(bool enableStash = false) {
     base.Open();
     _stashEnabled = enableStash;
@@ -177,4 +189,16 @@ public partial class InventoryMenu : Menu {
 
     UpdateLabels();
   }
+
+  private void MoveCards(Pile from, Pile to, Card.Origins newOrigin) {
+    var cards = new List<Card>(from.Cards);
+    for (var i = 0; i < cards.Count; i++) {
+      var card = cards[i];
+      if (!to.Add(card)) break;
+      card.Origin = newOrigin;
+      from.Remove(card);
+    }
+    UpdateLabels();
+    FillContainersWithCardViews();
+  } 
 }

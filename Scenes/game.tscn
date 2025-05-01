@@ -831,8 +831,7 @@ theme = ExtResource("5_h5gro")
 label_settings = SubResource("LabelSettings_khtd6")
 vertical_alignment = 1
 
-[node name="Inventory" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("Player", "StashContainer", "InventoryContainer", "DeckContainer", "StashArea", "InventoryArea", "DeckArea", "StashSizeLabel", "InventorySizeLabel", "DeckSizeLabel", "OkButton")]
-visible = false
+[node name="Inventory" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("Player", "StashContainer", "InventoryContainer", "DeckContainer", "StashArea", "InventoryArea", "DeckArea", "StashSizeLabel", "InventorySizeLabel", "DeckSizeLabel", "OkButton", "StashToInventoryButton", "StashToDeckButton", "InventoryToStashButton", "InventoryToDeckButton", "DeckToStashButton", "DeckToInventoryButton")]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 1920.0
@@ -847,10 +846,16 @@ DeckContainer = NodePath("CenterContainer/InventoryPanel/ContentRow/DeckPage/Dec
 StashArea = NodePath("StashArea")
 InventoryArea = NodePath("InventoryArea")
 DeckArea = NodePath("DeckArea")
-StashSizeLabel = NodePath("CenterContainer/InventoryPanel/NumbersRow/StashSizeLabel")
-InventorySizeLabel = NodePath("CenterContainer/InventoryPanel/NumbersRow/InventorySizeLabel")
-DeckSizeLabel = NodePath("CenterContainer/InventoryPanel/NumbersRow/DeckSizeLabel")
+StashSizeLabel = NodePath("CenterContainer/InventoryPanel/Header/StashHeader/Content/StashSizeLabel")
+InventorySizeLabel = NodePath("CenterContainer/InventoryPanel/Header/InventoryHeader/Content/InventorySizeLabel")
+DeckSizeLabel = NodePath("CenterContainer/InventoryPanel/Header/DeckHeader/Content/DeckSizeLabel")
 OkButton = NodePath("CenterContainer/InventoryPanel/ButtonRow/OkButton")
+StashToInventoryButton = NodePath("CenterContainer/InventoryPanel/Header/StashHeader/RightButtonsContainer/StashToInventory")
+StashToDeckButton = NodePath("CenterContainer/InventoryPanel/Header/StashHeader/RightButtonsContainer/StashToDeck")
+InventoryToStashButton = NodePath("CenterContainer/InventoryPanel/Header/InventoryHeader/LeftButtonsContainer/InventoryToStash")
+InventoryToDeckButton = NodePath("CenterContainer/InventoryPanel/Header/InventoryHeader/RightButtonsContainer/InventoryToDeck")
+DeckToStashButton = NodePath("CenterContainer/InventoryPanel/Header/DeckHeader/LeftButtonsContainer/DeckToStash")
+DeckToInventoryButton = NodePath("CenterContainer/InventoryPanel/Header/DeckHeader/LeftButtonsContainer/DeckToInventory")
 
 [node name="Background" type="ColorRect" parent="CanvasLayer/Inventory"]
 layout_mode = 1
@@ -880,60 +885,39 @@ custom_minimum_size = Vector2(1696, 920)
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="LabelRow" type="HBoxContainer" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel"]
+[node name="Header" type="HBoxContainer" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel"]
 layout_mode = 2
-theme_override_constants/separation = 32
+theme_override_constants/separation = 15
 
-[node name="StashLabel" type="Label" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/LabelRow"]
-custom_minimum_size = Vector2(0, 64)
+[node name="StashHeader" type="HBoxContainer" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/Header"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "    Stash"
+
+[node name="LeftButtonsContainer" type="VBoxContainer" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/Header/StashHeader"]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+alignment = 2
+
+[node name="Content" type="VBoxContainer" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/Header/StashHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="StashLabel" type="Label" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/Header/StashHeader/Content"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "     Stash"
 label_settings = SubResource("LabelSettings_r4kvp")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Symbol" type="Sprite2D" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/LabelRow/StashLabel"]
-position = Vector2(208, 16)
+[node name="Symbol" type="Sprite2D" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/Header/StashHeader/Content/StashLabel"]
+position = Vector2(0, 16)
 scale = Vector2(2, 2)
 texture = ExtResource("14_st5ht")
 centered = false
 
-[node name="InventoryLabel" type="Label" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/LabelRow"]
-custom_minimum_size = Vector2(0, 64)
-layout_mode = 2
-size_flags_horizontal = 3
-text = "    Inventory"
-label_settings = SubResource("LabelSettings_r4kvp")
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Symbol" type="Sprite2D" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/LabelRow/InventoryLabel"]
-position = Vector2(176, 16)
-scale = Vector2(2, 2)
-texture = ExtResource("15_he6bv")
-centered = false
-
-[node name="DeckLabel" type="Label" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/LabelRow"]
-custom_minimum_size = Vector2(0, 64)
-layout_mode = 2
-size_flags_horizontal = 3
-text = "    Deck"
-label_settings = SubResource("LabelSettings_r4kvp")
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Symbol" type="Sprite2D" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/LabelRow/DeckLabel"]
-position = Vector2(214, 16)
-scale = Vector2(2, 2)
-texture = ExtResource("16_gr7jj")
-centered = false
-
-[node name="NumbersRow" type="HBoxContainer" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel"]
-layout_mode = 2
-theme_override_constants/separation = 32
-
-[node name="StashSizeLabel" type="Label" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/NumbersRow"]
+[node name="StashSizeLabel" type="Label" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/Header/StashHeader/Content"]
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -942,29 +926,7 @@ label_settings = SubResource("LabelSettings_qiep8")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="InventorySizeLabel" type="Label" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/NumbersRow"]
-custom_minimum_size = Vector2(0, 32)
-layout_mode = 2
-size_flags_horizontal = 3
-text = "(0)"
-label_settings = SubResource("LabelSettings_qiep8")
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="DeckSizeLabel" type="Label" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/NumbersRow"]
-custom_minimum_size = Vector2(0, 32)
-layout_mode = 2
-size_flags_horizontal = 3
-text = "(0)"
-label_settings = SubResource("LabelSettings_qiep8")
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="DescriptionRow2" type="HBoxContainer" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel"]
-layout_mode = 2
-theme_override_constants/separation = 32
-
-[node name="StashLabel" type="Label" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/DescriptionRow2"]
+[node name="StashLabel2" type="Label" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/Header/StashHeader/Content"]
 custom_minimum_size = Vector2(0, 96)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -975,7 +937,67 @@ label_settings = SubResource("LabelSettings_m4nry")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="InventoryLabel" type="Label" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/DescriptionRow2"]
+[node name="RightButtonsContainer" type="VBoxContainer" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/Header/StashHeader"]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+alignment = 2
+
+[node name="StashToDeck" type="Button" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/Header/StashHeader/RightButtonsContainer"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+theme = ExtResource("5_h5gro")
+text = ">>"
+
+[node name="StashToInventory" type="Button" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/Header/StashHeader/RightButtonsContainer"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+theme = ExtResource("5_h5gro")
+text = ">"
+
+[node name="InventoryHeader" type="HBoxContainer" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LeftButtonsContainer" type="VBoxContainer" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/Header/InventoryHeader"]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+alignment = 2
+
+[node name="InventoryToStash" type="Button" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/Header/InventoryHeader/LeftButtonsContainer"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+theme = ExtResource("5_h5gro")
+text = "<"
+
+[node name="Content" type="VBoxContainer" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/Header/InventoryHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="InventoryLabel" type="Label" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/Header/InventoryHeader/Content"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "     Inventory"
+label_settings = SubResource("LabelSettings_r4kvp")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Symbol" type="Sprite2D" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/Header/InventoryHeader/Content/InventoryLabel"]
+position = Vector2(0, 16)
+scale = Vector2(2, 2)
+texture = ExtResource("15_he6bv")
+centered = false
+
+[node name="InventorySizeLabel" type="Label" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/Header/InventoryHeader/Content"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "(0)"
+label_settings = SubResource("LabelSettings_qiep8")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="InventoryLabel2" type="Label" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/Header/InventoryHeader/Content"]
 custom_minimum_size = Vector2(0, 96)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -985,7 +1007,67 @@ label_settings = SubResource("LabelSettings_m4nry")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="DeckLabel" type="Label" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/DescriptionRow2"]
+[node name="RightButtonsContainer" type="VBoxContainer" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/Header/InventoryHeader"]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+alignment = 2
+
+[node name="InventoryToDeck" type="Button" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/Header/InventoryHeader/RightButtonsContainer"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+theme = ExtResource("5_h5gro")
+text = ">"
+
+[node name="DeckHeader" type="HBoxContainer" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LeftButtonsContainer" type="VBoxContainer" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/Header/DeckHeader"]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+alignment = 2
+
+[node name="DeckToStash" type="Button" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/Header/DeckHeader/LeftButtonsContainer"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+theme = ExtResource("5_h5gro")
+text = "<<"
+
+[node name="DeckToInventory" type="Button" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/Header/DeckHeader/LeftButtonsContainer"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+theme = ExtResource("5_h5gro")
+text = "<"
+
+[node name="Content" type="VBoxContainer" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/Header/DeckHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="DeckLabel" type="Label" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/Header/DeckHeader/Content"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "     Deck"
+label_settings = SubResource("LabelSettings_r4kvp")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Symbol" type="Sprite2D" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/Header/DeckHeader/Content/DeckLabel"]
+position = Vector2(0, 16)
+scale = Vector2(2, 2)
+texture = ExtResource("16_gr7jj")
+centered = false
+
+[node name="DeckSizeLabel" type="Label" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/Header/DeckHeader/Content"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "(0)"
+label_settings = SubResource("LabelSettings_qiep8")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DeckLabel2" type="Label" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/Header/DeckHeader/Content"]
 custom_minimum_size = Vector2(0, 96)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -994,6 +1076,11 @@ Will be lost upon death."
 label_settings = SubResource("LabelSettings_m4nry")
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="RightButtonsContainer" type="VBoxContainer" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel/Header/DeckHeader"]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+alignment = 2
 
 [node name="ContentRow" type="HBoxContainer" parent="CanvasLayer/Inventory/CenterContainer/InventoryPanel"]
 clip_contents = true
@@ -1386,6 +1473,7 @@ theme = ExtResource("5_h5gro")
 text = "Not now"
 
 [node name="Workbench" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("Player", "ListContainer", "Slot1Container", "Slot2Container", "Slot3Container", "ResultContainer", "ListArea", "Slot1Area", "Slot2Area", "Slot3Area", "ListSizeLabel", "SlotSizeLabel", "CancelButton")]
+visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_right = 1920.0
@@ -1880,7 +1968,7 @@ scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_0eurg")
 animation = &"idle"
 autoplay = "idle"
-frame_progress = 0.638124
+frame_progress = 0.607718
 
 [node name="Chest" type="AnimatedSprite2D" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
 position = Vector2(571, 91)
@@ -1888,7 +1976,7 @@ scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_q0aas")
 animation = &"idle"
 autoplay = "idle"
-frame_progress = 0.756843
+frame_progress = 0.726426
 
 [node name="CardPickup" type="AnimatedSprite2D" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
 position = Vector2(171, 91)
@@ -1896,7 +1984,7 @@ scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_kyjdf")
 animation = &"idle"
 autoplay = "idle"
-frame_progress = 0.929746
+frame_progress = 0.899266
 
 [node name="Bonfire" type="AnimatedSprite2D" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
 position = Vector2(103, 432)
@@ -1904,7 +1992,7 @@ scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_w7kmc")
 animation = &"idle"
 autoplay = "idle"
-frame_progress = 0.982083
+frame_progress = 0.951611
 
 [node name="Workbench" type="Sprite2D" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
 position = Vector2(498, 122)
@@ -1922,7 +2010,7 @@ scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_q0aas")
 animation = &"idle"
 autoplay = "idle"
-frame_progress = 0.75027
+frame_progress = 0.719866
 
 [node name="Protection" type="Sprite2D" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
 position = Vector2(267, 606)
