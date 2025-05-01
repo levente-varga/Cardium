@@ -192,8 +192,7 @@ public partial class InventoryMenu : Menu {
 
   private void MoveCards(Pile from, Pile to, Card.Origins newOrigin) {
     var cards = new List<Card>(from.Cards);
-    for (var i = 0; i < cards.Count; i++) {
-      var card = cards[i];
+    foreach (var card in cards) {
       if (!to.Add(card)) break;
       card.Origin = newOrigin;
       from.Remove(card);

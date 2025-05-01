@@ -129,12 +129,11 @@ public partial class Player : Entity {
   }
 
   public void ReloadDeck(List<Type> except) {
-    var cards = DiscardPile.Pile.Cards;
+    var cards = new List<Card>(DiscardPile.Pile.Cards);
     foreach (var card in cards) {
       if (except.Contains(card.GetType())) continue;
-      if (Deck.Deck.IsFull) return;
+      if (!Deck.Add(card)) break;
       DiscardPile.Remove(card);
-      Deck.Add(card);
     }
 
     Hand.DrawUntilFull();
@@ -186,12 +185,14 @@ public partial class Player : Entity {
   }
 
   public void PutCardsInUseIntoDeck() {
-    foreach (var card in Hand.Cards) {
+    var cards = new List<Card>(Hand.Cards);
+    foreach (var card in cards) {
       Deck.Add(card);
       Hand.Remove(card);
     }
 
-    foreach (var card in DiscardPile.Pile.Cards) {
+    cards = new List<Card>(DiscardPile.Pile.Cards);
+    foreach (var card in cards) {
       Deck.Add(card);
       DiscardPile.Remove(card);
     }

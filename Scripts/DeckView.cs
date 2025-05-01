@@ -31,7 +31,11 @@ public partial class DeckView : Node2D {
     return true;
   }
 
-  public void Clear() => Deck.Clear();
+  public void Clear() {
+    Deck.Clear();
+    foreach (var view in _cardBackViews) view.QueueFree();
+    _cardBackViews.Clear();
+  }
 
   private void PositionCardBackViews() {
     for (var i = 0; i < _cardBackViews.Count; i++) {

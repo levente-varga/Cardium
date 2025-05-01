@@ -11,6 +11,7 @@ public class ShieldCard : PlayerTargetingCard {
   public ShieldCard() {
     Name = "Shield";
     Rarity = Rarities.Rare;
+    MaxLevel = 3;
     Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/Shield.png");
     Type = Types.Combat;
     UpdateDescription();
