@@ -21,6 +21,7 @@ public static class Global {
   public static Color Yellow => new("F4B41B");
   public static Color Red => new("E6482E");
   public static Color White => new("FFFFFF");
+  public static Color Gray => new("888888");
   public static Color Black => new("000000");
   public static Color Magenta => new("FF23D9");
   public static Color Purple => new("7D3CD7");

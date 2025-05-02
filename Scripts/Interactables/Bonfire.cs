@@ -15,7 +15,7 @@ public partial class Bonfire : Interactable {
   public override void _Ready() {
     base._Ready();
 
-    SetStillFrame(GD.Load<Texture2D>("res://Assets/Sprites/Bonfire.png"));
+    SetStillFrame("idle", GD.Load<Texture2D>("res://Assets/Sprites/Bonfire.png"));
   }
 
   public override void OnNudge(Player player, World world) {
@@ -34,7 +34,7 @@ public partial class Bonfire : Interactable {
       if (healAmount > 0) player.Heal(healAmount);
       world.InventoryMenu.Open();
       if (!Extinguishable) return;
-      SetStillFrame(GD.Load<Texture2D>("res://Assets/Sprites/ExtinguishedBonfire.png"), "extinguished");
+      SetStillFrame("extinguished", GD.Load<Texture2D>("res://Assets/Sprites/ExtinguishedBonfire.png"));
       State = BonfireState.Extinguished;
       return;
     }
@@ -44,7 +44,7 @@ public partial class Bonfire : Interactable {
     Statistics.BonfiresLit++;
 
     world.Camera.Shake(25);
-    SetAnimation("idle", GD.Load<Texture2D>("res://Assets/Animations/Bonfire.png"), 4, 12);
+    SetAnimation("lit", GD.Load<Texture2D>("res://Assets/Animations/Bonfire.png"), 4, 12);
     SpawnFallingLabel("Lit!");
   }
 }

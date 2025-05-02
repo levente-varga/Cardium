@@ -54,10 +54,12 @@ public partial class TileAlignedGameObject : AnimatedSprite2D {
     OnTeleportEvent?.Invoke(_previousPosition, Position);
   }
 
-  protected void SetStillFrame(Texture2D texture, string name = "still") {
-    SpriteFrames.AddAnimation(name);
-    SpriteFrames.SetAnimationLoop(name, false);
-    SpriteFrames.AddFrame(name, texture);
+  protected void SetStillFrame(string name, Texture2D texture) {
+    if (!SpriteFrames.HasAnimation(name)) {
+      SpriteFrames.AddAnimation(name);
+      SpriteFrames.SetAnimationLoop(name, false);
+      SpriteFrames.AddFrame(name, texture); 
+    }
 
     Stop();
     Play(name, 0);

@@ -7,7 +7,7 @@ public partial class Workbench : Interactable {
 
   public override void _Ready() {
     base._Ready();
-    SetStillFrame(ResourceLoader.Load<Texture2D>("res://Assets/Sprites/Workbench.png"));
+    SetStillFrame("idle", ResourceLoader.Load<Texture2D>("res://Assets/Sprites/Workbench.png"));
   }
 
   public override void OnNudge(Player player, World world) {

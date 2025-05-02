@@ -10,7 +10,7 @@ public partial class TargetDummy : Enemy {
     MaxHealth = 1000;
     Health = MaxHealth;
     BaseArmor = 0;
-    SetStillFrame(GD.Load<Texture2D>("res://Assets/Sprites/player.png"));
+    SetStillFrame("idle", GD.Load<Texture2D>("res://Assets/Sprites/player.png"));
   }
 
   protected override void TakeTurn(Player player, World world) {
