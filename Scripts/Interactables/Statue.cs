@@ -17,9 +17,9 @@ public partial class Statue : Interactable {
     SetSprite();
     
     world.Camera.Shake(10);
-    SpawnFloatingLabel($"{Data.Difficulty}", height: -180, lifetimeMillis: 4000);
-    SpawnFloatingLabel(GetEnemyText(), height: -230, lifetimeMillis: 4000, fontSize: 24, color: Global.Gray);
-    SpawnFloatingLabel(GetLootRarityText(), height: -260, lifetimeMillis: 4000, fontSize: 24, color: Global.Gray);
+    SpawnFloatingLabel($"{Data.Difficulty}", height: -180, lifetimeMillis: 3200);
+    SpawnFloatingLabel(GetEnemyText(), height: -230, lifetimeMillis: 3200, fontSize: 24, color: Global.Gray);
+    //SpawnFloatingLabel(GetLootRarityText(), height: -260, lifetimeMillis: 3200, fontSize: 24, color: Global.Gray);
   }
 
   private void IncreaseDifficulty() {

@@ -500,9 +500,15 @@ public partial class Dungeon {
     }
     
     private void PlaceEnemies() {
-      bool bossPlaced = false;
+      var bossPlaced = false;
       foreach (var room in _dungeon.Rooms.Where(room => room.Type == RoomTypes.Uncategorized)) {
-        var enemyCount = Global.Random.Next(room.Rect.Grow(-1).Area / 4) + 1;
+        var enemyCount = Data.Difficulty switch {
+          Difficulty.Easy => Global.Random.Next(room.Rect.Grow(-1).Area / 5) + 1,
+          Difficulty.Moderate => Global.Random.Next(room.Rect.Grow(-1).Area / 4) + 1,
+          Difficulty.Hard => Global.Random.Next(room.Rect.Grow(-1).Area / 3) + 1 + room.Rect.Grow(-1).Area / 15,
+          _ => Global.Random.Next(room.Rect.Grow(-1).Area / 2) + 1 + room.Rect.Grow(-1).Area / 9,
+        };
+        GD.Print($"Trying to fit {enemyCount} enemies inside a {room.Rect.Size.X}x{room.Rect.Size.Y} room");
         var usedTiles = new List<Vector2I>();
 
         if (!bossPlaced) enemyCount = 1;
@@ -511,8 +517,8 @@ public partial class Dungeon {
           Vector2I tile;
           do {
             tile = new Vector2I(
-              Global.Random.Next(room.Rect.Position.X + 1, room.Rect.End.X - 2),
-              Global.Random.Next(room.Rect.Position.Y + 1, room.Rect.End.Y - 2)
+              Global.Random.Next(room.Rect.Position.X + 1, room.Rect.End.X - 1),
+              Global.Random.Next(room.Rect.Position.Y + 1, room.Rect.End.Y - 1)
             );
           } while (usedTiles.Contains(tile));
 
