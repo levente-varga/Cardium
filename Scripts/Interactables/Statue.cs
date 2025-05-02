@@ -17,7 +17,7 @@ public partial class Statue : Interactable {
     SetSprite();
     
     world.Camera.Shake(10);
-    SpawnFloatingLabel($"{Data.Difficulty}", height: -180, lifetimeMillis: 3200);
+    SpawnFloatingLabel($"{Data.Difficulty}", height: -180, lifetimeMillis: 3200, color: GetDifficultyColor());
     SpawnFloatingLabel(GetEnemyText(), height: -230, lifetimeMillis: 3200, fontSize: 24, color: Global.Gray);
     SpawnFloatingLabel(GetBonfireLadderText(), height: -260, lifetimeMillis: 3200, fontSize: 24, color: Global.Gray);
     //SpawnFloatingLabel(GetLootRarityText(), height: -290, lifetimeMillis: 3200, fontSize: 24, color: Global.Gray);
@@ -33,6 +33,13 @@ public partial class Statue : Interactable {
     SetStillFrame(Data.Difficulty.ToString(), ResourceLoader.Load<Texture2D>($"res://Assets/Sprites/Difficulties/{Data.Difficulty.ToString()}.png"));
   }
 
+  private Color GetDifficultyColor() => Data.Difficulty switch {
+    Difficulty.Easy => Global.Green,
+    Difficulty.Moderate => Global.Yellow,
+    Difficulty.Hard => Global.Red,
+    Difficulty.Brutal => Global.Orange,
+  };
+  
   private string GetEnemyText() => Data.Difficulty switch {
     Difficulty.Easy => "Few, weak enemies",
     Difficulty.Moderate => "More, better enemies",
@@ -41,10 +48,10 @@ public partial class Statue : Interactable {
   };
   
   private string GetBonfireLadderText() => Data.Difficulty switch {
-    Difficulty.Easy => "Frequent bonfires/ladders",
-    Difficulty.Moderate => "Regular bonfires/ladders",
-    Difficulty.Hard => "Occasional bonfires/ladders",
-    _ => "Sparse bonfires/ladders",
+    Difficulty.Easy => "Frequent bonfires & ladders",
+    Difficulty.Moderate => "Regular bonfires & ladders",
+    Difficulty.Hard => "Occasional bonfires & ladders",
+    _ => "Sparse bonfires & ladders",
   };
   
   private string GetLootRarityText() => Data.Difficulty switch {
