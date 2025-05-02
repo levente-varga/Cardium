@@ -29,6 +29,8 @@ public partial class Dungeon {
 
     private Dungeon _dungeon = new();
 
+    private Room? spawnRoom;
+
     public Dungeon GenerateDungeon(int width, int height, int roomTries = 100) =>
       GenerateDungeon(new Vector2I(width, height), roomTries);
 
@@ -50,11 +52,11 @@ public partial class Dungeon {
 
       InitArea();
       GenerateRooms();
+      CategorizeRooms();
       GenerateMaze();
       ConnectRegions();
       RemoveDeadEnds();
-
-      CategorizeRooms();
+      
       PlaceWalls();
       PlaceExits();
       PlaceBonfires();
@@ -426,7 +428,7 @@ public partial class Dungeon {
         .Where(room => room.Type == RoomTypes.Uncategorized && RoomIsSmall(room))
         .ToList();
       
-      var spawnRoom = Utils.GetRandomItem(uncategorized);
+      spawnRoom = Utils.GetRandomItem(uncategorized);
       spawnRoom.Type = RoomTypes.Spawn;
       uncategorized.Remove(spawnRoom);
       
@@ -619,6 +621,7 @@ public partial class Dungeon {
       for (var x = 0; x < _dungeon.Rect.Size.X; x++) {
         for (var y = 0; y < _dungeon.Rect.Size.Y; y++) {
           if (_dungeon.Tiles[x][y] != TileTypes.Entrance) continue;
+          if (spawnRoom != null && spawnRoom.Rect.Grow(1).HasPoint(new Vector2I(x, y))) continue;
           if (Global.Random.Next(doors + 2) > 0) continue;
           Door door = new() { Position = new Vector2I(x, y) };
           _dungeon.Interactables.Add(door);
