@@ -56,7 +56,7 @@ public static class Data {
 
   public static void LoadDungeonData() {
     Level = Level.One;
-    Fog = true;
+    //Fog = true;
     Hand = true;
     ShowHealth = true;
     CameraOnPlayer = true;

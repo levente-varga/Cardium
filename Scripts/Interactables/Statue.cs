@@ -19,7 +19,8 @@ public partial class Statue : Interactable {
     world.Camera.Shake(10);
     SpawnFloatingLabel($"{Data.Difficulty}", height: -180, lifetimeMillis: 3200);
     SpawnFloatingLabel(GetEnemyText(), height: -230, lifetimeMillis: 3200, fontSize: 24, color: Global.Gray);
-    //SpawnFloatingLabel(GetLootRarityText(), height: -260, lifetimeMillis: 3200, fontSize: 24, color: Global.Gray);
+    SpawnFloatingLabel(GetBonfireLadderText(), height: -260, lifetimeMillis: 3200, fontSize: 24, color: Global.Gray);
+    //SpawnFloatingLabel(GetLootRarityText(), height: -290, lifetimeMillis: 3200, fontSize: 24, color: Global.Gray);
   }
 
   private void IncreaseDifficulty() {
@@ -37,6 +38,13 @@ public partial class Statue : Interactable {
     Difficulty.Moderate => "More, better enemies",
     Difficulty.Hard => "Many, strong enemies",
     _ => "Numerous, deadly enemies",
+  };
+  
+  private string GetBonfireLadderText() => Data.Difficulty switch {
+    Difficulty.Easy => "Frequent bonfires/ladders",
+    Difficulty.Moderate => "Regular bonfires/ladders",
+    Difficulty.Hard => "Occasional bonfires/ladders",
+    _ => "Sparse bonfires/ladders",
   };
   
   private string GetLootRarityText() => Data.Difficulty switch {

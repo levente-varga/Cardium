@@ -403,9 +403,54 @@ public partial class Dungeon {
     private static bool RoomIsSmall(Room room) => room.Rect.Area <= 15;
 
     private void CategorizeRooms() {
-      var spawnRoomPicked = false;
+      var minBonfireDistance = Data.Difficulty switch {
+        Difficulty.Easy => 30,
+        Difficulty.Moderate => 40,
+        Difficulty.Hard => 50,
+        _ => 60,
+      };
+      var minLadderDistance = Data.Difficulty switch {
+        Difficulty.Easy => 25,
+        Difficulty.Moderate => 40,
+        Difficulty.Hard => 55,
+        _ => 75,
+      };;
       var bonfires = 0;
-      var exits = 0;
+      var ladders = 0;
+      var bonfireTries = 1000;
+      var ladderTries = 1000;
+      List<Vector2I> bonfireLocations = new();
+      List<Vector2I> ladderLocations = new();
+
+      var uncategorized = _dungeon.Rooms
+        .Where(room => room.Type == RoomTypes.Uncategorized && RoomIsSmall(room))
+        .ToList();
+      
+      var spawnRoom = Utils.GetRandomItem(uncategorized);
+      spawnRoom.Type = RoomTypes.Spawn;
+      uncategorized.Remove(spawnRoom);
+      
+      for (var i = 0; i < ladderTries; i++) {
+        var room = Utils.GetRandomItem(uncategorized);
+        if (ladderLocations.Any(location => location.DistanceTo(room.Rect.GetCenter()) < minLadderDistance)) continue;
+        room.Type = RoomTypes.Exit;
+        ladderLocations.Add(room.Rect.GetCenter());
+        ladders++;
+        uncategorized.Remove(room);
+      }
+      
+      for (var i = 0; i < bonfireTries; i++) {
+        var room = Utils.GetRandomItem(uncategorized);
+        if (bonfireLocations.Any(location => location.DistanceTo(room.Rect.GetCenter()) < minBonfireDistance)) continue;
+        room.Type = RoomTypes.Bonfire;
+        bonfireLocations.Add(room.Rect.GetCenter());
+        bonfires++;
+        uncategorized.Remove(room);
+      }
+
+      return;
+      
+      var spawnRoomPicked = false;
       foreach (var room in _dungeon.Rooms) {
         if (room.Type != RoomTypes.Uncategorized) continue;
         if (RoomIsSmall(room)) {
@@ -414,8 +459,8 @@ public partial class Dungeon {
             spawnRoomPicked = true;
           }
           else {
-            if (Global.Random.Next((int)Mathf.Pow(exits * 2f, 2)) == 0) {
-              exits++;
+            if (Global.Random.Next((int)Mathf.Pow(ladders * 2f, 2)) == 0) {
+              ladders++;
               room.Type = RoomTypes.Exit;
             }
             else if (Global.Random.Next((int)Mathf.Pow(bonfires, 1.2f)) == 0) {

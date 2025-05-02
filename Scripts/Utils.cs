@@ -87,4 +87,6 @@ public static class Utils {
     GD.Print("Sorting result:");
     foreach (var card in cards) GD.Print($"  {card.Name} (lvl. {card.Level}) - {card.Origin}");
   }
+
+  public static T GetRandomItem<T>(List<T> list) => list[Global.Random.Next(list.Count)];
 }
