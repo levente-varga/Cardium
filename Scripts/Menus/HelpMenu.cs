@@ -6,7 +6,7 @@ public partial class HelpMenu : Menu {
   [Export] public Button CloseButton = null!;
 
   public override void _Ready() {
-    Visible = false;
+    Visible = true;
     CloseButton.Pressed += Close;
   }
   

@@ -64,6 +64,8 @@ public partial class DeckView : Node2D {
     Deck.Clear();
     Add(new HealCard { Protected = true, Origin = Card.Origins.Deck });
     Add(new HurlCard { Protected = true, Origin = Card.Origins.Deck });
+    Add(new HurlCard { Protected = true, Origin = Card.Origins.Deck });
+    Add(new SmiteCard { Protected = true, Origin = Card.Origins.Deck });
     Add(new SmiteCard { Protected = true, Origin = Card.Origins.Deck });
     Add(new WoodenKeyCard { Protected = true, Origin = Card.Origins.Deck });
     Add(new RestCard { Protected = true, Origin = Card.Origins.Deck });

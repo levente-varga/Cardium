@@ -27,9 +27,10 @@ public partial class Slime : Enemy {
   protected override List<Card> GenerateLoot => Utils.GenerateLoot(
     Global.Random.Next(1, 2 + Level), 
     new Dictionary<Type, int> {
-      { typeof(HealCard), 80 },
-      { typeof(ShieldCard), 30 },
+      { typeof(HealCard), 60 },
+      { typeof(ShieldCard), 20 },
       { typeof(HurlCard), 20 },
+      { typeof(SmiteCard), 20 },
       { typeof(ShuffleCard), 10 },
       { typeof(WoodenKeyCard), 10 },
       { typeof(GoldenKeyCard), 5 },

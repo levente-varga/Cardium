@@ -17,10 +17,10 @@ public partial class Statue : Interactable {
     SetSprite();
     
     world.Camera.Shake(10);
-    SpawnFloatingLabel($"{Data.Difficulty}", height: -180, lifetimeMillis: 3200, color: GetDifficultyColor());
-    SpawnFloatingLabel(GetEnemyText(), height: -230, lifetimeMillis: 3200, fontSize: 24, color: Global.Gray);
-    SpawnFloatingLabel(GetBonfireLadderText(), height: -260, lifetimeMillis: 3200, fontSize: 24, color: Global.Gray);
-    //SpawnFloatingLabel(GetLootRarityText(), height: -290, lifetimeMillis: 3200, fontSize: 24, color: Global.Gray);
+    SpawnFloatingLabel($"{Data.Difficulty}", height: -170, lifetimeMillis: 3200, color: GetDifficultyColor());
+    SpawnFloatingLabel(GetEnemyText(), height: -220, lifetimeMillis: 3200, fontSize: 24, color: Global.Gray);
+    SpawnFloatingLabel(GetBonfireLadderText(), height: -250, lifetimeMillis: 3200, fontSize: 24, color: Global.Gray);
+    SpawnFloatingLabel(GetLootRarityText(), height: -280, lifetimeMillis: 3200, fontSize: 24, color: Global.Gray);
   }
 
   private void IncreaseDifficulty() {
@@ -55,9 +55,9 @@ public partial class Statue : Interactable {
   };
   
   private string GetLootRarityText() => Data.Difficulty switch {
-    Difficulty.Easy => "Common loot",
-    Difficulty.Moderate => "Better loot",
-    Difficulty.Hard => "Awesome loot",
-    _ => "Best loot possible",
+    Difficulty.Easy => "Very little loot",
+    Difficulty.Moderate => "Average loot",
+    Difficulty.Hard => "More loot",
+    _ => "Tons of loot",
   };
 }
