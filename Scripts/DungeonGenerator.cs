@@ -517,9 +517,9 @@ public partial class Dungeon {
       }
     }
 
-    private int GenerateEnemyLevel(Difficulty difficulty) {
+    private int GenerateEnemyLevel() {
       var random = Global.Random.Next(100);
-      return difficulty switch {
+      return Data.Difficulty switch {
         Difficulty.Easy => random switch {
           < 75 => 0,
           _ => 1
@@ -544,11 +544,41 @@ public partial class Dungeon {
       };
     }
     
+    private Enemy GenerateEnemy() {
+      var random = Global.Random.Next(100);
+      var level = GenerateEnemyLevel();
+      return Data.Difficulty switch {
+        Difficulty.Easy => random switch {
+          < 75 => new Slime { Level = level },
+          < 90 => new Spider { Level = level },
+          _ => new Voidling { Level = level },
+        },
+        Difficulty.Moderate => random switch {
+          < 60 => new Slime { Level = level },
+          < 85 => new Spider { Level = level },
+          < 95 => new Voidling { Level = level },
+          _ => new Ranger { Level = level },
+        },
+        Difficulty.Hard => random switch {
+          < 40 => new Slime { Level = level },
+          < 70 => new Spider { Level = level },
+          < 90 => new Voidling { Level = level },
+          _ => new Ranger { Level = level },
+        },
+        Difficulty.Brutal => random switch {
+          < 25 => new Slime { Level = level },
+          < 60 => new Spider { Level = level },
+          < 85 => new Voidling { Level = level },
+          _ => new Ranger { Level = level },
+        },
+      };
+    }
+    
     private void PlaceEnemies() {
       var bossPlaced = false;
       foreach (var room in _dungeon.Rooms.Where(room => room.Type == RoomTypes.Uncategorized)) {
         var enemyCount = Data.Difficulty switch {
-          Difficulty.Easy => Global.Random.Next(room.Rect.Grow(-1).Area / 5) + 1,
+          Difficulty.Easy => Global.Random.Next(room.Rect.Grow(-1).Area / 9) + 1,
           Difficulty.Moderate => Global.Random.Next(room.Rect.Grow(-1).Area / 4) + 1,
           Difficulty.Hard => Global.Random.Next(room.Rect.Grow(-1).Area / 3) + 1 + room.Rect.Grow(-1).Area / 15,
           _ => Global.Random.Next(room.Rect.Grow(-1).Area / 2) + 1 + room.Rect.Grow(-1).Area / 9,
@@ -568,19 +598,13 @@ public partial class Dungeon {
           } while (usedTiles.Contains(tile));
 
           Enemy enemy;
-          var level = GenerateEnemyLevel(Data.Difficulty);
 
           if (!bossPlaced) {
             enemy = new Exterminator();
             bossPlaced = true;
           }
           else {
-            enemy = Global.Random.Next(100) switch {
-              < 50 => new Slime { Level = level },
-              < 80 => new Spider { Level = level },
-              < 90 => new Ranger { Level = level },
-              _ => new Voidling { Level = level },
-            };
+            enemy = GenerateEnemy();
           }
 
           enemy.Position = tile;
