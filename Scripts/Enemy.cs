@@ -44,15 +44,15 @@ public partial class Enemy : Entity {
     if (aggro || !PlayerInVision) {
       if (aggro || LastSeenPlayerDistance != -1 && LastSeenPlayerDistance <= Vision) {
         PlayerInVision = true;
-        HealthBar.Visible = Data.ShowHealth;
       }
     }
     else {
       if (LastSeenPlayerDistance != -1 && LastSeenPlayerDistance > CombatVision) {
         PlayerInVision = false;
-        HealthBar.Visible = false;
       }
     }
+
+    HealthBar.Visible = Data.ShowHealth && PlayerInVision;
   }
 
   protected override void TakeTurn(Player player, World world) {

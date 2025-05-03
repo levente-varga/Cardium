@@ -104,18 +104,19 @@ public partial class Entity : TileAlignedGameObject {
   }
 
   protected virtual void OnDamaged(Entity source, int damage, World world) {
-    var remainingDamage = Math.Max(1, damage - BaseArmor);;
+    var remainingDamage = Math.Max(1, damage - BaseArmor);
+    
+    GD.Print($"Total damage received is {remainingDamage}");
     
     if (Shield > 0) {
-      var shieldedDamage = Mathf.Max(remainingDamage, Shield);
+      var shieldedDamage = Mathf.Min(remainingDamage, Shield);
+      GD.Print($"Shielded: {shieldedDamage}");
       remainingDamage -= shieldedDamage;
-      if (shieldedDamage <= Shield) {
-        Shield -= shieldedDamage;
-        return;
-      }
-      Shield = 0;
+      Shield -= shieldedDamage;
     }
 
+    GD.Print($"Remaining after shield: {remainingDamage}");
+    
     Health -= remainingDamage;
     if (Health <= 0) OnDeath(source, world);
     
