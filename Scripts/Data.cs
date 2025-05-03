@@ -26,6 +26,8 @@ public static class Data {
   public static bool InitialStart = true;
   public static int InitialCardPlaysLeft = 1;
   public static bool LastRunFinished = true;
+  public static bool FoundSaveData = false;
+  public static bool SetupRan = false;
   public static DateTime LastSaveTime = DateTime.Now;
   public static bool Fog;
   public static bool Hand;
@@ -100,8 +102,8 @@ public static class Data {
         {"total_damage", Statistics.TotalDamage},
         {"total_damage_taken", Statistics.TotalDamageTaken},
         {"total_heal_amount", Statistics.TotalHealAmount},
-        {"start_time", Statistics.StartTime.ToString("o")}}
-      },
+        {"minutes_played", Utils.GetMinutesBetween(Statistics.StartTime, DateTime.Now)}
+      }},
       {"difficulty", (int)Difficulty},
       {"last_run_finished", LastRunFinished},
       {"stash", stashArray},
@@ -155,8 +157,7 @@ public static class Data {
     Statistics.TotalDamage = (int)stats.GetValueOrDefault("total_damage", 0);
     Statistics.TotalDamageTaken = (int)stats.GetValueOrDefault("total_damage_taken", 0);
     Statistics.TotalHealAmount = (int)stats.GetValueOrDefault("total_heal_amount", 0);
-    var parsed = DateTime.TryParse((string)stats.GetValueOrDefault("start_time", ""), out var parsedTime);
-    Statistics.StartTime = parsed ? parsedTime : DateTime.Now;
+    Statistics.StartTime = DateTime.Now.AddMinutes(-(int)stats.GetValueOrDefault("minutes_played", 0));
 
     Difficulty = (Difficulty)(int)save.GetValueOrDefault("difficulty", 0);
     LastRunFinished = (bool)save.GetValueOrDefault("last_run_finished", true);
@@ -179,6 +180,8 @@ public static class Data {
       foreach (var cardData in (Godot.Collections.Array)deckArray)
         Deck.Cards.Add(CardFromDict((Godot.Collections.Dictionary)cardData, Card.Origins.Deck));
     }
+
+    FoundSaveData = true;
   }
   
   private static Card CardFromDict(Godot.Collections.Dictionary dict, Card.Origins origin) {

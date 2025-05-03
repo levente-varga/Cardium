@@ -49,6 +49,10 @@ public partial class World : Node2D {
   private int _escapeAfterFrames = -1;
 
   public World() {
+    if (!Data.LoadedSaveData) {
+      Data.Load();
+    }
+    
     Dungeon = Dungeon.GenerateLobby();
 
     Dungeon = Data.Level switch {
@@ -62,19 +66,35 @@ public partial class World : Node2D {
 
   public Vector2I HoveredCell => GetTilePosition(GetGlobalMousePosition());
 
-  public override void _Ready() {
-    if (!Data.LoadedSaveData) {
-      Player.Deck.FillWithInitial();
-      Player.SaveCards();
-      Data.Load();
+  private void SpawnClosedMidRunText() => Utils.SpawnFloatingLabel(GetTree().Root, Camera.GlobalPosition, "Game was closed mid-run!", color: Global.Red);
+  
+  private void Setup() {
+    if (Data.SetupRan) return;
+    
+    if (Data.FoundSaveData) {
       if (!Data.LastRunFinished) {
         GD.Print("Game was closed mid-run.");
+        CallDeferred(nameof(SpawnClosedMidRunText));
         Data.EraseUnprotectedCardsOutsideStash();
         Data.LastRunFinished = true;
         Data.Save();
       }
       Player.LoadCards();
     }
+    else {
+      GD.Print("No save data found.");
+      Data.Stash.Clear();
+      Player.Inventory.Clear();
+      Player.Deck.Clear();
+      Player.Deck.FillWithInitial();
+      Player.SaveCards();
+    }
+    
+    Data.SetupRan = true;
+  }
+  
+  public override void _Ready() {
+    Setup();
 
     _combatManager = new CombatManager(Player, this, DebugLabel1);
 
