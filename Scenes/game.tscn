@@ -832,6 +832,7 @@ label_settings = SubResource("LabelSettings_khtd6")
 vertical_alignment = 1
 
 [node name="Inventory" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("Player", "StashContainer", "InventoryContainer", "DeckContainer", "StashArea", "InventoryArea", "DeckArea", "StashSizeLabel", "InventorySizeLabel", "DeckSizeLabel", "OkButton", "StashToInventoryButton", "StashToDeckButton", "InventoryToStashButton", "InventoryToDeckButton", "DeckToStashButton", "DeckToInventoryButton")]
+visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_right = 1920.0

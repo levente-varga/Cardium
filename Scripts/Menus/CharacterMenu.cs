@@ -26,6 +26,8 @@ public partial class CharacterMenu : Menu {
   }
 
   public override void _Input(InputEvent @event) {
+    base._Input(@event);
+    
     if (!@event.IsPressed()) return;
 
     if (InputMap.EventIsAction(@event, "ToggleCharacterMenu")) {

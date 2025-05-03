@@ -54,15 +54,6 @@ public partial class WorkbenchMenu : Menu {
     CancelButton.Pressed += Close;
   }
   
-  public override void _Input(InputEvent @event) {
-    if (!Visible) return;
-    
-    if (InputMap.EventIsAction(@event, "Back") && @event.IsPressed()) {
-      Close();
-      GetViewport().SetInputAsHandled();
-    }
-  }
-  
   public override void Open() {
     base.Open();
     Player.PutCardsInUseIntoDeck();

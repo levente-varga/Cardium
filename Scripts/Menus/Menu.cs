@@ -16,4 +16,13 @@ public partial class Menu : Control {
     Visible = false;
     Data.MenusOpen--;
   }
+  
+  public override void _Input(InputEvent @event) {
+    if (!Visible) return;
+    
+    if (InputMap.EventIsAction(@event, "Back") && @event.IsPressed()) {
+      Close();
+      GetViewport().SetInputAsHandled();
+    }
+  }
 }
