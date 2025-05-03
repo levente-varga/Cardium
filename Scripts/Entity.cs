@@ -41,6 +41,15 @@ public partial class Entity : TileAlignedGameObject {
     }
   }
   
+  private int _tempArmor;
+  public int TempArmor {
+    get => _tempArmor;
+    protected set {
+      _tempArmor = Mathf.Max(0, value);
+      StatusBar.ExtraArmor = _tempArmor;
+    }
+  }
+  
   private int _baseDamage;
   public int BaseDamage {
     get => _baseDamage;
@@ -54,7 +63,6 @@ public partial class Entity : TileAlignedGameObject {
   protected int BaseVision = 3;
   protected float BaseLuck = 0;
 
-  public int TempArmor { private get; set; }
   public int TempDamage { private get; set; }
   public int TempRange { private get; set; }
   public int TempVision { private get; set; }
@@ -134,7 +142,7 @@ public partial class Entity : TileAlignedGameObject {
   }
 
   protected virtual void OnDamaged(Entity source, int damage, World world) {
-    var remainingDamage = Math.Max(1, damage - BaseArmor);
+    var remainingDamage = Math.Max(1, damage - Armor);
     
     GD.Print($"Total damage received is {remainingDamage}");
     

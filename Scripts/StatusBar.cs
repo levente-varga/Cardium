@@ -73,6 +73,15 @@ public partial class StatusBar : Node2D {
 		}
 	}
 	
+	private int _extraArmor;
+	public int ExtraArmor {
+		get => _extraArmor;
+		set {
+			_extraArmor = Mathf.Max(0, value);
+			UpdateArmorLabel();
+		}
+	}
+	
 	private int _attack;
 	public int Attack {
 		get => _attack;
@@ -88,7 +97,7 @@ public partial class StatusBar : Node2D {
 	
 	private void UpdateArmorLabel() {
 		ArmorPart.Visible = Armor > 0;
-		ArmorLabel.Text = $"{Armor}";
+		ArmorLabel.Text = $"{Armor}{(ExtraArmor > 0 ? $"[color={Global.Yellow.ToHtml()}]+{ExtraArmor}" : "")}";
 	}
 	
 	private void UpdateAttackLabel() {

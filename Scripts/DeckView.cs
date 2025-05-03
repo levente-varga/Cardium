@@ -62,7 +62,20 @@ public partial class DeckView : Node2D {
 
   public void FillWithInitial() {
     Deck.Clear();
-    Add(new ShieldCard() { Protected = true, Origin = Card.Origins.Deck });
+    
+    for (var i = 0; i < 10; i++) {
+      var card = new HolyCard();
+      card.Upgrade();
+      card.Upgrade();
+      card.Upgrade();
+      Add(card);
+    }
+    
+    Add(new GuideCard { Protected = true, Origin = Card.Origins.Deck });
+    Add(new GuideCard { Protected = true, Origin = Card.Origins.Deck });
+    Add(new GuideCard { Protected = true, Origin = Card.Origins.Deck });
+    Add(new GuideCard { Protected = true, Origin = Card.Origins.Deck });
+    Add(new GuideCard { Protected = true, Origin = Card.Origins.Deck });
     Add(new HealCard { Protected = true, Origin = Card.Origins.Deck });
     Add(new HurlCard { Protected = true, Origin = Card.Origins.Deck });
     Add(new HurlCard { Protected = true, Origin = Card.Origins.Deck });

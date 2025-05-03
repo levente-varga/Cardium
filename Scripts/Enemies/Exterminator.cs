@@ -69,7 +69,7 @@ public partial class Exterminator : Enemy {
     }
 
     if (_state == ExterminatorState.Defensive) {
-      TempArmor = BaseArmor;
+      TempArmor = 15;
       if (_turnsInCurrentState >= 4) {
         _state = ExterminatorState.Aggressive;
         _turnsInCurrentState = 0;
