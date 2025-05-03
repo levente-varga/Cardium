@@ -63,10 +63,11 @@ public partial class World : Node2D {
   public Vector2I HoveredCell => GetTilePosition(GetGlobalMousePosition());
 
   public override void _Ready() {
-    if (Data.InitialStart) {
-      Data.InitialStart = false;
+    if (!Data.LoadedSaveData) {
       Player.Deck.FillWithInitial();
       Player.SaveCards();
+      Data.Load();
+      Player.LoadCards();
     }
 
     _combatManager = new CombatManager(Player, this, DebugLabel1);
@@ -152,6 +153,7 @@ public partial class World : Node2D {
     if (InputMap.EventIsAction(@event, "Back") && @event.IsPressed()) {
       if (!Data.MenuOpen) {
         PauseMenu.Open();
+        Data.Save();
       }
       else {
         PauseMenu.Close();

@@ -78,4 +78,12 @@ public class Card {
     Rarities.Legendary => new Color("FF8325"),
     _ => throw new ArgumentOutOfRangeException()
   };
+  
+  public Godot.Collections.Dictionary Save() {
+    return new Godot.Collections.Dictionary {
+      {"name", Name.ToLower()},
+      {"level", Level},
+      {"protected", Protected}
+    };
+  }
 }
