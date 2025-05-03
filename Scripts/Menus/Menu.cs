@@ -10,6 +10,7 @@ public partial class Menu : Control {
   public virtual void Open() {
     Visible = true;
     Data.MenusOpen++;
+    Data.InitialMenuOpen = false;
   }
 
   public virtual void Close() {

@@ -6,6 +6,7 @@ namespace Cardium.Scripts;
 public partial class Camera : Camera2D {
   [Export] public Node2D Target = null!;
   [Export] public CanvasLayer Canvas = null!;
+  [Export] public RichTextLabel Tip = null!;
 
   private float _shake;
 
@@ -41,6 +42,8 @@ public partial class Camera : Camera2D {
     if (_shake > 0) Shake(delta);
 
     FollowTarget(delta);
+    
+    Tip.Visible = Data.Level == Level.Lobby && Data.InitialMenuOpen;
   }
 
   private void FollowTarget(double delta) {

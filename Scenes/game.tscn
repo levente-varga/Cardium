@@ -455,10 +455,11 @@ Hand = NodePath("../Camera2D/Hand")
 DiscardPile = NodePath("../Camera2D/DiscardPile")
 Deck = NodePath("../Camera2D/Deck")
 
-[node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("Target", "Canvas")]
+[node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("Target", "Canvas", "Tip")]
 script = ExtResource("3_evct5")
 Target = NodePath("../Player")
 Canvas = NodePath("CanvasLayer")
+Tip = NodePath("CanvasLayer/Tip")
 
 [node name="DiscardPile" type="Node2D" parent="Camera2D" node_paths=PackedStringArray("SizeLabel")]
 z_index = 10
@@ -531,6 +532,36 @@ text = "Collection And Retrieval of Dungeon Scraps"
 label_settings = SubResource("LabelSettings_7y8e8")
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="Tip" type="RichTextLabel" parent="Camera2D/CanvasLayer"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -322.0
+offset_top = 980.0
+offset_right = 322.0
+offset_bottom = 1012.0
+grow_horizontal = 2
+theme = ExtResource("5_h5gro")
+theme_override_fonts/normal_font = ExtResource("12_aeksy")
+theme_override_font_sizes/normal_font_size = 25
+bbcode_enabled = true
+text = "[center]Press [color=CCCCCC]Esc[/color] and go to [color=CCCCCC]Help[/color] for more info!"
+
+[node name="Version" type="RichTextLabel" parent="Camera2D/CanvasLayer"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -322.0
+offset_top = 400.0
+offset_right = 322.0
+offset_bottom = 432.0
+grow_horizontal = 2
+theme = ExtResource("5_h5gro")
+theme_override_fonts/normal_font = ExtResource("12_aeksy")
+theme_override_font_sizes/normal_font_size = 25
+bbcode_enabled = true
+text = "[center][color=222222]First closed playtest version"
 
 [node name="PlayingCardPosition" type="Node2D" parent="Camera2D"]
 position = Vector2(-800, 0)
@@ -832,6 +863,7 @@ label_settings = SubResource("LabelSettings_khtd6")
 vertical_alignment = 1
 
 [node name="Inventory" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("Player", "StashContainer", "InventoryContainer", "DeckContainer", "StashArea", "InventoryArea", "DeckArea", "StashSizeLabel", "InventorySizeLabel", "DeckSizeLabel", "OkButton", "StashToInventoryButton", "StashToDeckButton", "InventoryToStashButton", "InventoryToDeckButton", "DeckToStashButton", "DeckToInventoryButton")]
+visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_right = 1920.0
@@ -1968,7 +2000,7 @@ scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_0eurg")
 animation = &"idle"
 autoplay = "idle"
-frame_progress = 0.225018
+frame_progress = 0.592294
 
 [node name="Chest" type="AnimatedSprite2D" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
 position = Vector2(571, 91)
@@ -1976,7 +2008,7 @@ scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_q0aas")
 animation = &"idle"
 autoplay = "idle"
-frame_progress = 0.34372
+frame_progress = 0.71099
 
 [node name="CardPickup" type="AnimatedSprite2D" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
 position = Vector2(171, 91)
@@ -1984,7 +2016,7 @@ scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_kyjdf")
 animation = &"idle"
 autoplay = "idle"
-frame_progress = 0.51655
+frame_progress = 0.883802
 
 [node name="Bonfire" type="AnimatedSprite2D" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
 position = Vector2(103, 432)
@@ -1992,7 +2024,7 @@ scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_w7kmc")
 animation = &"idle"
 autoplay = "idle"
-frame_progress = 0.568894
+frame_progress = 0.936143
 
 [node name="Workbench" type="Sprite2D" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
 position = Vector2(498, 122)
@@ -2010,7 +2042,7 @@ scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_q0aas")
 animation = &"idle"
 autoplay = "idle"
-frame_progress = 0.33716
+frame_progress = 0.704425
 
 [node name="Protection" type="Sprite2D" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
 position = Vector2(267, 606)
