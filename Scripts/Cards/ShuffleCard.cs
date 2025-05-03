@@ -14,7 +14,7 @@ public class ShuffleCard : PlayerTargetingCard {
   }
 
   protected sealed override void UpdateDescription() {
-    Description = $"Puts cards from hand into deck, shuffles it, then draws the same amount of cards.";
+    Description = $"Returns all cards from hand to deck, shuffles it, then draws a new hand.";
   }
 
   public override bool OnPlay(Player player, World world) {
