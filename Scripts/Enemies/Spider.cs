@@ -32,7 +32,7 @@ public partial class Spider : Enemy {
       { typeof(SmiteCard), 40 },
       { typeof(HolyCard), 15 },
       { typeof(ChainCard), 15 },
-      { typeof(WoodenKeyCard), 10 },
+      { typeof(WoodenKeyCard), 5 },
       { typeof(GoldenKeyCard), 5 },
       { typeof(GuideCard), 1 },
     }

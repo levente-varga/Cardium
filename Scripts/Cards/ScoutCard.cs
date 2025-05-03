@@ -5,7 +5,7 @@ using Godot;
 namespace Cardium.Scripts.Cards;
 
 public class ScoutCard : PlayerTargetingCard {
-  private int Range => new List<int> { 8, 10, 14, 20 }[Level];
+  private int Range => new List<int> { 8, 11, 15, 20 }[Level];
 
   public ScoutCard() {
     Name = "Scout";

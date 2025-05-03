@@ -17,7 +17,7 @@ public partial class Slime : Enemy {
     MaxHealth = new List<int> { 5, 7, 9, 12, 15 }[Level];
     Health = MaxHealth;
     BaseVision = 2;
-    BaseArmor = new List<int> { 0, 0, 1, 2, 6 }[Level];
+    BaseArmor = new List<int> { 0, 0, 1, 3, 6 }[Level];
     BaseDamage = new List<int> { 1, 2, 3, 4, 5 }[Level];
     BaseLuck = 0f;
     BaseRange = 1;
@@ -31,8 +31,8 @@ public partial class Slime : Enemy {
       { typeof(ShieldCard), 20 },
       { typeof(HurlCard), 20 },
       { typeof(SmiteCard), 20 },
-      { typeof(ShuffleCard), 10 },
-      { typeof(WoodenKeyCard), 10 },
+      { typeof(ShuffleCard), 5 },
+      { typeof(WoodenKeyCard), 5 },
       { typeof(GoldenKeyCard), 5 },
       { typeof(GuideCard), 1 },
     }

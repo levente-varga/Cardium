@@ -29,13 +29,18 @@ public partial class Chest : Interactable {
   }
   
   private static List<Card> GenerateLoot => Utils.GenerateLoot(
-    Global.Random.Next(3, 8), 
+    Data.Difficulty switch {
+      Difficulty.Easy => Global.Random.Next(3, 8),
+      Difficulty.Moderate => Global.Random.Next(4, 10),
+      Difficulty.Hard => Global.Random.Next(5, 12),
+      _ => Global.Random.Next(6, 15),
+    },
     new Dictionary<Type, int> {
       { typeof(HealCard), 40 },
       { typeof(ShieldCard), 20 },
       { typeof(SmiteCard), 40 },
       { typeof(ChainCard), 40 },
-      { typeof(ShuffleCard), 10 },
+      { typeof(ShuffleCard), 5 },
       { typeof(TeleportCard), 20 },
       { typeof(HolyCard), 10 },
       { typeof(RestCard), 5 },

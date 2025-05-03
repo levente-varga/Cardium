@@ -65,7 +65,7 @@ public partial class Ranger : Enemy {
       { typeof(ScoutCard), 40 },
       { typeof(ChainCard), 20 },
       { typeof(TeleportCard), 20 },
-      { typeof(WoodenKeyCard), 10 },
+      { typeof(WoodenKeyCard), 5 },
       { typeof(GoldenKeyCard), 5 },
     }
   );
