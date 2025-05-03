@@ -15,11 +15,11 @@ public partial class Ladder : Interactable {
     base.OnNudge(player, world);
 
     if (player.TurnsLived - _lastPlayerTurnsLived == 1) {
-      Data.LoadLobbyData();
       player.SaveCards();
+      Data.LastRunFinished = true;
+      Data.Save();
 
-      // TODO: Save cards
-
+      Data.LoadLobbyData();
       GetTree().ReloadCurrentScene();
       return;
     }

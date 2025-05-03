@@ -17,6 +17,8 @@ public partial class DeathMenu : Menu {
     Player.SaveCards();
     Statistics.CardsLost += Data.UnprotectedCardCount;
     Data.EraseUnprotectedCardsOutsideStash();
+    Data.LastRunFinished = true;
+    Data.Save();
     Data.LoadLobbyData();
     GetTree().ReloadCurrentScene();
   }

@@ -25,6 +25,7 @@ public static class Data {
   public static bool LoadedSaveData = false;
   public static bool InitialStart = true;
   public static int InitialCardPlaysLeft = 1;
+  public static bool LastRunFinished = true;
   public static bool Fog;
   public static bool Hand;
   public static bool ShowHealth;
@@ -100,6 +101,8 @@ public static class Data {
         {"total_heal_amount", Statistics.TotalHealAmount},
         {"start_time", Statistics.StartTime.ToString("o")}}
       },
+      {"difficulty", (int)Difficulty},
+      {"last_run_finished", LastRunFinished},
       {"stash", stashArray},
       {"inventory", inventoryArray},
       {"deck", deckArray},
@@ -153,6 +156,9 @@ public static class Data {
     var parsed = DateTime.TryParse((string)stats.GetValueOrDefault("start_time", ""), out var parsedTime);
     Statistics.StartTime = parsed ? parsedTime : DateTime.Now;
 
+    Difficulty = (Difficulty)(int)save.GetValueOrDefault("difficulty", 0);
+    LastRunFinished = (bool)save.GetValueOrDefault("last_run_finished", true);
+    
     Stash.Clear();
     Inventory.Clear();
     Deck.Clear();

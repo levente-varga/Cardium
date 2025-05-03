@@ -16,8 +16,10 @@ public partial class Entrance : Interactable {
 
     if (Interacted) {
       Statistics.Runs++;
-      Data.LoadDungeonData();
+      Data.LastRunFinished = false;
       player.SaveCards();
+      Data.Save();
+      Data.LoadDungeonData();
       GetTree().ReloadCurrentScene();
       return;
     }

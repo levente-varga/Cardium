@@ -67,6 +67,12 @@ public partial class World : Node2D {
       Player.Deck.FillWithInitial();
       Player.SaveCards();
       Data.Load();
+      if (!Data.LastRunFinished) {
+        GD.Print("Game was closed mid-run.");
+        Data.EraseUnprotectedCardsOutsideStash();
+        Data.LastRunFinished = true;
+        Data.Save();
+      }
       Player.LoadCards();
     }
 
@@ -114,8 +120,10 @@ public partial class World : Node2D {
     if (_escapeAfterFrames >= 0) {
       _escapeAfterFrames--;
       if (_escapeAfterFrames == -1) {
-        Data.LoadLobbyData();
         Player.SaveCards();
+        Data.LastRunFinished = true;
+        Data.Save();
+        Data.LoadLobbyData();
         Player.GetTree().ReloadCurrentScene();
       }
     }

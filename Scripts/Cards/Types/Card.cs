@@ -29,7 +29,6 @@ public class Card {
     set {
       if (value == _origin) return;
       _origin = value;
-      GD.Print($"Card origin changed: [{value}]");
       OnOriginChangedEvent?.Invoke(value);
     }
   }
