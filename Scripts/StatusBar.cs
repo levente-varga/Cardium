@@ -83,7 +83,7 @@ public partial class StatusBar : Node2D {
 	}
 
 	private void UpdateHealthLabel() {
-		HealthLabel.Text = $"{Health}{(Shield > 0 ? $"[color={Global.Yellow.ToHtml()}]+{Shield}" : "")}";
+		HealthLabel.Text = $"{Health}{(Shield > 0 ? $"[color={Global.Yellow.ToHtml()}]+{Shield}" : "")} {_smoothHealthRatio}";
 	}
 	
 	private void UpdateArmorLabel() {
@@ -97,8 +97,9 @@ public partial class StatusBar : Node2D {
 	}
 
 
-	public override void _Ready() {
-		
+	public void Reset() {
+		_smoothHealthRatio = _health / _maxHealth;
+		_smoothShieldRatio = _shield / _maxHealth;
 	}
 
 	public override void _Process(double delta) {

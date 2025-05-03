@@ -23,6 +23,8 @@ public partial class Spider : Enemy {
     BaseLuck = 0f;
     BaseRange = 1;
     Description = "A spider enemy.";
+    
+    StatusBar.Reset();
   }
   
   protected override List<Card> GenerateLoot => Utils.GenerateLoot(

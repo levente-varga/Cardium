@@ -28,6 +28,8 @@ public partial class Voidling : Enemy {
     BaseRange = 1;
 
     SetModulate();
+    
+    StatusBar.Reset();
   }
 
   protected override void TakeTurn(Player player, World world) {

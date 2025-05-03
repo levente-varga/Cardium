@@ -22,6 +22,8 @@ public partial class Slime : Enemy {
     BaseLuck = 0f;
     BaseRange = 1;
     Description = "A slime enemy.";
+    
+    StatusBar.Reset();
   }
   
   protected override List<Card> GenerateLoot => Utils.GenerateLoot(

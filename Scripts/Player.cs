@@ -38,6 +38,7 @@ public partial class Player : Entity {
     Name = "Player";
     MaxHealth = 10;
     Health = MaxHealth;
+    StatusBar.Reset();
 
     Position = Vector2I.One;
 

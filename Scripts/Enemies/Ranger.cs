@@ -23,6 +23,8 @@ public partial class Ranger : Enemy {
     BaseArmor = new List<int> { 0, 0, 1, 1, 4 }[Level];
     BaseDamage = new List<int> { 1, 2, 2, 3, 3 }[Level];
     BaseRange = new List<int> { 3, 3, 3, 3, 3 }[Level];
+    
+    StatusBar.Reset();
   }
 
   protected override void TakeTurn(Player player, World world) {

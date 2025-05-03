@@ -29,6 +29,8 @@ public partial class Exterminator : Enemy {
     BaseLuck = 10;
     
     OnDamagedEvent += OnDamaged;
+    
+    StatusBar.Reset();
   }
 
   private void OnDamaged(Entity entity, int damage) {
