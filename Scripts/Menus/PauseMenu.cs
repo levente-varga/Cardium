@@ -1,3 +1,4 @@
+using System;
 using Godot;
 
 namespace Cardium.Scripts.Menus;
@@ -9,6 +10,7 @@ public partial class PauseMenu : Menu {
   [Export] public Button FleeButton = null!;
   [Export] public Button QuitButton = null!;
   [Export] public HelpMenu HelpMenu = null!;
+  [Export] public Label QuitLabel = null!;
 
   public override void _Ready() {
     Visible = false;
@@ -22,6 +24,7 @@ public partial class PauseMenu : Menu {
     base.Open();
 
     Data.PauseMenuOpen = true;
+    QuitLabel.Text = $"Saved {Utils.GetMinutesBetween(Data.LastSaveTime, DateTime.Now)} mins ago";
     FleeButton.Disabled = Data.Level == Level.Lobby;
   }
   

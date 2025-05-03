@@ -89,4 +89,6 @@ public static class Utils {
   }
 
   public static T GetRandomItem<T>(List<T> list) => list[Global.Random.Next(list.Count)];
+
+  public static int GetMinutesBetween(DateTime start, DateTime end) => (int)(end - start).TotalMinutes;
 }

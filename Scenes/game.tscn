@@ -1775,8 +1775,7 @@ offset_bottom = 608.0
 mouse_filter = 2
 color = Color(1, 1, 1, 0)
 
-[node name="PauseMenu" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("Player", "ResumeButton", "HelpButton", "FleeButton", "QuitButton", "HelpMenu")]
-visible = false
+[node name="PauseMenu" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("Player", "ResumeButton", "HelpButton", "FleeButton", "QuitButton", "HelpMenu", "QuitLabel")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -1790,6 +1789,7 @@ HelpButton = NodePath("CenterContainer/Container/VBoxContainer4/HelpButton")
 FleeButton = NodePath("CenterContainer/Container/VBoxContainer2/FleeButton")
 QuitButton = NodePath("CenterContainer/Container/VBoxContainer3/QuitButton")
 HelpMenu = NodePath("../Help")
+QuitLabel = NodePath("CenterContainer/Container/VBoxContainer3/Label")
 
 [node name="ColorRect" type="ColorRect" parent="CanvasLayer/PauseMenu"]
 layout_mode = 1

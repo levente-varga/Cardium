@@ -26,6 +26,7 @@ public static class Data {
   public static bool InitialStart = true;
   public static int InitialCardPlaysLeft = 1;
   public static bool LastRunFinished = true;
+  public static DateTime LastSaveTime = DateTime.Now;
   public static bool Fog;
   public static bool Hand;
   public static bool ShowHealth;
@@ -115,6 +116,7 @@ public static class Data {
     file.Close();
     
     GD.Print($"Game data has been saved to {file.GetPathAbsolute()}");
+    LastSaveTime = DateTime.Now;
   }
 
   public static void Load() {
