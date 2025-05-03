@@ -5,23 +5,51 @@ using Godot;
 namespace Cardium.Scripts;
 
 public partial class Entity : TileAlignedGameObject {
+  private int _health;
   public int Health {
-    get => HealthBar.Health;
-    protected set => HealthBar.Health = value;
-  }
-
-  public int MaxHealth {
-    get => HealthBar.MaxHealth;
-    set => HealthBar.MaxHealth = value;
+    get => _health;
+    protected set {
+      _health = Mathf.Max(0, value);
+      StatusBar.Health = _health;
+    }
   }
   
-  public int Shield {
-    get => HealthBar.Shield;
-    protected set => HealthBar.Shield = value;
+  private int _maxHealth;
+  public int MaxHealth {
+    get => _maxHealth;
+    protected set {
+      _maxHealth = Mathf.Max(1, value);
+      StatusBar.MaxHealth = _maxHealth;
+    }
   }
-
-  protected int BaseArmor = 0;
-  protected int BaseDamage = 1;
+  
+  private int _shield;
+  public int Shield {
+    get => _shield;
+    protected set {
+      _shield = Mathf.Max(0, value);
+      StatusBar.Shield = _shield;
+    }
+  }
+  
+  private int _baseArmor;
+  public int BaseArmor {
+    get => _baseArmor;
+    protected set {
+      _baseArmor = Mathf.Max(0, value);
+      StatusBar.Armor = _baseArmor;
+    }
+  }
+  
+  private int _baseDamage;
+  public int BaseDamage {
+    get => _baseDamage;
+    protected set {
+      _baseDamage = Mathf.Max(0, value);
+      StatusBar.Attack = _baseDamage;
+    }
+  }
+  
   protected int BaseRange = 1;
   protected int BaseVision = 3;
   protected float BaseLuck = 0;
@@ -44,10 +72,10 @@ public partial class Entity : TileAlignedGameObject {
 
   public string Description = "";
 
-  public Pile Inventory = new();
-  public List<Buff> Buffs = new();
+  public readonly Pile Inventory = new();
+  public readonly List<Buff> Buffs = new();
 
-  public HealthBar HealthBar = new();
+  public StatusBar StatusBar = null!;
 
   private Vector2I _previousPosition;
   
@@ -63,18 +91,20 @@ public partial class Entity : TileAlignedGameObject {
     base._Ready();
 
     Name = "Entity";
-    SetupHealthBar();
+    SetupStatusBar();
   }
 
-  public override void _Process(double delta) {
-    base._Process(delta);
-  }
-
-  private void SetupHealthBar() {
-    AddChild(HealthBar);
-    HealthBar.MaxHealth = MaxHealth;
-    HealthBar.Health = Health;
-    HealthBar.Visible = Data.ShowHealth;
+  private void SetupStatusBar() {
+    var statusBarScene = GD.Load<PackedScene>("res://Scenes/tile_aligned_game_object.tscn");
+    StatusBar = statusBarScene.Instantiate<StatusBar>();
+    StatusBar.Attack = Damage;
+    StatusBar.Armor = Armor;
+    StatusBar.Health = Health;
+    StatusBar.MaxHealth = MaxHealth;
+    StatusBar.Shield = Shield;
+    StatusBar.Position = new Vector2(0, -6);
+    StatusBar.Scale = Vector2.One / 4f;
+    AddChild(StatusBar);
   }
 
   protected virtual void TakeTurn(Player player, World world) {

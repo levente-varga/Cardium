@@ -27,7 +27,7 @@ public partial class Enemy : Entity {
     
     Inventory.AddAll(GenerateLoot);
 
-    HealthBar.Visible = false;
+    StatusBar.Visible = false;
     BaseCombatVision = BaseVision + 3;
   }
 
@@ -52,7 +52,7 @@ public partial class Enemy : Entity {
       }
     }
 
-    HealthBar.Visible = Data.ShowHealth && PlayerInVision;
+    StatusBar.Visible = Data.ShowHealth && PlayerInVision;
   }
 
   protected override void TakeTurn(Player player, World world) {

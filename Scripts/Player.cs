@@ -36,13 +36,12 @@ public partial class Player : Entity {
     BaseVision = 3;
     BaseRange = 2;
     Name = "Player";
-    BaseDamage = 1;
     MaxHealth = 10;
     Health = MaxHealth;
 
     Position = Vector2I.One;
 
-    HealthBar.Visible = Data.ShowHealth;
+    StatusBar.Visible = Data.ShowHealth;
 
     LoadCards();
     Hand.DrawUntilFull();
