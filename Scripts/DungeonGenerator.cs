@@ -585,7 +585,6 @@ public partial class Dungeon {
           Difficulty.Hard => Global.Random.Next(room.Rect.Grow(-1).Area / 3) + 1 + room.Rect.Grow(-1).Area / 15,
           _ => Global.Random.Next(room.Rect.Grow(-1).Area / 2) + 1 + room.Rect.Grow(-1).Area / 9,
         };
-        GD.Print($"Trying to fit {enemyCount} enemies inside a {room.Rect.Size.X}x{room.Rect.Size.Y} room");
         var usedTiles = new List<Vector2I>();
 
         if (!bossPlaced) enemyCount = 1;

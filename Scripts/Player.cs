@@ -220,14 +220,6 @@ public partial class Player : Entity {
     Data.Deck.AddAll(DiscardPile.Pile.Cards);
     Data.Deck.AddAll(Hand.Cards);
     Data.Inventory.AddAll(Inventory.Cards);
-    
-    GD.Print("Saved cards to Data:");
-    GD.Print("  Stash:");
-    foreach (var card in Data.Stash.Cards) GD.Print($"    {card.Name} (lvl. {card.Level}) [{card.Origin}]");
-    GD.Print("  Inventory:");
-    foreach (var card in Data.Inventory.Cards) GD.Print($"    {card.Name} (lvl. {card.Level}) [{card.Origin}]");
-    GD.Print("  Deck:");
-    foreach (var card in Data.Deck.Cards) GD.Print($"    {card.Name} (lvl. {card.Level}) [{card.Origin}]");
   }
 
   public void LoadCards() {
@@ -235,14 +227,5 @@ public partial class Player : Entity {
     Inventory.Clear();
     foreach (var card in Data.Deck.Cards) Deck.Add(card);
     foreach (var card in Data.Inventory.Cards) Inventory.Add(card);
-    
-    GD.Print("Loaded cards from Data:");
-    GD.Print("  Stash:");
-    foreach (var card in Data.Stash.Cards) GD.Print($"    {card.Name} (lvl. {card.Level}) [{card.Origin}]");
-    GD.Print("  Inventory:");
-    foreach (var card in Inventory.Cards) GD.Print($"    {card.Name} (lvl. {card.Level}) [{card.Origin}]");
-    GD.Print("  Deck:");
-    foreach (var card in Deck.Deck.Cards) GD.Print($"    {card.Name} (lvl. {card.Level}) [{card.Origin}]");
-
   }
 }
