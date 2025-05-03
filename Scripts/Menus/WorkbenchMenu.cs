@@ -331,7 +331,9 @@ public partial class WorkbenchMenu : Menu {
     }
 
     if (_result == null && CardsAreValid) {
-      var isProtected = _slots[0]!.Protected || _slots[1]!.Protected || _slots[2]!.Protected;
+      var isProtected = _slots.Any(card => card!.Protected);
+      var toDeck = _slots.Any(card => card!.Origin == Card.Origins.Deck);
+      var toInventory = !toDeck && _slots.Any(card => card!.Origin == Card.Origins.Inventory);
 
       _result = CreateUpgradedCard(_slots[0]!.GetType(), _slots[0]!.Level + 1);
       
@@ -341,7 +343,7 @@ public partial class WorkbenchMenu : Menu {
         return;
       }
       else {
-        _result.Origin = Card.Origins.Stash;
+        _result.Origin = toDeck ? Card.Origins.Deck : toInventory ? Card.Origins.Inventory : Card.Origins.Stash;
         _result.Protected = isProtected;
       }
       FillContainersWithCardViews();
