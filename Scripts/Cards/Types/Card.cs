@@ -33,6 +33,8 @@ public class Card {
       OnOriginChangedEvent?.Invoke(value);
     }
   }
+
+  public bool OnMaxLevel => Level >= MaxLevel;
   
   public delegate void OnOriginChangedDelegate(Origins newOrigin);
   public event OnOriginChangedDelegate? OnOriginChangedEvent;

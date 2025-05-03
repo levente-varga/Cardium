@@ -65,7 +65,7 @@ public partial class InventoryMenu : Menu {
     Player.SaveCards();
     FillContainersWithCardViews();
     UpdateLabels();
-    if (!_stashEnabled) StashArea.Color = new Color("16161688");
+    if (!_stashEnabled) StashArea.Color = new Color("16161699");
   }
 
   public override void Close() {

@@ -149,6 +149,12 @@ public partial class WorkbenchMenu : Menu {
       var cardContainer = new Container();
       cardContainer.SetCustomMinimumSize(Global.GlobalCardSize);
       cardContainer.AddChild(views[i]);
+      if (views[i].Card.OnMaxLevel) {
+        var cover = new ColorRect();
+        cover.SetCustomMinimumSize(Global.GlobalCardSize);
+        cover.Color = new Color("16161699");
+        cardContainer.AddChild(cover);
+      }
       row.AddChild(cardContainer);
 
       if (i != cards.Count - 1 && rowNumber == (i + 1) / CardsPerRow) continue;
