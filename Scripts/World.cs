@@ -73,7 +73,6 @@ public partial class World : Node2D {
     
     if (Data.FoundSaveData) {
       if (!Data.LastRunFinished) {
-        GD.Print("Game was closed mid-run.");
         CallDeferred(nameof(SpawnClosedMidRunText));
         Data.EraseUnprotectedCardsOutsideStash();
         Data.LastRunFinished = true;
@@ -83,9 +82,6 @@ public partial class World : Node2D {
     }
     else {
       GD.Print("No save data found.");
-      Data.Stash.Clear();
-      Player.Inventory.Clear();
-      Player.Deck.Clear();
       Player.Deck.FillWithInitial();
       Player.SaveCards();
     }
@@ -105,6 +101,8 @@ public partial class World : Node2D {
     Player.Deck.Visible = Data.Hand;
     Player.DiscardPile.Visible = Data.Hand;
     Player.OnDeathEvent += OnPlayerDeath;
+    Player.LoadCards();
+    Player.Hand.DrawUntilFull();
 
     if (Data.CameraOnPlayer) {
       Camera.Target = Player;

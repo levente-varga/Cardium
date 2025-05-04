@@ -44,9 +44,6 @@ public partial class Player : Entity {
 
     StatusBar.Visible = Data.ShowHealth;
 
-    LoadCards();
-    Hand.DrawUntilFull();
-
     SetAnimation("idle", GD.Load<Texture2D>("res://Assets/Animations/Player.png"), 8, 12);
 
     SetupActionListeners();

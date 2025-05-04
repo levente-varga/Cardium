@@ -83,7 +83,7 @@ public partial class StatusBar : Node2D {
 	}
 
 	private void UpdateHealthLabel() {
-		HealthLabel.Text = $"{Health}{(Shield > 0 ? $"[color={Global.Yellow.ToHtml()}]+{Shield}" : "")} {_smoothHealthRatio}";
+		HealthLabel.Text = $"{Health}{(Shield > 0 ? $"[color={Global.Yellow.ToHtml()}]+{Shield}" : "")}";
 	}
 	
 	private void UpdateArmorLabel() {
