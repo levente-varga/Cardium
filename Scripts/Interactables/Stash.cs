@@ -7,7 +7,7 @@ public partial class Stash : Interactable {
 
   public override void _Ready() {
     base._Ready();
-    SetAnimation("open", ResourceLoader.Load<Texture2D>("res://Assets/Animations/Chest.png"), 6, 12, false, false);
+    SetAnimation("open", ResourceLoader.Load<Texture2D>("res://Assets/Animations/Stash.png"), 6, 12, false, false);
   }
 
   public override void OnNudge(Player player, World world) {

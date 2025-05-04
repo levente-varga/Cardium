@@ -197,7 +197,7 @@ public partial class Hand : Node2D {
   private void OnCardDragStart(CardView view) {
     _draggedCardState = DraggedCardState.None;
 
-    if (Data.InitialCardPlaysLeft > 0) {
+    if (Data.InitialCardPlay) {
       HelpOverlay.Visible = true;
     }
   }
@@ -231,14 +231,14 @@ public partial class Hand : Node2D {
   private void OnCardDragEnd(CardView view, Vector2 mousePosition) {
     HelpOverlay.Visible = false;
     if (_draggedCardState == DraggedCardState.OverPlayArea) {
-      if (Data.InitialCardPlaysLeft > 0) Data.InitialCardPlaysLeft--;
+      Data.InitialCardPlay = false;
       view.OnEnterPlayingMode();
       State = HandState.Playing;
       _ = Play(view);
     }
     else {
       if (_draggedCardState == DraggedCardState.OverDiscardArea) {
-        if (Data.InitialCardPlaysLeft > 0) Data.InitialCardPlaysLeft--;
+        Data.InitialCardPlay = false;
         Discard(view);
         OnCardDiscardedEvent?.Invoke(view.Card);
       }

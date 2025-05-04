@@ -100,12 +100,12 @@ public partial class Dungeon {
       _dungeon.Interactables.Add(new Entrance { Position = new Vector2I(10, 3) });
       _dungeon.Interactables.Add(new Bonfire { Position = new Vector2I(7, 3), Extinguishable = false });
       _dungeon.Interactables.Add(new Exit { Position = new Vector2I(2, 3) });
-      _dungeon.Interactables.Add(new Stash { Position = new Vector2I(6, 1) });
-      _dungeon.Interactables.Add(new Workbench { Position = new Vector2I(8, 1) });
+      _dungeon.Interactables.Add(new Stash { Position = new Vector2I(8, 1) });
       _dungeon.Interactables.Add(new Sign { Position = new Vector2I(12, 2), Text = "That way!" });
-      _dungeon.Interactables.Add(new Statue { Position = new Vector2I(9, 4) });
-      if (Statistics.Deaths > 0) _dungeon.Interactables.Add(new Grave { Position = new Vector2I(7, 5) });
+      if (Statistics.Runs > 0) _dungeon.Interactables.Add(new Workbench { Position = new Vector2I(6, 1) });
+      if (Statistics.Runs > 0) _dungeon.Interactables.Add(new Statue { Position = new Vector2I(9, 4) });
       if (Statistics.Runs > 0) _dungeon.Interactables.Add(new Records { Position = new Vector2I(4, 2) });
+      if (Statistics.Deaths > 0) _dungeon.Interactables.Add(new Grave { Position = new Vector2I(7, 5) });
       _dungeon.Player.Position = new Vector2I(5, 3);
 
       DecorateGround();

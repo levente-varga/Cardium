@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://c8tbfjcyg4o24"]
+[gd_scene load_steps=23 format=3 uid="uid://c8tbfjcyg4o24"]
 
 [ext_resource type="Script" path="res://Scripts/Cards/Types/CardView.cs" id="1_imc88"]
 [ext_resource type="Texture2D" uid="uid://cbie0d833gc4b" path="res://Assets/Sprites/Cards/Holy.png" id="2_nquoe"]
@@ -6,8 +6,9 @@
 [ext_resource type="FontFile" uid="uid://2rxest3pjy34" path="res://Assets/Fonts/alagard.ttf" id="3_hvbn6"]
 [ext_resource type="FontFile" uid="uid://cgna0pm46rmdr" path="res://Assets/Fonts/Levi Windows.ttf" id="3_ufy2c"]
 [ext_resource type="Texture2D" uid="uid://6msh5f7638ox" path="res://Assets/Sprites/Cards/Placeholder.png" id="4_rcsq4"]
-[ext_resource type="Texture2D" uid="uid://5x6qoxkgsv55" path="res://Assets/Sprites/Cards/ProtectionMarker.png" id="5_yh063"]
+[ext_resource type="Texture2D" uid="uid://bttwmt7iu6u3r" path="res://Assets/Sprites/Cards/ProtectionBackground.png" id="5_6ulu1"]
 [ext_resource type="Texture2D" uid="uid://cl2jaciwg2rqx" path="res://Assets/Sprites/OriginBackground.png" id="6_c6ynq"]
+[ext_resource type="Texture2D" uid="uid://bnc0u136kxr4f" path="res://Assets/Sprites/Symbols/ProtectionSymbol.png" id="6_gjqkq"]
 [ext_resource type="Texture2D" uid="uid://cnlc1otlj1kfs" path="res://Assets/Sprites/Symbols/DeckSymbol.png" id="7_vd3xn"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mih11"]
@@ -116,8 +117,13 @@ offset = Vector2(-16, -25)
 
 [node name="Protection" type="Sprite2D" parent="Base/HoverBase/Body"]
 position = Vector2(-17, -23)
-texture = ExtResource("5_yh063")
+texture = ExtResource("5_6ulu1")
 centered = false
+
+[node name="Sprite2D" type="Sprite2D" parent="Base/HoverBase/Body/Protection"]
+position = Vector2(1.5, 2.16665)
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("6_gjqkq")
 
 [node name="Origin" type="Sprite2D" parent="Base/HoverBase/Body"]
 position = Vector2(10, -25)
