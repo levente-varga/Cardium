@@ -52,6 +52,10 @@ public partial class InventoryMenu : Menu {
   public void Open(bool enableStash = false) {
     base.Open();
     _stashEnabled = enableStash;
+    StashToDeckButton.Visible = enableStash;
+    StashToInventoryButton.Visible = enableStash;
+    InventoryToStashButton.Visible = enableStash;
+    DeckToStashButton.Visible = enableStash;
     Player.PutCardsInUseIntoDeck();
     Player.SaveCards();
     FillContainersWithCardViews();
