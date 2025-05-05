@@ -5,7 +5,7 @@ using Godot;
 namespace Cardium.Scripts.Cards;
 
 public class HealCard : PlayerTargetingCard {
-  private int HealAmount => new List<int> { 2, 4, 7, 10 }[Level];
+  private int HealAmount => new List<int> { 1, 2, 4, 8 }[Level];
 
   public HealCard() {
     Name = "Heal";
