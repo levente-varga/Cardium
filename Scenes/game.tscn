@@ -1,4 +1,4 @@
-[gd_scene load_steps=102 format=3 uid="uid://cw3o4f0nr0f2v"]
+[gd_scene load_steps=103 format=3 uid="uid://cw3o4f0nr0f2v"]
 
 [ext_resource type="Script" path="res://Scripts/Hand.cs" id="1_3ixgw"]
 [ext_resource type="Script" path="res://Scripts/Camera.cs" id="3_evct5"]
@@ -52,6 +52,11 @@ font_color = Color(0.8, 0.8, 0.8, 1)
 [sub_resource type="LabelSettings" id="LabelSettings_7y8e8"]
 font_size = 32
 font_color = Color(0.462745, 0.462745, 0.462745, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_vjom4"]
+font = ExtResource("12_aeksy")
+font_size = 25
+font_color = Color(0.133333, 0.133333, 0.133333, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tb324"]
 bg_color = Color(0, 0, 0, 0)
@@ -603,6 +608,21 @@ grow_horizontal = 2
 theme = ExtResource("5_h5gro")
 text = "Collection And Retrieval of Dungeon Scraps"
 label_settings = SubResource("LabelSettings_7y8e8")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Version" type="Label" parent="Camera2D/CanvasLayer"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -279.0
+offset_top = 400.0
+offset_right = 279.0
+offset_bottom = 432.0
+grow_horizontal = 2
+theme = ExtResource("5_h5gro")
+text = "Public play test 1.0"
+label_settings = SubResource("LabelSettings_vjom4")
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -2007,6 +2027,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Help" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("CloseButton")]
+visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_right = 1920.0
