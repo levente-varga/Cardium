@@ -39,6 +39,9 @@ public partial class PauseMenu : Menu {
     
     Player.SaveCards();
     Data.EraseUnprotectedCardsOutsideStash();
+    Data.LastRunFinished = true;
+    Data.Save();
+    
     Data.LoadLobbyData();
     GetTree().ReloadCurrentScene();
   }
