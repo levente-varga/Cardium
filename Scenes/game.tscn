@@ -608,7 +608,7 @@ vertical_alignment = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Camera2D/CanvasLayer"]
 offset_left = 128.0
-offset_top = 528.0
+offset_top = 384.0
 offset_right = 544.0
 offset_bottom = 1024.0
 
@@ -623,12 +623,20 @@ text = "[color=999999]Welcome to the playtest![/color]
 
 [color=555555]Press [color=999999]Esc[/color] and go to [color=999999]Help[/color] for an explanation of rules and tips.
 
-Keep in mind that you might encounter game-breaking bugs. If you feel frustrated, feel free to stop playing at any time!
+Keep in mind that this is not a finished product: many QoL features are missing, and you might encounter game-breaking bugs. If you feel frustrated, feel free to stop playing at any time!
 
-After playing, please go back to the Itch.io page and fill out the [color=999999]feedback form[/color].
+After playing, please fill out the [color=999999]feedback form[/color] below (also found on the itch.io page).
 
 Thank you for participating!"
 autowrap_mode = 2
+
+[node name="LinkButton" type="LinkButton" parent="Camera2D/CanvasLayer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+size_flags_vertical = 0
+theme = ExtResource("5_h5gro")
+text = "Form"
+uri = "https://docs.google.com/forms/d/e/1FAIpQLSelYm6Da3QR0MkthMspFtos36GOlAQj_62esjDhSL2w1juk0w/viewform?usp=header"
 
 [node name="Button" type="Button" parent="Camera2D/CanvasLayer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 64)
