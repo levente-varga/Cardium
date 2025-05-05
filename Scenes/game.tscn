@@ -527,10 +527,12 @@ Hand = NodePath("../Camera2D/Hand")
 DiscardPile = NodePath("../Camera2D/DiscardPile")
 Deck = NodePath("../Camera2D/Deck")
 
-[node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("Target", "Canvas")]
+[node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("Target", "Canvas", "WelcomePanel", "HideWelcomePanelButton")]
 script = ExtResource("3_evct5")
 Target = NodePath("../Player")
 Canvas = NodePath("CanvasLayer")
+WelcomePanel = NodePath("CanvasLayer/VBoxContainer")
+HideWelcomePanelButton = NodePath("CanvasLayer/VBoxContainer/Button")
 
 [node name="DiscardPile" type="Node2D" parent="Camera2D" node_paths=PackedStringArray("SizeLabel")]
 z_index = 10
@@ -606,9 +608,9 @@ vertical_alignment = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Camera2D/CanvasLayer"]
 offset_left = 128.0
-offset_top = 544.0
+offset_top = 528.0
 offset_right = 544.0
-offset_bottom = 992.0
+offset_bottom = 1024.0
 
 [node name="Label2" type="RichTextLabel" parent="Camera2D/CanvasLayer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 64)
@@ -623,10 +625,17 @@ text = "[color=999999]Welcome to the playtest![/color]
 
 Keep in mind that you might encounter game-breaking bugs. If you feel frustrated, feel free to stop playing at any time!
 
-After playing, please go back to the Itch.io page and fill out the feedback form.
+After playing, please go back to the Itch.io page and fill out the [color=999999]feedback form[/color].
 
 Thank you for participating!"
 autowrap_mode = 2
+
+[node name="Button" type="Button" parent="Camera2D/CanvasLayer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+size_flags_horizontal = 0
+theme = ExtResource("5_h5gro")
+text = "Hide"
 
 [node name="PlayingCardPosition" type="Node2D" parent="Camera2D"]
 position = Vector2(-800, 0)

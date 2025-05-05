@@ -24,6 +24,7 @@ public static class Data {
   public static Difficulty Difficulty = Difficulty.Easy;
   public static bool LoadedSaveData = false;
   public static bool FirstStart = true;
+  public static bool ShowWelcomePanel = true;
   public static bool InitialCardPlay = true;
   public static bool LastRunFinished = true;
   public static bool FoundSaveData = false;
@@ -107,6 +108,7 @@ public static class Data {
       {"difficulty", (int)Difficulty},
       {"last_run_finished", LastRunFinished},
       {"first_start", FirstStart},
+      {"show_welcome_panel", ShowWelcomePanel},
       {"stash", stashArray},
       {"inventory", inventoryArray},
       {"deck", deckArray},
@@ -163,6 +165,7 @@ public static class Data {
     Difficulty = (Difficulty)(int)save.GetValueOrDefault("difficulty", 0);
     LastRunFinished = (bool)save.GetValueOrDefault("last_run_finished", true);
     FirstStart = (bool)save.GetValueOrDefault("first_start", true);
+    ShowWelcomePanel = (bool)save.GetValueOrDefault("show_welcome_panel", true);
     
     Stash.Clear();
     Inventory.Clear();

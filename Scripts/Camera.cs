@@ -6,6 +6,8 @@ namespace Cardium.Scripts;
 public partial class Camera : Camera2D {
   [Export] public Node2D Target = null!;
   [Export] public CanvasLayer Canvas = null!;
+  [Export] public Control WelcomePanel = null!;
+  [Export] public Button HideWelcomePanelButton = null!;
 
   private float _shake;
 
@@ -31,7 +33,14 @@ public partial class Camera : Camera2D {
   }
 
   public override void _Ready() {
+    WelcomePanel.Visible = Data.ShowWelcomePanel;
+    HideWelcomePanelButton.Pressed += HideWelcomePanel;
     Canvas.Visible = Data.Level == Level.Lobby;
+  }
+
+  private void HideWelcomePanel() {
+    Data.ShowWelcomePanel = false;
+    WelcomePanel.Visible = false;
   }
 
   public override void _Process(double delta) {
