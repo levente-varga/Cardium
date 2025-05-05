@@ -205,7 +205,7 @@ font_color = Color(0.466667, 0.466667, 0.466667, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_h3005"]
 font = ExtResource("5_70pgm")
-font_size = 100
+font_size = 80
 font_color = Color(0.8, 0.8, 0.8, 1)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_xid6y"]
@@ -2007,7 +2007,6 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Help" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("CloseButton")]
-visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_right = 1920.0
@@ -2131,6 +2130,11 @@ position = Vector2(269, 667)
 scale = Vector2(3, 3)
 texture = ExtResource("31_ykvuv")
 
+[node name="Protection2" type="Sprite2D" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
+position = Vector2(175, 699)
+scale = Vector2(3, 3)
+texture = ExtResource("31_ykvuv")
+
 [node name="ArrowKeys" type="Sprite2D" parent="CanvasLayer/Help/CenterContainer/InventoryPanel/Content/Description"]
 position = Vector2(157, 232)
 scale = Vector2(2, 2)
@@ -2202,7 +2206,7 @@ size_flags_horizontal = 3
 theme = ExtResource("5_h5gro")
 bbcode_enabled = true
 text = "[center]This is a turn-based game. 
-Every actions (move, nudge, play or discard) takes one turn.
+Each action (move, nudge, play or discard) takes one turn.
 Use         [color=#e6482e]Bonfires[/color] to reset health and manage your deck and inventory.
 Find         [color=#bf7958]Ladders[/color] to get back to the safety of your home."
 fit_content = true
@@ -2230,8 +2234,9 @@ bbcode_enabled = true
 text = "- Cards picked up go to the inventory, not the deck!
 - Upon death, you will lose all cards that are not stored in the          [color=#f4b41b]Stash[/color]!
 - However, cards with a        [color=#cccccc]Shield symbol[/color] in the top-right corner are kept.
-- Cards with a shield keep their protection after upgraded.
+- Cards with a        [color=#cccccc]Shield symbol[/color] keep their protection after upgraded.
 - [color=cccccc]Unstable[/color] cards are single-use.
+- The game saves only when entering or exiting the dungeon.
 - You can open this menu any time if you need clarification on something."
 fit_content = true
 
