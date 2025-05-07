@@ -1,0 +1,108 @@
+[gd_scene load_steps=6 format=3 uid="uid://cpa3ey8lb5hil"]
+
+[ext_resource type="Script" path="res://Scripts/StatusBar.cs" id="1_lebqf"]
+[ext_resource type="Texture2D" uid="uid://dif6bbunmyutc" path="res://Assets/Sprites/Symbols/Health.png" id="3_ebaf7"]
+[ext_resource type="Texture2D" uid="uid://dna15g43evan4" path="res://Assets/Sprites/Symbols/Armor.png" id="4_24a3h"]
+[ext_resource type="Texture2D" uid="uid://du15u3itbcbci" path="res://Assets/Sprites/Symbols/Attack.png" id="5_qlyui"]
+[ext_resource type="FontFile" uid="uid://cgna0pm46rmdr" path="res://Assets/Fonts/Levi Windows.ttf" id="6_ol7ik"]
+
+[node name="StatusBar" type="Node2D" node_paths=PackedStringArray("HealthPart", "ArmorPart", "AttackPart", "HealthLabel", "ArmorLabel", "AttackLabel", "HealthBar", "ShieldBar")]
+z_index = 11
+script = ExtResource("1_lebqf")
+HealthPart = NodePath("MarginContainer/HBoxContainer/Health")
+ArmorPart = NodePath("MarginContainer/HBoxContainer/Armor")
+AttackPart = NodePath("MarginContainer/HBoxContainer/Attack")
+HealthLabel = NodePath("MarginContainer/HBoxContainer/Health/HealthLabel")
+ArmorLabel = NodePath("MarginContainer/HBoxContainer/Armor/ArmorLabel")
+AttackLabel = NodePath("MarginContainer/HBoxContainer/Attack/AttackLabel")
+HealthBar = NodePath("HealthBar")
+ShieldBar = NodePath("ShieldBar")
+
+[node name="Background" type="Polygon2D" parent="."]
+color = Color(0, 0, 0, 0.466667)
+polygon = PackedVector2Array(0, 0, 64, 0, 64, 24, 0, 24)
+
+[node name="HealBarBackground" type="Polygon2D" parent="."]
+position = Vector2(0, 14)
+color = Color(0.0941176, 0.0941176, 0.0941176, 1)
+polygon = PackedVector2Array(4, 0, 60, 0, 60, 4, 4, 4)
+
+[node name="HealthBar" type="Polygon2D" parent="."]
+position = Vector2(0, 14)
+color = Color(0.901961, 0.282353, 0.180392, 1)
+polygon = PackedVector2Array(4, 0, 60, 0, 60, 4, 4, 4)
+
+[node name="ShieldBar" type="Polygon2D" parent="."]
+position = Vector2(0, 20)
+color = Color(0.956863, 0.705882, 0.105882, 1)
+polygon = PackedVector2Array(4, 0, 60, 0, 60, 4, 4, 4)
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
+scale = Vector2(0.5, 0.5)
+theme_override_constants/margin_left = 8
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Health" type="MarginContainer" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+
+[node name="HealthSymbol" type="Sprite2D" parent="MarginContainer/HBoxContainer/Health"]
+position = Vector2(0, 8)
+scale = Vector2(2, 2)
+texture = ExtResource("3_ebaf7")
+centered = false
+
+[node name="HealthLabel" type="RichTextLabel" parent="MarginContainer/HBoxContainer/Health"]
+layout_mode = 2
+theme_override_fonts/normal_font = ExtResource("6_ol7ik")
+theme_override_font_sizes/normal_font_size = 26
+bbcode_enabled = true
+text = "10[color=F4B41B]+5"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+
+[node name="Armor" type="MarginContainer" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+
+[node name="ArmorSymbol" type="Sprite2D" parent="MarginContainer/HBoxContainer/Armor"]
+position = Vector2(0, 8)
+scale = Vector2(2, 2)
+texture = ExtResource("4_24a3h")
+centered = false
+
+[node name="ArmorLabel" type="RichTextLabel" parent="MarginContainer/HBoxContainer/Armor"]
+layout_mode = 2
+theme_override_fonts/normal_font = ExtResource("6_ol7ik")
+theme_override_font_sizes/normal_font_size = 26
+bbcode_enabled = true
+text = "10"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+
+[node name="Attack" type="MarginContainer" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+
+[node name="AttackSymbol" type="Sprite2D" parent="MarginContainer/HBoxContainer/Attack"]
+position = Vector2(0, 8)
+scale = Vector2(2, 2)
+texture = ExtResource("5_qlyui")
+centered = false
+
+[node name="AttackLabel" type="RichTextLabel" parent="MarginContainer/HBoxContainer/Attack"]
+layout_mode = 2
+theme_override_fonts/normal_font = ExtResource("6_ol7ik")
+theme_override_font_sizes/normal_font_size = 26
+bbcode_enabled = true
+text = "10"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0

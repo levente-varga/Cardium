@@ -1,6 +1,7 @@
-[gd_resource type="TileSet" load_steps=3 format=3 uid="uid://bq7dnsy58vqiw"]
+[gd_resource type="TileSet" load_steps=5 format=3 uid="uid://bq7dnsy58vqiw"]
 
 [ext_resource type="Texture2D" uid="uid://bivy7ravgim4k" path="res://Assets/TileSets/decorations.png" id="1_jx7i6"]
+[ext_resource type="Texture2D" uid="uid://cyh14r188bddb" path="res://Assets/TileSets/Guide.png" id="2_ft2c3"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_bjf13"]
 resource_name = "Decor"
@@ -16,5 +17,14 @@ separation = Vector2i(1, 1)
 8:0/0 = 0
 0:0/0 = 0
 
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_pp4se"]
+resource_name = "Guide"
+texture = ExtResource("2_ft2c3")
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+
 [resource]
 sources/0 = SubResource("TileSetAtlasSource_bjf13")
+sources/1 = SubResource("TileSetAtlasSource_pp4se")

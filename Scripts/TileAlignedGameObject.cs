@@ -15,17 +15,21 @@ public partial class TileAlignedGameObject : AnimatedSprite2D {
   private Vector2I _previousPosition;
 
   public delegate void OnMoveDelegate(Vector2I from, Vector2I to);
-
   public event OnMoveDelegate? OnMoveEvent;
+  
+  public delegate void OnTeleportDelegate(Vector2I from, Vector2I to);
+  public event OnTeleportDelegate? OnTeleportEvent;
 
   public delegate void OnNudgeDelegate(Vector2I at);
   public event OnNudgeDelegate? OnNudgeEvent;
-  
+
   public delegate void OnNudgedDelegate();
+
   public event OnNudgedDelegate? OnNudgedEvent;
 
   public override void _Ready() {
     Scale = new Vector2(Global.TileScale, Global.TileScale);
+    SpriteFrames = new SpriteFrames();
     Centered = false;
   }
 
@@ -45,27 +49,27 @@ public partial class TileAlignedGameObject : AnimatedSprite2D {
 
   public void SetPosition(Vector2I position) {
     Position = position;
+    _previousPosition = position;
     base.Position = position * Global.GlobalTileSize;
+    OnTeleportEvent?.Invoke(_previousPosition, Position);
   }
 
-  protected void SetStillFrame(Texture2D texture) {
+  protected void SetStillFrame(string name, Texture2D texture) {
+    if (!SpriteFrames.HasAnimation(name)) {
+      SpriteFrames.AddAnimation(name);
+      SpriteFrames.SetAnimationLoop(name, false);
+      SpriteFrames.AddFrame(name, texture); 
+    }
+
     Stop();
-    var frames = new SpriteFrames();
-    frames.AddAnimation("still");
-    frames.SetAnimationLoop("still", false);
-
-    frames.AddFrame("still", texture);
-
-    SpriteFrames = frames;
-    Play("still", 0);
+    Play(name, 0);
   }
 
-  protected void SetAnimation(string name, Texture2D spriteSheet, int frames, double fps, bool autoPlay = true, bool loop = true) {
-    Stop();
-    var spriteFrames = new SpriteFrames();
-    spriteFrames.AddAnimation(name);
-    spriteFrames.SetAnimationLoop(name, loop);
-    spriteFrames.SetAnimationSpeed(name, fps);
+  protected void SetAnimation(string name, Texture2D spriteSheet, int frames, double fps, bool autoPlay = true,
+    bool loop = true) {
+    SpriteFrames.AddAnimation(name);
+    SpriteFrames.SetAnimationLoop(name, loop);
+    SpriteFrames.SetAnimationSpeed(name, fps);
 
     var frameSize = Global.TileSize;
 
@@ -76,13 +80,15 @@ public partial class TileAlignedGameObject : AnimatedSprite2D {
       var frameImage = image.GetRegion(region);
       Texture2D frameTexture = ImageTexture.CreateFromImage(frameImage);
 
-      spriteFrames.AddFrame(name, frameTexture);
+      SpriteFrames.AddFrame(name, frameTexture);
     }
 
-    SpriteFrames = spriteFrames;
     Animation = name;
 
-    if (autoPlay) Play(name);
+    if (autoPlay) {
+      Stop();
+      Play(name);
+    }
   }
 
   protected static async Task Delay(int milliseconds) {
@@ -106,7 +112,7 @@ public partial class TileAlignedGameObject : AnimatedSprite2D {
     OnNudgeEvent?.Invoke(Position + DirectionToVector(direction));
   }
 
-  public virtual void OnNudge(Player player, Camera camera) {
+  public virtual void OnNudge(Player player, World world) {
     OnNudgedEvent?.Invoke();
   }
 
@@ -118,10 +124,13 @@ public partial class TileAlignedGameObject : AnimatedSprite2D {
   }
 
   public void SpawnFallingLabel(string text, Color? color = null, int? fontSize = null, int? lifetimeMillis = null) =>
-    Utils.SpawnFallingLabel(GetTree(), GlobalPosition + Global.GlobalTileSize / 2, text, color, fontSize, lifetimeMillis);
+    Utils.SpawnFallingLabel(GetTree().Root, GlobalPosition + Global.GlobalTileSize / 2, text, color, fontSize,
+      lifetimeMillis);
 
-  public void SpawnFloatingLabel(string text, Color? color = null, int height = 120, int? fontSize = null, int? lifetimeMillis = 2000) =>
-    Utils.SpawnFloatingLabel(GetTree(), GlobalPosition + Global.GlobalTileSize / 2, text, color, height, fontSize, lifetimeMillis);
+  public void SpawnFloatingLabel(string text, Color? color = null, int height = 120, int? fontSize = null,
+    int? lifetimeMillis = 2000) =>
+    Utils.SpawnFloatingLabel(GetTree().Root, GlobalPosition + Global.GlobalTileSize / 2, text, color, height, fontSize,
+      lifetimeMillis);
 
   protected void SpawnDebugFloatingLabel(string text) {
     if (Global.Debug) SpawnFloatingLabel("[Debug] " + text, color: Global.Magenta, fontSize: 20);

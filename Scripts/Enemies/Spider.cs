@@ -1,45 +1,42 @@
+using System;
+using System.Collections.Generic;
 using Cardium.Scripts.Cards;
+using Cardium.Scripts.Cards.Types;
 using Godot;
 
 namespace Cardium.Scripts.Enemies;
 
-public partial class Spider : Enemy
-{
-    public override void _Ready()
-    {
-        base._Ready();
-        
-        SetAnimation("idle", GD.Load<Texture2D>("res://Assets/Animations/Spider.png"), 8, 12);
-        Name = "Spider";
-        MaxHealth = 5;
-        Health = MaxHealth;
-        BaseVision = 4;
-        BaseArmor = 0;
-        BaseDamage = 2;
-        BaseLuck = 0f;
-        BaseRange = 1;
-        Description = "A spider enemy.";
-        
-        Inventory.Add(new PushCard());
-    }
-    
-    public override void _Process(double delta)
-    {
-        base._Process(delta);
-    }
+public partial class Spider : Enemy {
+  protected override int MaxLevel => 4;
+  
+  public override void _Ready() {
+    base._Ready();
 
-    protected override void TakeTurn(Player player, World world)
-    {
-        base.TakeTurn(player, world);
-    }
-
-    public override void ReceiveDamage(Entity source, int damage)
-    {
-        base.ReceiveDamage(source, damage);
-    }
+    SetAnimation("idle", GD.Load<Texture2D>("res://Assets/Animations/Spider.png"), 8, 12);
+    Name = "Spider";
+    MaxHealth = new List<int> { 10, 13, 17, 23, 30 }[Level];
+    Health = MaxHealth;
+    BaseVision = 4;
+    BaseCombatVision = 5;
+    BaseArmor = new List<int> { 0, 0, 1, 3, 8 }[Level];
+    BaseDamage = new List<int> { 2, 3, 4, 5, 6 }[Level];
+    BaseLuck = 0f;
+    BaseRange = 1;
+    Description = "A spider enemy.";
     
-    protected override void OnDeath(Entity source)
-    {
-        base.OnDeath(source);
+    StatusBar.Reset();
+  }
+  
+  protected override List<Card> GenerateLoot => Utils.GenerateLoot(
+    Global.Random.Next(1, 3 + Level), 
+    new Dictionary<Type, int> {
+      { typeof(HurlCard), 40 },
+      { typeof(SmiteCard), 40 },
+      { typeof(HolyCard), 15 },
+      { typeof(ChainCard), 15 },
+      { typeof(WoodenKeyCard), 5 },
+      { typeof(GoldenKeyCard), 5 },
+      { typeof(GuideCard), 1 },
     }
+  );
 }

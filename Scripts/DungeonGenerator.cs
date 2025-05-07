@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Cardium.Scripts.Cards;
 using Cardium.Scripts.Enemies;
 using Cardium.Scripts.Interactables;
 using Godot;
@@ -11,18 +10,16 @@ namespace Cardium.Scripts;
 public partial class Dungeon {
   private class Generator {
     public int NumRoomTries = 100;
-    public static int ExtraConnectorChance => 5;
+    public static int ExtraConnectorChance => 15;
     public static int RoomExtraSize => 0;
     public static int WindingPercent => 70;
     public static int MinSmallRooms => 2;
-    public static Vector2I MinSize => new (11, 11);
+    public static Vector2I MinSize => new(11, 11);
 
     private static readonly List<Vector2I> Directions = new() {
       Vector2I.Down, Vector2I.Up, Vector2I.Left, Vector2I.Right
     };
     
-    private readonly Random _random = new();
-
     /// For each open position in the dungeon, the index of the connected region
     /// that that position is a part of.
     private readonly List<List<int>> _regions = new();
@@ -31,6 +28,8 @@ public partial class Dungeon {
     private int _currentRegion = -1;
 
     private Dungeon _dungeon = new();
+
+    private Room? spawnRoom;
 
     public Dungeon GenerateDungeon(int width, int height, int roomTries = 100) =>
       GenerateDungeon(new Vector2I(width, height), roomTries);
@@ -53,11 +52,11 @@ public partial class Dungeon {
 
       InitArea();
       GenerateRooms();
+      CategorizeRooms();
       GenerateMaze();
       ConnectRegions();
       RemoveDeadEnds();
       
-      CategorizeRooms();
       PlaceWalls();
       PlaceExits();
       PlaceBonfires();
@@ -76,12 +75,13 @@ public partial class Dungeon {
                $"    {_dungeon.Enemies.Where(e => e is Spider).ToList().Count} spiders\n" +
                $"    {_dungeon.Enemies.Where(e => e is Ranger).ToList().Count} rangers\n" +
                $"    {_dungeon.Enemies.Where(e => e is Voidling).ToList().Count} voidlings\n" +
+               $"    {_dungeon.Enemies.Where(e => e is Exterminator).ToList().Count} exterminators\n" +
                $"  {_dungeon.Interactables.Count} interactables\n" +
                $"    {_dungeon.Interactables.Where(i => i is Ladder).ToList().Count} exits\n" +
                $"    {_dungeon.Interactables.Where(i => i is Bonfire).ToList().Count} bonfires\n" +
                $"    {_dungeon.Interactables.Where(i => i is Chest).ToList().Count} chests\n" +
                $"    {_dungeon.Interactables.Where(i => i is Door).ToList().Count} doors\n");
-      
+
       return _dungeon;
     }
 
@@ -90,22 +90,26 @@ public partial class Dungeon {
         Rect = new Rect2I(0, 0, 11, 7),
       };
       InitArea();
-      
+
       CarveRect(new Rect2I(1, 2, 4, 3), TileTypes.RoomInterior);
       CarveRect(new Rect2I(5, 1, 5, 5), TileTypes.RoomInterior);
       Carve(10, 3, TileTypes.Doorway);
-      
+
       PlaceWalls();
-      
+
       _dungeon.Interactables.Add(new Entrance { Position = new Vector2I(10, 3) });
       _dungeon.Interactables.Add(new Bonfire { Position = new Vector2I(7, 3), Extinguishable = false });
       _dungeon.Interactables.Add(new Exit { Position = new Vector2I(2, 3) });
-      _dungeon.Interactables.Add(new Stash { Position = new Vector2I(6, 1) });
-      _dungeon.Interactables.Add(new Workbench { Position = new Vector2I(8, 1) });
+      _dungeon.Interactables.Add(new Stash { Position = new Vector2I(8, 1) });
+      _dungeon.Interactables.Add(new Sign { Position = new Vector2I(12, 2), Text = "That way!" });
+      if (Statistics.Runs > 0) _dungeon.Interactables.Add(new Workbench { Position = new Vector2I(6, 1) });
+      if (Statistics.Runs > 0) _dungeon.Interactables.Add(new Statue { Position = new Vector2I(9, 4) });
+      if (Statistics.Runs > 0) _dungeon.Interactables.Add(new Records { Position = new Vector2I(4, 2) });
+      if (Statistics.Deaths > 0) _dungeon.Interactables.Add(new Grave { Position = new Vector2I(7, 5) });
       _dungeon.Player.Position = new Vector2I(5, 3);
-      
+
       DecorateGround();
-      
+
       return _dungeon;
     }
 
@@ -129,11 +133,11 @@ public partial class Dungeon {
           // Based on how "windy" passages are, try to prefer carving in the
           // same direction.
           Vector2I direction;
-          if (unmadeCells.Contains(lastDirection) && _random.Next(100) > WindingPercent) {
+          if (unmadeCells.Contains(lastDirection) && Global.Random.Next(100) > WindingPercent) {
             direction = lastDirection;
           }
           else {
-            direction = unmadeCells[_random.Next(0, unmadeCells.Count)];
+            direction = unmadeCells[Global.Random.Next(0, unmadeCells.Count)];
           }
 
           Carve(cell + direction);
@@ -159,11 +163,11 @@ public partial class Dungeon {
       }
 
       for (var i = 0; i < NumRoomTries; i++) {
-        var size = _random.Next(1, 3 + RoomExtraSize) * 2 + 1;
-        var rectangularity = _random.Next(0, 1 + size / 2) * 2;
+        var size = Global.Random.Next(1, 3 + RoomExtraSize) * 2 + 1;
+        var rectangularity = Global.Random.Next(0, 1 + size / 2) * 2;
         var width = size;
         var height = size;
-        if (_random.Next(0, 2) == 0) {
+        if (Global.Random.Next(0, 2) == 0) {
           width += rectangularity;
         }
         else {
@@ -178,8 +182,8 @@ public partial class Dungeon {
 
     private bool PlaceRoom(Vector2I size) {
       Vector2I position = new(
-        _random.Next(0, (_dungeon.Rect.Size.X - size.X) / 2) * 2 + 1,
-        _random.Next(0, (_dungeon.Rect.Size.Y - size.Y) / 2) * 2 + 1
+        Global.Random.Next(0, (_dungeon.Rect.Size.X - size.X) / 2) * 2 + 1,
+        Global.Random.Next(0, (_dungeon.Rect.Size.Y - size.Y) / 2) * 2 + 1
       );
 
       var room = new Room {
@@ -257,7 +261,7 @@ public partial class Dungeon {
 
       // Keep connecting regions until we're down to one.
       while (openRegions.Count > 1) {
-        var index = _random.Next(0, connectors.Count);
+        var index = Global.Random.Next(0, connectors.Count);
         var connector = connectors[index];
 
         // Carve the connection.
@@ -294,7 +298,7 @@ public partial class Dungeon {
 
           if (adjacentRegions.Count > 1) return false;
 
-          if (_random.Next(ExtraConnectorChance) == 0) AddJunction(pos);
+          if (Global.Random.Next(ExtraConnectorChance) == 0) AddJunction(pos);
 
           return true;
         });
@@ -354,7 +358,7 @@ public partial class Dungeon {
     private void StartRegion() {
       _currentRegion++;
     }
-    
+
     private void CarveRect(Rect2I rect, TileTypes type = TileTypes.Corridor) {
       for (var x = rect.Position.X; x < rect.End.X; x++) {
         for (var y = rect.Position.Y; y < rect.End.Y; y++) {
@@ -362,7 +366,7 @@ public partial class Dungeon {
         }
       }
     }
-    
+
     private void CarveRoom(Room room) {
       for (var x = room.Rect.Position.X; x < room.Rect.End.X; x++) {
         var perimeterX = x == room.Rect.Position.X || x == room.Rect.End.X - 1;
@@ -377,6 +381,7 @@ public partial class Dungeon {
     }
 
     private void Carve(int x, int y, TileTypes type = TileTypes.Corridor) => Carve(new Vector2I(x, y), type);
+
     private void Carve(Vector2I tile, TileTypes type = TileTypes.Corridor) {
       SetTile(tile, type);
       _regions[tile.X][tile.Y] = _currentRegion;
@@ -398,11 +403,56 @@ public partial class Dungeon {
     }
 
     private static bool RoomIsSmall(Room room) => room.Rect.Area <= 15;
-    
+
     private void CategorizeRooms() {
-      var spawnRoomPicked = false;
+      var minBonfireDistance = Data.Difficulty switch {
+        Difficulty.Easy => 30,
+        Difficulty.Moderate => 40,
+        Difficulty.Hard => 50,
+        _ => 60,
+      };
+      var minLadderDistance = Data.Difficulty switch {
+        Difficulty.Easy => 25,
+        Difficulty.Moderate => 40,
+        Difficulty.Hard => 55,
+        _ => 75,
+      };;
       var bonfires = 0;
-      var exits = 0;
+      var ladders = 0;
+      var bonfireTries = 1000;
+      var ladderTries = 1000;
+      List<Vector2I> bonfireLocations = new();
+      List<Vector2I> ladderLocations = new();
+
+      var uncategorized = _dungeon.Rooms
+        .Where(room => room.Type == RoomTypes.Uncategorized && RoomIsSmall(room))
+        .ToList();
+      
+      spawnRoom = Utils.GetRandomItem(uncategorized);
+      spawnRoom.Type = RoomTypes.Spawn;
+      uncategorized.Remove(spawnRoom);
+      
+      for (var i = 0; i < ladderTries; i++) {
+        var room = Utils.GetRandomItem(uncategorized);
+        if (ladderLocations.Any(location => location.DistanceTo(room.Rect.GetCenter()) < minLadderDistance)) continue;
+        room.Type = RoomTypes.Exit;
+        ladderLocations.Add(room.Rect.GetCenter());
+        ladders++;
+        uncategorized.Remove(room);
+      }
+      
+      for (var i = 0; i < bonfireTries; i++) {
+        var room = Utils.GetRandomItem(uncategorized);
+        if (bonfireLocations.Any(location => location.DistanceTo(room.Rect.GetCenter()) < minBonfireDistance)) continue;
+        room.Type = RoomTypes.Bonfire;
+        bonfireLocations.Add(room.Rect.GetCenter());
+        bonfires++;
+        uncategorized.Remove(room);
+      }
+
+      return;
+      
+      var spawnRoomPicked = false;
       foreach (var room in _dungeon.Rooms) {
         if (room.Type != RoomTypes.Uncategorized) continue;
         if (RoomIsSmall(room)) {
@@ -411,11 +461,11 @@ public partial class Dungeon {
             spawnRoomPicked = true;
           }
           else {
-            if (_random.Next((int)Mathf.Pow(exits * 2f, 2)) == 0) {
-              exits++;
+            if (Global.Random.Next((int)Mathf.Pow(ladders * 2f, 2)) == 0) {
+              ladders++;
               room.Type = RoomTypes.Exit;
             }
-            else if (_random.Next((int)Mathf.Pow(bonfires, 1.2f)) == 0) {
+            else if (Global.Random.Next((int)Mathf.Pow(bonfires, 1.2f)) == 0) {
               bonfires++;
               room.Type = RoomTypes.Bonfire;
             }
@@ -423,9 +473,9 @@ public partial class Dungeon {
         }
       }
     }
-    
+
     private static bool LayerIsEmptyAt(TileMapLayer layer, Vector2I tile) => layer.GetCellSourceId(tile) == -1;
-    
+
     /// <summary>
     /// Sets wall sprites according to their surrounding cells
     /// </summary>
@@ -448,7 +498,7 @@ public partial class Dungeon {
         for (var y = 0; y < _dungeon.Rect.Size.Y; y++) {
           if (!LayerIsEmptyAt(_dungeon.WallLayer, new Vector2I(x, y))) continue;
           if (occupiedTiles.Contains(new Vector2I(x, y))) continue;
-          
+
           var factor = _dungeon.Tiles[x][y] switch {
             TileTypes.RoomCorner => 0.4f,
             TileTypes.RoomPerimeter => 0.8f,
@@ -456,9 +506,9 @@ public partial class Dungeon {
             _ => 1
           };
 
-          var random = _random.Next(100);
+          var random = Global.Random.Next(100);
           random = (int)(random * factor);
-          
+
           switch (random) {
             case 0: _dungeon.DecorLayer.SetCell(new Vector2I(x, y), 0, new Vector2I(8, 0)); break;
             case <= 2: _dungeon.DecorLayer.SetCell(new Vector2I(x, y), 0, new Vector2I(5, 0)); break;
@@ -468,31 +518,100 @@ public partial class Dungeon {
         }
       }
     }
+
+    private int GenerateEnemyLevel() {
+      var random = Global.Random.Next(100);
+      return Data.Difficulty switch {
+        Difficulty.Easy => random switch {
+          < 75 => 0,
+          _ => 1
+        },
+        Difficulty.Moderate => random switch {
+          < 30 => 0,
+          < 85 => 1,
+          _ => 2
+        },
+        Difficulty.Hard => random switch {
+          < 15 => 0,
+          < 40 => 1,
+          < 90 => 2,
+          _ => 3,
+        },
+        Difficulty.Brutal => random switch {
+          < 20 => 1,
+          < 50 => 2,
+          < 90 => 3,
+          _ => 4
+        },
+      };
+    }
+    
+    private Enemy GenerateEnemy() {
+      var random = Global.Random.Next(100);
+      var level = GenerateEnemyLevel();
+      return Data.Difficulty switch {
+        Difficulty.Easy => random switch {
+          < 75 => new Slime { Level = level },
+          < 90 => new Spider { Level = level },
+          _ => new Voidling { Level = level },
+        },
+        Difficulty.Moderate => random switch {
+          < 60 => new Slime { Level = level },
+          < 85 => new Spider { Level = level },
+          < 95 => new Voidling { Level = level },
+          _ => new Ranger { Level = level },
+        },
+        Difficulty.Hard => random switch {
+          < 40 => new Slime { Level = level },
+          < 70 => new Spider { Level = level },
+          < 90 => new Voidling { Level = level },
+          _ => new Ranger { Level = level },
+        },
+        Difficulty.Brutal => random switch {
+          < 25 => new Slime { Level = level },
+          < 60 => new Spider { Level = level },
+          < 85 => new Voidling { Level = level },
+          _ => new Ranger { Level = level },
+        },
+      };
+    }
     
     private void PlaceEnemies() {
+      var bossPlaced = false;
       foreach (var room in _dungeon.Rooms.Where(room => room.Type == RoomTypes.Uncategorized)) {
-        Vector2I tile = new(
-          _random.Next(room.Rect.Position.X + 1, room.Rect.End.X - 2),
-          _random.Next(room.Rect.Position.Y + 1, room.Rect.End.Y - 2)
-          );
+        var enemyCount = Data.Difficulty switch {
+          Difficulty.Easy => Global.Random.Next(room.Rect.Grow(-1).Area / 9) + 1,
+          Difficulty.Moderate => Global.Random.Next(room.Rect.Grow(-1).Area / 4) + 1,
+          Difficulty.Hard => Global.Random.Next(room.Rect.Grow(-1).Area / 3) + 1 + room.Rect.Grow(-1).Area / 15,
+          _ => Global.Random.Next(room.Rect.Grow(-1).Area / 2) + 1 + room.Rect.Grow(-1).Area / 9,
+        };
+        var usedTiles = new List<Vector2I>();
 
-        Enemy enemy ;
-        
-        if (_random.Next(20) == 0) {
-          enemy = new Voidling();
+        if (!bossPlaced) enemyCount = 1;
+
+        for (var i = 0; i < enemyCount; i++) {
+          Vector2I tile;
+          do {
+            tile = new Vector2I(
+              Global.Random.Next(room.Rect.Position.X + 1, room.Rect.End.X - 1),
+              Global.Random.Next(room.Rect.Position.Y + 1, room.Rect.End.Y - 1)
+            );
+          } while (usedTiles.Contains(tile));
+
+          Enemy enemy;
+
+          if (!bossPlaced) {
+            enemy = new Exterminator();
+            bossPlaced = true;
+          }
+          else {
+            enemy = GenerateEnemy();
+          }
+
+          enemy.Position = tile;
+          _dungeon.Enemies.Add(enemy);
+          usedTiles.Add(tile);
         }
-        else if (_random.Next(15) == 0) {
-          enemy = new Ranger();
-        }
-        else if (_random.Next(7) == 0) {
-          enemy = new Spider();
-        }
-        else {
-          enemy = new Slime();
-        }
-        
-        enemy.Position = tile;
-        _dungeon.Enemies.Add(enemy);
       }
     }
 
@@ -501,7 +620,8 @@ public partial class Dungeon {
       for (var x = 0; x < _dungeon.Rect.Size.X; x++) {
         for (var y = 0; y < _dungeon.Rect.Size.Y; y++) {
           if (_dungeon.Tiles[x][y] != TileTypes.Entrance) continue;
-          if (_random.Next(doors + 2) > 0) continue;
+          if (spawnRoom != null && spawnRoom.Rect.Grow(1).HasPoint(new Vector2I(x, y))) continue;
+          if (Global.Random.Next(doors + 2) > 0) continue;
           Door door = new() { Position = new Vector2I(x, y) };
           _dungeon.Interactables.Add(door);
           doors++;
@@ -512,9 +632,9 @@ public partial class Dungeon {
     private void PlaceBonfires() {
       foreach (var room in _dungeon.Rooms.Where(room => room.Type == RoomTypes.Bonfire)) {
         var tileCandidates = GetRoomInteriorTiles(room);
-        
+
         Bonfire bonfire = new();
-        bonfire.Position = tileCandidates[_random.Next(tileCandidates.Count)];
+        bonfire.Position = tileCandidates[Global.Random.Next(tileCandidates.Count)];
         _dungeon.Interactables.Add(bonfire);
       }
     }
@@ -522,63 +642,37 @@ public partial class Dungeon {
     private void PlaceChests() {
       var chests = 0;
       foreach (var room in _dungeon.Rooms.Where(room => room.Type == RoomTypes.Uncategorized)) {
-        if (_random.Next(chests / 2) > 0) continue;
+        if (Global.Random.Next(chests / 2) > 0) continue;
         var tileCandidates = GetRoomPerimeterTiles(room);
+        if (tileCandidates.Count == 0) continue;
         Chest chest = new();
-        chest.Position = tileCandidates[_random.Next(tileCandidates.Count)];
-        FillChest(chest);
+        chest.Position = tileCandidates[Global.Random.Next(tileCandidates.Count)];
         _dungeon.Interactables.Add(chest);
         chests++;
       }
     }
 
-    private void FillChest(Chest chest) {
-      chest.Content.Add(_random.Next(3) switch {
-        0 => new HurlCard(),
-        1 => new PushCard(),
-        2 => new ShuffleCard(),
-        _ => new HealCard(),
-      });
-      if (_random.Next(5) < 3) chest.Content.Add(_random.Next(2) switch {
-        0 => new HurlCard(),
-        1 => new PushCard(),
-        _ => new HealCard(),
-      });
-      if (_random.Next(3) < 1) chest.Content.Add(_random.Next(2) switch {
-        0 => new SmiteCard(),
-        _ => new ChainCard(),
-      });
-      if (_random.Next(4) < 1) chest.Content.Add(_random.Next(2) switch {
-        0 => new WoodenKeyCard(),
-        _ => new SmiteCard(),
-      });
-      if (_random.Next(5) < 1) chest.Content.Add(_random.Next(2) switch {
-        0 => new GoldenKeyCard(),
-        _ => new HolyCard(),
-      });
-    }
-
     private void PlaceExits() {
       foreach (var room in _dungeon.Rooms.Where(room => room.Type == RoomTypes.Exit)) {
         var tileCandidates = GetRoomInteriorTiles(room);
-        
+
         Ladder ladder = new();
-        ladder.Position = tileCandidates[_random.Next(tileCandidates.Count)];
+        ladder.Position = tileCandidates[Global.Random.Next(tileCandidates.Count)];
         _dungeon.Interactables.Add(ladder);
       }
     }
-    
+
     private void PlacePlayer() {
       if (_dungeon.Rooms.Where(room => room.Type == RoomTypes.Spawn).ToList().Count == 0) {
         GD.Print("[ERROR] No spawn room was generated");
         return;
       }
-      
+
       var room = _dungeon.Rooms.FirstOrDefault(room => room.Type == RoomTypes.Spawn);
       if (room == null) return;
       var tileCandidates = GetRoomInteriorTiles(room);
-      
-      _dungeon.Player.Position = tileCandidates[_random.Next(tileCandidates.Count)];
+
+      _dungeon.Player.Position = tileCandidates[Global.Random.Next(tileCandidates.Count)];
     }
 
     private List<Vector2I> GetRoomInteriorTiles(Room room) {
@@ -588,9 +682,10 @@ public partial class Dungeon {
           if (_dungeon.Tiles[x][y] == TileTypes.RoomInterior) tiles.Add(new Vector2I(x, y));
         }
       }
+
       return tiles;
     }
-    
+
     private List<Vector2I> GetRoomPerimeterTiles(Room room) {
       List<Vector2I> tiles = new();
       for (var x = room.Rect.Position.X; x < room.Rect.End.X; x++) {
@@ -598,6 +693,7 @@ public partial class Dungeon {
           if (_dungeon.Tiles[x][y] == TileTypes.RoomPerimeter) tiles.Add(new Vector2I(x, y));
         }
       }
+
       return tiles;
     }
   }

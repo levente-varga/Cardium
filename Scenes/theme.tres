@@ -1,6 +1,7 @@
-[gd_resource type="Theme" load_steps=7 format=3 uid="uid://ckiq2eob4d0lc"]
+[gd_resource type="Theme" load_steps=8 format=3 uid="uid://ckiq2eob4d0lc"]
 
 [ext_resource type="FontFile" uid="uid://2rxest3pjy34" path="res://Assets/Fonts/alagard.ttf" id="1_u3hck"]
+[ext_resource type="FontFile" uid="uid://cgna0pm46rmdr" path="res://Assets/Fonts/Levi Windows.ttf" id="2_apy7c"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7fwm8"]
 
@@ -14,9 +15,10 @@
 
 [resource]
 default_font = ExtResource("1_u3hck")
-Button/colors/font_color = Color(0.933333, 0.933333, 0.933333, 1)
-Button/colors/font_disabled_color = Color(0.933333, 0.933333, 0.933333, 0.458824)
+Button/colors/font_color = Color(0.8, 0.8, 0.8, 1)
+Button/colors/font_disabled_color = Color(0.8, 0.8, 0.8, 0.458824)
 Button/colors/font_hover_color = Color(0.857992, 0.387246, 0.228431, 1)
+Button/colors/font_hover_pressed_color = Color(0.658824, 0.188235, 0, 1)
 Button/colors/font_pressed_color = Color(0.658251, 0.188208, 0, 1)
 Button/constants/h_separation = 0
 Button/font_sizes/font_size = 32
@@ -26,3 +28,14 @@ Button/styles/focus = SubResource("StyleBoxEmpty_ctndu")
 Button/styles/hover = SubResource("StyleBoxEmpty_8b2wa")
 Button/styles/normal = SubResource("StyleBoxEmpty_21bk1")
 Button/styles/pressed = SubResource("StyleBoxEmpty_trsqd")
+LinkButton/colors/font_color = Color(0.8, 0.8, 0.8, 1)
+LinkButton/colors/font_disabled_color = Color(0.8, 0.8, 0.8, 0.458824)
+LinkButton/colors/font_hover_color = Color(0.858824, 0.388235, 0.227451, 1)
+LinkButton/colors/font_hover_pressed_color = Color(0.658824, 0.188235, 0, 1)
+LinkButton/colors/font_pressed_color = Color(0.658824, 0.188235, 0, 1)
+LinkButton/font_sizes/font_size = 32
+RichTextLabel/colors/default_color = Color(0.533333, 0.533333, 0.533333, 1)
+RichTextLabel/font_sizes/bold_font_size = 25
+RichTextLabel/font_sizes/normal_font_size = 25
+RichTextLabel/fonts/bold_font = ExtResource("2_apy7c")
+RichTextLabel/fonts/normal_font = ExtResource("2_apy7c")

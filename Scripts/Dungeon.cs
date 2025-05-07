@@ -1,10 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Cardium.Scripts.Cards;
-using Cardium.Scripts.Cards.Types;
-using Cardium.Scripts.Enemies;
-using Cardium.Scripts.Interactables;
 using Godot;
 
 namespace Cardium.Scripts;
@@ -21,6 +16,7 @@ public enum TileTypes {
 
 public enum RoomTypes {
   Uncategorized,
+  Boss,
   Spawn,
   Exit,
   Bonfire,
@@ -36,32 +32,31 @@ public partial class Dungeon {
   public readonly TileMapLayer DecorLayer = new();
   public readonly TileMapLayer WallLayer = new();
   public readonly TileMapLayer FogLayer = new();
-  
+
   public Rect2I Rect { get; private set; }
 
   public readonly Player Player = new();
   public readonly List<Enemy> Enemies = new();
   public readonly List<Interactable> Interactables = new();
-  public readonly List<List<TileTypes>> Tiles = new ();
+  public readonly List<List<TileTypes>> Tiles = new();
   public readonly List<Room> Rooms = new();
 
   private readonly Dictionary<int, Vector2I> _bitmaskToWallAtlasCoord = new();
-  
+
   public Dungeon() {
     FillBitmaskDictionary();
-    
+
     WallLayer.Scale = Global.TileScaleVector;
     DecorLayer.Scale = Global.TileScaleVector;
     FogLayer.Scale = Global.TileScaleVector;
-    
+
     WallLayer.TileSet = ResourceLoader.Load<TileSet>("res://Assets/TileSets/walls.tres");
     DecorLayer.TileSet = ResourceLoader.Load<TileSet>("res://Assets/TileSets/decor.tres");
     FogLayer.TileSet = ResourceLoader.Load<TileSet>("res://Assets/TileSets/fog.tres");
   }
 
-  public static Dungeon Generate(int width, int height, int roomTries) => Generate(new Vector2I(width, height), roomTries);
   public static Dungeon Generate(Vector2I size, int roomTries) => new Generator().GenerateDungeon(size, roomTries);
-  
+
   public static Dungeon GenerateLobby() => new Generator().GenerateLobbyDungeon();
 
   /// <summary>
@@ -87,12 +82,14 @@ public partial class Dungeon {
           if (!_bitmaskToWallAtlasCoord.TryAdd(bitmask, value)) {
             throw new Exception($"Dictionary already contains generated key: {bitmask}");
           }
+
           return;
         }
 
         if (pattern[index] == null || pattern[index] == true) {
           GenerateBitmasks(index + 1, (byte)(bitmask | (1 << index)));
         }
+
         if (pattern[index] == null || pattern[index] == false) {
           index = index + 1;
           continue;
@@ -104,83 +101,87 @@ public partial class Dungeon {
 
     GenerateBitmasks(0, 0);
   }
+
+  public void SetDecor(Vector2I tile, int sourceId, Vector2I atlasCoords) {
+    DecorLayer.SetCell(tile, sourceId, atlasCoords);
+  }
   
   private bool IsWall(Vector2I cell) => !Rect.HasPoint(cell) || Tiles[cell.X][cell.Y] == TileTypes.Wall;
-  
+
   private int GetWallBitmask(int x, int y) {
     var mask = 0;
     if (IsWall(new Vector2I(x - 1, y - 1))) mask |= 128;
-    if (IsWall(new Vector2I(x    , y - 1))) mask |= 64;
+    if (IsWall(new Vector2I(x, y - 1))) mask |= 64;
     if (IsWall(new Vector2I(x + 1, y - 1))) mask |= 32;
-    if (IsWall(new Vector2I(x - 1, y    ))) mask |= 16;
-    if (IsWall(new Vector2I(x + 1, y    ))) mask |= 8;
+    if (IsWall(new Vector2I(x - 1, y))) mask |= 16;
+    if (IsWall(new Vector2I(x + 1, y))) mask |= 8;
     if (IsWall(new Vector2I(x - 1, y + 1))) mask |= 4;
-    if (IsWall(new Vector2I(x    , y + 1))) mask |= 2;
+    if (IsWall(new Vector2I(x, y + 1))) mask |= 2;
     if (IsWall(new Vector2I(x + 1, y + 1))) mask |= 1;
     return mask;
   }
-  
+
   private void FillBitmaskDictionary() {
     //                                  TL     T      TR     L      R      BL     B      BR
     // 4 walls (1)
-    AddBitmaskEntries(new () {null , false, null , false, false, null , false, null }, new Vector2I(4, 0));
+    AddBitmaskEntries(new() { null, false, null, false, false, null, false, null }, new Vector2I(4, 0));
     // 3 walls (4)
-    AddBitmaskEntries(new () {null , true , null , false, false, null , false, null }, new Vector2I(5, 2));
-    AddBitmaskEntries(new () {null , false, null , true , false, null , false, null }, new Vector2I(3, 0));
-    AddBitmaskEntries(new () {null , false, null , false, true , null , false, null }, new Vector2I(1, 0));
-    AddBitmaskEntries(new () {null , false, null , false, false, null , true , null }, new Vector2I(5, 0));
+    AddBitmaskEntries(new() { null, true, null, false, false, null, false, null }, new Vector2I(5, 2));
+    AddBitmaskEntries(new() { null, false, null, true, false, null, false, null }, new Vector2I(3, 0));
+    AddBitmaskEntries(new() { null, false, null, false, true, null, false, null }, new Vector2I(1, 0));
+    AddBitmaskEntries(new() { null, false, null, false, false, null, true, null }, new Vector2I(5, 0));
     // 2 walls - straight (2)
-    AddBitmaskEntries(new () {null , true , null , false, false, null , true , null }, new Vector2I(5, 1));
-    AddBitmaskEntries(new () {null , false, null , true , true , null , false, null }, new Vector2I(2, 0));
+    AddBitmaskEntries(new() { null, true, null, false, false, null, true, null }, new Vector2I(5, 1));
+    AddBitmaskEntries(new() { null, false, null, true, true, null, false, null }, new Vector2I(2, 0));
     // 2 walls - corners (8)
-    AddBitmaskEntries(new () {false, true , null , true , false, null , false, null }, new Vector2I(4, 5));
-    AddBitmaskEntries(new () {true , true , null , true , false, null , false, null }, new Vector2I(3, 4));
-    AddBitmaskEntries(new () {null , true , false, false, true , null , false, null }, new Vector2I(0, 5));
-    AddBitmaskEntries(new () {null , true , true , false, true , null , false, null }, new Vector2I(1, 4));
-    AddBitmaskEntries(new () {null , false, null , true , false, false, true , null }, new Vector2I(4, 1));
-    AddBitmaskEntries(new () {null , false, null , true , false, true , true , null }, new Vector2I(3, 2));
-    AddBitmaskEntries(new () {null , false, null , false, true , null , true , false}, new Vector2I(0, 1));
-    AddBitmaskEntries(new () {null , false, null , false, true , null , true , true }, new Vector2I(1, 2));
+    AddBitmaskEntries(new() { false, true, null, true, false, null, false, null }, new Vector2I(4, 5));
+    AddBitmaskEntries(new() { true, true, null, true, false, null, false, null }, new Vector2I(3, 4));
+    AddBitmaskEntries(new() { null, true, false, false, true, null, false, null }, new Vector2I(0, 5));
+    AddBitmaskEntries(new() { null, true, true, false, true, null, false, null }, new Vector2I(1, 4));
+    AddBitmaskEntries(new() { null, false, null, true, false, false, true, null }, new Vector2I(4, 1));
+    AddBitmaskEntries(new() { null, false, null, true, false, true, true, null }, new Vector2I(3, 2));
+    AddBitmaskEntries(new() { null, false, null, false, true, null, true, false }, new Vector2I(0, 1));
+    AddBitmaskEntries(new() { null, false, null, false, true, null, true, true }, new Vector2I(1, 2));
     // 1 wall - 0 corner (4)
-    AddBitmaskEntries(new () {null , false, null , true , true , true , true , true }, new Vector2I(2, 2));
-    AddBitmaskEntries(new () {null , true , true , false, true , null , true , true }, new Vector2I(1, 3));
-    AddBitmaskEntries(new () {true , true , null , true , false, true , true , null }, new Vector2I(3, 3));
-    AddBitmaskEntries(new () {true , true , true , true , true , null , false, null }, new Vector2I(2, 4));
+    AddBitmaskEntries(new() { null, false, null, true, true, true, true, true }, new Vector2I(2, 2));
+    AddBitmaskEntries(new() { null, true, true, false, true, null, true, true }, new Vector2I(1, 3));
+    AddBitmaskEntries(new() { true, true, null, true, false, true, true, null }, new Vector2I(3, 3));
+    AddBitmaskEntries(new() { true, true, true, true, true, null, false, null }, new Vector2I(2, 4));
     // 1 wall - 1 corner (8)
-    AddBitmaskEntries(new () {null , false, null , true , true , false, true , true }, new Vector2I(3, 1));
-    AddBitmaskEntries(new () {null , false, null , true , true , true , true , false}, new Vector2I(1, 1));
-    AddBitmaskEntries(new () {null , true , false, false, true , null , true , true }, new Vector2I(0, 4));
-    AddBitmaskEntries(new () {null , true , true , false, true , null , true , false}, new Vector2I(0, 2));
-    AddBitmaskEntries(new () {false, true , null , true , false, true , true , null }, new Vector2I(4, 4));
-    AddBitmaskEntries(new () {true , true , null , true , false, false, true , null }, new Vector2I(4, 2));
-    AddBitmaskEntries(new () {false, true , true , true , true , null , false, null }, new Vector2I(3, 5));
-    AddBitmaskEntries(new () {true , true , false, true , true , null , false, null }, new Vector2I(1, 5));
+    AddBitmaskEntries(new() { null, false, null, true, true, false, true, true }, new Vector2I(3, 1));
+    AddBitmaskEntries(new() { null, false, null, true, true, true, true, false }, new Vector2I(1, 1));
+    AddBitmaskEntries(new() { null, true, false, false, true, null, true, true }, new Vector2I(0, 4));
+    AddBitmaskEntries(new() { null, true, true, false, true, null, true, false }, new Vector2I(0, 2));
+    AddBitmaskEntries(new() { false, true, null, true, false, true, true, null }, new Vector2I(4, 4));
+    AddBitmaskEntries(new() { true, true, null, true, false, false, true, null }, new Vector2I(4, 2));
+    AddBitmaskEntries(new() { false, true, true, true, true, null, false, null }, new Vector2I(3, 5));
+    AddBitmaskEntries(new() { true, true, false, true, true, null, false, null }, new Vector2I(1, 5));
     // 1 wall - 2 corners (4)
-    AddBitmaskEntries(new () {null , false, null , true , true , false, true , false}, new Vector2I(2, 1));
-    AddBitmaskEntries(new () {null , true , false, false, true , null , true , false}, new Vector2I(0, 3));
-    AddBitmaskEntries(new () {false, true , null , true , false, false, true , null }, new Vector2I(4, 3));
-    AddBitmaskEntries(new () {false, true , false, true , true , null , false, null }, new Vector2I(2, 5));
+    AddBitmaskEntries(new() { null, false, null, true, true, false, true, false }, new Vector2I(2, 1));
+    AddBitmaskEntries(new() { null, true, false, false, true, null, true, false }, new Vector2I(0, 3));
+    AddBitmaskEntries(new() { false, true, null, true, false, false, true, null }, new Vector2I(4, 3));
+    AddBitmaskEntries(new() { false, true, false, true, true, null, false, null }, new Vector2I(2, 5));
     // 0 wall - 0 corner (1)
-    AddBitmaskEntries(new () {true , true , true , true , true , true , true , true }, new Vector2I(0, 0));
+    AddBitmaskEntries(new() { true, true, true, true, true, true, true, true }, new Vector2I(0, 0));
     // 0 wall - 1 corner (4)
-    AddBitmaskEntries(new () {false, true , true , true , true , true , true , true }, new Vector2I(7, 1));
-    AddBitmaskEntries(new () {true , true , false, true , true , true , true , true }, new Vector2I(6, 1));
-    AddBitmaskEntries(new () {true , true , true , true , true , false, true , true }, new Vector2I(7, 0));
-    AddBitmaskEntries(new () {true , true , true , true , true , true , true , false}, new Vector2I(6, 0));
+    AddBitmaskEntries(new() { false, true, true, true, true, true, true, true }, new Vector2I(7, 1));
+    AddBitmaskEntries(new() { true, true, false, true, true, true, true, true }, new Vector2I(6, 1));
+    AddBitmaskEntries(new() { true, true, true, true, true, false, true, true }, new Vector2I(7, 0));
+    AddBitmaskEntries(new() { true, true, true, true, true, true, true, false }, new Vector2I(6, 0));
     // 0 wall - 2 corners - adjacent (4)
-    AddBitmaskEntries(new () {false, true , false, true , true , true , true , true }, new Vector2I(6, 5));
-    AddBitmaskEntries(new () {true , true , false, true , true , true , true , false}, new Vector2I(5, 4));
-    AddBitmaskEntries(new () {true , true , true , true , true , false, true , false}, new Vector2I(6, 3));
-    AddBitmaskEntries(new () {false, true , true , true , true , false, true , true }, new Vector2I(7, 4));
+    AddBitmaskEntries(new() { false, true, false, true, true, true, true, true }, new Vector2I(6, 5));
+    AddBitmaskEntries(new() { true, true, false, true, true, true, true, false }, new Vector2I(5, 4));
+    AddBitmaskEntries(new() { true, true, true, true, true, false, true, false }, new Vector2I(6, 3));
+    AddBitmaskEntries(new() { false, true, true, true, true, false, true, true }, new Vector2I(7, 4));
     // 0 wall - 2 corners - diagonal (2)
-    AddBitmaskEntries(new () {false, true , true , true , true , true , true , false}, new Vector2I(7, 2));
-    AddBitmaskEntries(new () {true , true , false, true , true , false, true , true }, new Vector2I(6, 2));
+    AddBitmaskEntries(new() { false, true, true, true, true, true, true, false }, new Vector2I(7, 2));
+    AddBitmaskEntries(new() { true, true, false, true, true, false, true, true }, new Vector2I(6, 2));
     // 0 wall - 3 corners (4)
-    AddBitmaskEntries(new () {true , true , false, true , true , false, true , false}, new Vector2I(5, 3));
-    AddBitmaskEntries(new () {false, true , true , true , true , false, true , false}, new Vector2I(7, 3));
-    AddBitmaskEntries(new () {false, true , false, true , true , true , true , false}, new Vector2I(5, 5));
-    AddBitmaskEntries(new () {false, true , false, true , true , false, true , true }, new Vector2I(7, 5));
+    AddBitmaskEntries(new() { true, true, false, true, true, false, true, false }, new Vector2I(5, 3));
+    AddBitmaskEntries(new() { false, true, true, true, true, false, true, false }, new Vector2I(7, 3));
+    AddBitmaskEntries(new() { false, true, false, true, true, true, true, false }, new Vector2I(5, 5));
+    AddBitmaskEntries(new() { false, true, false, true, true, false, true, true }, new Vector2I(7, 5));
     // 0 wall - 4 corners (1)
-    AddBitmaskEntries(new () {false, true , false, true , true , false, true , false}, new Vector2I(6, 4));
+    AddBitmaskEntries(new() { false, true, false, true, true, false, true, false }, new Vector2I(6, 4));
   }
 }

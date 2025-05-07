@@ -4,24 +4,29 @@ using Godot;
 
 namespace Cardium.Scripts.Cards;
 
-public class WoodenKeyCard : InteractableTargetingCard {
-    public WoodenKeyCard() {
-        Name = "Wooden Key";
-        Description = "Unlocks a door.";
-        Rarity = CardRarity.Common;
-        Range = 1;
-        Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/WoodenKey.png");
-        Type = CardType.Utility;
+public sealed class WoodenKeyCard : InteractableTargetingCard {
+  public WoodenKeyCard() {
+    Name = "Wooden Key";
+    Rarity = Rarities.Rare;
+    Range = 1;
+    Unstable = true;
+    Art = GD.Load<Texture2D>("res://Assets/Sprites/Cards/WoodenKey.png");
+    Type = Types.Utility;
+    UpdateDescription();
+  }
+
+  protected sealed override void UpdateDescription() {
+    Description = $"Unlocks a door. {Highlight("Unstable")}";
+  }
+
+  public override bool OnPlay(Player player, Interactable target, World world) {
+    switch (target) {
+      case Door door:
+        door.OnInteract(player, world);
+        break;
+      default: return false;
     }
 
-    public override bool OnPlay(Player player, Interactable target, World world) {
-        switch (target) {
-            case Door door:
-                door.OnInteract(player, world.Camera);
-                break;
-            default: return false;
-        }
-
-        return true;
-    }
+    return true;
+  }
 }
