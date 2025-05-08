@@ -38,12 +38,14 @@ public partial class CardView : Node2D {
   public HoverAnimationType HoverAnimation = HoverAnimationType.Slide;
   private CardState _state;
   private bool _dragging;
+  private bool _leftClickThreshold;
+  private const float ClickThreshold = 20;
 
   private Tween? _hoverTween;
   private Tween? _scaleTween;
   private Tween? _rotationTween;
 
-  private Vector2 _mouseDownPosition;
+  private Vector2? _mouseDownPosition;
 
   public delegate void OnDragStartDelegate(CardView cardView);
 
@@ -76,7 +78,6 @@ public partial class CardView : Node2D {
     _hitbox.MouseExited += OnMouseExited;
     _hitbox.ButtonDown += OnMouseDown;
     _hitbox.ButtonUp += OnMouseUp;
-    _hitbox.Pressed += OnPressed;
     Card.OnOriginChangedEvent += UpdateOriginIndicator;
 
     _descriptionLabel.Text = $"[center]{Card.Description}[/center]";
@@ -111,6 +112,12 @@ public partial class CardView : Node2D {
   }
 
   public override void _Process(double delta) {
+    var mousePosition = GetViewport().GetMousePosition();
+    if (!_leftClickThreshold && _mouseDownPosition != null) {
+      if (mousePosition.DistanceTo(_mouseDownPosition.Value) > ClickThreshold) {
+        _leftClickThreshold = true;
+      }
+    }
     if (_dragging) {
       _base.GlobalPosition = _base.GlobalPosition.Lerp(GetGlobalMousePosition(), Global.LerpWeight * (float)delta);
       _base.GlobalRotation = Mathf.Lerp(_base.GlobalRotation, 0, (float)delta);
@@ -238,29 +245,35 @@ public partial class CardView : Node2D {
     PlayResetAnimation();
   }
 
-  private void OnMouseDown() {
-    if (!Enabled || !Draggable) return;
-
-    _mouseDownPosition = GetViewport().GetMousePosition();
+  private void StartDragging() {
     _dragging = true;
     _state = CardState.Dragging;
     ZIndex = 11;
     OnDragStartEvent?.Invoke(this);
   }
 
+  private void OnMouseDown() {
+    if (!Enabled || !Draggable) return;
+    
+    _mouseDownPosition = GetViewport().GetMousePosition();
+    
+    StartDragging();
+  }
+
   private void OnMouseUp() {
     if (!Enabled || !Draggable) return;
 
     PlayResetAnimation();
-    _dragging = false;
+    _mouseDownPosition = null;
     _state = CardState.Idle;
     ZIndex = 0;
-    OnDragEndEvent?.Invoke(this, GetViewport().GetMousePosition());
-  }
-
-  private void OnPressed() {
-    if (!Enabled) return;
-
-    OnPressedEvent?.Invoke(this);
+    if (_leftClickThreshold) {
+      OnDragEndEvent?.Invoke(this, GetViewport().GetMousePosition());
+    }
+    else {
+      OnPressedEvent?.Invoke(this);
+    }
+    _leftClickThreshold = false;
+    _dragging = false;
   }
 }

@@ -101,6 +101,7 @@ public partial class WorkbenchMenu : Menu {
     view.OnDragStartEvent += OnCardDragStartEventHandler;
     view.OnDragEndEvent += OnCardDragEndEventHandler;
     view.OnDragEvent += OnCardDragEventHandler;
+    view.OnPressedEvent += OnCardPressedEventHandler;
     cardContainer.AddChild(view);
     slotContainer.AddChild(cardContainer);
   }
@@ -125,6 +126,7 @@ public partial class WorkbenchMenu : Menu {
       view.OnDragStartEvent += OnCardDragStartEventHandler;
       view.OnDragEndEvent += OnCardDragEndEventHandler;
       view.OnDragEvent += OnCardDragEventHandler;
+      view.OnPressedEvent += OnCardPressedEventHandler;
       views.Add(view);
     }
     
@@ -234,23 +236,27 @@ public partial class WorkbenchMenu : Menu {
         _result = null;
         break;
       case DraggedCardOrigin.List:
-        switch (view.Card.Origin) {
-          case Card.Origins.Deck:
-            Data.Deck.Remove(view.Card);
-            break;
-          case Card.Origins.Inventory:
-            Data.Inventory.Remove(view.Card);
-            break;
-          case Card.Origins.Stash:
-            Data.Stash.Remove(view.Card);
-            break;
-          case Card.Origins.None:
-          default: 
-            break;
-        }
+        RemoveCardFromItsOrigin(view.Card);
         break;
       case DraggedCardOrigin.None:
       default:
+        break;
+    }
+  }
+
+  private void RemoveCardFromItsOrigin(Card card) {
+    switch (card.Origin) {
+      case Card.Origins.Deck:
+        Data.Deck.Remove(card);
+        break;
+      case Card.Origins.Inventory:
+        Data.Inventory.Remove(card);
+        break;
+      case Card.Origins.Stash:
+        Data.Stash.Remove(card);
+        break;
+      case Card.Origins.None:
+      default: 
         break;
     }
   }
@@ -270,6 +276,31 @@ public partial class WorkbenchMenu : Menu {
       default: 
         break;
     }
+  }
+
+  private void OnCardPressedEventHandler(CardView view) {
+    if (_slots.Contains(view.Card)) {
+      _slots[_slots.IndexOf(view.Card)] = null;
+      ReturnCardToItsOrigin(view.Card);
+    }
+    else if (_result == view.Card) {
+      ReturnCardToItsOrigin(view.Card);
+      Statistics.CardsUpgraded++;
+      EmptySlots(false);
+    }
+    else {
+      var freeIndex = -1;
+      for (var i = 0; i < _slots.Count; i++) {
+        if (_slots[i] == null) {
+          freeIndex = i;
+          break;
+        }
+      }
+      if (freeIndex == -1) return;
+      RemoveCardFromItsOrigin(view.Card);
+      _slots[freeIndex] = view.Card;
+    }
+    FillContainersWithCardViews();
   }
 
   private void OnCardDragEndEventHandler(CardView view, Vector2 mousePosition) {
@@ -307,19 +338,7 @@ public partial class WorkbenchMenu : Menu {
     }
     else if (mouseOverListArea && _draggedCardOrigin != DraggedCardOrigin.List) {
       RemoveDraggedCardFromItsOrigin(view);
-      switch (view.Card.Origin) {
-        case Card.Origins.Deck:
-          Data.Deck.Add(view.Card);
-          break;
-        case Card.Origins.Inventory:
-          Data.Inventory.Add(view.Card);
-          break;
-        case Card.Origins.Stash:
-        case Card.Origins.None:
-        default:
-          Data.Stash.Add(view.Card);
-          break;
-      }
+      ReturnCardToItsOrigin(view.Card);
       if (_draggedCardOrigin == DraggedCardOrigin.Result) {
         Statistics.CardsUpgraded++;
         EmptySlots(false);
