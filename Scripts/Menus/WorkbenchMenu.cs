@@ -300,7 +300,10 @@ public partial class WorkbenchMenu : Menu {
       RemoveCardFromItsOrigin(view.Card);
       _slots[freeIndex] = view.Card;
     }
+    
+    UpdateUpgradedCard();
     FillContainersWithCardViews();
+    UpdateLabels();
   }
 
   private void OnCardDragEndEventHandler(CardView view, Vector2 mousePosition) {
@@ -316,7 +319,6 @@ public partial class WorkbenchMenu : Menu {
       }
       RemoveDraggedCardFromItsOrigin(view);
       _slots[0] = view.Card;
-      FillContainersWithCardViews();
     }
     else if (mouseOverSlot2Area && _draggedCardOrigin != DraggedCardOrigin.Slot1 && (_slots[1] == null || view.Card == _result)) {
       if (view.Card == _result) {
@@ -325,7 +327,6 @@ public partial class WorkbenchMenu : Menu {
       }
       RemoveDraggedCardFromItsOrigin(view);
       _slots[1] = view.Card;
-      FillContainersWithCardViews();
     }
     else if (mouseOverSlot3Area && _draggedCardOrigin != DraggedCardOrigin.Slot2 && (_slots[2] == null || view.Card == _result)) {
       if (view.Card == _result) {
@@ -334,7 +335,6 @@ public partial class WorkbenchMenu : Menu {
       }
       RemoveDraggedCardFromItsOrigin(view);
       _slots[2] = view.Card;
-      FillContainersWithCardViews();
     }
     else if (mouseOverListArea && _draggedCardOrigin != DraggedCardOrigin.List) {
       RemoveDraggedCardFromItsOrigin(view);
@@ -343,9 +343,16 @@ public partial class WorkbenchMenu : Menu {
         Statistics.CardsUpgraded++;
         EmptySlots(false);
       }
-      FillContainersWithCardViews();
     }
+    
+    _draggedCardOrigin = DraggedCardOrigin.None;
+    
+    UpdateUpgradedCard();
+    FillContainersWithCardViews();
+    UpdateLabels();
+  }
 
+  private void UpdateUpgradedCard() {
     if (_result == null && CardsAreValid) {
       var isProtected = _slots.Any(card => card!.Protected);
       var toDeck = _slots.Any(card => card!.Origin == Card.Origins.Deck);
@@ -368,11 +375,6 @@ public partial class WorkbenchMenu : Menu {
       _result = null;
       FillContainersWithCardViews();
     }
-    
-
-    _draggedCardOrigin = DraggedCardOrigin.None;
-
-    UpdateLabels();
   }
 
   private bool CardsAreValid => _slots.All(slot => slot != null) &&
@@ -382,10 +384,7 @@ public partial class WorkbenchMenu : Menu {
     _slots[1]!.Level == _slots[2]!.Level;
   
   private Card? CreateUpgradedCard(Type cardType, int level) {
-    GD.Print($"Creating upgraded card variant...");
-
     if (!typeof(Card).IsAssignableFrom(cardType)) {
-      GD.Print($"Can't cast {cardType} to Card!");
       return null;
     }
 
@@ -394,13 +393,6 @@ public partial class WorkbenchMenu : Menu {
     int upgradedLevel;
     for (upgradedLevel = 0; upgradedLevel < level; upgradedLevel++) {
       if (!card.Upgrade()) break;
-    }
-
-    if (upgradedLevel != level) {
-      GD.Print($"Can't upgrade");
-    }
-    else {
-      GD.Print($"Upgraded!");
     }
     
     return upgradedLevel == level ? card : null;
