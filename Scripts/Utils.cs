@@ -81,6 +81,8 @@ public static class Utils {
       if (nameOrder != 0) return nameOrder;
       var levelOrder = card.Level.CompareTo(other.Level);
       if (levelOrder != 0) return levelOrder;
+      var protectionOrder = card.Protected.CompareTo(other.Protected);
+      if (protectionOrder != 0) return -protectionOrder;
       return card.Origin.CompareTo(card.Origin);
     });
     return;
