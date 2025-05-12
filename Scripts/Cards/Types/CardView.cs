@@ -267,12 +267,10 @@ public partial class CardView : Node2D {
     _mouseDownPosition = null;
     _state = CardState.Idle;
     ZIndex = 0;
-    if (_leftClickThreshold) {
-      OnDragEndEvent?.Invoke(this, GetViewport().GetMousePosition());
-    }
-    else {
+    if (!_leftClickThreshold) {
       OnPressedEvent?.Invoke(this);
     }
+    OnDragEndEvent?.Invoke(this, GetViewport().GetMousePosition());
     _leftClickThreshold = false;
     _dragging = false;
   }
